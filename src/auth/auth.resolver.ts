@@ -9,7 +9,7 @@ export class AuthResolver {
   @Mutation()
   async signUp(@Args('data') data: SignUpInput): Promise<AuthPayload> {
     // FIXME:
-    const user = await this.userService.createUser({ ...data } as any);
+    const user = await this.userService.createUser({ ...data });
     return {
       token: 'dmm',
       userName: user.name,
