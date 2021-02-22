@@ -1,19 +1,15 @@
 import {
-  Column,
   Entity,
   JoinColumn,
   OneToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { PermissionSet } from './Permission.entity';
 
 @Entity()
 export class Role {
-  @PrimaryGeneratedColumn()
-  id: string;
-
-  @Column()
-  role: string;
+  @PrimaryColumn()
+  name: string;
 
   @OneToOne(() => PermissionSet)
   @JoinColumn()

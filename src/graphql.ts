@@ -10,7 +10,6 @@ export class SignUpInput {
     email: string;
     name: string;
     password: string;
-    role: string;
 }
 
 export class SignInInput {
@@ -22,6 +21,17 @@ export abstract class IQuery {
     __typename?: 'IQuery';
 
     abstract heartBeat(): string | Promise<string>;
+}
+
+export class User {
+    __typename?: 'User';
+    id: string;
+    email: string;
+    name: string;
+    passwordHash: string;
+    role: string;
+    createBy?: User;
+    createdAt: string;
 }
 
 export abstract class IMutation {
@@ -37,15 +47,4 @@ export class AuthPayload {
     token: string;
     userName: string;
     role: string;
-}
-
-export class User {
-    __typename?: 'User';
-    id: string;
-    email: string;
-    name: string;
-    passwordHash: string;
-    role: string;
-    createBy?: User;
-    createdAt: string;
 }

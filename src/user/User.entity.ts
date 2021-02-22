@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Role } from 'src/permission/Role.entity';
+import { Role } from 'src/permission/entities/Role.entity';
 import {
   Column,
   Entity,
@@ -23,6 +23,8 @@ export class User {
   password: string;
 
   @OneToOne(() => Role)
-  @JoinColumn()
+  @JoinColumn({
+    name: 'role'
+  })
   role: Role;
 }

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AuthModule } from './auth/Auth.module';
 import { HeartBeat as HeartBeatModule } from './HeartBeat/HeartBeat.module';
+import { PermissionModule } from './permission/permission.module';
 import { UserModule } from './user/user.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
@@ -14,6 +15,9 @@ const graphQLModuleInit = GraphQLModule.forRoot({
     outputAs: 'class',
     emitTypenameField: true,
   },
+  cors: {
+    origin: 'http://localhost:3000',
+  }
 });
 
 const typeORMModuleInit = TypeOrmModule.forRoot();
@@ -25,6 +29,7 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     HeartBeatModule,
     AuthModule,
     UserModule,
+    PermissionModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }

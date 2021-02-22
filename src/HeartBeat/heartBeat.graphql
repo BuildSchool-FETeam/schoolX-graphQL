@@ -1,3 +1,4 @@
+# This file only use for testing
 type Query {
   heartBeat: String!
 }
