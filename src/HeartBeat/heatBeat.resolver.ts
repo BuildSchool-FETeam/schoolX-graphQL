@@ -1,9 +1,9 @@
 import { Resolver, Query } from '@nestjs/graphql';
 
 @Resolver()
-export class UserResolver {
+export class HeartBeat {
   @Query()
-  user() {
-    return 'Hi there';
+  heartBeat() {
+    return 'Ba dum!!!';
   }
 }
