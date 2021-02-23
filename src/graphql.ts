@@ -17,14 +17,14 @@ export class SignInInput {
     password: string;
 }
 
-export class User {
-    __typename?: 'User';
+export class AdminUser {
+    __typename?: 'AdminUser';
     id: string;
     email: string;
     name: string;
     passwordHash: string;
     role: string;
-    createBy?: User;
+    createBy?: AdminUser;
     createdAt: string;
 }
 

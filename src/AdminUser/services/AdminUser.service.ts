@@ -11,6 +11,7 @@ export class AdminUserService {
   constructor(
     @InjectRepository(AdminUser)
     private userRepo: Repository<AdminUser>,
+
     private passwordService: PasswordService,
     private permissionService: PermissionService,
     private roleService: RoleService

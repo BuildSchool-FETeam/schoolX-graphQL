@@ -1,9 +1,9 @@
-type User {
+type AdminUser {
   id: ID!
   email: String!
   name: String!
   passwordHash: String!
   role: String!
-  createBy: User
+  createBy: AdminUser
   createdAt: String!
 }
