@@ -17,12 +17,6 @@ export class SignInInput {
     password: string;
 }
 
-export abstract class IQuery {
-    __typename?: 'IQuery';
-
-    abstract heartBeat(): string | Promise<string>;
-}
-
 export class User {
     __typename?: 'User';
     id: string;
@@ -32,6 +26,14 @@ export class User {
     role: string;
     createBy?: User;
     createdAt: string;
+}
+
+export abstract class IQuery {
+    __typename?: 'IQuery';
+
+    abstract heartBeat(): string | Promise<string>;
+
+    abstract heartBeatWithAuth(): string | Promise<string>;
 }
 
 export abstract class IMutation {

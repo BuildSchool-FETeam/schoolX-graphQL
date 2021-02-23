@@ -1,22 +1,22 @@
+import { TokenService } from './../common/services/token.service';
 import { PasswordService } from './../common/services/password.service';
-import { AuthService } from './services/auth.service';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthPayload, SignUpInput, SignInInput } from 'src/graphql';
-import { UserService } from 'src/User/services/user.service';
+import { AdminUserService } from 'src/AdminUser/services/AdminUser.service';
 
 @Resolver()
 export class AuthResolver {
   constructor(
-    private userService: UserService,
-    private authService: AuthService,
+    private adminUserService: AdminUserService,
+    private tokenService: TokenService,
     private passwordService: PasswordService
   ) { }
 
   @Mutation()
   async signUp (@Args('data') data: SignUpInput): Promise<AuthPayload> {
-    const user = await this.userService.createUserBySignup({ ...data });
+    const user = await this.adminUserService.createUserBySignup({ ...data });
     return {
-      token: this.authService.createToken(user),
+      token: this.tokenService.createToken({ ...user }),
       userName: user.name,
       role: user.role.name,
     };
@@ -24,18 +24,17 @@ export class AuthResolver {
 
   @Mutation()
   async signIn (@Args('data') data: SignInInput): Promise<AuthPayload> {
-    const user = await this.userService.findUserByEmail(data.email);
+    const user = await this.adminUserService.findUserByEmail(data.email);
 
     if (!user) {
       throw Error('User is not existed')
     }
-
     if (!this.passwordService.compare(data.password, user.password)) {
       throw Error('Invalid password')
     }
 
     return {
-      token: this.authService.createToken({ ...user }),
+      token: this.tokenService.createToken({ ...user }),
       userName: user.name,
       role: user.role.name,
     };

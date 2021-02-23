@@ -8,7 +8,7 @@ import { PermissionSet } from './Permission.entity';
 
 @Entity()
 export class Role {
-  @PrimaryColumn()
+  @PrimaryColumn({ unique: true })
   name: string;
 
   @OneToOne(() => PermissionSet)

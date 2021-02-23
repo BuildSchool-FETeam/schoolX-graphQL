@@ -2,9 +2,9 @@ import { Injectable } from "@nestjs/common";
 import * as jwt from "jsonwebtoken";
 
 @Injectable()
-export class AuthService {
+export class TokenService {
   private readonly privateKey = 'Yasuoganktem20gg'
-  private readonly expirationTime = 2 * 15
+  private readonly expirationTime = '8h'
 
   createToken (data: any) {
     const token = jwt.sign(

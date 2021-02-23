@@ -13,7 +13,7 @@ export class RoleService {
 
   createAdminRole (assignedPermission: PermissionSet) {
     const role = this.roleRepo.create({
-      name: 'admin',
+      name: 'ultimateAdmin',
       permissionSet: assignedPermission
     })
 

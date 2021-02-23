@@ -4,19 +4,19 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PasswordService } from 'src/common/services/password.service';
 import { Repository } from 'typeorm';
-import { User } from '../User.entity';
+import { AdminUser } from '../AdminUser.entity';
 
 @Injectable()
-export class UserService {
+export class AdminUserService {
   constructor(
-    @InjectRepository(User)
-    private userRepo: Repository<User>,
+    @InjectRepository(AdminUser)
+    private userRepo: Repository<AdminUser>,
     private passwordService: PasswordService,
     private permissionService: PermissionService,
     private roleService: RoleService
   ) { }
 
-  async createUserBySignup (data: Partial<User>) {
+  async createUserBySignup (data: Partial<AdminUser>) {
     const userCount = await this.userRepo.count();
 
     if (userCount > 0) {

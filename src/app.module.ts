@@ -5,7 +5,7 @@ import { join } from 'path';
 import { AuthModule } from './auth/Auth.module';
 import { HeartBeat as HeartBeatModule } from './HeartBeat/HeartBeat.module';
 import { PermissionModule } from './permission/permission.module';
-import { UserModule } from './user/user.module';
+import { AdminUserModule } from './AdminUser/AdminUser.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -28,7 +28,7 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     graphQLModuleInit,
     HeartBeatModule,
     AuthModule,
-    UserModule,
+    AdminUserModule,
     PermissionModule,
   ],
 })

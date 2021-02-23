@@ -6,14 +6,15 @@
   "password": "Toan1234",
   "database": "schoolX-dev",
   "entities": [
-    "dist/**/*.entity{.ts,.js}"
+    "dist/**/*.entity.js"
   ],
   "autoLoadEntities": true,
-  "migrationsTableName": "custom_migration_table",
+  "migrationsTableName": "migration_table_dev",
   "migrations": [
     "dist/migrations/*.js"
   ],
   "cli": {
-    "migrationsDir": "dist/migrations"
+    "entitiesDir": "src/entity",
+    "migrationsDir": "src/migrations"
   }
 }
