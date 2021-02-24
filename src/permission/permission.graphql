@@ -1,0 +1,35 @@
+
+input PermissionSetInput {
+  course: String!
+  permission: String!
+  user: String!
+  blog: String!
+  notification: String!
+  instructor: String!
+}
+
+type Permission {
+  id: ID!
+  course: String!
+  permission: String!
+  user: String!
+  blog: String!
+  notification: String!
+  instructor: String!
+}
+
+type PermissionMutation {
+  setPermission(id: ID, data: PermissionSetInput): Permission
+  deletePermission(id: ID!): Permission
+}
+
+type Mutation {
+  PermissionMutation: PermissionMutation!
+}
+
+# type Query {
+#   PermissionQuery: {
+#     getAllPermissions: [Permission!]
+#     getPermissionById(id: ID!): Permission!
+#   }
+# }

@@ -1,10 +1,10 @@
 import { TokenService } from './../common/services/token.service';
 import { PasswordService } from './../common/services/password.service';
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, ResolveField, Resolver, Mutation } from '@nestjs/graphql';
 import { AuthPayload, SignUpInput, SignInInput } from 'src/graphql';
 import { AdminUserService } from 'src/AdminUser/services/AdminUser.service';
 
-@Resolver()
+@Resolver('AuthMutation')
 export class AuthResolver {
   constructor(
     private adminUserService: AdminUserService,
@@ -12,7 +12,7 @@ export class AuthResolver {
     private passwordService: PasswordService
   ) { }
 
-  @Mutation()
+  @ResolveField()
   async signUp (@Args('data') data: SignUpInput): Promise<AuthPayload> {
     const user = await this.adminUserService.createUserBySignup({ ...data });
     return {
@@ -22,9 +22,10 @@ export class AuthResolver {
     };
   }
 
-  @Mutation()
+  @ResolveField()
   async signIn (@Args('data') data: SignInInput): Promise<AuthPayload> {
     const user = await this.adminUserService.findUserByEmail(data.email);
+    console.log('sign in');
 
     if (!user) {
       throw Error('User is not existed')

@@ -1,3 +1,13 @@
+# type Query {
+#   setAdminUser(id: ID, data: ) {}
+# }
+
+# input AdminUserData {
+#   email: String!
+#   name: String!
+#   role: String!
+# }
+
 type AdminUser {
   id: ID!
   email: String!

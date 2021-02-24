@@ -1,6 +1,10 @@
-type Mutation {
-  signUp(data: SignUpInput!): AuthPayload!
-  signIn(data: SignInInput!): AuthPayload!
+extend type Mutation {
+  AuthOperator(data: SignInInput!): AuthMutation
+}
+
+type AuthMutation {
+  signUp: AuthPayload!
+  signIn: AuthPayload!
 }
 
 input SignUpInput {

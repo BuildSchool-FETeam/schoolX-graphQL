@@ -17,6 +17,15 @@ export class SignInInput {
     password: string;
 }
 
+export class PermissionSetInput {
+    course: string;
+    permission: string;
+    user: string;
+    blog: string;
+    notification: string;
+    instructor: string;
+}
+
 export class AdminUser {
     __typename?: 'AdminUser';
     id: string;
@@ -39,9 +48,15 @@ export abstract class IQuery {
 export abstract class IMutation {
     __typename?: 'IMutation';
 
-    abstract signUp(data: SignUpInput): AuthPayload | Promise<AuthPayload>;
+    abstract AuthOperator(data: SignInInput): AuthMutation | Promise<AuthMutation>;
 
-    abstract signIn(data: SignInInput): AuthPayload | Promise<AuthPayload>;
+    abstract PermissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+}
+
+export class AuthMutation {
+    __typename?: 'AuthMutation';
+    signUp: AuthPayload;
+    signIn: AuthPayload;
 }
 
 export class AuthPayload {
@@ -49,4 +64,21 @@ export class AuthPayload {
     token: string;
     userName: string;
     role: string;
+}
+
+export class Permission {
+    __typename?: 'Permission';
+    id: string;
+    course: string;
+    permission: string;
+    user: string;
+    blog: string;
+    notification: string;
+    instructor: string;
+}
+
+export class PermissionMutation {
+    __typename?: 'PermissionMutation';
+    setPermission?: Permission;
+    deletePermission?: Permission;
 }
