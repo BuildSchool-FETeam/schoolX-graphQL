@@ -3,7 +3,7 @@ import { PermissionService } from '../../permission/services/permission.service'
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PasswordService } from 'src/common/services/password.service';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { AdminUser } from '../AdminUser.entity';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class AdminUserService {
     return this.userRepo.findOne({ email }, { relations: ['role'] })
   }
 
-  async findAllUser () {
-    return this.userRepo.find();
+  async findAllUser (options?: FindManyOptions<AdminUser>) {
+    return this.userRepo.find(options);
   }
 }

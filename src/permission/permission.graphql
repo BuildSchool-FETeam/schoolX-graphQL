@@ -4,10 +4,11 @@ type Mutation {
 
 type PermissionMutation {
   setPermission(id: ID, data: PermissionSetInput!): Permission!
-  deletePermission(id: ID!): Permission!
+  deletePermission(id: ID!): Boolean!
 }
 
 input PermissionSetInput {
+  roleName: String!
   course: String!
   permission: String!
   user: String!
@@ -17,6 +18,7 @@ input PermissionSetInput {
 }
 
 type Permission {
+  roleName: String!
   id: ID!
   course: String!
   permission: String!

@@ -11,4 +11,4 @@ import { PermissionResolver } from './permission.resolver';
   providers: [PermissionService, RoleService, PermissionResolver],
   exports: [PermissionService, RoleService],
 })
-export class PermissionModule {}
+export class PermissionModule { }

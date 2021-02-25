@@ -18,6 +18,7 @@ export class SignInInput {
 }
 
 export class PermissionSetInput {
+    roleName: string;
     course: string;
     permission: string;
     user: string;
@@ -69,11 +70,12 @@ export class AuthPayload {
 export class PermissionMutation {
     __typename?: 'PermissionMutation';
     setPermission: Permission;
-    deletePermission: Permission;
+    deletePermission: boolean;
 }
 
 export class Permission {
     __typename?: 'Permission';
+    roleName: string;
     id: string;
     course: string;
     permission: string;
