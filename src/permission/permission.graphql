@@ -1,3 +1,11 @@
+type Mutation {
+  permissionMutation: PermissionMutation
+}
+
+type PermissionMutation {
+  setPermission(id: ID, data: PermissionSetInput!): Permission!
+  deletePermission(id: ID!): Permission!
+}
 
 input PermissionSetInput {
   course: String!
@@ -17,16 +25,6 @@ type Permission {
   notification: String!
   instructor: String!
 }
-
-type PermissionMutation {
-  setPermission(id: ID, data: PermissionSetInput): Permission
-  deletePermission(id: ID!): Permission
-}
-
-type Mutation {
-  PermissionMutation: PermissionMutation!
-}
-
 # type Query {
 #   PermissionQuery: {
 #     getAllPermissions: [Permission!]

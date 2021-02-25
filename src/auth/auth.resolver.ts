@@ -9,11 +9,16 @@ export class AuthResolver {
   constructor(
     private adminUserService: AdminUserService,
     private tokenService: TokenService,
-    private passwordService: PasswordService
-  ) { }
+    private passwordService: PasswordService,
+  ) {}
+
+  @Mutation()
+  authMutation() {
+    return {};
+  }
 
   @ResolveField()
-  async signUp (@Args('data') data: SignUpInput): Promise<AuthPayload> {
+  async signUp(@Args('data') data: SignUpInput): Promise<AuthPayload> {
     const user = await this.adminUserService.createUserBySignup({ ...data });
     return {
       token: this.tokenService.createToken({ ...user }),
@@ -23,15 +28,14 @@ export class AuthResolver {
   }
 
   @ResolveField()
-  async signIn (@Args('data') data: SignInInput): Promise<AuthPayload> {
+  async signIn(@Args('data') data: SignInInput): Promise<AuthPayload> {
     const user = await this.adminUserService.findUserByEmail(data.email);
-    console.log('sign in');
 
     if (!user) {
-      throw Error('User is not existed')
+      throw Error('User is not existed');
     }
     if (!this.passwordService.compare(data.password, user.password)) {
-      throw Error('Invalid password')
+      throw Error('Invalid password');
     }
 
     return {

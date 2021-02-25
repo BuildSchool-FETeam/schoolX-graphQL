@@ -48,9 +48,9 @@ export abstract class IQuery {
 export abstract class IMutation {
     __typename?: 'IMutation';
 
-    abstract AuthOperator(data: SignInInput): AuthMutation | Promise<AuthMutation>;
+    abstract authMutation(): AuthMutation | Promise<AuthMutation>;
 
-    abstract PermissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+    abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
 }
 
 export class AuthMutation {
@@ -66,6 +66,12 @@ export class AuthPayload {
     role: string;
 }
 
+export class PermissionMutation {
+    __typename?: 'PermissionMutation';
+    setPermission: Permission;
+    deletePermission: Permission;
+}
+
 export class Permission {
     __typename?: 'Permission';
     id: string;
@@ -75,10 +81,4 @@ export class Permission {
     blog: string;
     notification: string;
     instructor: string;
-}
-
-export class PermissionMutation {
-    __typename?: 'PermissionMutation';
-    setPermission?: Permission;
-    deletePermission?: Permission;
 }

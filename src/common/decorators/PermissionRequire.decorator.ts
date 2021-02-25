@@ -1,20 +1,6 @@
-import { SetMetadata } from "@nestjs/common";
-
-enum Resource {
-  course = 'course',
-  permission = 'permission',
-  user = 'user',
-  blog = 'blog',
-  notification = 'notification',
-  instructor = 'instructor',
-}
-
-enum ResourceAction {
-  C = 'C',
-  R = 'R',
-  U = 'U',
-  D = 'D',
-}
+import { SetMetadata } from '@nestjs/common';
+import { Resource } from '../enums/resource.enum';
+import { ResourceAction } from '../enums/resourceAction.enum';
 
 type PermissionRequire = {
   [key in Resource]: ResourceAction[];
@@ -22,4 +8,5 @@ type PermissionRequire = {
 
 export const PERMISSION_REQUIRE_KEY = 'PermissionRequire';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const PermissionRequire = (permission: PermissionRequire) => SetMetadata(PERMISSION_REQUIRE_KEY, permission)
+export const PermissionRequire = (permission: PermissionRequire) =>
+  SetMetadata(PERMISSION_REQUIRE_KEY, permission);
