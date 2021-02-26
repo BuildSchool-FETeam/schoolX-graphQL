@@ -1,7 +1,7 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class CascadeDelete1614248654869 implements MigrationInterface {
-    name = 'CascadeDelete1614248654869'
+export class CreateApp1614263807315 implements MigrationInterface {
+    name = 'CreateApp1614263807315'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "permission_set" ("id" SERIAL NOT NULL, "course" character varying NOT NULL, "user" character varying NOT NULL, "blog" character varying NOT NULL, "instructor" character varying NOT NULL, "permission" character varying NOT NULL, "notification" character varying NOT NULL, CONSTRAINT "PK_40c60f41127ea51a22e63d291f9" PRIMARY KEY ("id"))`);

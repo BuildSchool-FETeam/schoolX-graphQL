@@ -2,17 +2,26 @@
 #   setAdminUser(id: ID, data: ) {}
 # }
 
-# input AdminUserData {
-#   email: String!
-#   name: String!
-#   role: String!
-# }
+input AdminUserSetInput {
+  email: String!
+  name: String!
+  role: String!
+  password: String!
+}
+
+type Mutation {
+  adminUserMutation: AdminUserMutation
+}
+
+type AdminUserMutation {
+  setAdminUser(id: ID, data: AdminUserSetInput!): AdminUser!
+  deleteAdminUser(id: ID!): Boolean
+}
 
 type AdminUser {
   id: ID!
   email: String!
   name: String!
-  passwordHash: String!
   role: String!
   createBy: AdminUser
   createdAt: String!

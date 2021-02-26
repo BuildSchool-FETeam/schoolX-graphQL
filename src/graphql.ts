@@ -6,6 +6,13 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class AdminUserSetInput {
+    email: string;
+    name: string;
+    role: string;
+    password: string;
+}
+
 export class SignUpInput {
     email: string;
     name: string;
@@ -27,12 +34,27 @@ export class PermissionSetInput {
     instructor: string;
 }
 
+export abstract class IMutation {
+    __typename?: 'IMutation';
+
+    abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
+
+    abstract authMutation(): AuthMutation | Promise<AuthMutation>;
+
+    abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+}
+
+export class AdminUserMutation {
+    __typename?: 'AdminUserMutation';
+    setAdminUser: AdminUser;
+    deleteAdminUser?: boolean;
+}
+
 export class AdminUser {
     __typename?: 'AdminUser';
     id: string;
     email: string;
     name: string;
-    passwordHash: string;
     role: string;
     createBy?: AdminUser;
     createdAt: string;
@@ -44,14 +66,8 @@ export abstract class IQuery {
     abstract heartBeat(): string | Promise<string>;
 
     abstract heartBeatWithAuth(): string | Promise<string>;
-}
 
-export abstract class IMutation {
-    __typename?: 'IMutation';
-
-    abstract authMutation(): AuthMutation | Promise<AuthMutation>;
-
-    abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+    abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
 
 export class AuthMutation {
@@ -83,4 +99,10 @@ export class Permission {
     blog: string;
     notification: string;
     instructor: string;
+}
+
+export class PermissionQuery {
+    __typename?: 'PermissionQuery';
+    getAllPermissions?: Permission[];
+    getPermissionById: Permission;
 }

@@ -22,9 +22,11 @@ export class AdminUser {
   @Column()
   password: string;
 
-  @ManyToOne(() => Role, role => role.adminUser)
+  @ManyToOne(() => Role, (role) => role.adminUser, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
-    name: 'role'
+    name: 'role',
   })
   role: Role;
 }

@@ -27,9 +27,12 @@ type Permission {
   notification: String!
   instructor: String!
 }
-# type Query {
-#   PermissionQuery: {
-#     getAllPermissions: [Permission!]
-#     getPermissionById(id: ID!): Permission!
-#   }
-# }
+
+type Query {
+  permissionQuery: PermissionQuery!
+}
+
+type PermissionQuery {
+  getAllPermissions: [Permission!]
+  getPermissionById(id: ID!): Permission!
+}
