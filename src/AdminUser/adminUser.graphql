@@ -1,6 +1,6 @@
-# type Query {
-#   setAdminUser(id: ID, data: ) {}
-# }
+type Query {
+  adminUserQuery: AdminUserQuery
+}
 
 input AdminUserSetInput {
   email: String!
@@ -11,6 +11,11 @@ input AdminUserSetInput {
 
 type Mutation {
   adminUserMutation: AdminUserMutation
+}
+
+type AdminUserQuery {
+  getAllAdminUsers: [AdminUser]
+  getAdminUserById(id: ID!): AdminUser!
 }
 
 type AdminUserMutation {

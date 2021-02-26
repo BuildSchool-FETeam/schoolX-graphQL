@@ -1,55 +1,43 @@
-import { RoleService } from './services/role.service';
 import { Mutation, Resolver, Args, ResolveField } from '@nestjs/graphql';
-import { Permission, PermissionSetInput } from 'src/graphql';
+import { PermissionSetInput } from 'src/graphql';
 import { PermissionService } from './services/permission.service';
-import * as _ from 'lodash';
 import { PermissionSet } from './entities/Permission.entity';
-import { Role } from './entities/Role.entity';
 
 @Resolver('PermissionMutation')
 export class PermissionMutationResolver {
   constructor(
     private permissionService: PermissionService,
-    private roleService: RoleService,
-  ) {}
+  ) { }
 
   @Mutation()
-  permissionMutation() {
+  permissionMutation () {
     return {};
   }
 
   @ResolveField()
-  async setPermission(
+  async setPermission (
     @Args('data') data: PermissionSetInput,
     @Args('id') id: string,
   ) {
-    let savedPermission: PermissionSet;
-    const permissionSetWithoutName = _.omit(data, 'roleName') as Permission;
-    let role: Role;
-
+    let result: {
+      name: string;
+      permissionSet: PermissionSet;
+    }
     if (!id) {
-      savedPermission = await this.permissionService.createPermission({
-        ...permissionSetWithoutName,
-      });
-      role = await this.roleService.createRole(data.roleName, savedPermission);
+      result = await this.permissionService.createPermission(data)
     } else {
-      savedPermission = await this.permissionService.updatePermission(id, {
-        ...permissionSetWithoutName,
-      });
-      role = (
-        await this.roleService.findRoles({ relations: ['permissionSet'] })
-      )[0];
+      result = await this.permissionService.updatePermission(id, data);
     }
 
     return {
-      ...savedPermission,
-      roleName: role.name,
+      ...result.permissionSet,
+      roleName: result.name
     };
   }
 
   @ResolveField()
-  async deletePermission(@Args('id') id: string) {
-    const permissions = await this.permissionService.deletePermission(id);
+  async deletePermission (@Args('id') id: string) {
+    const permissions = await this.permissionService.deleteOneById(id);
     return !!permissions;
   }
 }

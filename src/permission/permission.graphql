@@ -33,6 +33,6 @@ type Query {
 }
 
 type PermissionQuery {
-  getAllPermissions: [Permission!]
-  getPermissionById(id: ID!): Permission!
+  getAllPermissions: [Permission]
+  getPermissionById(id: ID!): Permission
 }

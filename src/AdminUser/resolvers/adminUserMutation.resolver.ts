@@ -1,19 +1,19 @@
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { AdminUserSetInput } from 'src/graphql';
-import { AdminUser } from './AdminUser.entity';
-import { AdminUserService } from './services/AdminUser.service';
+import { AdminUser } from '../AdminUser.entity';
+import { AdminUserService } from '../services/AdminUser.service';
 
 @Resolver('AdminUserMutation')
 export class AdminUserMutationResolver {
-  constructor(private adminUserService: AdminUserService) {}
+  constructor(private adminUserService: AdminUserService) { }
 
   @Mutation()
-  adminUserMutation() {
+  adminUserMutation () {
     return {};
   }
 
   @ResolveField()
-  async setAdminUser(
+  async setAdminUser (
     @Args('data') data: AdminUserSetInput,
     @Args('id') id?: string,
   ) {
@@ -28,5 +28,14 @@ export class AdminUserMutationResolver {
       ...user,
       role: user.role.name,
     };
+  }
+
+  @ResolveField()
+  async deleteAdminUser (
+    @Args('id') id?: string,
+  ) {
+    const result = await this.adminUserService.deleteOneById(id);
+
+    return !!result;
   }
 }

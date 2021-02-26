@@ -34,6 +34,18 @@ export class PermissionSetInput {
     instructor: string;
 }
 
+export abstract class IQuery {
+    __typename?: 'IQuery';
+
+    abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
+
+    abstract heartBeat(): string | Promise<string>;
+
+    abstract heartBeatWithAuth(): string | Promise<string>;
+
+    abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
+}
+
 export abstract class IMutation {
     __typename?: 'IMutation';
 
@@ -42,6 +54,12 @@ export abstract class IMutation {
     abstract authMutation(): AuthMutation | Promise<AuthMutation>;
 
     abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+}
+
+export class AdminUserQuery {
+    __typename?: 'AdminUserQuery';
+    getAllAdminUsers?: AdminUser[];
+    getAdminUserById: AdminUser;
 }
 
 export class AdminUserMutation {
@@ -58,16 +76,6 @@ export class AdminUser {
     role: string;
     createBy?: AdminUser;
     createdAt: string;
-}
-
-export abstract class IQuery {
-    __typename?: 'IQuery';
-
-    abstract heartBeat(): string | Promise<string>;
-
-    abstract heartBeatWithAuth(): string | Promise<string>;
-
-    abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
 
 export class AuthMutation {
@@ -104,5 +112,5 @@ export class Permission {
 export class PermissionQuery {
     __typename?: 'PermissionQuery';
     getAllPermissions?: Permission[];
-    getPermissionById: Permission;
+    getPermissionById?: Permission;
 }

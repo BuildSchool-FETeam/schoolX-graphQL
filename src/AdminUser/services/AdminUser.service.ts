@@ -1,3 +1,4 @@
+import { BaseService } from 'src/common/services/base.service';
 import { RoleService } from '../../permission/services/role.service';
 import { PermissionService } from '../../permission/services/permission.service';
 import {
@@ -7,26 +8,28 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PasswordService } from 'src/common/services/password.service';
-import { Repository, FindManyOptions } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AdminUser } from '../AdminUser.entity';
 import { AdminUserSetInput } from 'src/graphql';
 import * as _ from 'lodash';
 
 @Injectable()
-export class AdminUserService {
+export class AdminUserService extends BaseService<AdminUser> {
   constructor(
     @InjectRepository(AdminUser)
     private userRepo: Repository<AdminUser>,
     private passwordService: PasswordService,
     private permissionService: PermissionService,
     private roleService: RoleService,
-  ) {}
+  ) {
+    super(userRepo)
+  }
 
-  async createUserBySignup(data: Partial<AdminUser>) {
+  async createUserBySignup (data: Partial<AdminUser>) {
     const userCount = await this.userRepo.count();
 
     if (userCount > 0) {
-      throw new Error('Only have one admin created by this way');
+      throw new BadRequestException('Only have one admin created by this way');
     }
     const permissionSet = await this.permissionService.createAdminPermission();
     const role = await this.roleService.createAdminRole(permissionSet);
@@ -39,17 +42,17 @@ export class AdminUserService {
     return this.userRepo.save(user);
   }
 
-  async createUser(data: AdminUserSetInput) {
+  async createUser (data: AdminUserSetInput) {
     const { name, email, password, role } = data;
-    const existedRole = await this.roleService.findRoleByOption(role);
+    const existedRole = await this.roleService.findRoleByName(role);
 
-    if (!role) {
-      throw new BadRequestException('This role is not existed');
+    if (!existedRole) {
+      throw new NotFoundException('This role is not existed');
     }
     const existedUser = await this.userRepo.find({ email });
 
     if (existedUser.length > 0) {
-      throw new BadRequestException('This user email has been taken!');
+      throw new NotFoundException('This user email has been taken!');
     }
     const user = this.userRepo.create({
       email,
@@ -61,9 +64,14 @@ export class AdminUserService {
     return this.userRepo.save(user);
   }
 
-  async updateUser(id: string, data: AdminUserSetInput) {
+  async updateUser (id: string, data: AdminUserSetInput) {
     const user = await this.userRepo.findOne(id);
+    const role = await this.roleService.findRoleByName(data.role);
 
+    if (!role) {
+      throw new NotFoundException('Role not found')
+    }
+    user.role = role;
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -74,15 +82,7 @@ export class AdminUserService {
     return this.userRepo.save(user);
   }
 
-  async findUserById(id: string) {
-    return this.userRepo.findOne(id);
-  }
-
-  async findUserByEmail(email: string) {
+  async findUserByEmail (email: string) {
     return this.userRepo.findOne({ email }, { relations: ['role'] });
-  }
-
-  async findAllUser(options?: FindManyOptions<AdminUser>) {
-    return this.userRepo.find(options);
   }
 }

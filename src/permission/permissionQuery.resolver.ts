@@ -3,16 +3,16 @@ import { PermissionService } from './services/permission.service';
 
 @Resolver('PermissionQuery')
 export class PermissionQueryResolver {
-  constructor(private permissionService: PermissionService) {}
+  constructor(private permissionService: PermissionService) { }
 
   @Query()
-  permissionQuery() {
+  permissionQuery () {
     return {};
   }
 
   @ResolveField()
-  async getAllPermissions() {
-    const permissions = await this.permissionService.getPermissions({
+  async getAllPermissions () {
+    const permissions = await this.permissionService.findWithOptions({
       relations: ['role'],
     });
     return permissions.map((item) => {
@@ -24,8 +24,8 @@ export class PermissionQueryResolver {
   }
 
   @ResolveField()
-  async getPermissionById(@Args('id') id: string) {
-    const permission = await this.permissionService.getPermissionById(id, {
+  async getPermissionById (@Args('id') id: string) {
+    const permission = await this.permissionService.findById(id, {
       relations: ['role'],
     });
     return {
