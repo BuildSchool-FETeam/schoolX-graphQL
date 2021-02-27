@@ -7,6 +7,16 @@ type PermissionMutation {
   deletePermission(id: ID!): Boolean!
 }
 
+type Query {
+  permissionQuery: PermissionQuery!
+}
+
+type PermissionQuery {
+  getAllPermissions: [Permission]
+  getPermissionById(id: ID!): Permission
+  getPermissionByRole(roleName: String!): Permission
+}
+
 input PermissionSetInput {
   roleName: String!
   course: String!
@@ -26,13 +36,4 @@ type Permission {
   blog: String!
   notification: String!
   instructor: String!
-}
-
-type Query {
-  permissionQuery: PermissionQuery!
-}
-
-type PermissionQuery {
-  getAllPermissions: [Permission]
-  getPermissionById(id: ID!): Permission
 }

@@ -13,12 +13,12 @@ export class PermissionService extends BaseService<PermissionSet> {
   constructor(
     @InjectRepository(PermissionSet)
     private permissionRepo: Repository<PermissionSet>,
-    private roleService: RoleService
+    private roleService: RoleService,
   ) {
-    super(permissionRepo)
+    super(permissionRepo);
   }
 
-  createAdminPermission () {
+  createAdminPermission() {
     const fullPerm = 'CRUD'.split('').join('|');
     const permissionSet = this.permissionRepo.create({
       course: fullPerm,
@@ -32,9 +32,9 @@ export class PermissionService extends BaseService<PermissionSet> {
     return this.permissionRepo.save(permissionSet);
   }
 
-  async createPermission (input: PermissionSetInput) {
-    const inputWithoutName = _.omit(input, 'roleName')
-    const role = await this.roleService.createRole(input.roleName)
+  async createPermission(input: PermissionSetInput) {
+    const inputWithoutName = _.omit(input, 'roleName');
+    const role = await this.roleService.createRole(input.roleName);
     const perSet = this.permissionRepo.create({
       ...inputWithoutName,
     });
@@ -44,15 +44,17 @@ export class PermissionService extends BaseService<PermissionSet> {
     await this.permissionRepo.save(perSet);
     return {
       name: role.name,
-      permissionSet: perSet
-    }
+      permissionSet: perSet,
+    };
   }
 
-  async updatePermission (id: string, input: PermissionSetInput) {
-    const permissionSet = await this.permissionRepo.findOne(id, { relations: ['role'] });
+  async updatePermission(id: string, input: PermissionSetInput) {
+    const permissionSet = await this.permissionRepo.findOne(id, {
+      relations: ['role'],
+    });
 
     if (!permissionSet) {
-      throw new NotFoundException(`Resource with id "${id}" not found`)
+      throw new NotFoundException(`Resource with id "${id}" not found`);
     }
     await this.roleService.updateRole(permissionSet.role.name, input.roleName);
     _.forOwn(_.omit(input, 'roleName'), (value, key: Resource) => {
@@ -62,7 +64,16 @@ export class PermissionService extends BaseService<PermissionSet> {
     const savedData = await this.permissionRepo.save(permissionSet);
     return {
       name: input.roleName,
-      permissionSet: savedData
-    }
+      permissionSet: savedData,
+    };
+  }
+
+  async getPermissionByRole(roleName: string) {
+    return this.permissionRepo
+      .createQueryBuilder('perm')
+      .innerJoinAndSelect('perm.role', 'role', 'role.name = :name', {
+        name: roleName,
+      })
+      .getOne();
   }
 }

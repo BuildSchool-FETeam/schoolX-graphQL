@@ -97,6 +97,13 @@ export class PermissionMutation {
     deletePermission: boolean;
 }
 
+export class PermissionQuery {
+    __typename?: 'PermissionQuery';
+    getAllPermissions?: Permission[];
+    getPermissionById?: Permission;
+    getPermissionByRole?: Permission;
+}
+
 export class Permission {
     __typename?: 'Permission';
     roleName: string;
@@ -107,10 +114,4 @@ export class Permission {
     blog: string;
     notification: string;
     instructor: string;
-}
-
-export class PermissionQuery {
-    __typename?: 'PermissionQuery';
-    getAllPermissions?: Permission[];
-    getPermissionById?: Permission;
 }

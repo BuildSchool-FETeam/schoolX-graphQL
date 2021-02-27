@@ -6,6 +6,9 @@ import { AuthModule } from './auth/Auth.module';
 import { HeartBeat as HeartBeatModule } from './HeartBeat/HeartBeat.module';
 import { PermissionModule } from './permission/permission.module';
 import { AdminUserModule } from './AdminUser/AdminUser.module';
+import { APP_GUARD } from '@nestjs/core';
+import { PermissionGuard } from './common/guards/permission.guard';
+import { CommonModule } from './common/Common.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -17,7 +20,8 @@ const graphQLModuleInit = GraphQLModule.forRoot({
   },
   cors: {
     origin: 'http://localhost:3000',
-  }
+  },
+  fieldResolverEnhancers: ['guards'],
 });
 
 const typeORMModuleInit = TypeOrmModule.forRoot();
@@ -30,6 +34,13 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     AuthModule,
     AdminUserModule,
     PermissionModule,
+    CommonModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: PermissionGuard,
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}

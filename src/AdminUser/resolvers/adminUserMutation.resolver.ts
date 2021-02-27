@@ -1,19 +1,21 @@
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AdminUserSetInput } from 'src/graphql';
 import { AdminUser } from '../AdminUser.entity';
 import { AdminUserService } from '../services/AdminUser.service';
 
 @Resolver('AdminUserMutation')
 export class AdminUserMutationResolver {
-  constructor(private adminUserService: AdminUserService) { }
+  constructor(private adminUserService: AdminUserService) {}
 
   @Mutation()
-  adminUserMutation () {
+  adminUserMutation() {
     return {};
   }
 
+  @PermissionRequire({ user: ['C', 'R'] })
   @ResolveField()
-  async setAdminUser (
+  async setAdminUser(
     @Args('data') data: AdminUserSetInput,
     @Args('id') id?: string,
   ) {
@@ -30,10 +32,9 @@ export class AdminUserMutationResolver {
     };
   }
 
+  @PermissionRequire({ user: ['D'] })
   @ResolveField()
-  async deleteAdminUser (
-    @Args('id') id?: string,
-  ) {
+  async deleteAdminUser(@Args('id') id?: string) {
     const result = await this.adminUserService.deleteOneById(id);
 
     return !!result;
