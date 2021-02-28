@@ -6,7 +6,7 @@ input AdminUserSetInput {
   email: String!
   name: String!
   role: String!
-  password: String!
+  password: String
 }
 
 type Mutation {

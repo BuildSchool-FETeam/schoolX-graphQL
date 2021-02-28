@@ -1,7 +1,7 @@
 import { Mutation, Resolver, Args, ResolveField } from '@nestjs/graphql';
 import { PermissionSetInput } from 'src/graphql';
-import { PermissionService } from './services/permission.service';
-import { PermissionSet } from './entities/Permission.entity';
+import { PermissionService } from '../services/permission.service';
+import { PermissionSet } from '../entities/Permission.entity';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
@@ -29,7 +29,7 @@ export class PermissionMutationResolver {
     };
     if (!this.isRightFormat(data)) {
       throw new BadRequestException(
-        'Wrong format with permission, it should like this "C|R|U|D"',
+        'Wrong format with permission, it should be like this "C|R|U|D|S" or "R" or ""(nothing)"',
       );
     }
     if (!id) {
@@ -52,8 +52,8 @@ export class PermissionMutationResolver {
   }
 
   private isRightFormat(perm: PermissionSetInput) {
-    const pattern_1 = /^[CRUD]{1}$/;
-    const pattern_2 = /^[CRUD]{1}(\|[CRUD]){1,3}$/;
+    const pattern_1 = /^[CRUDS]{0,1}$/;
+    const pattern_2 = /^[CRUDS]{1}(\|[CRUDS]){1,3}$/;
 
     const permissionSetOnly = _.omit(perm, 'roleName');
 

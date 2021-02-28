@@ -22,10 +22,10 @@ export class AdminUserService extends BaseService<AdminUser> {
     private permissionService: PermissionService,
     private roleService: RoleService,
   ) {
-    super(userRepo)
+    super(userRepo);
   }
 
-  async createUserBySignup (data: Partial<AdminUser>) {
+  async createUserBySignup(data: Partial<AdminUser>) {
     const userCount = await this.userRepo.count();
 
     if (userCount > 0) {
@@ -42,7 +42,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     return this.userRepo.save(user);
   }
 
-  async createUser (data: AdminUserSetInput) {
+  async createUser(data: AdminUserSetInput) {
     const { name, email, password, role } = data;
     const existedRole = await this.roleService.findRoleByName(role);
 
@@ -54,6 +54,13 @@ export class AdminUserService extends BaseService<AdminUser> {
     if (existedUser.length > 0) {
       throw new NotFoundException('This user email has been taken!');
     }
+
+    if (!data.password) {
+      throw new BadRequestException(
+        'Cannot create an adminUser without password',
+      );
+    }
+
     const user = this.userRepo.create({
       email,
       name,
@@ -64,25 +71,29 @@ export class AdminUserService extends BaseService<AdminUser> {
     return this.userRepo.save(user);
   }
 
-  async updateUser (id: string, data: AdminUserSetInput) {
+  async updateUser(id: string, data: AdminUserSetInput) {
     const user = await this.userRepo.findOne(id);
     const role = await this.roleService.findRoleByName(data.role);
 
     if (!role) {
-      throw new NotFoundException('Role not found')
+      throw new NotFoundException('Role not found');
     }
-    user.role = role;
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    _.forOwn(user, (value, key) => {
-      data[key] = value;
+    _.forOwn(data, (value, key) => {
+      if (key === 'password' && value) {
+        user[key] = this.passwordService.hash(key);
+      } else {
+        user[key] = value;
+      }
     });
+    user.role = role;
 
     return this.userRepo.save(user);
   }
 
-  async findUserByEmail (email: string) {
+  async findUserByEmail(email: string) {
     return this.userRepo.findOne({ email }, { relations: ['role'] });
   }
 }

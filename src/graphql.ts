@@ -10,7 +10,7 @@ export class AdminUserSetInput {
     email: string;
     name: string;
     role: string;
-    password: string;
+    password?: string;
 }
 
 export class SignUpInput {

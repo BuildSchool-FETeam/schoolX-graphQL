@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, ResolveField, Args } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
-import { PermissionService } from './services/permission.service';
+import { PermissionService } from '../services/permission.service';
 
 @UseGuards(AuthGuard)
 @Resolver('PermissionQuery')

@@ -4,9 +4,9 @@ import { forwardRef, Module } from '@nestjs/common';
 import { PermissionService } from './services/permission.service';
 import { RoleService } from './services/role.service';
 import { Role } from './entities/Role.entity';
-import { PermissionMutationResolver } from './permissionMutation.resolver';
-import { PermissionQueryResolver } from './permissionQuery.resolver';
+import { PermissionMutationResolver } from './resolvers/permissionMutation.resolver';
 import { CommonModule } from 'src/common/Common.module';
+import { PermissionQueryResolver } from './resolvers/permissionQuery.resolver';
 
 @Module({
   imports: [
