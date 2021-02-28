@@ -1,4 +1,8 @@
 type Mutation {
+  authMutation: AuthMutation!
+}
+
+type AuthMutation {
   signUp(data: SignUpInput!): AuthPayload!
   signIn(data: SignInInput!): AuthPayload!
 }

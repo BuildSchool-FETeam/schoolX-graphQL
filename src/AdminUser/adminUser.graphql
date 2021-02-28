@@ -1,9 +1,33 @@
-type User {
+type Query {
+  adminUserQuery: AdminUserQuery
+}
+
+input AdminUserSetInput {
+  email: String!
+  name: String!
+  role: String!
+  password: String
+}
+
+type Mutation {
+  adminUserMutation: AdminUserMutation
+}
+
+type AdminUserQuery {
+  getAllAdminUsers: [AdminUser]
+  getAdminUserById(id: ID!): AdminUser!
+}
+
+type AdminUserMutation {
+  setAdminUser(id: ID, data: AdminUserSetInput!): AdminUser!
+  deleteAdminUser(id: ID!): Boolean
+}
+
+type AdminUser {
   id: ID!
   email: String!
   name: String!
-  passwordHash: String!
   role: String!
-  createBy: User
+  createBy: AdminUser
   createdAt: String!
 }

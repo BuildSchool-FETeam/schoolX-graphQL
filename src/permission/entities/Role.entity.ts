@@ -1,6 +1,8 @@
+import { AdminUser } from 'src/AdminUser/AdminUser.entity';
 import {
   Entity,
   JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
@@ -11,7 +13,14 @@ export class Role {
   @PrimaryColumn({ unique: true })
   name: string;
 
-  @OneToOne(() => PermissionSet)
+  @OneToOne(() => PermissionSet, permissionSet => permissionSet.role, {
+    onDelete: 'CASCADE'
+  })
   @JoinColumn()
   permissionSet: PermissionSet;
+
+  @OneToMany(() => AdminUser, adminUser => adminUser.role, {
+    onDelete: 'CASCADE'
+  })
+  adminUser: AdminUser
 }

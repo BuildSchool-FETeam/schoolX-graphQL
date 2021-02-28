@@ -6,6 +6,13 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export class AdminUserSetInput {
+    email: string;
+    name: string;
+    role: string;
+    password?: string;
+}
+
 export class SignUpInput {
     email: string;
     name: string;
@@ -17,31 +24,64 @@ export class SignInInput {
     password: string;
 }
 
-export class User {
-    __typename?: 'User';
-    id: string;
-    email: string;
-    name: string;
-    passwordHash: string;
-    role: string;
-    createBy?: User;
-    createdAt: string;
+export class PermissionSetInput {
+    roleName: string;
+    course: string;
+    permission: string;
+    user: string;
+    blog: string;
+    notification: string;
+    instructor: string;
 }
 
 export abstract class IQuery {
     __typename?: 'IQuery';
 
+    abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
+
     abstract heartBeat(): string | Promise<string>;
 
     abstract heartBeatWithAuth(): string | Promise<string>;
+
+    abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
 
 export abstract class IMutation {
     __typename?: 'IMutation';
 
-    abstract signUp(data: SignUpInput): AuthPayload | Promise<AuthPayload>;
+    abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
 
-    abstract signIn(data: SignInInput): AuthPayload | Promise<AuthPayload>;
+    abstract authMutation(): AuthMutation | Promise<AuthMutation>;
+
+    abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+}
+
+export class AdminUserQuery {
+    __typename?: 'AdminUserQuery';
+    getAllAdminUsers?: AdminUser[];
+    getAdminUserById: AdminUser;
+}
+
+export class AdminUserMutation {
+    __typename?: 'AdminUserMutation';
+    setAdminUser: AdminUser;
+    deleteAdminUser?: boolean;
+}
+
+export class AdminUser {
+    __typename?: 'AdminUser';
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    createBy?: AdminUser;
+    createdAt: string;
+}
+
+export class AuthMutation {
+    __typename?: 'AuthMutation';
+    signUp: AuthPayload;
+    signIn: AuthPayload;
 }
 
 export class AuthPayload {
@@ -49,4 +89,29 @@ export class AuthPayload {
     token: string;
     userName: string;
     role: string;
+}
+
+export class PermissionMutation {
+    __typename?: 'PermissionMutation';
+    setPermission: Permission;
+    deletePermission: boolean;
+}
+
+export class PermissionQuery {
+    __typename?: 'PermissionQuery';
+    getAllPermissions?: Permission[];
+    getPermissionById?: Permission;
+    getPermissionByRole?: Permission;
+}
+
+export class Permission {
+    __typename?: 'Permission';
+    roleName: string;
+    id: string;
+    course: string;
+    permission: string;
+    user: string;
+    blog: string;
+    notification: string;
+    instructor: string;
 }
