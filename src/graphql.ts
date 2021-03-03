@@ -43,6 +43,8 @@ export abstract class IQuery {
 
     abstract heartBeatWithAuth(): string | Promise<string>;
 
+    abstract course(): string | Promise<string>;
+
     abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
 

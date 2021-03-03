@@ -5,7 +5,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Course } from './Course.entity';
 import { LessonDocument } from './LessonDocument.entity';
 
-Entity();
+@Entity()
 export class Lesson extends BaseEntity {
   @Column()
   videoUrl: string;

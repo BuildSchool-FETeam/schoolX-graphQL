@@ -26,7 +26,7 @@ export class Assignment extends BaseEntity {
   description: string;
 
   @Column()
-  hints: string[];
+  hints: string;
 
   @Column('float')
   score: number;
@@ -38,7 +38,7 @@ export class Assignment extends BaseEntity {
   output: string;
 
   @Column()
-  languageSupport: string[];
+  languageSupport: string;
 
   @OneToOne(() => TestCase, (testCase) => testCase.assignment)
   @JoinColumn()

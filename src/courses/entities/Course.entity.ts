@@ -1,8 +1,10 @@
-import { UserComment } from 'src/comment/entities/userComment.entity';
+import { ClientUser } from 'src/ClientUser/entities/ClientUser.entity';
+
+import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/Entity/base.entity';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
 import { Lesson } from './Lesson.entity';
 
 @Entity()
@@ -19,6 +21,9 @@ export class Course extends BaseEntity {
   @Column('int2')
   timeByHour: number;
 
+  @OneToMany(() => Lesson, (lesson) => lesson.course)
+  lessons: Lesson[];
+
   @ManyToOne(() => Instructor, (instructor) => instructor.courses)
   @JoinColumn()
   instructor: Instructor;
@@ -27,23 +32,21 @@ export class Course extends BaseEntity {
   isCompleted: boolean;
 
   @Column()
-  benefits: string[];
+  benefits: string;
 
   @Column()
-  requirements: string[];
+  requirements: string;
 
-  @Column()
-  joiningUser?: string[];
-
-  @OneToMany(() => UserComment, (cmt) => cmt.course)
-  comments: UserComment[];
-
-  @Column('int2')
-  levels: number;
+  @ManyToMany(() => ClientUser, clientUser => clientUser.courses)
+  @JoinTable()
+  joiningUsers?: string[];
 
   @OneToMany(() => Tag, (tag) => tag.course)
   tags: Tag[];
 
-  @OneToMany(() => Lesson, (lesson) => lesson.course)
-  lessons: Lesson[];
+  @Column('int2')
+  levels: number;
+
+  @OneToMany(() => UserComment, (userComment) => userComment.course)
+  comments: UserComment[];
 }

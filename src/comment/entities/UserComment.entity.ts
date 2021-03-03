@@ -1,10 +1,11 @@
 import { Assignment } from 'src/Assignment/entities/Assignment.entity';
 import { ClientUser } from 'src/ClientUser/entities/ClientUser.entity';
 import { BaseEntity } from 'src/common/Entity/base.entity';
-import { Course } from 'src/courses/entities/course.entity';
+import { Course } from '../../courses/entities/Course.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
-import { Column, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
+@Entity()
 export class UserComment extends BaseEntity {
   @ManyToOne(() => ClientUser, (clientUser) => clientUser.comments, {
     onDelete: 'CASCADE',
