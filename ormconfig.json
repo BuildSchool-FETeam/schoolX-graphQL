@@ -5,14 +5,10 @@
   "username": "postgres",
   "password": "Toan1234",
   "database": "schoolX-dev",
-  "entities": [
-    "dist/**/*.entity{.ts,.js}"
-  ],
+  "entities": ["dist/**/*.entity.js"],
   "autoLoadEntities": true,
   "migrationsTableName": "migration_table_dev",
-  "migrations": [
-    "dist/migrations/*.js"
-  ],
+  "migrations": ["dist/migrations/*.js"],
   "cli": {
     "migrationsDir": "src/migrations"
   }

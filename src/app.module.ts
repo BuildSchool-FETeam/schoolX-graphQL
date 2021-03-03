@@ -9,6 +9,11 @@ import { AdminUserModule } from './AdminUser/AdminUser.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionGuard } from './common/guards/permission.guard';
 import { CommonModule } from './common/Common.module';
+import { PermissionSet } from './permission/entities/Permission.entity';
+import { AdminUser } from './AdminUser/AdminUser.entity';
+import { Role } from './permission/entities/Role.entity';
+import { Lesson } from './courses/entities/Lesson.entity';
+import { LessonDocument } from './courses/entities/LessonDocument.entity';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],

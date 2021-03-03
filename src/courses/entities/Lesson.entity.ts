@@ -1,29 +1,33 @@
-import { BaseEntity, Column, Entity, ManyToOne } from 'typeorm';
+import { Assignment } from 'src/Assignment/entities/Assignment.entity';
+import { UserComment } from 'src/comment/entities/UserComment.entity';
+import { BaseEntity } from 'src/common/Entity/base.entity';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Course } from './Course.entity';
+import { LessonDocument } from './LessonDocument.entity';
 
-Entity()
+Entity();
 export class Lesson extends BaseEntity {
   @Column()
-  videoUrl: string
+  videoUrl: string;
 
   @Column()
-  votes: string
+  votes: string;
 
-  @Column()
-  @ManyToOne(() => Course, course => course.lessons, {
-    onDelete: 'CASCADE'
+  @ManyToOne(() => Course, (course) => course.lessons, {
+    onDelete: 'CASCADE',
   })
-  course: Course
+  @JoinColumn()
+  course: Course;
 
-  @Column()
-  comments: UserComment[]
+  @OneToMany(() => UserComment, (cmt) => cmt.lesson)
+  comments: UserComment[];
 
   @Column('varchar')
-  content: string
+  content: string;
 
-  @Column()
-  assignments: Assignment[]
+  @OneToMany(() => Assignment, (assign) => assign.lesson)
+  assignments: Assignment[];
 
-  @Column()
-  documents: LessonDocument[]
+  @OneToMany(() => LessonDocument, (doc) => doc.lesson)
+  documents: LessonDocument[];
 }

@@ -13,14 +13,14 @@ export class Role {
   @PrimaryColumn({ unique: true })
   name: string;
 
-  @OneToOne(() => PermissionSet, permissionSet => permissionSet.role, {
-    onDelete: 'CASCADE'
+  @OneToOne(() => PermissionSet, (permissionSet) => permissionSet.role, {
+    onDelete: 'CASCADE',
   })
   @JoinColumn()
   permissionSet: PermissionSet;
 
-  @OneToMany(() => AdminUser, adminUser => adminUser.role, {
-    onDelete: 'CASCADE'
+  @OneToMany(() => AdminUser, (adminUser) => adminUser.role, {
+    onDelete: 'CASCADE',
   })
-  adminUser: AdminUser
+  adminUser: AdminUser;
 }
