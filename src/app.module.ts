@@ -9,6 +9,7 @@ import { AdminUserModule } from './AdminUser/AdminUser.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionGuard } from './common/guards/permission.guard';
 import { CommonModule } from './common/Common.module';
+import { InstructorModule } from './instructor/Instructor.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -35,6 +36,7 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     AdminUserModule,
     PermissionModule,
     CommonModule,
+    InstructorModule
   ],
   providers: [
     {

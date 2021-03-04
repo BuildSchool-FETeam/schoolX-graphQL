@@ -1,3 +1,25 @@
 type Query {
-  course: String
+  courseQuery: CourseQuery
+}
+
+type CourseQuery {
+  setCourse(id: ID!, data: CourseSetInput!): CourseType
+}
+
+input CourseSetInput {
+  title: String!
+  description: String!
+  instructorId: ID!
+  benefits: [String!]!
+  requirements: [String!]!
+  # tags: [Tag!]!
+}
+
+type CourseType {
+  title: String!
+  description: String!
+  instructor: InstructorType!
+  benefits: [String!]!
+  requirements: [String!]!
+  # tags: [Tag!]!
 }

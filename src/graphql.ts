@@ -24,6 +24,24 @@ export class SignInInput {
     password: string;
 }
 
+export class CourseSetInput {
+    title: string;
+    description: string;
+    instructorId: string;
+    benefits: string[];
+    requirements: string[];
+}
+
+export class InstructorSetInput {
+    name: string;
+    title: string;
+    description: string;
+    email: string;
+    ClientUserId?: string;
+    image: FileUpload;
+    phone: string;
+}
+
 export class PermissionSetInput {
     roleName: string;
     course: string;
@@ -43,7 +61,7 @@ export abstract class IQuery {
 
     abstract heartBeatWithAuth(): string | Promise<string>;
 
-    abstract course(): string | Promise<string>;
+    abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
 
     abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
@@ -54,6 +72,8 @@ export abstract class IMutation {
     abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
 
     abstract authMutation(): AuthMutation | Promise<AuthMutation>;
+
+    abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
     abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
 }
@@ -93,6 +113,43 @@ export class AuthPayload {
     role: string;
 }
 
+export class File {
+    __typename?: 'File';
+    filename: string;
+    mimetype: string;
+    encoding: string;
+}
+
+export class CourseQuery {
+    __typename?: 'CourseQuery';
+    setCourse?: CourseType;
+}
+
+export class CourseType {
+    __typename?: 'CourseType';
+    title: string;
+    description: string;
+    instructor: InstructorType;
+    benefits: string[];
+    requirements: string[];
+}
+
+export class InstructorMutation {
+    __typename?: 'InstructorMutation';
+    setInstructor: InstructorType;
+}
+
+export class InstructorType {
+    __typename?: 'InstructorType';
+    id: string;
+    name: string;
+    title: string;
+    description: string;
+    email: string;
+    imageUrl: string;
+    phone: string;
+}
+
 export class PermissionMutation {
     __typename?: 'PermissionMutation';
     setPermission: Permission;
@@ -117,3 +174,5 @@ export class Permission {
     notification: string;
     instructor: string;
 }
+
+export type FileUpload = any;
