@@ -7,7 +7,7 @@ type Mutation {
 }
 
 type InstructorMutation {
-  setInstructor(id: ID!, data: InstructorSetInput!): InstructorType!
+  setInstructor(id: ID, data: InstructorSetInput!): InstructorType!
 }
 
 input InstructorSetInput {
@@ -19,7 +19,6 @@ input InstructorSetInput {
   image: FileUpload!
   phone: String!
 }
-
 
 type InstructorType {
   id: ID!

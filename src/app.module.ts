@@ -36,7 +36,7 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     AdminUserModule,
     PermissionModule,
     CommonModule,
-    InstructorModule
+    InstructorModule,
   ],
   providers: [
     {
@@ -45,4 +45,4 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}
