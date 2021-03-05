@@ -12,13 +12,16 @@ export class Course extends BaseEntity {
   @Column()
   description: string;
 
-  @Column('int4')
+  @Column({ nullable: true, type: 'int' })
   votes: number;
 
   @Column()
   imageUrl: string;
 
-  @Column('int2')
+  @Column()
+  filePath: string;
+
+  @Column({ nullable: true, type: 'int2' })
   timeByHour: number;
 
   @OneToMany(() => Lesson, (lesson) => lesson.course)
@@ -28,7 +31,7 @@ export class Course extends BaseEntity {
   @JoinColumn()
   instructor: Instructor;
 
-  @Column()
+  @Column({ nullable: true })
   isCompleted: boolean;
 
   @Column()
@@ -44,7 +47,7 @@ export class Course extends BaseEntity {
   @OneToMany(() => Tag, (tag) => tag.course)
   tags: Tag[];
 
-  @Column('int2')
+  @Column({ nullable: true, type: 'int' })
   levels: number;
 
   @OneToMany(() => UserComment, (userComment) => userComment.course)

@@ -30,6 +30,7 @@ export class CourseSetInput {
     instructorId: string;
     benefits: string[];
     requirements: string[];
+    image?: FileUpload;
 }
 
 export class InstructorSetInput {
@@ -38,7 +39,7 @@ export class InstructorSetInput {
     description: string;
     email: string;
     ClientUserId?: string;
-    image: FileUpload;
+    image?: FileUpload;
     phone: string;
 }
 
@@ -61,7 +62,7 @@ export abstract class IQuery {
 
     abstract heartBeatWithAuth(): string | Promise<string>;
 
-    abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
+    abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
 
     abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
@@ -72,6 +73,8 @@ export abstract class IMutation {
     abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
 
     abstract authMutation(): AuthMutation | Promise<AuthMutation>;
+
+    abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
 
     abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
@@ -120,23 +123,33 @@ export class File {
     encoding: string;
 }
 
-export class CourseQuery {
-    __typename?: 'CourseQuery';
-    setCourse?: CourseType;
+export class CourseMutation {
+    __typename?: 'CourseMutation';
+    setCourse: CourseType;
+    deleteCourse: boolean;
 }
 
 export class CourseType {
     __typename?: 'CourseType';
+    id: string;
     title: string;
     description: string;
     instructor: InstructorType;
     benefits: string[];
     requirements: string[];
+    imageUrl?: string;
+}
+
+export class InstructorQuery {
+    __typename?: 'InstructorQuery';
+    getAllInstructors: InstructorType[];
+    getInstructorById: InstructorType;
 }
 
 export class InstructorMutation {
     __typename?: 'InstructorMutation';
     setInstructor: InstructorType;
+    deleteInstructor?: boolean;
 }
 
 export class InstructorType {

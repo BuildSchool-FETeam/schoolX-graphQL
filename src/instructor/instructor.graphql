@@ -1,6 +1,11 @@
-# type Query {
-#   instructorQuery: InstructorQuery!
-# }
+type Query {
+  instructorQuery: InstructorQuery!
+}
+
+type InstructorQuery {
+  getAllInstructors: [InstructorType!]!
+  getInstructorById(id: ID!): InstructorType!
+}
 
 type Mutation {
   instructorMutation: InstructorMutation!
@@ -8,6 +13,7 @@ type Mutation {
 
 type InstructorMutation {
   setInstructor(id: ID, data: InstructorSetInput!): InstructorType!
+  deleteInstructor(id: ID!): Boolean
 }
 
 input InstructorSetInput {
@@ -16,7 +22,7 @@ input InstructorSetInput {
   description: String!
   email: String!
   ClientUserId: ID
-  image: FileUpload!
+  image: FileUpload
   phone: String!
 }
 

@@ -17,6 +17,12 @@ export class ClientUser extends BaseEntityUUID {
   @Column()
   email: string;
 
+  @Column()
+  imageUrl: string;
+
+  @Column()
+  filePath: string;
+
   @OneToMany(() => UserComment, (cmt) => cmt.author)
   comments: UserComment[];
 

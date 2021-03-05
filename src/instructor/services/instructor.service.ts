@@ -11,6 +11,7 @@ interface InstructorInput {
   title: string;
   description: string;
   imageUrl: string;
+  filePath: string;
   phone: string
   clientUserId?: string
 }

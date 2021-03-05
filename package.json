@@ -25,6 +25,7 @@
     "migrate:down": "typeorm migration:revert"
   },
   "dependencies": {
+    "@google-cloud/storage": "^5.8.1",
     "@nestjs/common": "^7.5.1",
     "@nestjs/core": "^7.5.1",
     "@nestjs/graphql": "^7.9.9",
@@ -35,7 +36,6 @@
     "@types/lodash": "^4.14.168",
     "apollo-server-express": "^2.21.0",
     "bcrypt": "^5.0.0",
-    "firebase": "^8.2.9",
     "graphql": "^15.5.0",
     "graphql-tools": "^7.0.4",
     "jsonwebtoken": "^8.5.1",

@@ -23,4 +23,10 @@ export class Instructor extends BaseEntity {
 
   @Column()
   imageUrl: string;
+
+  @Column()
+  filePath: string;
+
+  @Column()
+  phone: string
 }

@@ -1,3 +1,4 @@
+import { CourseModule } from './courses/Course.module';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -37,6 +38,7 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     PermissionModule,
     CommonModule,
     InstructorModule,
+    CourseModule
   ],
   providers: [
     {
@@ -45,4 +47,4 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

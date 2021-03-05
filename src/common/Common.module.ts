@@ -4,10 +4,11 @@ import { forwardRef, Module } from '@nestjs/common';
 import { PasswordService } from './services/password.service';
 import { PermissionModule } from 'src/permission/permission.module';
 import { FileService } from './services/file.service';
+import { GCStorageService } from './services/GCStorage.service';
 
 @Module({
   imports: [forwardRef(() => PermissionModule)],
-  providers: [PasswordService, TokenService, AuthGuard, FileService],
-  exports: [PasswordService, AuthGuard, TokenService, FileService],
+  providers: [PasswordService, TokenService, AuthGuard, FileService, GCStorageService],
+  exports: [PasswordService, AuthGuard, TokenService, FileService, GCStorageService],
 })
-export class CommonModule {}
+export class CommonModule { }

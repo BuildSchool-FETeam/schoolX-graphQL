@@ -1,9 +1,18 @@
-type Query {
-  courseQuery: CourseQuery
+# type Query {
+#   courseQuery: CourseQuery
+# }
+
+# type CourseQuery {
+#   setCourse(id: ID!, data: CourseSetInput!): CourseType
+# }
+
+type Mutation {
+  courseMutation: CourseMutation!
 }
 
-type CourseQuery {
-  setCourse(id: ID!, data: CourseSetInput!): CourseType
+type CourseMutation {
+  setCourse(id: ID, data: CourseSetInput!): CourseType!
+  deleteCourse(id: ID!): Boolean!
 }
 
 input CourseSetInput {
@@ -12,14 +21,17 @@ input CourseSetInput {
   instructorId: ID!
   benefits: [String!]!
   requirements: [String!]!
+  image: FileUpload
   # tags: [Tag!]!
 }
 
 type CourseType {
+  id: ID!
   title: String!
   description: String!
   instructor: InstructorType!
   benefits: [String!]!
   requirements: [String!]!
+  imageUrl: String
   # tags: [Tag!]!
 }
