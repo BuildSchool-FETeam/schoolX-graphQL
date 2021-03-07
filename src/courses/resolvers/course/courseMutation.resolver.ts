@@ -2,10 +2,10 @@ import { Course } from 'src/courses/entities/Course.entity';
 import {
   GCStorageService,
   StorageFolder,
-} from './../../common/services/GCStorage.service';
-import { FileUploadType } from './../../common/interfaces/ImageUpload.interface';
-import { CourseSetInput } from './../../graphql';
-import { CourseService } from './../services/course.service';
+} from 'src/common/services/GCStorage.service';
+import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
+import { CourseSetInput } from 'src/graphql';
+import { CourseService } from '../../services/course.service';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import * as _ from 'lodash';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';

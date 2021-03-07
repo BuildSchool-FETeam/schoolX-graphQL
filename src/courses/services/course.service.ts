@@ -21,7 +21,7 @@ export class CourseService extends BaseService<Course> {
     private instructorService: InstructorService,
     private tagService: TagService,
   ) {
-    super(courseRepo, 'Tag');
+    super(courseRepo, 'Course');
   }
 
   async createCourse(data: CourseDataInput) {
@@ -42,7 +42,7 @@ export class CourseService extends BaseService<Course> {
         course.tags = tags;
       })
       .then(async () => {
-        await this.updateInstructorOfCourse(course, instructorId);
+        await this.updateCourseInstructor(course, instructorId);
 
         return this.courseRepo.save(course);
       });
@@ -66,7 +66,7 @@ export class CourseService extends BaseService<Course> {
         existedCourse.tags = tags;
       })
       .then(async () => {
-        await this.updateInstructorOfCourse(existedCourse, data.instructorId);
+        await this.updateCourseInstructor(existedCourse, data.instructorId);
 
         return this.courseRepo.save(existedCourse);
       });
@@ -80,7 +80,7 @@ export class CourseService extends BaseService<Course> {
     });
   }
 
-  private async updateInstructorOfCourse(course: Course, instId: string) {
+  private async updateCourseInstructor(course: Course, instId: string) {
     const existedOne = await this.instructorService.findById(instId);
     course.instructor = existedOne;
   }

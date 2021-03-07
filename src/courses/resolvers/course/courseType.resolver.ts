@@ -1,6 +1,6 @@
-import { CourseService } from './../services/course.service';
-import { CourseType } from './../../graphql';
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { CourseService } from 'src/courses/services/course.service';
+import { CourseType } from 'src/graphql';
 
 @Resolver('CourseType')
 export class CourseTypeResolver {

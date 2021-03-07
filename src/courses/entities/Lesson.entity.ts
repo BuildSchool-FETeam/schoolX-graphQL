@@ -11,7 +11,7 @@ export class Lesson extends BaseEntity {
   videoUrl: string;
 
   @Column()
-  votes: string;
+  votes: number;
 
   @ManyToOne(() => Course, (course) => course.lessons, {
     onDelete: 'CASCADE',
@@ -19,11 +19,11 @@ export class Lesson extends BaseEntity {
   @JoinColumn()
   course: Course;
 
-  @OneToMany(() => UserComment, (cmt) => cmt.lesson)
-  comments: UserComment[];
-
   @Column('varchar')
   content: string;
+
+  @OneToMany(() => UserComment, (cmt) => cmt.lesson)
+  comments: UserComment[];
 
   @OneToMany(() => Assignment, (assign) => assign.lesson)
   assignments: Assignment[];

@@ -34,6 +34,13 @@ export class CourseSetInput {
     tags: string[];
 }
 
+export class LessonSetInput {
+    title: string;
+    videoUrl: string;
+    courseId: string;
+    content: string;
+}
+
 export class InstructorSetInput {
     name: string;
     title: string;
@@ -85,6 +92,8 @@ export abstract class IMutation {
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
 
     abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
+
+    abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
 
     abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
@@ -157,6 +166,24 @@ export class CourseType implements BaseGraphQL {
     requirements: string[];
     imageUrl?: string;
     tags: TagType[];
+}
+
+export class LessonType implements BaseGraphQL {
+    __typename?: 'LessonType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    videoUrl: string;
+    votes: number;
+    course: CourseType;
+    content: string;
+}
+
+export class LessonMutation {
+    __typename?: 'LessonMutation';
+    setLesson: LessonType;
+    deleteLesson: boolean;
 }
 
 export class InstructorQuery {
