@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { AdminUser } from 'src/AdminUser/AdminUser.entity';
+import { EnvVariable } from '../interfaces/EnvVariable.interface';
 
 @Injectable()
 export class TokenService {
-  private readonly privateKey = 'Yasuoganktem20gg';
+  private readonly privateKey: string;
   private readonly expirationTime = '8h';
+
+  constructor(private configService: ConfigService<EnvVariable>) {
+    this.privateKey = this.configService.get('JWT_SECRET');
+  }
 
   createToken(data: AdminUser) {
     const token = jwt.sign(data, this.privateKey, {

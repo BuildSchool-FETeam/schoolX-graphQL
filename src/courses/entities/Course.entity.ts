@@ -4,7 +4,15 @@ import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/Entity/base.entity';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
 import { Tag } from 'src/tag/entities/tag.entity';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { Lesson } from './Lesson.entity';
 
 @Entity()
@@ -27,7 +35,9 @@ export class Course extends BaseEntity {
   @OneToMany(() => Lesson, (lesson) => lesson.course)
   lessons: Lesson[];
 
-  @ManyToOne(() => Instructor, (instructor) => instructor.courses)
+  @ManyToOne(() => Instructor, (instructor) => instructor.courses, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn()
   instructor: Instructor;
 
@@ -40,11 +50,11 @@ export class Course extends BaseEntity {
   @Column()
   requirements: string;
 
-  @ManyToMany(() => ClientUser, clientUser => clientUser.courses)
+  @ManyToMany(() => ClientUser, (clientUser) => clientUser.courses)
   @JoinTable()
   joiningUsers?: string[];
 
-  @OneToMany(() => Tag, (tag) => tag.course)
+  @ManyToMany(() => Tag, (tag) => tag.courses)
   tags: Tag[];
 
   @Column({ nullable: true, type: 'int' })

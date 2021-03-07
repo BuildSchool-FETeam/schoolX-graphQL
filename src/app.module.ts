@@ -11,6 +11,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { PermissionGuard } from './common/guards/permission.guard';
 import { CommonModule } from './common/Common.module';
 import { InstructorModule } from './instructor/Instructor.module';
+import { ConfigModule } from '@nestjs/config';
+import { TagModule } from './tag/tag.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -27,6 +29,9 @@ const graphQLModuleInit = GraphQLModule.forRoot({
 });
 
 const typeORMModuleInit = TypeOrmModule.forRoot();
+const EnvInitModule = ConfigModule.forRoot({
+  envFilePath: ['.env.development'],
+});
 
 @Module({
   imports: [
@@ -38,7 +43,9 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     PermissionModule,
     CommonModule,
     InstructorModule,
-    CourseModule
+    CourseModule,
+    EnvInitModule,
+    TagModule,
   ],
   providers: [
     {
@@ -47,4 +54,4 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     },
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -26,13 +26,16 @@ input InstructorSetInput {
   phone: String!
 }
 
-type InstructorType {
+type InstructorType implements BaseGraphQL {
   id: ID!
-  name: String!
   title: String!
+  createdAt: String!
+  updatedAt: String!
+  name: String!
   description: String!
   email: String!
   # clientUserId: ClientUser
   imageUrl: String!
   phone: String!
+  courses: [CourseType]!
 }

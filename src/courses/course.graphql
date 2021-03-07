@@ -1,10 +1,11 @@
-# type Query {
-#   courseQuery: CourseQuery
-# }
+type Query {
+  courseQuery: CourseQuery
+}
 
-# type CourseQuery {
-#   setCourse(id: ID!, data: CourseSetInput!): CourseType
-# }
+type CourseQuery {
+  getAllCourses: [CourseType!]!
+  getCourseById(id: ID!): CourseType!
+}
 
 type Mutation {
   courseMutation: CourseMutation!
@@ -22,16 +23,18 @@ input CourseSetInput {
   benefits: [String!]!
   requirements: [String!]!
   image: FileUpload
-  # tags: [Tag!]!
+  tags: [String!]!
 }
 
-type CourseType {
+type CourseType implements BaseGraphQL {
   id: ID!
   title: String!
+  createdAt: String!
+  updatedAt: String!
   description: String!
   instructor: InstructorType!
   benefits: [String!]!
   requirements: [String!]!
   imageUrl: String
-  # tags: [Tag!]!
+  tags: [TagType!]!
 }

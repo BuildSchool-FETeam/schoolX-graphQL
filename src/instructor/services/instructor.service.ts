@@ -12,37 +12,37 @@ interface InstructorInput {
   description: string;
   imageUrl: string;
   filePath: string;
-  phone: string
-  clientUserId?: string
+  phone: string;
+  clientUserId?: string;
 }
 
 @Injectable()
 export class InstructorService extends BaseService<Instructor> {
   constructor(
     @InjectRepository(Instructor)
-    private instructorRepo: Repository<Instructor>
+    private instructorRepo: Repository<Instructor>,
   ) {
-    super(instructorRepo)
+    super(instructorRepo, 'Instructor');
   }
 
-  createInstructor (data: InstructorInput) {
+  createInstructor(data: InstructorInput) {
     const instructor = this.instructorRepo.create({
-      ...data
-    })
-    return this.instructorRepo.save(instructor)
+      ...data,
+    });
+    return this.instructorRepo.save(instructor);
   }
 
-  async updateInstructor (id: string, data: InstructorInput) {
+  async updateInstructor(id: string, data: InstructorInput) {
     const inst = await this.instructorRepo.findOne(id);
 
     if (!inst) {
-      throw new NotFoundException('Cannot found this instructor')
+      throw new NotFoundException('Cannot found this instructor');
     }
 
     _.forOwn(data, (value, key: keyof InstructorInput) => {
-      value && (inst[key] = value)
-    })
+      value && (inst[key] = value);
+    });
 
-    return this.instructorRepo.save(inst)
+    return this.instructorRepo.save(inst);
   }
 }

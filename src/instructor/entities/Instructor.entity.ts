@@ -19,7 +19,7 @@ export class Instructor extends BaseEntity {
   user?: ClientUser;
 
   @OneToMany(() => Course, (course) => course.instructor)
-  courses: string;
+  courses: Course[];
 
   @Column()
   imageUrl: string;
@@ -28,5 +28,5 @@ export class Instructor extends BaseEntity {
   filePath: string;
 
   @Column()
-  phone: string
+  phone: string;
 }

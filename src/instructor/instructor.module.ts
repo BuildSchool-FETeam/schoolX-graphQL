@@ -5,11 +5,16 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from 'src/common/Common.module';
 import { InstructorQueryResolver } from './reslovers/instructorQuery.resolver';
-import { CourseTypeResolver } from 'src/courses/resolvers/courseType.resolver';
+import { InstructorTypeResolver } from './reslovers/instructorType.resolver';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Instructor]), CommonModule],
-  providers: [InstructorService, InstructorMutationResolver, InstructorQueryResolver],
-  exports: [InstructorService]
+  providers: [
+    InstructorService,
+    InstructorMutationResolver,
+    InstructorQueryResolver,
+    InstructorTypeResolver,
+  ],
+  exports: [InstructorService],
 })
-export class InstructorModule { }
+export class InstructorModule {}

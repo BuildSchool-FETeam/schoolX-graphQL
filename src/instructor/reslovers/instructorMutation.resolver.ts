@@ -1,8 +1,9 @@
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
-import { GCStorageService, StorageFolder } from './../../common/services/GCStorage.service';
 import {
-  InstructorSetInput, InstructorType,
-} from './../../graphql';
+  GCStorageService,
+  StorageFolder,
+} from './../../common/services/GCStorage.service';
+import { InstructorSetInput } from './../../graphql';
 import { InstructorService } from './../services/instructor.service';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
@@ -12,26 +13,26 @@ import * as _ from 'lodash';
 export class InstructorMutationResolver {
   constructor(
     private instructorService: InstructorService,
-    private gcStorageService: GCStorageService
-  ) { }
+    private gcStorageService: GCStorageService,
+  ) {}
 
   @Mutation()
-  instructorMutation () {
+  instructorMutation() {
     return {};
   }
 
   @ResolveField()
-  async setInstructor (
+  async setInstructor(
     @Args('data') data: InstructorSetInput,
-    @Args('id') id?: string
-  ): Promise<InstructorType> {
+    @Args('id') id?: string,
+  ) {
     const { image } = data;
     let imageUrl = '';
     let imgPath = '';
     let existedInstructor: Instructor;
 
     if (id) {
-      existedInstructor = await this.instructorService.findById(id)
+      existedInstructor = await this.instructorService.findById(id);
     }
 
     if (image) {
@@ -44,38 +45,38 @@ export class InstructorMutationResolver {
         fileName: filename,
         readStream,
         type: StorageFolder.instructor,
-        makePublic: true
-      })
+        makePublic: true,
+      });
       imageUrl = promiseObj.publicUrl;
-      imgPath = promiseObj.filePath
+      imgPath = promiseObj.filePath;
     }
 
     const dataWithoutImg = _.omit(data, 'image');
     const savedObj = {
       ...dataWithoutImg,
       imageUrl,
-      filePath: imgPath
-    }
+      filePath: imgPath,
+    };
 
-    let ins: InstructorType
+    let ins: Instructor;
     if (!id) {
       ins = await this.instructorService.createInstructor(savedObj);
     } else {
-      ins = await this.instructorService.updateInstructor(id, savedObj)
+      ins = await this.instructorService.updateInstructor(id, savedObj);
     }
 
-    return ins
+    return ins;
   }
 
   @ResolveField()
-  async deleteInstructor (@Args('id') id: string): Promise<boolean> {
+  async deleteInstructor(@Args('id') id: string): Promise<boolean> {
     const inst = await this.instructorService.findById(id);
 
     if (inst.filePath) {
       this.gcStorageService.deleteFile(inst.filePath);
     }
 
-    await this.instructorService.deleteOneById(id)
-    return true
+    await this.instructorService.deleteOneById(id);
+    return true;
   }
 }

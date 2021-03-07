@@ -22,7 +22,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     private permissionService: PermissionService,
     private roleService: RoleService,
   ) {
-    super(userRepo);
+    super(userRepo, 'AdminUser');
   }
 
   async createUserBySignup(data: Partial<AdminUser>) {

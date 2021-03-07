@@ -31,6 +31,7 @@ export class CourseSetInput {
     benefits: string[];
     requirements: string[];
     image?: FileUpload;
+    tags: string[];
 }
 
 export class InstructorSetInput {
@@ -53,6 +54,13 @@ export class PermissionSetInput {
     instructor: string;
 }
 
+export interface BaseGraphQL {
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 export abstract class IQuery {
     __typename?: 'IQuery';
 
@@ -61,6 +69,8 @@ export abstract class IQuery {
     abstract heartBeat(): string | Promise<string>;
 
     abstract heartBeatWithAuth(): string | Promise<string>;
+
+    abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
 
     abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
 
@@ -123,21 +133,30 @@ export class File {
     encoding: string;
 }
 
+export class CourseQuery {
+    __typename?: 'CourseQuery';
+    getAllCourses: CourseType[];
+    getCourseById: CourseType;
+}
+
 export class CourseMutation {
     __typename?: 'CourseMutation';
     setCourse: CourseType;
     deleteCourse: boolean;
 }
 
-export class CourseType {
+export class CourseType implements BaseGraphQL {
     __typename?: 'CourseType';
     id: string;
     title: string;
+    createdAt: string;
+    updatedAt: string;
     description: string;
     instructor: InstructorType;
     benefits: string[];
     requirements: string[];
     imageUrl?: string;
+    tags: TagType[];
 }
 
 export class InstructorQuery {
@@ -152,15 +171,18 @@ export class InstructorMutation {
     deleteInstructor?: boolean;
 }
 
-export class InstructorType {
+export class InstructorType implements BaseGraphQL {
     __typename?: 'InstructorType';
     id: string;
-    name: string;
     title: string;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
     description: string;
     email: string;
     imageUrl: string;
     phone: string;
+    courses: CourseType[];
 }
 
 export class PermissionMutation {
@@ -186,6 +208,15 @@ export class Permission {
     blog: string;
     notification: string;
     instructor: string;
+}
+
+export class TagType implements BaseGraphQL {
+    __typename?: 'TagType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    courses: CourseType[];
 }
 
 export type FileUpload = any;

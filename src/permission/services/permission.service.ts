@@ -15,7 +15,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     private permissionRepo: Repository<PermissionSet>,
     private roleService: RoleService,
   ) {
-    super(permissionRepo);
+    super(permissionRepo, 'Permission');
   }
 
   createAdminPermission() {
