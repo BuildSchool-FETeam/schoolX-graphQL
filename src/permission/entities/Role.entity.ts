@@ -16,7 +16,6 @@ export class Role {
   @OneToOne(() => PermissionSet, (permissionSet) => permissionSet.role, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn()
   permissionSet: PermissionSet;
 
   @OneToMany(() => AdminUser, (adminUser) => adminUser.role, {

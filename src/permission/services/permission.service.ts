@@ -29,6 +29,11 @@ export class PermissionService extends BaseService<PermissionSet> {
       notification: fullPerm,
     });
 
+    // return this.permissionRepo.save(permissionSet);
+    return permissionSet;
+  }
+
+  savePermissionSet(permissionSet: PermissionSet) {
     return this.permissionRepo.save(permissionSet);
   }
 

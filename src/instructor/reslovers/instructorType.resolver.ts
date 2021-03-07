@@ -2,7 +2,10 @@ import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { CourseType, InstructorType } from 'src/graphql';
 import { InstructorService } from '../services/instructor.service';
 import * as _ from 'lodash';
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
+@UseGuards(AuthGuard)
 @Resolver('InstructorType')
 export class InstructorTypeResolver {
   constructor(private instructorService: InstructorService) {}

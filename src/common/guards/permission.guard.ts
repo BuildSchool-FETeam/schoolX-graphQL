@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import {
   PermissionRequire,
@@ -27,20 +32,23 @@ export class PermissionGuard implements CanActivate {
     if (!this.isResolve(graphQLContext)) {
       return true;
     }
-
     if (_.isNil(requirePermission)) {
       return true;
     }
-
     const validToken = this.decodeToken(graphQLContext);
 
     if (!validToken) {
       return false;
     }
-
     const userPermissions = await this.permissionService.getPermissionByRole(
       validToken.role.name,
     );
+
+    if (!userPermissions) {
+      throw new NotFoundException(
+        'Cannot found proper permission, try another one!',
+      );
+    }
 
     const validPermission = _.every(requirePermission, (value, key) => {
       const diff = _.difference(value, _.split(userPermissions[key], '|'));

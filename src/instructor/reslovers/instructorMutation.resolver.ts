@@ -8,6 +8,7 @@ import { InstructorService } from './../services/instructor.service';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import * as _ from 'lodash';
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 
 @Resolver('InstructorMutation')
 export class InstructorMutationResolver {
@@ -21,6 +22,7 @@ export class InstructorMutationResolver {
     return {};
   }
 
+  @PermissionRequire({ instructor: ['C', 'U'] })
   @ResolveField()
   async setInstructor(
     @Args('data') data: InstructorSetInput,
@@ -68,6 +70,7 @@ export class InstructorMutationResolver {
     return ins;
   }
 
+  @PermissionRequire({ instructor: ['D'] })
   @ResolveField()
   async deleteInstructor(@Args('id') id: string): Promise<boolean> {
     const inst = await this.instructorService.findById(id);

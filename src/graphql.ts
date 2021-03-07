@@ -82,7 +82,7 @@ export abstract class IMutation {
 
     abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
 
-    abstract authMutation(): AuthMutation | Promise<AuthMutation>;
+    abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
 
     abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
 
@@ -113,8 +113,8 @@ export class AdminUser {
     createdAt: string;
 }
 
-export class AuthMutation {
-    __typename?: 'AuthMutation';
+export class AdminAuthMutation {
+    __typename?: 'AdminAuthMutation';
     signUp: AuthPayload;
     signIn: AuthPayload;
 }

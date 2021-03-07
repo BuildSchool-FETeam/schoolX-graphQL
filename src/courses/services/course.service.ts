@@ -35,7 +35,7 @@ export class CourseService extends BaseService<Course> {
     });
 
     const tagsString = data.tags;
-    const tagsPromise = this.CreateTags(tagsString, course.id);
+    const tagsPromise = this.createTags(tagsString);
 
     return Promise.all(tagsPromise)
       .then((tags) => {
@@ -59,7 +59,7 @@ export class CourseService extends BaseService<Course> {
         (value && (existedCourse[key] = value));
     });
     const tagsString = data.tags;
-    const tagsPromise = this.CreateTags(tagsString, existedCourse.id);
+    const tagsPromise = this.createTags(tagsString);
 
     return Promise.all(tagsPromise)
       .then((tags) => {
@@ -72,11 +72,10 @@ export class CourseService extends BaseService<Course> {
       });
   }
 
-  private CreateTags(tags: string[], courseId: string) {
+  private createTags(tags: string[]) {
     return _.map(tags, (tag) => {
       return this.tagService.addTag({
         title: tag,
-        courseId: courseId,
       });
     });
   }

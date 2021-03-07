@@ -8,6 +8,7 @@ import { CourseSetInput } from './../../graphql';
 import { CourseService } from './../services/course.service';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import * as _ from 'lodash';
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 
 @Resolver('CourseMutation')
 export class CourseMutationResolver {
@@ -21,6 +22,7 @@ export class CourseMutationResolver {
     return {};
   }
 
+  @PermissionRequire({ course: ['C', 'U'] })
   @ResolveField()
   async setCourse(@Args('data') data: CourseSetInput, @Args('id') id?: string) {
     const { image } = data;
@@ -68,6 +70,7 @@ export class CourseMutationResolver {
     };
   }
 
+  @PermissionRequire({ course: ['D'] })
   @ResolveField()
   async deleteCourse(@Args('id') id: string) {
     const course = await this.courseService.findById(id);
