@@ -13,12 +13,12 @@ export class AdminUserQueryResolver {
   }
 
   @ResolveField()
-  getAllAdminUsers() {
+  adminUsers () {
     return this.adminUserService.findWithOptions();
   }
 
   @ResolveField()
-  getAdminUserById(@Args('id') id: string) {
+  adminUser (@Args('id') id: string) {
     return this.adminUserService.findById(id);
   }
 }

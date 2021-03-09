@@ -21,4 +21,12 @@ export class CourseTypeResolver {
     });
     return course.tags;
   }
+
+  @ResolveField()
+  async lessons (@Parent() courseParent: CourseType) {
+    const course = await this.courseService.findById(courseParent.id, {
+      relations: ['lessons'],
+    });
+    return course.lessons;
+  }
 }

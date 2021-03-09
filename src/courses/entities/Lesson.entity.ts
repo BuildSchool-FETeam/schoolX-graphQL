@@ -10,7 +10,7 @@ export class Lesson extends BaseEntity {
   @Column()
   videoUrl: string;
 
-  @Column()
+  @Column({ nullable: true, default: 0 })
   votes: number;
 
   @ManyToOne(() => Course, (course) => course.lessons, {

@@ -3,8 +3,8 @@ type Query {
 }
 
 type CourseQuery {
-  getAllCourses: [CourseType!]!
-  getCourseById(id: ID!): CourseType!
+  courses: [CourseType!]!
+  course(id: ID!): CourseType!
 }
 
 type Mutation {
@@ -37,4 +37,6 @@ type CourseType implements BaseGraphQL {
   requirements: [String!]!
   imageUrl: String
   tags: [TagType!]!
+  lessons: [LessonType]!
+  # comments: [UserCommentType]!
 }

@@ -27,6 +27,7 @@ export class LessonMutationResolver {
     };
   }
 
+  @ResolveField()
   async deleteLesson(@Args('id') id: string) {
     return this.lessonService.deleteOneById(id);
   }

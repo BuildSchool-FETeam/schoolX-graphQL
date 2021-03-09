@@ -13,12 +13,12 @@ export class InstructorQueryResolver {
     return {};
   }
 
-  @ResolveField()
+  @ResolveField('instructors')
   getAllInstructors() {
     return this.instructorService.findWithOptions();
   }
 
-  @ResolveField()
+  @ResolveField('instructor')
   getInstructorById(@Args('id') id: string) {
     return this.instructorService.findById(id);
   }

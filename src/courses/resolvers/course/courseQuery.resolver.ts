@@ -15,7 +15,7 @@ export class CourseQueryResolver {
     return {};
   }
 
-  @ResolveField()
+  @ResolveField('courses')
   async getAllCourses() {
     const courses = await this.courseService.findWithOptions();
 
@@ -28,7 +28,7 @@ export class CourseQueryResolver {
     });
   }
 
-  @ResolveField()
+  @ResolveField('course')
   async getCourseById(@Args('id') id: string) {
     const course = await this.courseService.findById(id);
 

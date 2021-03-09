@@ -1,0 +1,22 @@
+type Mutation {
+  documentMutation: DocumentMutation
+}
+
+type DocumentType implements BaseGraphQL{
+  id: ID!
+  title: String!
+  createdAt: String!
+  updatedAt: String!
+  url: String!
+  lesson: LessonType!
+}
+
+input AddDocumentInput {
+  title: String!
+  file: FileUpload!
+}
+
+type DocumentMutation {
+  addDocumentToLesson(lessonId: ID!, data: AddDocumentInput!): DocumentType!
+  removeDocumentFromLesson(docId: ID!): Boolean!
+}

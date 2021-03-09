@@ -1,3 +1,6 @@
+import { LessonDocument } from './entities/LessonDocument.entity';
+import { LessonDocumentService } from './services/document.service';
+import { LessonQueryResolver } from './resolvers/lesson/lessonQuery.resolver';
 import { InstructorModule } from './../instructor/instructor.module';
 import { CourseService } from './services/course.service';
 import { Course } from 'src/courses/entities/Course.entity';
@@ -12,11 +15,12 @@ import { Lesson } from './entities/Lesson.entity';
 import { LessonService } from './services/lesson.service';
 import { LessonMutationResolver } from './resolvers/lesson/lessonMutation.resolver';
 import { LessonTypeResolver } from './resolvers/lesson/lessonType.resolver';
+import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/documentMutation.resolver';
 
 @Module({
   imports: [
     CommonModule,
-    TypeOrmModule.forFeature([Course, Lesson]),
+    TypeOrmModule.forFeature([Course, Lesson, LessonDocument]),
     forwardRef(() => InstructorModule),
     TagModule,
   ],
@@ -28,6 +32,9 @@ import { LessonTypeResolver } from './resolvers/lesson/lessonType.resolver';
     LessonService,
     LessonMutationResolver,
     LessonTypeResolver,
+    LessonQueryResolver,
+    LessonDocumentService,
+    LessonDocumentMutationResolver
   ],
   exports: [CourseService],
 })
