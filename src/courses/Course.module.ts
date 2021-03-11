@@ -1,3 +1,4 @@
+import { AdminUserModule } from './../AdminUser/AdminUser.module';
 import { LessonDocument } from './entities/LessonDocument.entity';
 import { LessonDocumentService } from './services/document.service';
 import { LessonQueryResolver } from './resolvers/lesson/lessonQuery.resolver';
@@ -23,6 +24,7 @@ import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/docum
     TypeOrmModule.forFeature([Course, Lesson, LessonDocument]),
     forwardRef(() => InstructorModule),
     TagModule,
+    AdminUserModule
   ],
   providers: [
     CourseMutationResolver,

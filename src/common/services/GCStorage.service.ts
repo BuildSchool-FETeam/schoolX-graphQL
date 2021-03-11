@@ -45,8 +45,9 @@ export class GCStorageService {
 
     return new Promise((resolve) => {
       const filePath = additionalPath ?
-        `${type}/${this.makeFileNameUnique(fileName)}` :
-        `${type}/${additionalPath}/${this.makeFileNameUnique(fileName)}`;
+        `${type}/${additionalPath}/${this.makeFileNameUnique(fileName)}` :
+        `${type}/${this.makeFileNameUnique(fileName)}`;
+
       const cloudFile = this.bucket.file(filePath);
       readStream
         .pipe(cloudFile.createWriteStream())

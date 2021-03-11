@@ -1,3 +1,5 @@
+import { AuthGuard } from './../../common/guards/auth.guard';
+import { UseGuards } from '@nestjs/common';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
 import {
   GCStorageService,
@@ -10,11 +12,12 @@ import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import * as _ from 'lodash';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 
+@UseGuards(AuthGuard)
 @Resolver('InstructorMutation')
 export class InstructorMutationResolver {
   constructor(
     private instructorService: InstructorService,
-    private gcStorageService: GCStorageService,
+    private gcStorageService: GCStorageService
   ) {}
 
   @Mutation()

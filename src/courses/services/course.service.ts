@@ -1,16 +1,19 @@
-import { InstructorService } from './../../instructor/services/instructor.service';
+
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CourseSetInput } from './../../graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Course } from 'src/courses/entities/Course.entity';
 import { BaseService } from 'src/common/services/base.service';
 import * as _ from 'lodash';
 import { TagService } from 'src/tag/tag.service';
+import { AdminUser } from 'src/AdminUser/AdminUser.entity';
+import { CourseSetInput } from 'src/graphql';
+import { InstructorService } from 'src/instructor/services/instructor.service';
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string;
   filePath: string;
+  createdBy: AdminUser
 };
 
 @Injectable()
@@ -54,9 +57,12 @@ export class CourseService extends BaseService<Course> {
     if (!existedCourse) {
       throw new NotFoundException('Course not found');
     }
-    _.forOwn(data, (value, key) => {
-      (typeof value === 'object' && (existedCourse[key] = value.join('|'))) ||
+    _.forOwn(data, (value, key: keyof CourseDataInput) => {
+      if (value instanceof Array) {
+        existedCourse[key] = value.join('|')
+      } else {
         (value && (existedCourse[key] = value));
+      }
     });
     const tagsString = data.tags;
     const tagsPromise = this.createTags(tagsString);

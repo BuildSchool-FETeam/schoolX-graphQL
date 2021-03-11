@@ -1,5 +1,5 @@
 import { CourseModule } from './courses/Course.module';
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
@@ -33,10 +33,16 @@ const EnvInitModule = ConfigModule.forRoot({
   envFilePath: ['.env.development'],
 });
 
+const cacheManagerModule = CacheModule.register({
+  ttl: 1000, // 1000s
+  max: 100
+})
+
 @Module({
   imports: [
     typeORMModuleInit,
     graphQLModuleInit,
+    cacheManagerModule,
     HeartBeatModule,
     AuthModule,
     AdminUserModule,

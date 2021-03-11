@@ -1,8 +1,11 @@
+import { cacheConstant } from './../../common/constants/cache.contant';
+import { CacheService } from './../../common/services/cache.service';
 import { BaseService } from 'src/common/services/base.service';
 import { RoleService } from '../../permission/services/role.service';
 import { PermissionService } from '../../permission/services/permission.service';
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -21,6 +24,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     private passwordService: PasswordService,
     private permissionService: PermissionService,
     private roleService: RoleService,
+    private cacheService: CacheService
   ) {
     super(userRepo, 'AdminUser');
   }
@@ -97,5 +101,15 @@ export class AdminUserService extends BaseService<AdminUser> {
 
   async findUserByEmail(email: string) {
     return this.userRepo.findOne({ email }, { relations: ['role'] });
+  }
+
+  async getAdminUserByToken (token: string) {
+    const adminUser = await this.cacheService.getValue(cacheConstant.ADMIN_USER + '-' + token) as AdminUser;
+
+    if (adminUser) {
+      return adminUser
+    }
+
+    throw new ForbiddenException('Forbidden resource')
   }
 }

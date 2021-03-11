@@ -1,6 +1,8 @@
+import { AdminUser } from 'src/AdminUser/AdminUser.entity';
 import {
   Column,
   CreateDateColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';

@@ -1,13 +1,17 @@
+import { cacheConstant } from './../constants/cache.contant';
+import { CacheService } from './../services/cache.service';
 import { TokenService } from './../services/token.service';
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { GqlExecutionContext } from "@nestjs/graphql";
-import { Observable } from "rxjs";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private tokenService: TokenService) { }
+  constructor(
+    private tokenService: TokenService,
+    private cacheService: CacheService
+  ) { }
 
-  canActivate (context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate (context: ExecutionContext): Promise<boolean> {
     const ctx = GqlExecutionContext.create(context);
     const headers = ctx.getContext().req.headers as DynamicObject;
 
@@ -19,7 +23,10 @@ export class AuthGuard implements CanActivate {
     let isValidToken: boolean;
 
     try {
-      this.tokenService.verifyAndDecodeToken(token)
+      const user = this.tokenService.verifyAndDecodeToken(token)
+      await this.cacheService.setValue(cacheConstant.ADMIN_USER + '-' + token, {
+        ...user
+      });
 
       isValidToken = true;
     } catch (error) {

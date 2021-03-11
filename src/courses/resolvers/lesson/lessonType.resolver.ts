@@ -14,4 +14,13 @@ export class LessonTypeResolver {
 
     return parent.course;
   }
+
+  @ResolveField()
+  async documents (@Parent() lesson: Lesson) {
+    const parent = await this.lessonService.findById(lesson.id, {
+      relations: ['documents'],
+    });
+
+    return parent.documents;
+  }
 }

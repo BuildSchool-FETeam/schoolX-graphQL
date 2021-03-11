@@ -188,6 +188,7 @@ export class LessonType implements BaseGraphQL {
     votes: number;
     course: CourseType;
     content: string;
+    documents: DocumentType[];
 }
 
 export class LessonMutation {
