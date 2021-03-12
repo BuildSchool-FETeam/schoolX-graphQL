@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
-import { Bucket, Storage } from '@google-cloud/storage';
+import { Bucket, Storage, File } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from '../interfaces/EnvVariable.interface';
 
@@ -79,6 +79,19 @@ export class GCStorageService {
     } catch (err) {
       throw new BadRequestException(err);
     }
+  }
+
+  async getAllFiles (): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      this.bucket.getFiles({}, (err, files) => {
+        if (err) {
+          reject(err)
+          return
+        }
+
+        resolve(files.map(item => item.metadata.name));
+      })
+    })
   }
 
   private makeFileNameUnique (fileName: string) {

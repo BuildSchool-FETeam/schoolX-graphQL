@@ -20,7 +20,7 @@ import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/docum
 
 @Module({
   imports: [
-    CommonModule,
+    forwardRef(() => CommonModule),
     TypeOrmModule.forFeature([Course, Lesson, LessonDocument]),
     forwardRef(() => InstructorModule),
     TagModule,
@@ -38,6 +38,6 @@ import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/docum
     LessonDocumentService,
     LessonDocumentMutationResolver
   ],
-  exports: [CourseService],
+  exports: [CourseService, LessonDocumentService],
 })
 export class CourseModule {}

@@ -1,3 +1,4 @@
+import { ScheduleModule } from '@nestjs/schedule';
 import { CourseModule } from './courses/Course.module';
 import { CacheModule, Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -38,8 +39,11 @@ const cacheManagerModule = CacheModule.register({
   max: 100
 })
 
+const scheduleModule = ScheduleModule.forRoot()
+
 @Module({
   imports: [
+    scheduleModule,
     typeORMModuleInit,
     graphQLModuleInit,
     cacheManagerModule,

@@ -1,3 +1,6 @@
+import { CourseModule } from './../courses/Course.module';
+import { InstructorModule } from './../instructor/instructor.module';
+import { CronService } from './services/cron.service';
 import { TokenService } from './services/token.service';
 import { AuthGuard } from './guards/auth.guard';
 import { CacheModule, forwardRef, Module } from '@nestjs/common';
@@ -9,7 +12,12 @@ import { ConfigService } from '@nestjs/config';
 import { CacheService } from './services/cache.service';
 
 @Module({
-  imports: [forwardRef(() => PermissionModule), CacheModule.register()],
+  imports: [
+    forwardRef(() => PermissionModule),
+    forwardRef(() => InstructorModule),
+    forwardRef(() => CourseModule),
+    CacheModule.register()
+  ],
   providers: [
     PasswordService,
     TokenService,
@@ -17,7 +25,8 @@ import { CacheService } from './services/cache.service';
     FileService,
     GCStorageService,
     ConfigService,
-    CacheService
+    CacheService,
+    CronService
   ],
   exports: [
     PasswordService,
