@@ -5,26 +5,18 @@
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
 [circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## App Stacks:
+
+1. GraphQL: [https://graphql.org/]
+2. Apollo: [https://www.apollographql.com/docs/apollo-server/]
+3. NestJS(GraphQL):[https://docs.nestjs.com/graphql/quick-start]
+4. TypeORM: [https://typeorm.io/#/migrations]
+5. PostgreSQL: [https://www.postgresql.org/]
+6. TypeScript: [https://www.typescriptlang.org/]
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+GraphQL API app for **schoolX admin** and **schoolX Client** which is written by nodeJS + Typescript
 
 ## Installation
 
@@ -58,10 +50,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 ## Stay in touch
 
 - Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
@@ -71,3 +59,120 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## HOW TO: Setup app:
+
+### 1. Install postgreSQL
+
+a. Install postgreSQL and create the credentials as you can see in **.ormconfig** file, include create server, db name, user name and password
+b. Run migration in app:
+
+```
+npm run start:dev
+npm run migrate:up
+```
+
+c. if _failed_ or have some _errors_, here are these steps you could follow:
+
+```
+"Ctrl + C" to stop server
+remove dist folder
+delete all files in src/migrations
+npm run migrate:gen
+npm run start:dev
+npm run migrate:up
+```
+
+d. Open pgAdmin and make sure all tables are generated.
+
+### 2. Install google cloud cli/SDK
+
+a. Read and Install follow this docs: [https://cloud.google.com/sdk/docs/quickstart#windows]
+b. Login it with the credential:
+
+```
+ user: superknife0513@gmail.com
+ password: Inbox
+```
+
+c. **Important** Change the root folder when saving the file:
+
+```
+Go to .env.development
+Change STORAGE_FOLDER value
+```
+
+You can lost your files if you don't implement these steps
+
+---
+
+## HOW TO: Test our app:
+
+#### 1. graphQL
+
+> The app is written using graphQL and typeORM so you can test it in two ways
+
+a. Using native playground: `localhost:<PORT_NUMBER>/graphQL`
+
+```
+ query { heartBeat }
+```
+
+b. For more convenience when uploading file and testing, you can use **Altair**
+Download: [https://altair.sirmuel.design/]
+
+```
+mutation AddDocs($file: FileUpload!) {
+documentMutation {
+  addDocumentToLesson(lessonId: 8, data: {
+    file: $file
+    title: "Syllabus 1"
+  }) {
+      id
+      url
+    }
+  }
+}
+```
+
+You can get the **403 error** with this query if you don't have properly token.
+
+c. You can check the document for graphQL API in docs for **Altair** and **playground**
+
+#### 2. Authentication and authorization
+
+a. All app functionality will be guarded by authentication mechanism, you should create an ultimateUser admin with full power access control like so:
+
+> Example: The name, email, password is totally up to you, this is just an examples
+
+```
+mutation Signup {
+  adminAuthMutation {
+    signUp(data: {
+      name: "Toan"
+      email: "phanhuutoan.dev@outlook.com"
+      password: "Toan1234"
+    }) {
+      token
+    }
+}
+```
+
+**AND**
+
+```
+mutation Signin{
+	adminAuthMutation {
+      signIn(data: {
+        email: "phanhuutoan.dev@outlook.com",
+        password: "Toan1234"
+      }) {
+        token
+        role
+      }
+    }
+}
+```
+
+b. Take token which API sent back and add it to header:
+`authorization: Bearer <token>`
