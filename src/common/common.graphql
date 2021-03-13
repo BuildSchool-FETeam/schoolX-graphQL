@@ -1,0 +1,14 @@
+scalar FileUpload
+
+type File {
+  filename: String!
+  mimetype: String!
+  encoding: String!
+}
+
+interface BaseGraphQL {
+  id: ID!
+  title: String!
+  createdAt: String!
+  updatedAt: String!
+}

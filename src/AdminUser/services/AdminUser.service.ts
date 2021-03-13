@@ -22,7 +22,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     private permissionService: PermissionService,
     private roleService: RoleService,
   ) {
-    super(userRepo);
+    super(userRepo, 'AdminUser');
   }
 
   async createUserBySignup(data: Partial<AdminUser>) {
@@ -31,8 +31,10 @@ export class AdminUserService extends BaseService<AdminUser> {
     if (userCount > 0) {
       throw new BadRequestException('Only have one admin created by this way');
     }
-    const permissionSet = await this.permissionService.createAdminPermission();
+    const permissionSet = this.permissionService.createAdminPermission();
     const role = await this.roleService.createAdminRole(permissionSet);
+    permissionSet.role = role;
+    await this.permissionService.savePermissionSet(permissionSet);
     const user = this.userRepo.create({
       ...data,
       password: this.passwordService.hash(data.password),

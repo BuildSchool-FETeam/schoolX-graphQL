@@ -1,0 +1,7 @@
+type TagType implements BaseGraphQL {
+  id: ID!
+  title: String!
+  createdAt: String!
+  updatedAt: String!
+  courses: [CourseType]!
+}

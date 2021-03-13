@@ -15,7 +15,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     private permissionRepo: Repository<PermissionSet>,
     private roleService: RoleService,
   ) {
-    super(permissionRepo);
+    super(permissionRepo, 'Permission');
   }
 
   createAdminPermission() {
@@ -29,6 +29,11 @@ export class PermissionService extends BaseService<PermissionSet> {
       notification: fullPerm,
     });
 
+    // return this.permissionRepo.save(permissionSet);
+    return permissionSet;
+  }
+
+  savePermissionSet(permissionSet: PermissionSet) {
     return this.permissionRepo.save(permissionSet);
   }
 
