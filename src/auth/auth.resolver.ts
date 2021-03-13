@@ -5,21 +5,21 @@ import { AuthPayload, SignUpInput, SignInInput } from 'src/graphql';
 import { AdminUserService } from 'src/AdminUser/services/AdminUser.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
-@Resolver('AuthMutation')
+@Resolver('AdminAuthMutation')
 export class AuthResolver {
   constructor(
     private adminUserService: AdminUserService,
     private tokenService: TokenService,
     private passwordService: PasswordService,
-  ) { }
+  ) {}
 
   @Mutation()
-  authMutation () {
+  adminAuthMutation() {
     return {};
   }
 
   @ResolveField()
-  async signUp (@Args('data') data: SignUpInput): Promise<AuthPayload> {
+  async signUp(@Args('data') data: SignUpInput): Promise<AuthPayload> {
     const user = await this.adminUserService.createUserBySignup({ ...data });
     return {
       token: this.tokenService.createToken({ ...user }),
@@ -29,7 +29,7 @@ export class AuthResolver {
   }
 
   @ResolveField()
-  async signIn (@Args('data') data: SignInInput): Promise<AuthPayload> {
+  async signIn(@Args('data') data: SignInInput): Promise<AuthPayload> {
     const user = await this.adminUserService.findUserByEmail(data.email);
 
     if (!user) {

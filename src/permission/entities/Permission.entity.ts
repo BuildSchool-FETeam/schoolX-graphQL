@@ -1,4 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Role } from './Role.entity';
 
 @Entity()
@@ -24,8 +30,9 @@ export class PermissionSet {
   @Column()
   notification: string;
 
-  @OneToOne(() => Role, role => role.permissionSet, {
-    onDelete: 'CASCADE'
+  @OneToOne(() => Role, (role) => role.permissionSet, {
+    onDelete: 'CASCADE',
   })
-  role: Role
+  @JoinColumn()
+  role: Role;
 }

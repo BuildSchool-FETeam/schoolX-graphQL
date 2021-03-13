@@ -1,3 +1,4 @@
+import { CourseModule } from './courses/Course.module';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +10,9 @@ import { AdminUserModule } from './AdminUser/AdminUser.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionGuard } from './common/guards/permission.guard';
 import { CommonModule } from './common/Common.module';
+import { InstructorModule } from './instructor/Instructor.module';
+import { ConfigModule } from '@nestjs/config';
+import { TagModule } from './tag/tag.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -25,6 +29,9 @@ const graphQLModuleInit = GraphQLModule.forRoot({
 });
 
 const typeORMModuleInit = TypeOrmModule.forRoot();
+const EnvInitModule = ConfigModule.forRoot({
+  envFilePath: ['.env.development'],
+});
 
 @Module({
   imports: [
@@ -35,6 +42,10 @@ const typeORMModuleInit = TypeOrmModule.forRoot();
     AdminUserModule,
     PermissionModule,
     CommonModule,
+    InstructorModule,
+    CourseModule,
+    EnvInitModule,
+    TagModule,
   ],
   providers: [
     {

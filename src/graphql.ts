@@ -24,6 +24,26 @@ export class SignInInput {
     password: string;
 }
 
+export class CourseSetInput {
+    title: string;
+    description: string;
+    instructorId: string;
+    benefits: string[];
+    requirements: string[];
+    image?: FileUpload;
+    tags: string[];
+}
+
+export class InstructorSetInput {
+    name: string;
+    title: string;
+    description: string;
+    email: string;
+    ClientUserId?: string;
+    image?: FileUpload;
+    phone: string;
+}
+
 export class PermissionSetInput {
     roleName: string;
     course: string;
@@ -32,6 +52,13 @@ export class PermissionSetInput {
     blog: string;
     notification: string;
     instructor: string;
+}
+
+export interface BaseGraphQL {
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export abstract class IQuery {
@@ -43,6 +70,10 @@ export abstract class IQuery {
 
     abstract heartBeatWithAuth(): string | Promise<string>;
 
+    abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
+
+    abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
+
     abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
 
@@ -51,7 +82,11 @@ export abstract class IMutation {
 
     abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
 
-    abstract authMutation(): AuthMutation | Promise<AuthMutation>;
+    abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
+
+    abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
+
+    abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
     abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
 }
@@ -78,8 +113,8 @@ export class AdminUser {
     createdAt: string;
 }
 
-export class AuthMutation {
-    __typename?: 'AuthMutation';
+export class AdminAuthMutation {
+    __typename?: 'AdminAuthMutation';
     signUp: AuthPayload;
     signIn: AuthPayload;
 }
@@ -89,6 +124,65 @@ export class AuthPayload {
     token: string;
     userName: string;
     role: string;
+}
+
+export class File {
+    __typename?: 'File';
+    filename: string;
+    mimetype: string;
+    encoding: string;
+}
+
+export class CourseQuery {
+    __typename?: 'CourseQuery';
+    getAllCourses: CourseType[];
+    getCourseById: CourseType;
+}
+
+export class CourseMutation {
+    __typename?: 'CourseMutation';
+    setCourse: CourseType;
+    deleteCourse: boolean;
+}
+
+export class CourseType implements BaseGraphQL {
+    __typename?: 'CourseType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    description: string;
+    instructor: InstructorType;
+    benefits: string[];
+    requirements: string[];
+    imageUrl?: string;
+    tags: TagType[];
+}
+
+export class InstructorQuery {
+    __typename?: 'InstructorQuery';
+    getAllInstructors: InstructorType[];
+    getInstructorById: InstructorType;
+}
+
+export class InstructorMutation {
+    __typename?: 'InstructorMutation';
+    setInstructor: InstructorType;
+    deleteInstructor?: boolean;
+}
+
+export class InstructorType implements BaseGraphQL {
+    __typename?: 'InstructorType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    name: string;
+    description: string;
+    email: string;
+    imageUrl: string;
+    phone: string;
+    courses: CourseType[];
 }
 
 export class PermissionMutation {
@@ -115,3 +209,14 @@ export class Permission {
     notification: string;
     instructor: string;
 }
+
+export class TagType implements BaseGraphQL {
+    __typename?: 'TagType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    courses: CourseType[];
+}
+
+export type FileUpload = any;
