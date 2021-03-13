@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
-import { Bucket, Storage, File } from '@google-cloud/storage';
+import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from '../interfaces/EnvVariable.interface';
 
@@ -12,12 +12,13 @@ export enum StorageFolder {
   instructor = 'Instructors',
   course = 'Courses',
   ClientUsers = 'ClientUsers',
-  documents = 'document'
+  documents = 'document',
 }
 
 @Injectable()
 export class GCStorageService {
   private bucket: Bucket;
+  private rootFolder: string;
 
   constructor(private configService: ConfigService<EnvVariable>) {
     const storage = new Storage({
@@ -25,16 +26,17 @@ export class GCStorageService {
       keyFile: this.configService.get('KEY_FILE_PATH'),
     });
     this.bucket = storage.bucket('schoolx-dev-bucket');
+    this.rootFolder = this.configService.get('STORAGE_FOLDER');
   }
 
-  getFiles () {
+  getFiles() {
     return this.bucket.getFiles();
   }
 
   /**
    * @additionalPath format: path/.../path
    */
-  uploadFile (config: {
+  uploadFile(config: {
     fileName: string;
     readStream: ReadStream;
     type: StorageFolder;
@@ -44,9 +46,11 @@ export class GCStorageService {
     const { fileName, readStream, type, makePublic, additionalPath } = config;
 
     return new Promise((resolve) => {
-      const filePath = additionalPath ?
-        `${type}/${additionalPath}/${this.makeFileNameUnique(fileName)}` :
-        `${type}/${this.makeFileNameUnique(fileName)}`;
+      const filePath = additionalPath
+        ? `${
+            this.rootFolder
+          }/${type}/${additionalPath}/${this.makeFileNameUnique(fileName)}`
+        : `${this.rootFolder}/${type}/${this.makeFileNameUnique(fileName)}`;
 
       const cloudFile = this.bucket.file(filePath);
       readStream
@@ -70,7 +74,7 @@ export class GCStorageService {
     });
   }
 
-  async deleteFile (filePath: string) {
+  async deleteFile(filePath: string) {
     const cloudFile = this.bucket.file(filePath);
 
     try {
@@ -81,20 +85,20 @@ export class GCStorageService {
     }
   }
 
-  async getAllFiles (): Promise<string[]> {
+  async getAllFiles(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       this.bucket.getFiles({}, (err, files) => {
         if (err) {
-          reject(err)
-          return
+          reject(err);
+          return;
         }
 
-        resolve(files.map(item => item.metadata.name));
-      })
-    })
+        resolve(files.map((item) => item.metadata.name));
+      });
+    });
   }
 
-  private makeFileNameUnique (fileName: string) {
+  private makeFileNameUnique(fileName: string) {
     const fileNameArr = fileName.split('.');
     if (fileNameArr.length !== 2) {
       throw new InternalServerErrorException(
