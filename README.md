@@ -16,7 +16,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+GraphQL API app for **schoolX admin** and **schoolX Client** which is written by nodeJS + Typescript
 
 ## Installation
 
@@ -67,42 +67,59 @@ Nest is [MIT licensed](LICENSE).
 a. Install postgreSQL and create the credentials as you can see in **.ormconfig** file, include create server, db name, user name and password
 b. Run migration in app:
 
-> npm run start:dev
-> npm run migrate:up
-> c. if _failed_ or have some _errors_, here are these steps you could follow:
-> Ctrl + C -> stop server
-> remove dist folder
-> delete all files in src/migrations
-> npm run migrate:gen
-> npm run start:dev
-> npm run migrate:up
-> d. Open pgAdmin and make sure all tables are generated.
+```
+npm run start:dev
+npm run migrate:up
+```
+
+c. if _failed_ or have some _errors_, here are these steps you could follow:
+
+```
+"Ctrl + C" to stop server
+remove dist folder
+delete all files in src/migrations
+npm run migrate:gen
+npm run start:dev
+npm run migrate:up
+```
+
+d. Open pgAdmin and make sure all tables are generated.
 
 ### 2. Install google cloud cli/SDK
 
 a. Read and Install follow this docs: [https://cloud.google.com/sdk/docs/quickstart#windows]
 b. Login it with the credential:
 
-> user: superknife0513@gmail.com
-> password: Inbox
-> c. **Important** Change the root folder when saving the file:
-> Go to .env.development
-> Change STORAGE_FOLDER value
-> You can lost your files if you don't implement these steps
+```
+ user: superknife0513@gmail.com
+ password: Inbox
+```
+
+c. **Important** Change the root folder when saving the file:
+
+```
+Go to .env.development
+Change STORAGE_FOLDER value
+```
+
+You can lost your files if you don't implement these steps
 
 ---
 
 ## HOW TO: Test our app:
 
-### 1. graphQL
+#### 1. graphQL
 
-#### The app is written using graphQL and typeORM so you can test it in two way
+> The app is written using graphQL and typeORM so you can test it in two ways
 
-a. Using native playground: localhost:<PORT_NUMBER>/graphQL
+a. Using native playground: `localhost:<PORT_NUMBER>/graphQL`
 
-> query { heartBeat }
-> b. For convenience when uploading file and testing, you can use **Altair**
-> Download: [https://altair.sirmuel.design/]
+```
+ query { heartBeat }
+```
+
+b. For more convenience when uploading file and testing, you can use **Altair**
+Download: [https://altair.sirmuel.design/]
 
 ```
 mutation AddDocs($file: FileUpload!) {
@@ -118,4 +135,44 @@ documentMutation {
 }
 ```
 
-c. You can check the document for graphQL API in docs for _Altair_ and _playground_
+You can get the **403 error** with this query if you don't have properly token.
+
+c. You can check the document for graphQL API in docs for **Altair** and **playground**
+
+#### 2. Authentication and authorization
+
+a. All app functionality will be guarded by authentication mechanism, you should create an ultimateUser admin with full power access control like so:
+
+> Example: The name, email, password is totally up to you, this is just an examples
+
+```
+mutation Signup {
+  adminAuthMutation {
+    signUp(data: {
+      name: "Toan"
+      email: "phanhuutoan.dev@outlook.com"
+      password: "Toan1234"
+    }) {
+      token
+    }
+}
+```
+
+**AND**
+
+```
+mutation Signin{
+	adminAuthMutation {
+      signIn(data: {
+        email: "phanhuutoan.dev@outlook.com",
+        password: "Toan1234"
+      }) {
+        token
+        role
+      }
+    }
+}
+```
+
+b. Take token which API sent back and add it to header:
+`authorization: Bearer <token>`

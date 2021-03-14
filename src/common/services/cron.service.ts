@@ -39,7 +39,7 @@ export class CronService {
   async clearTrashFiles() {
     try {
       const promises: ArrayPromises = [
-        this.gcStorage.getAllFiles(),
+        this.gcStorage.getAllFileNames(),
         this.instructorService.findWithOptions(),
         this.courseService.findWithOptions(),
         this.lessonDocumentService.findWithOptions(),
@@ -61,7 +61,7 @@ export class CronService {
         this.cacheService.setValue(cacheConstant.CLEAR_FILE, false);
       });
     } catch (err) {
-      console.log(err);
+      this.logger.error(err);
       throw new InternalServerErrorException(err);
     }
   }

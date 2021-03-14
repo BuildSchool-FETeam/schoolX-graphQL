@@ -31,10 +31,13 @@ export class LessonService extends BaseService<Lesson> {
 
   async updateLesson(id: string, data: LessonSetInput) {
     const lesson = await this.findById(id);
+    const course = await this.courseService.findById(data.courseId);
 
     _.forOwn(data, (value, key) => {
       if (key !== 'courseId') {
         value && (lesson[key] = value);
+      } else {
+        lesson.course = course;
       }
     });
 

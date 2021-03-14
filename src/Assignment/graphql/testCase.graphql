@@ -1,0 +1,25 @@
+type TestCaseType implements BaseGraphQL {
+  id: ID!
+  title: String!
+  createdAt: String!
+  updatedAt: String!
+  input: String!
+  expectedOutput: String!
+  assignment: AssignmentType!
+}
+
+input TestCaseSetInput {
+  title: String!
+  input: String!
+  expectedOutput: String!
+  assignmentId: ID!
+}
+
+type TestCaseMutation {
+  setTestCase(id: ID, data: TestCaseSetInput!): TestCaseType!
+  deleteTestCase(id: ID!): Boolean
+}
+
+type Mutation {
+  testCaseMutation: TestCaseMutation!
+}

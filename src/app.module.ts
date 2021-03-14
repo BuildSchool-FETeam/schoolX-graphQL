@@ -14,6 +14,7 @@ import { CommonModule } from './common/Common.module';
 import { ConfigModule } from '@nestjs/config';
 import { TagModule } from './tag/tag.module';
 import { InstructorModule } from './instructor/instructor.module';
+import { AssignmentModule } from './assignment/assignment.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -56,6 +57,7 @@ const scheduleModule = ScheduleModule.forRoot()
     CourseModule,
     EnvInitModule,
     TagModule,
+    AssignmentModule,
   ],
   providers: [
     {

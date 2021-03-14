@@ -8,7 +8,7 @@ type LessonType implements BaseGraphQL {
   course: CourseType!
   content: String!
   documents: [DocumentType]!
-  # assignments: [AssignmentType]!
+  assignments: [AssignmentType]!
   # comments: [UserCommentType]!
 }
 

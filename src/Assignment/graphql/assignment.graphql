@@ -1,0 +1,42 @@
+input AssignmentSetInput {
+  title: String!
+  description: String!
+  hints: [String]!
+  score: Int!
+  input: String!
+  output: String!
+  languageSupport: [String]!
+  lessonId: ID!
+}
+
+type AssignmentType implements BaseGraphQL {
+  id: ID!
+  title: String!
+  createdAt: String!
+  updatedAt: String!
+  description: String!
+  hints: [String]!
+  score: Int!
+  input: String!
+  output: String!
+  languageSupport: [String]!
+  lesson: LessonType!
+  testCases: [TestCaseType!]!
+}
+
+type AssignmentMutation {
+  setAssignment(id: ID, data: AssignmentSetInput!): AssignmentType!
+  deleteAssignment(id: ID!): Boolean
+}
+
+type AssignmentQuery {
+  assignment(id: ID!): AssignmentType!
+}
+
+type Query {
+  assignmentQuery: AssignmentQuery!
+}
+
+type Mutation {
+  assignmentMutation: AssignmentMutation!
+}

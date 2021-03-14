@@ -13,6 +13,24 @@ export class AdminUserSetInput {
     password?: string;
 }
 
+export class AssignmentSetInput {
+    title: string;
+    description: string;
+    hints: string[];
+    score: number;
+    input: string;
+    output: string;
+    languageSupport: string[];
+    lessonId: string;
+}
+
+export class TestCaseSetInput {
+    title: string;
+    input: string;
+    expectedOutput: string;
+    assignmentId: string;
+}
+
 export class SignUpInput {
     email: string;
     name: string;
@@ -78,6 +96,8 @@ export abstract class IQuery {
 
     abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
 
+    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
+
     abstract heartBeat(): string | Promise<string>;
 
     abstract heartBeatWithAuth(): string | Promise<string>;
@@ -95,6 +115,10 @@ export abstract class IMutation {
     __typename?: 'IMutation';
 
     abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
+
+    abstract assignmentMutation(): AssignmentMutation | Promise<AssignmentMutation>;
+
+    abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
 
@@ -129,6 +153,50 @@ export class AdminUser {
     role: string;
     createBy?: AdminUser;
     createdAt: string;
+}
+
+export class AssignmentType implements BaseGraphQL {
+    __typename?: 'AssignmentType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    description: string;
+    hints: string[];
+    score: number;
+    input: string;
+    output: string;
+    languageSupport: string[];
+    lesson: LessonType;
+    testCases: TestCaseType[];
+}
+
+export class AssignmentMutation {
+    __typename?: 'AssignmentMutation';
+    setAssignment: AssignmentType;
+    deleteAssignment?: boolean;
+}
+
+export class AssignmentQuery {
+    __typename?: 'AssignmentQuery';
+    assignment: AssignmentType;
+}
+
+export class TestCaseType implements BaseGraphQL {
+    __typename?: 'TestCaseType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    input: string;
+    expectedOutput: string;
+    assignment: AssignmentType;
+}
+
+export class TestCaseMutation {
+    __typename?: 'TestCaseMutation';
+    setTestCase: TestCaseType;
+    deleteTestCase?: boolean;
 }
 
 export class AdminAuthMutation {
@@ -189,6 +257,7 @@ export class LessonType implements BaseGraphQL {
     course: CourseType;
     content: string;
     documents: DocumentType[];
+    assignments: AssignmentType[];
 }
 
 export class LessonMutation {

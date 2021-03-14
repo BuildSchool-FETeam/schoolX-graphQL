@@ -85,16 +85,21 @@ export class GCStorageService {
     }
   }
 
-  async getAllFiles(): Promise<string[]> {
+  async getAllFileNames(): Promise<string[]> {
     return new Promise((resolve, reject) => {
-      this.bucket.getFiles({}, (err, files) => {
-        if (err) {
-          reject(err);
-          return;
-        }
+      this.bucket.getFiles(
+        {
+          prefix: this.rootFolder,
+        },
+        (err, files) => {
+          if (err) {
+            reject(err);
+            return;
+          }
 
-        resolve(files.map((item) => item.metadata.name));
-      });
+          resolve(files.map((item) => item.metadata.name));
+        },
+      );
     });
   }
 

@@ -24,7 +24,7 @@ import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/docum
     TypeOrmModule.forFeature([Course, Lesson, LessonDocument]),
     forwardRef(() => InstructorModule),
     TagModule,
-    AdminUserModule
+    AdminUserModule,
   ],
   providers: [
     CourseMutationResolver,
@@ -36,8 +36,8 @@ import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/docum
     LessonTypeResolver,
     LessonQueryResolver,
     LessonDocumentService,
-    LessonDocumentMutationResolver
+    LessonDocumentMutationResolver,
   ],
-  exports: [CourseService, LessonDocumentService],
+  exports: [CourseService, LessonDocumentService, LessonService],
 })
 export class CourseModule {}
