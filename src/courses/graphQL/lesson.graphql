@@ -1,0 +1,38 @@
+type LessonType implements BaseGraphQL {
+  id: ID!
+  title: String!
+  createdAt: String!
+  updatedAt: String!
+  videoUrl: String!
+  votes: Int!
+  course: CourseType!
+  content: String!
+  documents: [DocumentType]!
+  assignments: [AssignmentType]!
+  # comments: [UserCommentType]!
+}
+
+input LessonSetInput {
+  title: String!
+  videoUrl: String!
+  courseId: ID!
+  content: String!
+}
+
+type LessonMutation {
+  setLesson(id: ID, data: LessonSetInput!): LessonType!
+  deleteLesson(id: ID): Boolean!
+}
+
+type Mutation {
+  lessonMutation: LessonMutation!
+}
+
+type Query {
+  lessonQuery: LessonQuery
+}
+
+type LessonQuery {
+  lesson(id: ID!): LessonType!
+  lessonsWithCourseId(courseId: ID!): [LessonType]!
+}

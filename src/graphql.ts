@@ -13,6 +13,24 @@ export class AdminUserSetInput {
     password?: string;
 }
 
+export class AssignmentSetInput {
+    title: string;
+    description: string;
+    hints: string[];
+    score: number;
+    input: string;
+    output: string;
+    languageSupport: string[];
+    lessonId: string;
+}
+
+export class TestCaseSetInput {
+    title: string;
+    input: string;
+    expectedOutput: string;
+    assignmentId: string;
+}
+
 export class SignUpInput {
     email: string;
     name: string;
@@ -32,6 +50,18 @@ export class CourseSetInput {
     requirements: string[];
     image?: FileUpload;
     tags: string[];
+}
+
+export class LessonSetInput {
+    title: string;
+    videoUrl: string;
+    courseId: string;
+    content: string;
+}
+
+export class AddDocumentInput {
+    title: string;
+    file: FileUpload;
 }
 
 export class InstructorSetInput {
@@ -66,11 +96,15 @@ export abstract class IQuery {
 
     abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
 
+    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
+
     abstract heartBeat(): string | Promise<string>;
 
     abstract heartBeatWithAuth(): string | Promise<string>;
 
     abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
+
+    abstract lessonQuery(): LessonQuery | Promise<LessonQuery>;
 
     abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
 
@@ -82,9 +116,17 @@ export abstract class IMutation {
 
     abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
 
+    abstract assignmentMutation(): AssignmentMutation | Promise<AssignmentMutation>;
+
+    abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
+
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
 
     abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
+
+    abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
+
+    abstract documentMutation(): DocumentMutation | Promise<DocumentMutation>;
 
     abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
@@ -93,8 +135,8 @@ export abstract class IMutation {
 
 export class AdminUserQuery {
     __typename?: 'AdminUserQuery';
-    getAllAdminUsers?: AdminUser[];
-    getAdminUserById: AdminUser;
+    adminUsers: AdminUser[];
+    adminUser: AdminUser;
 }
 
 export class AdminUserMutation {
@@ -111,6 +153,50 @@ export class AdminUser {
     role: string;
     createBy?: AdminUser;
     createdAt: string;
+}
+
+export class AssignmentType implements BaseGraphQL {
+    __typename?: 'AssignmentType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    description: string;
+    hints: string[];
+    score: number;
+    input: string;
+    output: string;
+    languageSupport: string[];
+    lesson: LessonType;
+    testCases: TestCaseType[];
+}
+
+export class AssignmentMutation {
+    __typename?: 'AssignmentMutation';
+    setAssignment: AssignmentType;
+    deleteAssignment?: boolean;
+}
+
+export class AssignmentQuery {
+    __typename?: 'AssignmentQuery';
+    assignment: AssignmentType;
+}
+
+export class TestCaseType implements BaseGraphQL {
+    __typename?: 'TestCaseType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    input: string;
+    expectedOutput: string;
+    assignment: AssignmentType;
+}
+
+export class TestCaseMutation {
+    __typename?: 'TestCaseMutation';
+    setTestCase: TestCaseType;
+    deleteTestCase?: boolean;
 }
 
 export class AdminAuthMutation {
@@ -135,8 +221,8 @@ export class File {
 
 export class CourseQuery {
     __typename?: 'CourseQuery';
-    getAllCourses: CourseType[];
-    getCourseById: CourseType;
+    courses: CourseType[];
+    course: CourseType;
 }
 
 export class CourseMutation {
@@ -157,12 +243,55 @@ export class CourseType implements BaseGraphQL {
     requirements: string[];
     imageUrl?: string;
     tags: TagType[];
+    lessons: LessonType[];
+}
+
+export class LessonType implements BaseGraphQL {
+    __typename?: 'LessonType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    videoUrl: string;
+    votes: number;
+    course: CourseType;
+    content: string;
+    documents: DocumentType[];
+    assignments: AssignmentType[];
+}
+
+export class LessonMutation {
+    __typename?: 'LessonMutation';
+    setLesson: LessonType;
+    deleteLesson: boolean;
+}
+
+export class LessonQuery {
+    __typename?: 'LessonQuery';
+    lesson: LessonType;
+    lessonsWithCourseId: LessonType[];
+}
+
+export class DocumentType implements BaseGraphQL {
+    __typename?: 'DocumentType';
+    id: string;
+    title: string;
+    createdAt: string;
+    updatedAt: string;
+    url: string;
+    lesson: LessonType;
+}
+
+export class DocumentMutation {
+    __typename?: 'DocumentMutation';
+    addDocumentToLesson: DocumentType;
+    removeDocumentFromLesson: boolean;
 }
 
 export class InstructorQuery {
     __typename?: 'InstructorQuery';
-    getAllInstructors: InstructorType[];
-    getInstructorById: InstructorType;
+    instructors: InstructorType[];
+    instructor: InstructorType;
 }
 
 export class InstructorMutation {
@@ -193,9 +322,9 @@ export class PermissionMutation {
 
 export class PermissionQuery {
     __typename?: 'PermissionQuery';
-    getAllPermissions?: Permission[];
-    getPermissionById?: Permission;
-    getPermissionByRole?: Permission;
+    permissions?: Permission[];
+    permissionWithId?: Permission;
+    permissionWithRole?: Permission;
 }
 
 export class Permission {

@@ -1,14 +1,7 @@
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/Entity/base.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { TestCase } from './Testcase.entity';
 
 @Entity()
@@ -40,7 +33,6 @@ export class Assignment extends BaseEntity {
   @Column()
   languageSupport: string;
 
-  @OneToOne(() => TestCase, (testCase) => testCase.assignment)
-  @JoinColumn()
-  testCase: TestCase;
+  @OneToMany(() => TestCase, (testCase) => testCase.assignment)
+  testCases: TestCase[];
 }

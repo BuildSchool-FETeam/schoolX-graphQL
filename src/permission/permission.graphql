@@ -12,9 +12,9 @@ type Query {
 }
 
 type PermissionQuery {
-  getAllPermissions: [Permission]
-  getPermissionById(id: ID!): Permission
-  getPermissionByRole(roleName: String!): Permission
+  permissions: [Permission]
+  permissionWithId(id: ID!): Permission
+  permissionWithRole(roleName: String!): Permission
 }
 
 input PermissionSetInput {

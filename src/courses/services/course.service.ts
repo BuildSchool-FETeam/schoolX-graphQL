@@ -1,16 +1,19 @@
-import { InstructorService } from './../../instructor/services/instructor.service';
+
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CourseSetInput } from './../../graphql';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Course } from 'src/courses/entities/Course.entity';
 import { BaseService } from 'src/common/services/base.service';
 import * as _ from 'lodash';
 import { TagService } from 'src/tag/tag.service';
+import { AdminUser } from 'src/AdminUser/AdminUser.entity';
+import { CourseSetInput } from 'src/graphql';
+import { InstructorService } from 'src/instructor/services/instructor.service';
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string;
   filePath: string;
+  createdBy: AdminUser
 };
 
 @Injectable()
@@ -21,7 +24,7 @@ export class CourseService extends BaseService<Course> {
     private instructorService: InstructorService,
     private tagService: TagService,
   ) {
-    super(courseRepo, 'Tag');
+    super(courseRepo, 'Course');
   }
 
   async createCourse(data: CourseDataInput) {
@@ -42,7 +45,7 @@ export class CourseService extends BaseService<Course> {
         course.tags = tags;
       })
       .then(async () => {
-        await this.updateInstructorOfCourse(course, instructorId);
+        await this.updateCourseInstructor(course, instructorId);
 
         return this.courseRepo.save(course);
       });
@@ -54,9 +57,12 @@ export class CourseService extends BaseService<Course> {
     if (!existedCourse) {
       throw new NotFoundException('Course not found');
     }
-    _.forOwn(data, (value, key) => {
-      (typeof value === 'object' && (existedCourse[key] = value.join('|'))) ||
+    _.forOwn(data, (value, key: keyof CourseDataInput) => {
+      if (value instanceof Array) {
+        existedCourse[key] = value.join('|')
+      } else {
         (value && (existedCourse[key] = value));
+      }
     });
     const tagsString = data.tags;
     const tagsPromise = this.createTags(tagsString);
@@ -66,7 +72,7 @@ export class CourseService extends BaseService<Course> {
         existedCourse.tags = tags;
       })
       .then(async () => {
-        await this.updateInstructorOfCourse(existedCourse, data.instructorId);
+        await this.updateCourseInstructor(existedCourse, data.instructorId);
 
         return this.courseRepo.save(existedCourse);
       });
@@ -80,7 +86,7 @@ export class CourseService extends BaseService<Course> {
     });
   }
 
-  private async updateInstructorOfCourse(course: Course, instId: string) {
+  private async updateCourseInstructor(course: Course, instId: string) {
     const existedOne = await this.instructorService.findById(instId);
     course.instructor = existedOne;
   }

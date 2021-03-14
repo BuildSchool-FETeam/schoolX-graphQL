@@ -1,3 +1,4 @@
+import { AdminUser } from 'src/AdminUser/AdminUser.entity';
 import { ClientUser } from 'src/ClientUser/entities/ClientUser.entity';
 
 import { UserComment } from 'src/comment/entities/UserComment.entity';
@@ -52,7 +53,7 @@ export class Course extends BaseEntity {
 
   @ManyToMany(() => ClientUser, (clientUser) => clientUser.courses)
   @JoinTable()
-  joiningUsers?: string[];
+  joiningUsers?: ClientUser[];
 
   @ManyToMany(() => Tag, (tag) => tag.courses)
   tags: Tag[];
@@ -62,4 +63,7 @@ export class Course extends BaseEntity {
 
   @OneToMany(() => UserComment, (userComment) => userComment.course)
   comments: UserComment[];
+
+  @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
+  createdBy: AdminUser
 }

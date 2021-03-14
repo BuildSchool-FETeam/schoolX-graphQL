@@ -14,8 +14,8 @@ type Mutation {
 }
 
 type AdminUserQuery {
-  getAllAdminUsers: [AdminUser]
-  getAdminUserById(id: ID!): AdminUser!
+  adminUsers: [AdminUser]!
+  adminUser(id: ID!): AdminUser!
 }
 
 type AdminUserMutation {

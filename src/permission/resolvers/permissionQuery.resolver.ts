@@ -15,7 +15,7 @@ export class PermissionQueryResolver {
     return {};
   }
 
-  @ResolveField()
+  @ResolveField('permissions')
   async getAllPermissions() {
     const permissions = await this.permissionService.findWithOptions({
       relations: ['role'],
@@ -28,7 +28,7 @@ export class PermissionQueryResolver {
     });
   }
 
-  @ResolveField()
+  @ResolveField('permissionWithId')
   async getPermissionById(@Args('id') id: string) {
     const permission = await this.permissionService.findById(id, {
       relations: ['role'],
@@ -39,7 +39,7 @@ export class PermissionQueryResolver {
     };
   }
 
-  @ResolveField()
+  @ResolveField('permissionWithRole')
   async getPermissionByRole(@Args('roleName') roleName: string) {
     const permissionSet = await this.permissionService.getPermissionByRole(
       roleName,

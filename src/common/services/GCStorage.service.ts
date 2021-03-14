@@ -12,11 +12,13 @@ export enum StorageFolder {
   instructor = 'Instructors',
   course = 'Courses',
   ClientUsers = 'ClientUsers',
+  documents = 'document',
 }
 
 @Injectable()
 export class GCStorageService {
   private bucket: Bucket;
+  private rootFolder: string;
 
   constructor(private configService: ConfigService<EnvVariable>) {
     const storage = new Storage({
@@ -24,21 +26,32 @@ export class GCStorageService {
       keyFile: this.configService.get('KEY_FILE_PATH'),
     });
     this.bucket = storage.bucket('schoolx-dev-bucket');
+    this.rootFolder = this.configService.get('STORAGE_FOLDER');
   }
 
   getFiles() {
     return this.bucket.getFiles();
   }
 
+  /**
+   * @additionalPath format: path/.../path
+   */
   uploadFile(config: {
     fileName: string;
     readStream: ReadStream;
     type: StorageFolder;
     makePublic: boolean;
+    additionalPath?: string;
   }): Promise<{ publicUrl: string; filePath: string }> {
-    const { fileName, readStream, type, makePublic } = config;
+    const { fileName, readStream, type, makePublic, additionalPath } = config;
+
     return new Promise((resolve) => {
-      const filePath = `${type}/${this.makeFileNameUnique(fileName)}`;
+      const filePath = additionalPath
+        ? `${
+            this.rootFolder
+          }/${type}/${additionalPath}/${this.makeFileNameUnique(fileName)}`
+        : `${this.rootFolder}/${type}/${this.makeFileNameUnique(fileName)}`;
+
       const cloudFile = this.bucket.file(filePath);
       readStream
         .pipe(cloudFile.createWriteStream())
@@ -72,6 +85,24 @@ export class GCStorageService {
     }
   }
 
+  async getAllFileNames(): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      this.bucket.getFiles(
+        {
+          prefix: this.rootFolder,
+        },
+        (err, files) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+
+          resolve(files.map((item) => item.metadata.name));
+        },
+      );
+    });
+  }
+
   private makeFileNameUnique(fileName: string) {
     const fileNameArr = fileName.split('.');
     if (fileNameArr.length !== 2) {
@@ -80,6 +111,7 @@ export class GCStorageService {
       );
     }
     const randomNumber = Math.random().toString(24).slice(2, 15);
+
     return `${fileNameArr[0]}-${randomNumber}.${fileNameArr[1]}`;
   }
 }

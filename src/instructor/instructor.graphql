@@ -3,8 +3,8 @@ type Query {
 }
 
 type InstructorQuery {
-  getAllInstructors: [InstructorType!]!
-  getInstructorById(id: ID!): InstructorType!
+  instructors: [InstructorType!]!
+  instructor(id: ID!): InstructorType!
 }
 
 type Mutation {
