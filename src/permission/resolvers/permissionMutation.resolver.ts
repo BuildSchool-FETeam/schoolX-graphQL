@@ -53,7 +53,7 @@ export class PermissionMutationResolver {
 
   private isRightFormat(perm: PermissionSetInput) {
     const pattern_1 = /^[CRUDS]{0,1}$/;
-    const pattern_2 = /^[CRUDS]{1}(\|[CRUDS]){1,3}$/;
+    const pattern_2 = /^[CRUDS]{1}(\|[CRUDS]){1,4}$/;
 
     const permissionSetOnly = _.omit(perm, 'roleName');
 
