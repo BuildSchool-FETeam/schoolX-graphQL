@@ -1,3 +1,4 @@
+import { AdminUserTypeResolver } from './resolvers/adminUserType.Resolver';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from 'src/common/Common.module';
@@ -13,7 +14,7 @@ import { AdminUserService } from './services/AdminUser.service';
     TypeOrmModule.forFeature([AdminUser]),
     PermissionModule,
   ],
-  providers: [AdminUserService, AdminUserMutationResolver, AdminUserQueryResolver],
+  providers: [AdminUserService, AdminUserMutationResolver, AdminUserQueryResolver, AdminUserTypeResolver],
   exports: [AdminUserService],
 })
 export class AdminUserModule { }
