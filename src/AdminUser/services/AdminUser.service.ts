@@ -89,7 +89,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     }
     _.forOwn(data, (value, key) => {
       if (key === 'password' && value) {
-        user[key] = this.passwordService.hash(key);
+        user[key] = this.passwordService.hash(value);
       } else {
         user[key] = value;
       }
