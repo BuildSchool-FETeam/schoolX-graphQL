@@ -1,4 +1,10 @@
-import { Mutation, Resolver, Args, ResolveField } from '@nestjs/graphql';
+import {
+  Mutation,
+  Resolver,
+  Args,
+  ResolveField,
+  Context,
+} from '@nestjs/graphql';
 import { PermissionSetInput } from 'src/graphql';
 import { PermissionService } from '../services/permission.service';
 import { PermissionSet } from '../entities/Permission.entity';
@@ -21,6 +27,7 @@ export class PermissionMutationResolver {
   @ResolveField()
   async setPermission(
     @Args('data') data: PermissionSetInput,
+    @Context() { req }: any,
     @Args('id') id: string,
   ) {
     let result: {
@@ -32,8 +39,10 @@ export class PermissionMutationResolver {
         'Wrong format with permission, it should be like this "C|R|U|D|S" or "R" or ""(nothing)"',
       );
     }
+    const token = _.split(req.headers.authorization, ' ')[1];
+
     if (!id) {
-      result = await this.permissionService.createPermission(data);
+      result = await this.permissionService.createPermission(data, token);
     } else {
       result = await this.permissionService.updatePermission(id, data);
     }

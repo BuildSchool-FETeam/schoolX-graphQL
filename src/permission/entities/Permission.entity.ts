@@ -1,3 +1,4 @@
+import { BaseEntityWithCreatedBy } from 'src/common/Entity/base.entity';
 import {
   Column,
   Entity,
@@ -8,7 +9,7 @@ import {
 import { Role } from './Role.entity';
 
 @Entity()
-export class PermissionSet {
+export class PermissionSet extends BaseEntityWithCreatedBy {
   @PrimaryGeneratedColumn()
   id: string;
 

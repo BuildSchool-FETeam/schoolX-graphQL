@@ -2,7 +2,6 @@ import { cacheConstant } from './../../common/constants/cache.contant';
 import { CacheService } from './../../common/services/cache.service';
 import { BaseService } from 'src/common/services/base.service';
 import { RoleService } from '../../permission/services/role.service';
-import { PermissionService } from '../../permission/services/permission.service';
 import {
   BadRequestException,
   ForbiddenException,
@@ -15,6 +14,8 @@ import { Repository } from 'typeorm';
 import { AdminUser } from '../AdminUser.entity';
 import { AdminUserSetInput } from 'src/graphql';
 import * as _ from 'lodash';
+import { PermissionService } from 'src/permission/services/permission.service';
+import { TokenService } from 'src/common/services/token.service';
 
 @Injectable()
 export class AdminUserService extends BaseService<AdminUser> {
@@ -24,7 +25,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     private passwordService: PasswordService,
     private permissionService: PermissionService,
     private roleService: RoleService,
-    private cacheService: CacheService
+    private tokenService: TokenService,
   ) {
     super(userRepo, 'AdminUser');
   }
@@ -48,7 +49,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     return this.userRepo.save(user);
   }
 
-  async createUser(data: AdminUserSetInput) {
+  async createUser(data: AdminUserSetInput, token: string) {
     const { name, email, password, role } = data;
     const existedRole = await this.roleService.findRoleByName(role);
 
@@ -67,11 +68,14 @@ export class AdminUserService extends BaseService<AdminUser> {
       );
     }
 
+    const adminUser = await this.tokenService.getAdminUserByToken(token);
+
     const user = this.userRepo.create({
       email,
       name,
       role: existedRole,
       password: this.passwordService.hash(password),
+      createdBy: adminUser,
     });
 
     return this.userRepo.save(user);
@@ -101,15 +105,5 @@ export class AdminUserService extends BaseService<AdminUser> {
 
   async findUserByEmail(email: string) {
     return this.userRepo.findOne({ email }, { relations: ['role'] });
-  }
-
-  async getAdminUserByToken (token: string) {
-    const adminUser = await this.cacheService.getValue(cacheConstant.ADMIN_USER + '-' + token) as AdminUser;
-
-    if (adminUser) {
-      return adminUser
-    }
-
-    throw new ForbiddenException('Forbidden resource')
   }
 }

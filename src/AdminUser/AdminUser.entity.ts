@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { BaseEntityWithCreatedBy } from 'src/common/Entity/base.entity';
 import { Role } from 'src/permission/entities/Role.entity';
 import {
   Column,
@@ -9,7 +10,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class AdminUser {
+export class AdminUser extends BaseEntityWithCreatedBy {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

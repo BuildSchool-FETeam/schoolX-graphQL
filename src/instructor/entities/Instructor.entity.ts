@@ -1,7 +1,15 @@
+import { AdminUser } from 'src/AdminUser/AdminUser.entity';
 import { ClientUser } from 'src/ClientUser/entities/ClientUser.entity';
 import { BaseEntity } from 'src/common/Entity/base.entity';
 import { Course } from 'src/courses/entities/Course.entity';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 
 @Entity()
 export class Instructor extends BaseEntity {
@@ -29,4 +37,7 @@ export class Instructor extends BaseEntity {
 
   @Column()
   phone: string;
+
+  @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
+  createdBy: AdminUser;
 }
