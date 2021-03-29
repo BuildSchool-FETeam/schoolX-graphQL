@@ -38,5 +38,6 @@ type CourseType implements BaseGraphQL {
   imageUrl: String
   tags: [TagType!]!
   lessons: [LessonType]!
+  createdBy: AdminUser
   # comments: [UserCommentType]!
 }

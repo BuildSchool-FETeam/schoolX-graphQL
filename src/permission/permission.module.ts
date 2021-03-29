@@ -7,11 +7,13 @@ import { Role } from './entities/Role.entity';
 import { PermissionMutationResolver } from './resolvers/permissionMutation.resolver';
 import { CommonModule } from 'src/common/Common.module';
 import { PermissionQueryResolver } from './resolvers/permissionQuery.resolver';
+import { AdminUserModule } from 'src/AdminUser/AdminUser.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PermissionSet, Role]),
     forwardRef(() => CommonModule),
+    forwardRef(() => AdminUserModule),
   ],
   providers: [
     PermissionService,

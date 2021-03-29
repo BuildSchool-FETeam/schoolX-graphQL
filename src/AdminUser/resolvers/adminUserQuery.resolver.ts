@@ -13,12 +13,14 @@ export class AdminUserQueryResolver {
   }
 
   @ResolveField()
-  adminUsers () {
-    return this.adminUserService.findWithOptions();
+  async adminUsers() {
+    const data = await this.adminUserService.findWithOptions();
+
+    return data;
   }
 
   @ResolveField()
-  adminUser (@Args('id') id: string) {
+  adminUser(@Args('id') id: string) {
     return this.adminUserService.findById(id);
   }
 }

@@ -65,5 +65,5 @@ export class Course extends BaseEntity {
   comments: UserComment[];
 
   @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
-  createdBy: AdminUser
+  createdBy: AdminUser;
 }

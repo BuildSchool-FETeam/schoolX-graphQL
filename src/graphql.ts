@@ -151,8 +151,7 @@ export class AdminUser {
     email: string;
     name: string;
     role: string;
-    createBy?: AdminUser;
-    createdAt: string;
+    createdBy?: AdminUser;
 }
 
 export class AssignmentType implements BaseGraphQL {
@@ -244,6 +243,7 @@ export class CourseType implements BaseGraphQL {
     imageUrl?: string;
     tags: TagType[];
     lessons: LessonType[];
+    createdBy?: AdminUser;
 }
 
 export class LessonType implements BaseGraphQL {
@@ -337,6 +337,7 @@ export class Permission {
     blog: string;
     notification: string;
     instructor: string;
+    createdBy?: AdminUser;
 }
 
 export class TagType implements BaseGraphQL {

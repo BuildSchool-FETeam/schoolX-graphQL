@@ -34,3 +34,8 @@ export abstract class BaseEntityUUID {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+
+export abstract class BaseEntityWithCreatedBy {
+  @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
+  createdBy: AdminUser;
+}

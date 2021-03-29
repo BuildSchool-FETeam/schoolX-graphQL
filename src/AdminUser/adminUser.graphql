@@ -28,6 +28,5 @@ type AdminUser {
   email: String!
   name: String!
   role: String!
-  createBy: AdminUser
-  createdAt: String!
+  createdBy: AdminUser
 }

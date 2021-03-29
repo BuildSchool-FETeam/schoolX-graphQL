@@ -36,4 +36,5 @@ type Permission {
   blog: String!
   notification: String!
   instructor: String!
+  createdBy: AdminUser
 }

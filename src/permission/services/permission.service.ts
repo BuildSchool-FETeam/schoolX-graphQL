@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Resource } from 'src/common/enums/resource.enum';
 import * as _ from 'lodash';
 import { BaseService } from 'src/common/services/base.service';
+import { TokenService } from 'src/common/services/token.service';
 
 @Injectable()
 export class PermissionService extends BaseService<PermissionSet> {
@@ -14,6 +15,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     @InjectRepository(PermissionSet)
     private permissionRepo: Repository<PermissionSet>,
     private roleService: RoleService,
+    private tokenService: TokenService,
   ) {
     super(permissionRepo, 'Permission');
   }
@@ -29,7 +31,6 @@ export class PermissionService extends BaseService<PermissionSet> {
       notification: fullPerm,
     });
 
-    // return this.permissionRepo.save(permissionSet);
     return permissionSet;
   }
 
@@ -37,11 +38,14 @@ export class PermissionService extends BaseService<PermissionSet> {
     return this.permissionRepo.save(permissionSet);
   }
 
-  async createPermission(input: PermissionSetInput) {
+  async createPermission(input: PermissionSetInput, token: string) {
     const inputWithoutName = _.omit(input, 'roleName');
     const role = await this.roleService.createRole(input.roleName);
+    const adminUser = await this.tokenService.getAdminUserByToken(token);
+
     const perSet = this.permissionRepo.create({
       ...inputWithoutName,
+      createdBy: adminUser,
     });
 
     perSet.role = role;
