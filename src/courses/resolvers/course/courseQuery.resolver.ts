@@ -22,8 +22,6 @@ export class CourseQueryResolver {
     return courses.map((course) => {
       return {
         ...course,
-        benefits: course.benefits.split('|'),
-        requirements: course.requirements.split('|'),
       };
     });
   }
@@ -34,8 +32,6 @@ export class CourseQueryResolver {
 
     return {
       ...course,
-      benefits: course.benefits.split('|'),
-      requirements: course.requirements.split('|'),
     };
   }
 }
