@@ -73,8 +73,6 @@ export class CourseMutationResolver {
 
     return {
       ...course,
-      benefits: course.benefits.split('|'),
-      requirements: course.requirements.split('|'),
     };
   }
 
