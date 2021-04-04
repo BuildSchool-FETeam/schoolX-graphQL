@@ -1,4 +1,4 @@
-import { AdminUserService } from 'src/AdminUser/services/AdminUser.service';
+import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
 import { Resolver, ResolveField, Parent } from '@nestjs/graphql';
 import { AdminUser } from '../AdminUser.entity';
 

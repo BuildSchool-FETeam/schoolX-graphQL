@@ -1,5 +1,5 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { TestCase } from 'src/Assignment/entities/Testcase.entity';
+import { TestCase } from 'src/assignment/entities/Testcase.entity';
 import { TestCaseService } from 'src/assignment/services/testCase.service';
 
 @Resolver('TestCaseType')

@@ -1,5 +1,5 @@
 import { BaseService } from 'src/common/services/base.service';
-import { TestCase } from 'src/Assignment/entities/Testcase.entity';
+import { TestCase } from 'src/assignment/entities/Testcase.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TestCaseSetInput } from 'src/graphql';

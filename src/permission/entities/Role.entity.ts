@@ -1,4 +1,4 @@
-import { AdminUser } from 'src/AdminUser/AdminUser.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity';
 import { Entity, OneToMany, OneToOne, PrimaryColumn } from 'typeorm';
 import { PermissionSet } from './Permission.entity';
 

@@ -94,13 +94,13 @@ export interface BaseGraphQL {
 export abstract class IQuery {
     __typename?: 'IQuery';
 
-    abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
-
-    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
-
     abstract heartBeat(): string | Promise<string>;
 
     abstract heartBeatWithAuth(): string | Promise<string>;
+
+    abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
+
+    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
 
     abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
 

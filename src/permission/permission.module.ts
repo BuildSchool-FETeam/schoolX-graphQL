@@ -7,7 +7,7 @@ import { Role } from './entities/Role.entity';
 import { PermissionMutationResolver } from './resolvers/permissionMutation.resolver';
 import { CommonModule } from 'src/common/Common.module';
 import { PermissionQueryResolver } from './resolvers/permissionQuery.resolver';
-import { AdminUserModule } from 'src/AdminUser/AdminUser.module';
+import { AdminUserModule } from 'src/adminUser/AdminUser.module';
 
 @Module({
   imports: [

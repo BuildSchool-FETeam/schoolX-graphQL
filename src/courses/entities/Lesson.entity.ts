@@ -1,4 +1,4 @@
-import { Assignment } from 'src/Assignment/entities/Assignment.entity';
+import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/Entity/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';

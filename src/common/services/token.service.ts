@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
-import { AdminUser } from 'src/AdminUser/AdminUser.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity';
 import { cacheConstant } from '../constants/cache.contant';
 import { EnvVariable } from '../interfaces/EnvVariable.interface';
 import { CacheService } from './cache.service';

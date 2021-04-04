@@ -1,4 +1,4 @@
-import { AdminUserService } from 'src/AdminUser/services/AdminUser.service';
+import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
 import { Resolver, Query, ResolveField, Args } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 

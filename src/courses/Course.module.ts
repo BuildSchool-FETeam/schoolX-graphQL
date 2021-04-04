@@ -1,4 +1,4 @@
-import { AdminUserModule } from './../AdminUser/AdminUser.module';
+import { AdminUserModule } from '../adminUser/AdminUser.module';
 import { LessonDocument } from './entities/LessonDocument.entity';
 import { LessonDocumentService } from './services/document.service';
 import { LessonQueryResolver } from './resolvers/lesson/lessonQuery.resolver';

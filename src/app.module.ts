@@ -7,7 +7,7 @@ import { join } from 'path';
 import { AuthModule } from './auth/Auth.module';
 import { HeartBeat as HeartBeatModule } from './HeartBeat/HeartBeat.module';
 import { PermissionModule } from './permission/permission.module';
-import { AdminUserModule } from './AdminUser/AdminUser.module';
+import { AdminUserModule } from './adminUser/AdminUser.module';
 import { APP_GUARD } from '@nestjs/core';
 import { PermissionGuard } from './common/guards/permission.guard';
 import { CommonModule } from './common/Common.module';
@@ -37,10 +37,10 @@ const EnvInitModule = ConfigModule.forRoot({
 
 const cacheManagerModule = CacheModule.register({
   ttl: 1000, // 1000s
-  max: 100
-})
+  max: 100,
+});
 
-const scheduleModule = ScheduleModule.forRoot()
+const scheduleModule = ScheduleModule.forRoot();
 
 @Module({
   imports: [

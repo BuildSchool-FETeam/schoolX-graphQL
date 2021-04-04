@@ -5,7 +5,7 @@ import { LessonService } from 'src/courses/services/lesson.service';
 import { AssignmentSetInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import * as _ from 'lodash';
-import { Assignment } from 'src/Assignment/entities/Assignment.entity';
+import { Assignment } from 'src/assignment/entities/Assignment.entity';
 
 @Injectable()
 export class AssignmentService extends BaseService<Assignment> {
