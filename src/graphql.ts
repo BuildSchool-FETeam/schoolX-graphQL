@@ -102,6 +102,8 @@ export abstract class IQuery {
 
     abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
 
+    abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
+
     abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
 
     abstract lessonQuery(): LessonQuery | Promise<LessonQuery>;
@@ -196,6 +198,11 @@ export class TestCaseMutation {
     __typename?: 'TestCaseMutation';
     setTestCase: TestCaseType;
     deleteTestCase?: boolean;
+}
+
+export class TestCaseQuery {
+    __typename?: 'TestCaseQuery';
+    testCase: TestCaseType;
 }
 
 export class AdminAuthMutation {

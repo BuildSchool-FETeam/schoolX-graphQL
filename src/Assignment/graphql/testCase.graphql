@@ -20,6 +20,14 @@ type TestCaseMutation {
   deleteTestCase(id: ID!): Boolean
 }
 
+type TestCaseQuery {
+  testCase(id: ID!): TestCaseType!
+}
+
 type Mutation {
   testCaseMutation: TestCaseMutation!
+}
+
+type Query {
+  testCaseQuery: TestCaseQuery!
 }

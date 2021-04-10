@@ -21,7 +21,7 @@ export class Assignment extends BaseEntity {
   @Column()
   hints: string;
 
-  @Column('float')
+  @Column('int4')
   score: number;
 
   @Column()

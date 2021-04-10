@@ -10,6 +10,7 @@ import { TestCase } from 'src/assignment/entities/Testcase.entity';
 import { TestCaseService } from './services/testCase.service';
 import { TestCaseMutationResolver } from './resolvers/testCase/testCaseMutation.resolver';
 import { TestCaseType } from 'src/graphql';
+import { TestCaseQueryResolver } from './resolvers/testCase/testCaseQuery.resolver';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Assignment, TestCase]), CourseModule],
@@ -21,6 +22,7 @@ import { TestCaseType } from 'src/graphql';
     TestCaseService,
     TestCaseMutationResolver,
     TestCaseType,
+    TestCaseQueryResolver,
   ],
 })
 export class AssignmentModule {}
