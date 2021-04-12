@@ -267,7 +267,6 @@ export class LessonType implements BaseGraphQL {
     content: string;
     documents: DocumentType[];
     assignments: AssignmentType[];
-    documentUrls?: string[];
 }
 
 export class LessonMutation {

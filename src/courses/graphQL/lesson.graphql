@@ -9,7 +9,6 @@ type LessonType implements BaseGraphQL {
   content: String!
   documents: [DocumentType]!
   assignments: [AssignmentType]!
-  documentUrls: [String]
   # comments: [UserCommentType]!
 }
 
