@@ -2,7 +2,7 @@ type Mutation {
   documentMutation: DocumentMutation
 }
 
-type DocumentType implements BaseGraphQL{
+type DocumentType implements BaseGraphQL {
   id: ID!
   title: String!
   createdAt: String!
@@ -12,7 +12,6 @@ type DocumentType implements BaseGraphQL{
 }
 
 input AddDocumentInput {
-  title: String!
   file: FileUpload!
 }
 

@@ -9,6 +9,7 @@ type LessonType implements BaseGraphQL {
   content: String!
   documents: [DocumentType]!
   assignments: [AssignmentType]!
+  documentUrls: [String]
   # comments: [UserCommentType]!
 }
 
@@ -17,7 +18,7 @@ input LessonSetInput {
   videoUrl: String!
   courseId: ID!
   content: String!
-  document: FileUpload
+  documents: [FileUpload]
 }
 
 type LessonMutation {

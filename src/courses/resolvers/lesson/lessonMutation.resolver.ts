@@ -1,14 +1,26 @@
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+import * as _ from 'lodash';
 import { AuthGuard } from 'src/common/guards/auth.guard';
+import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
+import {
+  GCStorageService,
+  StorageFolder,
+} from 'src/common/services/GCStorage.service';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
+import { LessonDocument } from 'src/courses/entities/LessonDocument.entity';
+import { LessonDocumentService } from 'src/courses/services/document.service';
 import { LessonService } from 'src/courses/services/lesson.service';
 import { LessonSetInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('LessonMutation')
 export class LessonMutationResolver {
-  constructor(private lessonService: LessonService) {}
+  constructor(
+    private lessonService: LessonService,
+    private documentService: LessonDocumentService,
+    private storageService: GCStorageService,
+  ) {}
 
   @Mutation()
   lessonMutation() {
@@ -18,12 +30,27 @@ export class LessonMutationResolver {
   @ResolveField()
   async setLesson(@Args('data') data: LessonSetInput, @Args('id') id?: string) {
     let lesson: Lesson;
+    let promises: Array<Promise<LessonDocument>> = [];
 
     if (!id) {
+      const allDocs = (await Promise.all(data.documents)) as FileUploadType[];
       lesson = await this.lessonService.createLesson(data);
+
+      if (_.size(allDocs) > 0) {
+        promises = _.map(allDocs, (doc) =>
+          this.uploadFileAndAddDocument(doc, lesson),
+        );
+      }
     } else {
+      if (_.size(data.documents) > 0) {
+        throw new BadRequestException(
+          'No need to upload all document in update mode, use document graphQL API instead',
+        );
+      }
       lesson = await this.lessonService.updateLesson(id, data);
     }
+
+    await Promise.all(promises);
 
     return {
       ...lesson,
@@ -33,5 +60,25 @@ export class LessonMutationResolver {
   @ResolveField()
   async deleteLesson(@Args('id') id: string) {
     return !!this.lessonService.deleteOneById(id);
+  }
+
+  private async uploadFileAndAddDocument(
+    { createReadStream, filename }: FileUploadType,
+    lesson: Lesson,
+  ) {
+    const fileStream = createReadStream();
+    const { filePath, publicUrl } = await this.storageService.uploadFile({
+      fileName: filename,
+      readStream: fileStream,
+      type: StorageFolder.documents,
+      makePublic: true,
+      additionalPath: `lesson-${lesson.id}`,
+    });
+
+    return await this.documentService.addDocumentToLesson(lesson, {
+      title: filename,
+      url: publicUrl,
+      filePath,
+    });
   }
 }
