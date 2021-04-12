@@ -13,6 +13,7 @@ type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string;
   filePath: string;
   createdBy: AdminUser;
+  levels: string[]
 };
 
 @Injectable()
@@ -34,6 +35,7 @@ export class CourseService extends BaseService<Course> {
       benefits: data.benefits.join('|'),
       requirements: data.requirements.join('|'),
       tags: [],
+      levels: data.levels.join('|')
     });
 
     const tagsString = data.tags;

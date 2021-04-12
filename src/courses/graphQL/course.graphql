@@ -24,6 +24,7 @@ input CourseSetInput {
   requirements: [String!]!
   image: FileUpload
   tags: [String!]!
+  levels: [String]!
 }
 
 type CourseType implements BaseGraphQL {
@@ -39,5 +40,6 @@ type CourseType implements BaseGraphQL {
   tags: [TagType!]!
   lessons: [LessonType]!
   createdBy: AdminUser
+  levels: [String]!
   # comments: [UserCommentType]!
 }

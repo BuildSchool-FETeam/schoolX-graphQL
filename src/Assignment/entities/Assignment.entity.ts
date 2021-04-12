@@ -21,7 +21,7 @@ export class Assignment extends BaseEntity {
   @Column()
   hints: string;
 
-  @Column('int4')
+  @Column('int4', {default: 10, nullable: true})
   score: number;
 
   @Column()

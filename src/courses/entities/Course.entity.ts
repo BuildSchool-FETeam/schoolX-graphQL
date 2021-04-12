@@ -58,8 +58,8 @@ export class Course extends BaseEntity {
   @ManyToMany(() => Tag, (tag) => tag.courses)
   tags: Tag[];
 
-  @Column({ nullable: true, type: 'int' })
-  levels: number;
+  @Column({ nullable: true, default: "Beginner" })
+  levels: string;
 
   @OneToMany(() => UserComment, (userComment) => userComment.course)
   comments: UserComment[];
