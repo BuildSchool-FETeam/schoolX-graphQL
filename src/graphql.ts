@@ -50,6 +50,7 @@ export class CourseSetInput {
     requirements: string[];
     image?: FileUpload;
     tags: string[];
+    levels: string[];
 }
 
 export class LessonSetInput {
@@ -94,15 +95,15 @@ export interface BaseGraphQL {
 export abstract class IQuery {
     __typename?: 'IQuery';
 
-    abstract heartBeat(): string | Promise<string>;
-
-    abstract heartBeatWithAuth(): string | Promise<string>;
-
     abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
 
     abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
 
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
+
+    abstract heartBeat(): string | Promise<string>;
+
+    abstract heartBeatWithAuth(): string | Promise<string>;
 
     abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
 
@@ -251,6 +252,7 @@ export class CourseType implements BaseGraphQL {
     tags: TagType[];
     lessons: LessonType[];
     createdBy?: AdminUser;
+    levels: string[];
 }
 
 export class LessonType implements BaseGraphQL {

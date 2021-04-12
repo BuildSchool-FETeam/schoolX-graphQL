@@ -40,4 +40,9 @@ export class CourseTypeResolver {
   async requirements(@Parent() courseParent: Course) {
     return courseParent.requirements.split('|');
   }
+
+  @ResolveField()
+  async levels(@Parent() courseParent: Course) {
+    return courseParent.levels.split('|');
+  }
 }

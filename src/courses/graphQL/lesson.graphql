@@ -17,6 +17,7 @@ input LessonSetInput {
   videoUrl: String!
   courseId: ID!
   content: String!
+  document: FileUpload
 }
 
 type LessonMutation {
