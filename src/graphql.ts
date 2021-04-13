@@ -6,13 +6,6 @@
 
 /* tslint:disable */
 /* eslint-disable */
-export class AdminUserSetInput {
-    email: string;
-    name: string;
-    role: string;
-    password?: string;
-}
-
 export class AssignmentSetInput {
     title: string;
     description: string;
@@ -29,6 +22,13 @@ export class TestCaseSetInput {
     input: string;
     expectedOutput: string;
     assignmentId: string;
+}
+
+export class AdminUserSetInput {
+    email: string;
+    name: string;
+    role: string;
+    password?: string;
 }
 
 export class SignUpInput {
@@ -58,10 +58,10 @@ export class LessonSetInput {
     videoUrl: string;
     courseId: string;
     content: string;
+    documents?: FileUpload[];
 }
 
 export class AddDocumentInput {
-    title: string;
     file: FileUpload;
 }
 
@@ -92,71 +92,6 @@ export interface BaseGraphQL {
     updatedAt: string;
 }
 
-export abstract class IQuery {
-    __typename?: 'IQuery';
-
-    abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
-
-    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
-
-    abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
-
-    abstract heartBeat(): string | Promise<string>;
-
-    abstract heartBeatWithAuth(): string | Promise<string>;
-
-    abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
-
-    abstract lessonQuery(): LessonQuery | Promise<LessonQuery>;
-
-    abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
-
-    abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
-}
-
-export abstract class IMutation {
-    __typename?: 'IMutation';
-
-    abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
-
-    abstract assignmentMutation(): AssignmentMutation | Promise<AssignmentMutation>;
-
-    abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
-
-    abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
-
-    abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
-
-    abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
-
-    abstract documentMutation(): DocumentMutation | Promise<DocumentMutation>;
-
-    abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
-
-    abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
-}
-
-export class AdminUserQuery {
-    __typename?: 'AdminUserQuery';
-    adminUsers: AdminUser[];
-    adminUser: AdminUser;
-}
-
-export class AdminUserMutation {
-    __typename?: 'AdminUserMutation';
-    setAdminUser: AdminUser;
-    deleteAdminUser?: boolean;
-}
-
-export class AdminUser {
-    __typename?: 'AdminUser';
-    id: string;
-    email: string;
-    name: string;
-    role: string;
-    createdBy?: AdminUser;
-}
-
 export class AssignmentType implements BaseGraphQL {
     __typename?: 'AssignmentType';
     id: string;
@@ -184,6 +119,50 @@ export class AssignmentQuery {
     assignment: AssignmentType;
 }
 
+export abstract class IQuery {
+    __typename?: 'IQuery';
+
+    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
+
+    abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
+
+    abstract heartBeat(): string | Promise<string>;
+
+    abstract heartBeatWithAuth(): string | Promise<string>;
+
+    abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
+
+    abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
+
+    abstract lessonQuery(): LessonQuery | Promise<LessonQuery>;
+
+    abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
+
+    abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
+}
+
+export abstract class IMutation {
+    __typename?: 'IMutation';
+
+    abstract assignmentMutation(): AssignmentMutation | Promise<AssignmentMutation>;
+
+    abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
+
+    abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
+
+    abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
+
+    abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
+
+    abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
+
+    abstract documentMutation(): DocumentMutation | Promise<DocumentMutation>;
+
+    abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
+
+    abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+}
+
 export class TestCaseType implements BaseGraphQL {
     __typename?: 'TestCaseType';
     id: string;
@@ -204,6 +183,27 @@ export class TestCaseMutation {
 export class TestCaseQuery {
     __typename?: 'TestCaseQuery';
     testCase: TestCaseType;
+}
+
+export class AdminUserQuery {
+    __typename?: 'AdminUserQuery';
+    adminUsers: AdminUser[];
+    adminUser: AdminUser;
+}
+
+export class AdminUserMutation {
+    __typename?: 'AdminUserMutation';
+    setAdminUser: AdminUser;
+    deleteAdminUser?: boolean;
+}
+
+export class AdminUser {
+    __typename?: 'AdminUser';
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    createdBy?: AdminUser;
 }
 
 export class AdminAuthMutation {

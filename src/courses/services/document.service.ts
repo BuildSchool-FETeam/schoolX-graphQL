@@ -1,32 +1,38 @@
-import { LessonService } from './lesson.service';
 import { Repository } from 'typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonDocument } from './../entities/LessonDocument.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Lesson } from '../entities/Lesson.entity';
+import { GCStorageService } from 'src/common/services/GCStorage.service';
 
 export class LessonDocumentService extends BaseService<LessonDocument> {
   constructor(
     @InjectRepository(LessonDocument)
     private docRepo: Repository<LessonDocument>,
-    private lessonService: LessonService
+    private storageService: GCStorageService,
   ) {
-    super(docRepo, 'Document')
+    super(docRepo, 'Document');
   }
 
-  async addDocumentToLesson (lessonId: string, data: { title: string, url: string, filePath: string }) {
+  async addDocumentToLesson(
+    lesson: Lesson,
+    data: { title: string; url: string; filePath: string },
+  ) {
     const doc = this.docRepo.create({
       title: data.title,
       url: data.url,
-      filePath: data.filePath
-    })
-    const lesson = await this.lessonService.findById(lessonId);
+      filePath: data.filePath,
+    });
 
     doc.lesson = lesson;
 
     return this.docRepo.save(doc);
   }
 
-  removeDocFromLesson (docId: string) {
+  async removeDocFromLesson(docId: string) {
+    const doc = await this.findById(docId);
+
+    this.storageService.deleteFile(doc.filePath);
     return this.docRepo.delete(docId);
   }
 }
