@@ -13,6 +13,15 @@ import * as _ from 'lodash';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { TokenService } from '../services/token.service';
 import { PermissionService } from 'src/permission/services/permission.service';
+import { CacheService } from '../services/cache.service';
+import { cacheConstant } from '../constants/cache.contant';
+import { PermissionSet } from 'src/permission/entities/Permission.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity';
+
+export interface ICachedPermissionSet {
+  adminUser: AdminUser;
+  permissionSet: PermissionSet;
+}
 
 @Injectable()
 export class PermissionGuard implements CanActivate {
@@ -20,6 +29,7 @@ export class PermissionGuard implements CanActivate {
     private reflector: Reflector,
     private tokenService: TokenService,
     private permissionService: PermissionService,
+    private cacheService: CacheService,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -35,13 +45,21 @@ export class PermissionGuard implements CanActivate {
     if (_.isNil(requirePermission)) {
       return true;
     }
-    const validToken = this.decodeToken(graphQLContext);
+    const { token, adminUser } = this.decodeToken(graphQLContext);
 
-    if (!validToken) {
+    if (!adminUser) {
       return false;
     }
     const userPermissions = await this.permissionService.getPermissionByRole(
-      validToken.role.name,
+      adminUser.role.name,
+    );
+
+    await this.cacheService.setValue<ICachedPermissionSet>(
+      `${cacheConstant.PERMISSION}-${token}`,
+      {
+        permissionSet: userPermissions,
+        adminUser: adminUser,
+      },
     );
 
     if (!userPermissions) {
@@ -73,7 +91,10 @@ export class PermissionGuard implements CanActivate {
     try {
       const headers = context.getContext().req.headers as DynamicObject;
       const token = headers.authorization?.split(' ')[1] as string;
-      return this.tokenService.verifyAndDecodeToken(token);
+      return {
+        adminUser: this.tokenService.verifyAndDecodeToken(token),
+        token,
+      };
     } catch (err) {
       return null;
     }

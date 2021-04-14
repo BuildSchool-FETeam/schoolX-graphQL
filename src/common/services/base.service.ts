@@ -1,4 +1,8 @@
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
+import * as _ from 'lodash';
 import { Repository, FindManyOptions, FindOneOptions } from 'typeorm';
 
 export abstract class BaseService<T> {
@@ -38,5 +42,19 @@ export abstract class BaseService<T> {
       );
     }
     return this.repository.delete(id);
+  }
+
+  getTokenFromHttpHeader(headers: DynamicObject) {
+    const token = _.split(headers.authorization, ' ')[1];
+
+    if (!token) {
+      throw new InternalServerErrorException('Token not found');
+    }
+
+    return token;
+  }
+
+  isStrictPermission(permissionArray: string[]) {
+    return _.includes(permissionArray, 'S');
   }
 }

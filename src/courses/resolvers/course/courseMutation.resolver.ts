@@ -44,7 +44,7 @@ export class CourseMutationResolver {
     let imageUrl: string, filePath: string;
     let existedCourse: Course;
 
-    const token = _.split(req.headers.authorization, ' ')[1];
+    const token = this.courseService.getTokenFromHttpHeader(req.headers);
     const adminUser = await this.tokenService.getAdminUserByToken(token);
 
     if (id) {
