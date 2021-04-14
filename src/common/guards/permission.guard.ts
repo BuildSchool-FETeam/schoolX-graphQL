@@ -45,11 +45,14 @@ export class PermissionGuard implements CanActivate {
     if (_.isNil(requirePermission)) {
       return true;
     }
-    const { token, adminUser } = this.decodeToken(graphQLContext);
+    const decodedToken = this.decodeToken(graphQLContext);
 
-    if (!adminUser) {
+    if (!decodedToken) {
       return false;
     }
+
+    const {adminUser, token} = decodedToken;
+
     const userPermissions = await this.permissionService.getPermissionByRole(
       adminUser.role.name,
     );

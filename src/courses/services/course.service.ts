@@ -1,3 +1,4 @@
+import { CacheService } from './../../common/services/cache.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,8 +24,9 @@ export class CourseService extends BaseService<Course> {
     private courseRepo: Repository<Course>,
     private instructorService: InstructorService,
     private tagService: TagService,
+    private cachedService: CacheService
   ) {
-    super(courseRepo, 'Course');
+    super(courseRepo, 'Course', cachedService);
   }
 
   async createCourse(data: CourseDataInput) {

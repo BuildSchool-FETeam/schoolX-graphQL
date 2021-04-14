@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, ResolveField, Args } from '@nestjs/graphql';
+import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { CourseService } from 'src/courses/services/course.service';
@@ -16,8 +16,9 @@ export class CourseQueryResolver {
   }
 
   @ResolveField('courses')
-  async getAllCourses() {
-    const courses = await this.courseService.findWithOptions();
+  async getAllCourses(@Context() {req}: any) {
+    const token = this.courseService.getTokenFromHttpHeader(req.headers)
+    const courses = await this.courseService.findWithOptions({}, {token, strictResourceName: 'course'});
 
     return courses.map((course) => {
       return {

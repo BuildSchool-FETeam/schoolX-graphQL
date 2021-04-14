@@ -1,3 +1,4 @@
+import { CacheService } from './../../common/services/cache.service';
 
 import { BaseService } from 'src/common/services/base.service';
 import { RoleService } from '../../permission/services/role.service';
@@ -24,8 +25,9 @@ export class AdminUserService extends BaseService<AdminUser> {
     private permissionService: PermissionService,
     private roleService: RoleService,
     private tokenService: TokenService,
+    public cachedService: CacheService
   ) {
-    super(userRepo, 'AdminUser');
+    super(userRepo, 'AdminUser', cachedService);
   }
 
   async createUserBySignup(data: Partial<AdminUser>) {
