@@ -11,51 +11,57 @@ import { ICachedPermissionSet } from '../guards/permission.guard';
 import { cacheConstant } from '../constants/cache.contant';
 
 interface IStrictConfig {
-  token: string
-  strictResourceName: keyof Omit<PermissionSet, 'id'|'role'|'createdBy'>
+  token: string;
+  strictResourceName: keyof Omit<PermissionSet, 'id' | 'role' | 'createdBy'>;
 }
 export abstract class BaseService<T> {
   protected repository: Repository<T>;
   protected resourceName: string;
-  protected cachingService: CacheService
+  protected cachingService: CacheService;
 
   constructor(
-    repo: Repository<T>, 
-    resourceName?: string, 
-    cachingService?: CacheService
+    repo: Repository<T>,
+    resourceName?: string,
+    cachingService?: CacheService,
   ) {
     this.repository = repo;
     this.resourceName = resourceName;
-    this.cachingService = cachingService
+    this.cachingService = cachingService;
   }
 
-  async findById(id: string, options: FindOneOptions<T> = {}, strictConfig?: IStrictConfig) {
+  async findById(
+    id: string,
+    options: FindOneOptions<T> = {},
+    strictConfig?: IStrictConfig,
+  ) {
     if (_.size(options.relations) === 0) {
-      options.relations = ['createdBy']
+      options.relations = ['createdBy'];
     } else if (!options.relations.includes('createdBy')) {
-      options.relations.push('createdBy')
+      options.relations.push('createdBy');
     }
 
-    const resource = await this.repository.findOne(id, options);    
+    const resource = await this.repository.findOne(id, options);
 
     if (this.cachingService && strictConfig) {
-      const {
-        adminUser,
-        permissionSet,
-      } = await this.cachingService.getValue<ICachedPermissionSet>(
-        `${cacheConstant.PERMISSION}-${strictConfig.token}`,
-      )
-      
-      if (this.isStrictPermission(permissionSet[strictConfig.strictResourceName])) {
+      const { adminUser, permissionSet } = await this.getAdminUserCredential(
+        strictConfig,
+      );
+      if (
+        this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
+      ) {
         if (_.isNil((resource as any).createdBy)) {
-          throw new ForbiddenException("You don't have permission to view this resource")
+          throw new ForbiddenException(
+            "You don't have permission to do this action on resource",
+          );
         }
 
         if ((resource as any).createdBy.id !== adminUser.id) {
-          throw new ForbiddenException("You don't have permission to view this resource")
+          throw new ForbiddenException(
+            "You don't have permission to do this action on resource",
+          );
         }
       }
-    } 
+    }
 
     if (!resource) {
       throw new NotFoundException(
@@ -65,21 +71,25 @@ export abstract class BaseService<T> {
     return resource;
   }
 
-  async findWithOptions(options?: FindManyOptions<T>, strictConfig?: IStrictConfig) {    
+  async findWithOptions(
+    options?: FindManyOptions<T>,
+    strictConfig?: IStrictConfig,
+  ) {
     let finalOptions: FindManyOptions<T> = options;
-    
+
     if (this.cachingService && strictConfig) {
-      const {
-        adminUser,
-        permissionSet,
-      } = await this.cachingService.getValue<ICachedPermissionSet>(
-        `${cacheConstant.PERMISSION}-${strictConfig.token}`,
-      )
-      
-      if (this.isStrictPermission(permissionSet[strictConfig.strictResourceName])) {
-        finalOptions = _.assign(options.where, {createdBy: adminUser}) as FindManyOptions<T>
+      const { adminUser, permissionSet } = await this.getAdminUserCredential(
+        strictConfig,
+      );
+
+      if (
+        this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
+      ) {
+        finalOptions = _.assign(options.where, {
+          createdBy: adminUser,
+        }) as FindManyOptions<T>;
       }
-    }    
+    }
 
     const resource = await this.repository.find(finalOptions);
     if (!resource) {
@@ -90,7 +100,11 @@ export abstract class BaseService<T> {
     return resource;
   }
 
-  async deleteOneById(id: string) {
+  async deleteOneById(id: string, strictConfig?: IStrictConfig) {
+    if (strictConfig && this.cachingService) {
+      await this.findById(id, {}, strictConfig);
+    }
+
     const existedItem = await this.repository.findOne(id);
     if (!existedItem) {
       throw new NotFoundException(
@@ -112,5 +126,11 @@ export abstract class BaseService<T> {
 
   private isStrictPermission(permissionAsString: string) {
     return _.includes(permissionAsString.split('|'), 'S');
+  }
+
+  private async getAdminUserCredential(strictConfig: IStrictConfig) {
+    return await this.cachingService.getValue<ICachedPermissionSet>(
+      `${cacheConstant.PERMISSION}-${strictConfig.token}`,
+    );
   }
 }
