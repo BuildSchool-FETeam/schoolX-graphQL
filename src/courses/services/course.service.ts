@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Course } from 'src/courses/entities/Course.entity';
-import { BaseService } from 'src/common/services/base.service';
+import { BaseService, IStrictConfig } from 'src/common/services/base.service';
 import * as _ from 'lodash';
 import { TagService } from 'src/tag/tag.service';
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
@@ -14,7 +14,7 @@ type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string;
   filePath: string;
   createdBy: AdminUser;
-  levels: string[]
+  levels: string[];
 };
 
 @Injectable()
@@ -24,7 +24,7 @@ export class CourseService extends BaseService<Course> {
     private courseRepo: Repository<Course>,
     private instructorService: InstructorService,
     private tagService: TagService,
-    private cachedService: CacheService
+    private cachedService: CacheService,
   ) {
     super(courseRepo, 'Course', cachedService);
   }
@@ -37,7 +37,7 @@ export class CourseService extends BaseService<Course> {
       benefits: data.benefits.join('|'),
       requirements: data.requirements.join('|'),
       tags: [],
-      levels: data.levels.join('|')
+      levels: data.levels.join('|'),
     });
 
     const tagsString = data.tags;
@@ -54,8 +54,12 @@ export class CourseService extends BaseService<Course> {
       });
   }
 
-  async updateCourse(id: string, data: CourseDataInput) {
-    const existedCourse = await this.courseRepo.findOne(id);
+  async updateCourse(
+    id: string,
+    data: CourseDataInput,
+    strictConfig: IStrictConfig,
+  ) {
+    const existedCourse = await this.findById(id, {}, strictConfig);
 
     if (!existedCourse) {
       throw new NotFoundException('Course not found');

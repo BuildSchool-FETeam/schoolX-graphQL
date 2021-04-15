@@ -16,9 +16,12 @@ export class CourseQueryResolver {
   }
 
   @ResolveField('courses')
-  async getAllCourses(@Context() {req}: any) {
-    const token = this.courseService.getTokenFromHttpHeader(req.headers)
-    const courses = await this.courseService.findWithOptions({}, {token, strictResourceName: 'course'});
+  async getAllCourses(@Context() { req }: any) {
+    const token = this.courseService.getTokenFromHttpHeader(req.headers);
+    const courses = await this.courseService.findWithOptions(
+      {},
+      { token, strictResourceName: 'course' },
+    );
 
     return courses.map((course) => {
       return {
@@ -28,8 +31,13 @@ export class CourseQueryResolver {
   }
 
   @ResolveField('course')
-  async getCourseById(@Args('id') id: string) {
-    const course = await this.courseService.findById(id);
+  async getCourseById(@Args('id') id: string, @Context() { req }: any) {
+    const token = this.courseService.getTokenFromHttpHeader(req.headers);
+    const course = await this.courseService.findById(
+      id,
+      {},
+      { token, strictResourceName: 'course' },
+    );
 
     return {
       ...course,

@@ -35,7 +35,10 @@ export class AdminUserMutationResolver {
     if (!id) {
       user = await this.adminUserService.createUser(data, token);
     } else {
-      user = await this.adminUserService.updateUser(id, data);
+      user = await this.adminUserService.updateUser(id, data, {
+        token,
+        strictResourceName: 'user',
+      });
     }
 
     return {

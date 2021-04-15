@@ -66,7 +66,10 @@ export class CourseMutationResolver {
     };
 
     if (id) {
-      course = await this.courseService.updateCourse(id, savedObj);
+      course = await this.courseService.updateCourse(id, savedObj, {
+        token,
+        strictResourceName: 'course',
+      });
     } else {
       course = await this.courseService.createCourse(savedObj);
     }
@@ -78,8 +81,13 @@ export class CourseMutationResolver {
 
   @PermissionRequire({ course: ['D'] })
   @ResolveField()
-  async deleteCourse(@Args('id') id: string) {
-    const course = await this.courseService.findById(id);
+  async deleteCourse(@Args('id') id: string, @Context() { req }: any) {
+    const token = this.courseService.getTokenFromHttpHeader(req.headers);
+    const course = await this.courseService.findById(
+      id,
+      {},
+      { token, strictResourceName: 'course' },
+    );
 
     if (course.filePath) {
       this.gcStorageService.deleteFile(course.filePath);
