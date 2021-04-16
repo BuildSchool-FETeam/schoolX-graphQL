@@ -6,8 +6,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Resource } from 'src/common/enums/resource.enum';
 import * as _ from 'lodash';
-import { BaseService } from 'src/common/services/base.service';
+import { BaseService, IStrictConfig } from 'src/common/services/base.service';
 import { TokenService } from 'src/common/services/token.service';
+import { CacheService } from 'src/common/services/cache.service';
 
 @Injectable()
 export class PermissionService extends BaseService<PermissionSet> {
@@ -16,8 +17,9 @@ export class PermissionService extends BaseService<PermissionSet> {
     private permissionRepo: Repository<PermissionSet>,
     private roleService: RoleService,
     private tokenService: TokenService,
+    public cachedService: CacheService,
   ) {
-    super(permissionRepo, 'Permission');
+    super(permissionRepo, 'Permission', cachedService);
   }
 
   createAdminPermission() {
@@ -49,18 +51,26 @@ export class PermissionService extends BaseService<PermissionSet> {
     });
 
     perSet.role = role;
-
     await this.permissionRepo.save(perSet);
+
     return {
       name: role.name,
       permissionSet: perSet,
     };
   }
 
-  async updatePermission(id: string, input: PermissionSetInput) {
-    const permissionSet = await this.permissionRepo.findOne(id, {
-      relations: ['role'],
-    });
+  async updatePermission(
+    id: string,
+    input: PermissionSetInput,
+    strictConfig: IStrictConfig,
+  ) {
+    const permissionSet = await this.findById(
+      id,
+      {
+        relations: ['role'],
+      },
+      strictConfig,
+    );
 
     if (!permissionSet) {
       throw new NotFoundException(`Resource with id "${id}" not found`);

@@ -1,5 +1,6 @@
+import { CacheService } from './../../common/services/cache.service';
 
-import { BaseService } from 'src/common/services/base.service';
+import { BaseService, IStrictConfig } from 'src/common/services/base.service';
 import { RoleService } from '../../permission/services/role.service';
 import {
   BadRequestException,
@@ -24,8 +25,9 @@ export class AdminUserService extends BaseService<AdminUser> {
     private permissionService: PermissionService,
     private roleService: RoleService,
     private tokenService: TokenService,
+    public cachedService: CacheService,
   ) {
-    super(userRepo, 'AdminUser');
+    super(userRepo, 'AdminUser', cachedService);
   }
 
   async createUserBySignup(data: Partial<AdminUser>) {
@@ -79,8 +81,12 @@ export class AdminUserService extends BaseService<AdminUser> {
     return this.userRepo.save(user);
   }
 
-  async updateUser(id: string, data: AdminUserSetInput) {
-    const user = await this.userRepo.findOne(id);
+  async updateUser(
+    id: string,
+    data: AdminUserSetInput,
+    strictConfig: IStrictConfig,
+  ) {
+    const user = await this.findById(id, {}, strictConfig);
     const role = await this.roleService.findRoleByName(data.role);
 
     if (!role) {

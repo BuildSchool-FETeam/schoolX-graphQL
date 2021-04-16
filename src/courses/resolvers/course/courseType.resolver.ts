@@ -32,6 +32,14 @@ export class CourseTypeResolver {
   }
 
   @ResolveField()
+  async createdBy(@Parent() courseParent: CourseType) {
+    const course = await this.courseService.findById(courseParent.id, {
+      relations: ['createdBy'],
+    });
+    return course.createdBy;
+  }
+
+  @ResolveField()
   async benefits(@Parent() courseParent: Course) {
     return courseParent.benefits.split('|');
   }

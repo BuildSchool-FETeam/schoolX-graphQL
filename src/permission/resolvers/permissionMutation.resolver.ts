@@ -44,7 +44,10 @@ export class PermissionMutationResolver {
     if (!id) {
       result = await this.permissionService.createPermission(data, token);
     } else {
-      result = await this.permissionService.updatePermission(id, data);
+      result = await this.permissionService.updatePermission(id, data, {
+        token,
+        strictResourceName: 'permission',
+      });
     }
 
     return {
@@ -55,8 +58,12 @@ export class PermissionMutationResolver {
 
   @PermissionRequire({ permission: ['D'] })
   @ResolveField()
-  async deletePermission(@Args('id') id: string) {
-    const permissions = await this.permissionService.deleteOneById(id);
+  async deletePermission(@Args('id') id: string, @Context() { req }: any) {
+    const token = this.permissionService.getTokenFromHttpHeader(req.headers);
+    const permissions = await this.permissionService.deleteOneById(id, {
+      token,
+      strictResourceName: 'permission',
+    });
     return !!permissions;
   }
 
