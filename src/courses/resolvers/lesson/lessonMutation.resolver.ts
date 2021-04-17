@@ -33,7 +33,10 @@ export class LessonMutationResolver {
     let promises: Array<Promise<LessonDocument>> = [];
 
     if (!id) {
-      const allDocs = (await Promise.all(data.documents)) as FileUploadType[];
+      let allDocs: FileUploadType[] = [];
+
+      _.size(data.documents) > 0 &&
+        (allDocs = (await Promise.all(data.documents)) as FileUploadType[]);
       lesson = await this.lessonService.createLesson(data);
 
       if (_.size(allDocs) > 0) {
