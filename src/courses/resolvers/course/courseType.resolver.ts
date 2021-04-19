@@ -1,7 +1,7 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { Course } from 'src/courses/entities/Course.entity';
 import { CourseService } from 'src/courses/services/course.service';
-import { CourseType } from 'src/graphql';
+import { CourseType, PaginationInput } from 'src/graphql';
 
 @Resolver('CourseType')
 export class CourseTypeResolver {
@@ -24,11 +24,14 @@ export class CourseTypeResolver {
   }
 
   @ResolveField()
-  async lessons(@Parent() courseParent: CourseType) {
+  async lessons(
+    @Parent() courseParent: CourseType,
+    @Args('pagination') pg: PaginationInput,
+  ) {
     const course = await this.courseService.findById(courseParent.id, {
       relations: ['lessons'],
     });
-    return course.lessons;
+    return this.courseService.manualPagination(course.lessons, pg);
   }
 
   @ResolveField()

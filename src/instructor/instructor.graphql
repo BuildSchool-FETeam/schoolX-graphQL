@@ -3,7 +3,7 @@ type Query {
 }
 
 type InstructorQuery {
-  instructors: [InstructorType!]!
+  instructors(pagination: PaginationInput): [InstructorType!]!
   instructor(id: ID!): InstructorType!
 }
 

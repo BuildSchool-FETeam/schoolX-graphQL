@@ -1,20 +1,17 @@
 import { PermissionSet } from './../../permission/entities/Permission.entity';
 import { CacheService } from './cache.service';
-import {
-  ForbiddenException,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import * as _ from 'lodash';
 import { Repository, FindManyOptions, FindOneOptions } from 'typeorm';
 import { ICachedPermissionSet } from '../guards/permission.guard';
 import { cacheConstant } from '../constants/cache.contant';
+import { UtilService } from './util.service';
 
 export interface IStrictConfig {
   token: string;
   strictResourceName: keyof Omit<PermissionSet, 'id' | 'role' | 'createdBy'>;
 }
-export abstract class BaseService<T> {
+export abstract class BaseService<T> extends UtilService {
   protected repository: Repository<T>;
   protected resourceName: string;
   protected cachingService: CacheService;
@@ -24,6 +21,7 @@ export abstract class BaseService<T> {
     resourceName?: string,
     cachingService?: CacheService,
   ) {
+    super();
     this.repository = repo;
     this.resourceName = resourceName;
     this.cachingService = cachingService;
@@ -117,16 +115,6 @@ export abstract class BaseService<T> {
       );
     }
     return this.repository.delete(id);
-  }
-
-  getTokenFromHttpHeader(headers: DynamicObject) {
-    const token = _.split(headers.authorization, ' ')[1];
-
-    if (!token) {
-      throw new InternalServerErrorException('Token not found');
-    }
-
-    return token;
   }
 
   private isStrictPermission(permissionAsString: string) {
