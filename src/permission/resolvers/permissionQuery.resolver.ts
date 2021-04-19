@@ -2,6 +2,8 @@ import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
+import { PaginationInput } from 'src/graphql';
+import { PermissionSet } from '../entities/Permission.entity';
 import { PermissionService } from '../services/permission.service';
 
 @UseGuards(AuthGuard)
@@ -10,17 +12,24 @@ export class PermissionQueryResolver {
   constructor(private permissionService: PermissionService) {}
 
   @Query()
-  @PermissionRequire({ permission: ['R'] })
   permissionQuery() {
     return {};
   }
 
+  @PermissionRequire({ permission: ['R'] })
   @ResolveField('permissions')
-  async getAllPermissions(@Context() { req }: any) {
+  async getAllPermissions(
+    @Context() { req }: any,
+    @Args('pagination') pg: PaginationInput,
+  ) {
+    const pgOptions = this.permissionService.buildPaginationOptions<PermissionSet>(
+      pg,
+    );
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
     const permissions = await this.permissionService.findWithOptions(
       {
         relations: ['role'],
+        ...pgOptions,
       },
       { token, strictResourceName: 'permission' },
     );
@@ -33,6 +42,7 @@ export class PermissionQueryResolver {
     });
   }
 
+  @PermissionRequire({ permission: ['R'] })
   @ResolveField('permissionWithId')
   async getPermissionById(@Args('id') id: string, @Context() { req }: any) {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
@@ -50,6 +60,7 @@ export class PermissionQueryResolver {
     };
   }
 
+  @PermissionRequire({ permission: ['R'] })
   @ResolveField('permissionWithRole')
   async getPermissionByRole(@Args('roleName') roleName: string) {
     const permissionSet = await this.permissionService.getPermissionByRole(

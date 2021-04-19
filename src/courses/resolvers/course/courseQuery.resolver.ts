@@ -3,6 +3,7 @@ import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { CourseService } from 'src/courses/services/course.service';
+import { PaginationInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('CourseQuery')
@@ -16,10 +17,14 @@ export class CourseQueryResolver {
   }
 
   @ResolveField('courses')
-  async getAllCourses(@Context() { req }: any) {
+  async getAllCourses(
+    @Context() { req }: any,
+    @Args('pagination') pg?: PaginationInput,
+  ) {
+    const pgOptions = this.courseService.buildPaginationOptions(pg);
     const token = this.courseService.getTokenFromHttpHeader(req.headers);
     const courses = await this.courseService.findWithOptions(
-      {},
+      { ...pgOptions },
       { token, strictResourceName: 'course' },
     );
 

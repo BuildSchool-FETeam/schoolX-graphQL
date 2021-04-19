@@ -1,5 +1,10 @@
 scalar FileUpload
 
+enum OrderDirection {
+  ASC
+  DESC
+}
+
 type File {
   filename: String!
   mimetype: String!
@@ -11,4 +16,15 @@ interface BaseGraphQL {
   title: String!
   createdAt: String!
   updatedAt: String!
+}
+
+input OrderType {
+  orderBy: String!
+  direction: OrderDirection!
+}
+
+input PaginationInput {
+  order: OrderType
+  skip: Int
+  limit: Int
 }

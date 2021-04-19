@@ -6,6 +6,11 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum OrderDirection {
+    ASC = "ASC",
+    DESC = "DESC"
+}
+
 export class AssignmentSetInput {
     title: string;
     description: string;
@@ -40,6 +45,17 @@ export class SignUpInput {
 export class SignInInput {
     email: string;
     password: string;
+}
+
+export class OrderType {
+    orderBy: string;
+    direction: OrderDirection;
+}
+
+export class PaginationInput {
+    order?: OrderType;
+    skip?: number;
+    limit?: number;
 }
 
 export class CourseSetInput {

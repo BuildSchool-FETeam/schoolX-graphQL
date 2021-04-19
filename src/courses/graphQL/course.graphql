@@ -3,7 +3,7 @@ type Query {
 }
 
 type CourseQuery {
-  courses: [CourseType!]!
+  courses(pagination: PaginationInput): [CourseType!]!
   course(id: ID!): CourseType!
 }
 
@@ -38,7 +38,7 @@ type CourseType implements BaseGraphQL {
   requirements: [String!]!
   imageUrl: String
   tags: [TagType!]!
-  lessons: [LessonType]!
+  lessons(pagination: PaginationInput): [LessonType]!
   createdBy: AdminUser
   levels: [String]!
   # comments: [UserCommentType]!

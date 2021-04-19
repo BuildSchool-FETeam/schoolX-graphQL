@@ -35,5 +35,5 @@ type Query {
 
 type LessonQuery {
   lesson(id: ID!): LessonType!
-  lessonsWithCourseId(courseId: ID!): [LessonType]!
+  lessonsWithCourseId(courseId: ID!, pagination: PaginationInput): [LessonType]!
 }

@@ -3,13 +3,12 @@ import { UseGuards } from '@nestjs/common';
 import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
+import { PaginationInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('AdminUserQuery')
 export class AdminUserQueryResolver {
-  constructor(
-    private adminUserService: AdminUserService,
-  ) {}
+  constructor(private adminUserService: AdminUserService) {}
 
   @Query()
   @PermissionRequire({ user: ['R'] })
@@ -19,17 +18,28 @@ export class AdminUserQueryResolver {
 
   @ResolveField()
   @PermissionRequire({ user: ['R'] })
-  async adminUsers(@Context() { req }: any) {
+  async adminUsers(
+    @Context() { req }: any,
+    @Args('pagination') pg: PaginationInput,
+  ) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
-    const data = this.adminUserService.findWithOptions({}, {token, strictResourceName: 'user'})
+    const pgOptions = this.adminUserService.buildPaginationOptions(pg);
+    const data = this.adminUserService.findWithOptions(
+      { ...pgOptions },
+      { token, strictResourceName: 'user' },
+    );
     return data;
   }
 
   @ResolveField()
   @PermissionRequire({ user: ['R'] })
-  adminUser(@Args('id') id: string, @Context() {req}: any) {
+  adminUser(@Args('id') id: string, @Context() { req }: any) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
 
-    return this.adminUserService.findById(id, {}, {token, strictResourceName: 'user'});
+    return this.adminUserService.findById(
+      id,
+      {},
+      { token, strictResourceName: 'user' },
+    );
   }
 }

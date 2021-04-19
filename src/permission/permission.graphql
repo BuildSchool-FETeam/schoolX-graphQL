@@ -12,7 +12,7 @@ type Query {
 }
 
 type PermissionQuery {
-  permissions: [Permission]
+  permissions(pagination: PaginationInput): [Permission]
   permissionWithId(id: ID!): Permission
   permissionWithRole(roleName: String!): Permission
 }
