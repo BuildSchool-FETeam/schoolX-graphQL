@@ -1,5 +1,5 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { CourseType, InstructorType } from 'src/graphql';
+import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { InstructorType, PaginationInput } from 'src/graphql';
 import { InstructorService } from '../services/instructor.service';
 import * as _ from 'lodash';
 import { UseGuards } from '@nestjs/common';
@@ -11,18 +11,28 @@ export class InstructorTypeResolver {
   constructor(private instructorService: InstructorService) {}
 
   @ResolveField()
-  async courses(@Parent() instructor: InstructorType): Promise<CourseType[]> {
+  async courses(
+    @Parent() instructor: InstructorType,
+    @Args('pagination') pg: PaginationInput,
+  ) {
     const instructorWithCourses = await this.instructorService.findById(
       instructor.id,
       { relations: ['courses'] },
     );
 
-    return _.map(instructorWithCourses.courses, (item) => {
-      return {
-        ...item,
-        benefits: item.benefits.split('|'),
-        requirements: item.requirements.split('|'),
-      };
-    }) as any;
+    return this.instructorService.manualPagination(
+      instructorWithCourses.courses,
+      pg,
+    );
+  }
+
+  @ResolveField()
+  async createdBy(@Parent() instructor: InstructorType) {
+    const instructorAndCreatedBy = await this.instructorService.findById(
+      instructor.id,
+      { relations: ['createdBy'] },
+    );
+
+    return instructorAndCreatedBy.createdBy;
   }
 }
