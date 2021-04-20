@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { InstructorService } from './../services/instructor.service';
-import { Args, Query, ResolveField } from '@nestjs/graphql';
+import { Args, Context, Query, ResolveField } from '@nestjs/graphql';
 import { Resolver } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
@@ -18,13 +18,27 @@ export class InstructorQueryResolver {
   }
 
   @ResolveField('instructors')
-  async getAllInstructors(@Args('pagination') pg: PaginationInput) {
+  async getAllInstructors(
+    @Args('pagination') pg: PaginationInput,
+    @Context() { req }: any,
+  ) {
+    const token = this.instructorService.getTokenFromHttpHeader(req.headers);
     const pgOptions = this.instructorService.buildPaginationOptions(pg);
-    return this.instructorService.findWithOptions({ ...pgOptions });
+
+    return this.instructorService.findWithOptions(
+      { ...pgOptions },
+      { token, strictResourceName: 'instructor' },
+    );
   }
 
   @ResolveField('instructor')
-  getInstructorById(@Args('id') id: string) {
-    return this.instructorService.findById(id);
+  getInstructorById(@Args('id') id: string, @Context() { req }: any) {
+    const token = this.instructorService.getTokenFromHttpHeader(req.headers);
+
+    return this.instructorService.findById(
+      id,
+      {},
+      { token, strictResourceName: 'instructor' },
+    );
   }
 }

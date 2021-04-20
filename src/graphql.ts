@@ -337,6 +337,7 @@ export class InstructorType implements BaseGraphQL {
     imageUrl: string;
     phone: string;
     courses: CourseType[];
+    createdBy?: AdminUser;
 }
 
 export class PermissionMutation {

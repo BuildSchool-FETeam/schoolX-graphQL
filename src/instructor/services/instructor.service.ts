@@ -4,6 +4,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseService } from 'src/common/services/base.service';
 import { Instructor } from './../entities/Instructor.entity';
 import * as _ from 'lodash';
+import { TokenService } from 'src/common/services/token.service';
+import { CacheService } from 'src/common/services/cache.service';
 
 interface InstructorInput {
   name: string;
@@ -21,19 +23,24 @@ export class InstructorService extends BaseService<Instructor> {
   constructor(
     @InjectRepository(Instructor)
     private instructorRepo: Repository<Instructor>,
+    private tokenService: TokenService,
+    public cachingService: CacheService,
   ) {
-    super(instructorRepo, 'Instructor');
+    super(instructorRepo, 'Instructor', cachingService);
   }
 
-  createInstructor(data: InstructorInput) {
+  async createInstructor(data: InstructorInput, token: string) {
+    const adminUser = await this.tokenService.getAdminUserByToken(token);
     const instructor = this.instructorRepo.create({
       ...data,
+      createdBy: adminUser,
     });
+
     return this.instructorRepo.save(instructor);
   }
 
   async updateInstructor(id: string, data: InstructorInput) {
-    const inst = await this.instructorRepo.findOne(id);
+    const inst = await this.findById(id, {});
 
     if (!inst) {
       throw new NotFoundException('Cannot found this instructor');

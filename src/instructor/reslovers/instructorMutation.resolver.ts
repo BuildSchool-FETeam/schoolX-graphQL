@@ -1,23 +1,29 @@
-import { AuthGuard } from './../../common/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
 import {
-  GCStorageService,
-  StorageFolder,
-} from './../../common/services/GCStorage.service';
-import { InstructorSetInput } from './../../graphql';
-import { InstructorService } from './../services/instructor.service';
-import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+  Args,
+  Context,
+  Mutation,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import * as _ from 'lodash';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
+import { AuthGuard } from 'src/common/guards/auth.guard';
+import { InstructorService } from '../services/instructor.service';
+import {
+  GCStorageService,
+  StorageFolder,
+} from 'src/common/services/GCStorage.service';
+import { InstructorSetInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('InstructorMutation')
 export class InstructorMutationResolver {
   constructor(
     private instructorService: InstructorService,
-    private gcStorageService: GCStorageService
+    private gcStorageService: GCStorageService,
   ) {}
 
   @Mutation()
@@ -29,15 +35,21 @@ export class InstructorMutationResolver {
   @ResolveField()
   async setInstructor(
     @Args('data') data: InstructorSetInput,
+    @Context() { req }: any,
     @Args('id') id?: string,
   ) {
     const { image } = data;
     let imageUrl = '';
     let imgPath = '';
     let existedInstructor: Instructor;
+    const token = this.instructorService.getTokenFromHttpHeader(req.headers);
 
     if (id) {
-      existedInstructor = await this.instructorService.findById(id);
+      existedInstructor = await this.instructorService.findById(
+        id,
+        {},
+        { token, strictResourceName: 'instructor' },
+      );
     }
 
     if (image) {
@@ -65,7 +77,7 @@ export class InstructorMutationResolver {
 
     let ins: Instructor;
     if (!id) {
-      ins = await this.instructorService.createInstructor(savedObj);
+      ins = await this.instructorService.createInstructor(savedObj, token);
     } else {
       ins = await this.instructorService.updateInstructor(id, savedObj);
     }
@@ -75,8 +87,16 @@ export class InstructorMutationResolver {
 
   @PermissionRequire({ instructor: ['D'] })
   @ResolveField()
-  async deleteInstructor(@Args('id') id: string): Promise<boolean> {
-    const inst = await this.instructorService.findById(id);
+  async deleteInstructor(
+    @Args('id') id: string,
+    @Context() { req }: any,
+  ): Promise<boolean> {
+    const token = this.instructorService.getTokenFromHttpHeader(req.headers);
+    const inst = await this.instructorService.findById(
+      id,
+      {},
+      { token, strictResourceName: 'instructor' },
+    );
 
     if (inst.filePath) {
       this.gcStorageService.deleteFile(inst.filePath);
