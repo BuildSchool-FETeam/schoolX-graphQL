@@ -21,10 +21,7 @@ export class GCStorageService {
   private rootFolder: string;
 
   constructor(private configService: ConfigService<EnvVariable>) {
-    const storage = new Storage({
-      projectId: this.configService.get('PROJECT_ID'),
-      keyFile: this.configService.get('KEY_FILE_PATH'),
-    });
+    const storage = new Storage();
     this.bucket = storage.bucket('schoolx-dev-bucket');
     this.rootFolder = this.configService.get('STORAGE_FOLDER');
   }

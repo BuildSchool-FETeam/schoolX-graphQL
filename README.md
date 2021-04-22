@@ -176,3 +176,19 @@ mutation Signin{
 
 b. Take token which API sent back and add it to header:
 `authorization: Bearer <token>`
+
+---
+
+### 3. RUN with docker: one command setup everything
+
+- This is the most easy way
+  a. You should install docker from [https://www.docker.com/]
+  b. Create a **data** folder inside the root folder of our project.
+  c. run command: `docker compose up`
+  d. if there is any problem after run the command above please run it one more time and you're good to go.
+  d. DONE :D
+
+**WARNING: MUST READ**
+
+- You need to go to _docker-compose.yml_ file, looking at **environment** and change it follow your demand.
+- Run with docker can cost more RAM than traditional way, you should aware of it.
