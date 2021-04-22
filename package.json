@@ -23,7 +23,7 @@
     "migrate:gen": "typeorm migration:generate -n",
     "migrate:up": "typeorm migration:run",
     "migrate:down": "typeorm migration:revert",
-    "docker-start": "bash docker-start-app.sh"
+    "start:docker": "./scripts/docker-start-app.sh"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.8.1",
