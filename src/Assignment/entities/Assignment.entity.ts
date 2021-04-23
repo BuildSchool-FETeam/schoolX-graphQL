@@ -34,5 +34,5 @@ export class Assignment extends BaseEntity {
   languageSupport: string;
 
   @OneToMany(() => TestCase, (testCase) => testCase.assignment)
-  testCases: TestCase[];
+  testCases: TestCase[]
 }

@@ -29,5 +29,5 @@ export class AdminUser extends BaseEntityWithCreatedBy {
   @JoinColumn({
     name: 'role',
   })
-  role: Role;
+  role: Role
 }

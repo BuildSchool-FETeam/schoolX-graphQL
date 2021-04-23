@@ -31,5 +31,5 @@ export class ClientUser extends BaseEntityUUID {
   instructor: Instructor;
 
   @ManyToMany(() => Course, (course) => course.joiningUsers)
-  courses: Course[];
+  courses: Course[]
 }
