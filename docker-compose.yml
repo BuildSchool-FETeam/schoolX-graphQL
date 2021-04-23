@@ -15,11 +15,11 @@ services:
       - DB_PASSWORD=Toan1234
       - DB_NAME=schoolX-dev
     volumes:
-      - /home/app/node_modules/
-      - /home/app/src/migrations/
-      - /home/app/scripts/
-      - /home/app/dist/
-      - .:/home/app
+      - /home/app/node_modules
+      - /home/app/src/migrations
+      - /home/app/dist
+      - /home/app/scripts
+      - ./src:/home/app/src
     depends_on:
       - postgres-db
     command:
@@ -27,7 +27,6 @@ services:
         'bash',
         './scripts/wait-for-it.sh',
         '--timeout=180',
-        '--strict',
         'postgres-db:5432',
         '--',
         'npm',
@@ -45,5 +44,6 @@ services:
       - ./data:/var/lib/postgresql/data
   adminer:
     image: adminer
+    restart: always
     ports:
       - 4001:8080
