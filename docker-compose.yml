@@ -15,10 +15,10 @@ services:
       - DB_PASSWORD=Toan1234
       - DB_NAME=schoolX-dev
     volumes:
-      - /home/app/node_modules
-      - /home/app/src/migrations
-      - /home/app/scripts
-      - /home/app/dist
+      - /home/app/node_modules/
+      - /home/app/src/migrations/
+      - /home/app/scripts/
+      - /home/app/dist/
       - .:/home/app
     depends_on:
       - postgres-db
@@ -45,6 +45,5 @@ services:
       - ./data:/var/lib/postgresql/data
   adminer:
     image: adminer
-    restart: always
     ports:
       - 4001:8080

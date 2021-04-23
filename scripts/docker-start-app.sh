@@ -1,4 +1,4 @@
-npm run migrate:gen InitApp
+npm run migrate:docker Init_app_docker
 npm run build
 npm run migrate:up
 
