@@ -1,0 +1,15 @@
+FROM node:12.22.1
+
+RUN apt-get update -y
+RUN apt-get install -y dos2unix
+
+WORKDIR /home/app
+COPY package.json .
+RUN npm i
+
+RUN npm rebuild bcrypt --build-from-source
+
+COPY . .
+RUN dos2unix scripts/*.sh
+
+CMD [ "npm", "run", "docker-start" ]

@@ -1,0 +1,49 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3001:3001
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=ticketer-dev-283204-f6b9d5e1193e.json
+      - JWT_SECRET=Yasuoganktem20gg
+      - STORAGE_FOLDER=docker_storage_folder
+      - DB_HOST=postgres-db
+      - DB_USER_NAME=postgres
+      - DB_PASSWORD=Toan1234
+      - DB_NAME=schoolX-dev
+    volumes:
+      - /home/app/node_modules
+      - /home/app/src/migrations
+      - /home/app/dist
+      # - /home/app/scripts
+      - ./src:/home/app/src
+    depends_on:
+      - postgres-db
+    command:
+      [
+        'bash',
+        './scripts/wait-for-it.sh',
+        '--timeout=180',
+        'postgres-db:5432',
+        '--',
+        'npm',
+        'run',
+        'start:docker',
+      ]
+  postgres-db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Toan1234
+      - POSTGRES_DB=schoolX-dev
+    volumes:
+      - ./data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 4001:8080
