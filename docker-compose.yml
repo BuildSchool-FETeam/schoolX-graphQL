@@ -18,7 +18,7 @@ services:
       - /home/app/node_modules
       - /home/app/src/migrations
       - /home/app/dist
-      - /home/app/scripts
+      # - /home/app/scripts
       - ./src:/home/app/src
     depends_on:
       - postgres-db
