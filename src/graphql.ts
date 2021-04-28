@@ -1,6 +1,5 @@
 
-/*
- * ------------------------------------------------------
+/** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -57,6 +56,11 @@ export class PaginationInput {
     order?: OrderType;
     skip?: number;
     limit?: number;
+}
+
+export class SearchOptionInput {
+    searchString: string;
+    searchFields: string[];
 }
 
 export class CourseSetInput {

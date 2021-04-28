@@ -1,4 +1,4 @@
-import { BaseEntityWithCreatedBy } from 'src/common/Entity/base.entity';
+import { BaseEntityWithCreatedBy } from 'src/common/entity/base.entity';
 import {
   Column,
   Entity,

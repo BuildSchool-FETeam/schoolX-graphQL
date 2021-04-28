@@ -1,3 +1,4 @@
+import { SearchOptionInput } from './../../../graphql';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
@@ -20,11 +21,14 @@ export class CourseQueryResolver {
   async getAllCourses(
     @Context() { req }: any,
     @Args('pagination') pg?: PaginationInput,
+    @Args('searchOption') searchOpt?: SearchOptionInput,
   ) {
     const pgOptions = this.courseService.buildPaginationOptions(pg);
+    const searchOption = this.courseService.buildSearchOptions(searchOpt);
+
     const token = this.courseService.getTokenFromHttpHeader(req.headers);
     const courses = await this.courseService.findWithOptions(
-      { ...pgOptions },
+      { ...pgOptions, ...searchOption },
       { token, strictResourceName: 'course' },
     );
 

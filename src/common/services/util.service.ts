@@ -1,7 +1,8 @@
+
 import { InternalServerErrorException } from '@nestjs/common';
 import * as _ from 'lodash';
-import { OrderDirection, PaginationInput } from 'src/graphql';
-import { FindManyOptions } from 'typeorm';
+import { OrderDirection, PaginationInput, SearchOptionInput } from 'src/graphql';
+import { FindManyOptions, Like } from 'typeorm';
 
 export abstract class UtilService {
   private readonly MAXIMUM_LIMIT = 1000;
@@ -46,5 +47,23 @@ export abstract class UtilService {
       .value();
 
     return order.direction === OrderDirection.ASC ? items : _.reverse(items);
+  }
+
+  buildSearchOptions<T>(search: SearchOptionInput): FindManyOptions<T> {
+    const findObj = {};
+
+    if (!search) {
+      return {}
+    }
+
+    _.each(search.searchFields, field => {
+      findObj[field] = Like(`%${search.searchString}%`);
+    })
+
+    return {
+      where: {
+        ...findObj
+      }
+    }
   }
 }

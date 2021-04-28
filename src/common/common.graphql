@@ -28,3 +28,8 @@ input PaginationInput {
   skip: Int
   limit: Int
 }
+
+input SearchOptionInput {
+  searchString: String!
+  searchFields: [String!]!
+}

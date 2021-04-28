@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { BaseEntityWithCreatedBy } from 'src/common/Entity/base.entity';
+import { BaseEntityWithCreatedBy } from 'src/common/entity/base.entity';
 import { Role } from 'src/permission/entities/Role.entity';
 import {
   Column,

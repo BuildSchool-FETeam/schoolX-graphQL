@@ -1,6 +1,6 @@
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
-import { BaseEntity } from 'src/common/Entity/base.entity';
+import { BaseEntity } from 'src/common/entity/base.entity';
 import { Course } from '../../courses/entities/Course.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';

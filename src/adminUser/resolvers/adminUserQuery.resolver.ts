@@ -1,3 +1,4 @@
+import { SearchOptionInput } from './../../graphql';
 import { AuthGuard } from './../../common/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
@@ -21,11 +22,15 @@ export class AdminUserQueryResolver {
   async adminUsers(
     @Context() { req }: any,
     @Args('pagination') pg: PaginationInput,
+    @Args('searchOption') sOpt: SearchOptionInput
   ) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
+
     const pgOptions = this.adminUserService.buildPaginationOptions(pg);
+    const searchOpt = this.adminUserService.buildSearchOptions(sOpt);
+
     const data = this.adminUserService.findWithOptions(
-      { ...pgOptions },
+      { ...pgOptions, ...searchOpt },
       { token, strictResourceName: 'user' },
     );
     return data;

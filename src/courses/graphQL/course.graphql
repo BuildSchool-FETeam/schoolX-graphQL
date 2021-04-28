@@ -3,7 +3,11 @@ type Query {
 }
 
 type CourseQuery {
-  courses(pagination: PaginationInput): [CourseType!]!
+  courses(
+    pagination: PaginationInput, 
+    searchOption: SearchOptionInput
+  ): [CourseType]!
+  
   course(id: ID!): CourseType!
 }
 
