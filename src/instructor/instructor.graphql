@@ -3,7 +3,11 @@ type Query {
 }
 
 type InstructorQuery {
-  instructors(pagination: PaginationInput): [InstructorType!]!
+  instructors(
+    pagination: PaginationInput, 
+    searchOption: SearchOptionInput
+  ): [InstructorType!]!
+  
   instructor(id: ID!): InstructorType!
 }
 

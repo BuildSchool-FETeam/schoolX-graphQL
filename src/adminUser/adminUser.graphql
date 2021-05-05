@@ -14,7 +14,11 @@ type Mutation {
 }
 
 type AdminUserQuery {
-  adminUsers(pagination: PaginationInput): [AdminUser]!
+  adminUsers(
+    pagination: PaginationInput, 
+    searchOption: SearchOptionInput
+  ): [AdminUser]!
+  
   adminUser(id: ID!): AdminUser!
 }
 

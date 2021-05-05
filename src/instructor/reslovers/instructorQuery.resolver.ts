@@ -1,3 +1,4 @@
+import { SearchOptionInput } from './../../graphql';
 import { UseGuards } from '@nestjs/common';
 import { InstructorService } from './../services/instructor.service';
 import { Args, Context, Query, ResolveField } from '@nestjs/graphql';
@@ -20,13 +21,15 @@ export class InstructorQueryResolver {
   @ResolveField('instructors')
   async getAllInstructors(
     @Args('pagination') pg: PaginationInput,
+    @Args('searchOption') searchOpt: SearchOptionInput,
     @Context() { req }: any,
   ) {
     const token = this.instructorService.getTokenFromHttpHeader(req.headers);
     const pgOptions = this.instructorService.buildPaginationOptions(pg);
+    const searchOptions = this.instructorService.buildSearchOptions(searchOpt);
 
     return this.instructorService.findWithOptions(
-      { ...pgOptions },
+      { ...pgOptions, ...searchOptions },
       { token, strictResourceName: 'instructor' },
     );
   }

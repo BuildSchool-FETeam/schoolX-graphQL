@@ -1,4 +1,4 @@
-import { BaseEntity } from 'src/common/Entity/base.entity';
+import { BaseEntity } from 'src/common/entity/base.entity';
 import { Course } from 'src/courses/entities/Course.entity';
 import { Entity, JoinTable, ManyToMany } from 'typeorm';
 

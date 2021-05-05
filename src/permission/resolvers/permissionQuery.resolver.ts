@@ -1,3 +1,4 @@
+import { SearchOptionInput } from './../../graphql';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
@@ -21,6 +22,7 @@ export class PermissionQueryResolver {
   async getAllPermissions(
     @Context() { req }: any,
     @Args('pagination') pg: PaginationInput,
+    @Args('searchOption') searchOpt: SearchOptionInput,
   ) {
     const pgOptions = this.permissionService.buildPaginationOptions<PermissionSet>(
       pg,
@@ -28,18 +30,20 @@ export class PermissionQueryResolver {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
     const permissions = await this.permissionService.findWithOptions(
       {
-        relations: ['role'],
+        relations: ['role', 'createdBy'],
         ...pgOptions,
       },
       { token, strictResourceName: 'permission' },
     );
+
+    const filterPattern = new RegExp(searchOpt.searchString);
 
     return permissions.map((item) => {
       return {
         ...item,
         roleName: item.role.name,
       };
-    });
+    }).filter(item => filterPattern.test(item.roleName));
   }
 
   @PermissionRequire({ permission: ['R'] })
@@ -49,7 +53,7 @@ export class PermissionQueryResolver {
     const permission = await this.permissionService.findById(
       id,
       {
-        relations: ['role'],
+        relations: ['role', 'createdBy'],
       },
       { token, strictResourceName: 'permission' },
     );

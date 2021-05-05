@@ -1,5 +1,5 @@
 import { UserComment } from 'src/comment/entities/UserComment.entity';
-import { BaseEntity } from 'src/common/Entity/base.entity';
+import { BaseEntity } from 'src/common/entity/base.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { TestCase } from './Testcase.entity';

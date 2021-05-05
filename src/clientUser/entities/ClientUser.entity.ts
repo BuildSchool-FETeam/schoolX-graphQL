@@ -1,5 +1,5 @@
 import { UserComment } from 'src/comment/entities/UserComment.entity';
-import { BaseEntityUUID } from 'src/common/Entity/base.entity';
+import { BaseEntityUUID } from 'src/common/entity/base.entity';
 import { Course } from 'src/courses/entities/Course.entity';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
 import {
