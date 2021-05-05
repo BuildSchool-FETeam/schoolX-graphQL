@@ -36,14 +36,19 @@ export class PermissionQueryResolver {
       { token, strictResourceName: 'permission' },
     );
 
-    const filterPattern = new RegExp(searchOpt.searchString);
+    let filterPattern: RegExp = null;
+
+    if (searchOpt) {
+      filterPattern = new RegExp(searchOpt.searchString);
+    }
 
     return permissions.map((item) => {
       return {
         ...item,
         roleName: item.role.name,
       };
-    }).filter(item => filterPattern.test(item.roleName));
+    }).filter(item => 
+      filterPattern ? filterPattern.test(item.roleName) : true);
   }
 
   @PermissionRequire({ permission: ['R'] })

@@ -40,12 +40,23 @@ export class LessonQueryResolver {
       { token, strictResourceName: 'course' },
     );
 
-    const lessonWhereOpts = _.map(searchOptions.where, (opt: DynamicObject) => {
-      return {
-        course,
-        ...opt
-      }
-    })
+    let lessonWhereOpts: DynamicObject = {};
+
+    if (!_.isNil(searchOpt)) {
+      lessonWhereOpts = _.map(searchOptions.where, (opt: DynamicObject) => {
+        return {
+          course,
+          ...opt
+        }
+      })
+    } else {
+      lessonWhereOpts = {course}
+    }
+
+
+    if (_.size(lessonWhereOpts) === 0) {
+      lessonWhereOpts = {course}
+    }
 
     const lessons = await this.lessonService.findWithOptions({
       where: lessonWhereOpts,
