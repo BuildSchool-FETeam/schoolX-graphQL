@@ -84,27 +84,26 @@ export abstract class BaseService<T> extends UtilService {
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
       ) {
         if (_.isArray(options.where)) {
-          const strictWhereOptions = _.map(options.where, whereOpt => {
+          const strictWhereOptions = _.map(options.where, (whereOpt) => {
             const whereOptions = _.assign(whereOpt, {
               createdBy: adminUser,
             }) as FindManyOptions<T>;
-    
+
             return whereOptions;
-          })
+          });
           options = {
             ...options,
             where: strictWhereOptions,
           };
-
         } else {
           const whereOptions = _.assign(options.where, {
             createdBy: adminUser,
           }) as FindManyOptions<T>;
-  
+
           options = {
             ...options,
             where: whereOptions,
-            cache: true
+            cache: true,
           };
         }
       }

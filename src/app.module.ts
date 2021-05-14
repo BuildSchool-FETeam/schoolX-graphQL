@@ -15,10 +15,14 @@ import { ConfigModule } from '@nestjs/config';
 import { TagModule } from './tag/tag.module';
 import { InstructorModule } from './instructor/instructor.module';
 import { AssignmentModule } from './assignment/assignment.module';
+import { NotificationModule } from './notification/notification.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
   installSubscriptionHandlers: true,
+  subscriptions: {
+    path: '/subscriptions',
+  },
   definitions: {
     path: join(process.cwd(), 'src/graphql.ts'),
     outputAs: 'class',
@@ -58,6 +62,7 @@ const scheduleModule = ScheduleModule.forRoot();
     EnvInitModule,
     TagModule,
     AssignmentModule,
+    NotificationModule,
   ],
   providers: [
     {
