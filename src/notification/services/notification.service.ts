@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { CacheService } from 'src/common/services/cache.service';
 import { TokenService } from 'src/common/services/token.service';
 import { NotificationInput } from 'src/graphql';
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { AdminNotification } from '../Notification.entity';
 import * as _ from 'lodash';
 import { RoleService } from 'src/permission/services/role.service';
@@ -44,7 +44,7 @@ export class NotificationService extends BaseService<AdminNotification> {
     return this.noticRepo.save(notic);
   }
 
-  async getNotification(
+  async getNotifications(
     adminToken: string,
     commonOptions: FindManyOptions<AdminNotification>,
   ) {
@@ -57,6 +57,21 @@ export class NotificationService extends BaseService<AdminNotification> {
         adminUser.id,
       );
     });
+  }
+
+  async getNotificationById(
+    adminToken: string,
+    noticId: string,
+    commonOptions?: FindOneOptions,
+  ) {
+    const adminUser = await this.tokenService.getAdminUserByToken(adminToken);
+    const notification = await this.findById(noticId, commonOptions);
+
+    if (!notification.recipientByAdminIds.includes(adminUser.id)) {
+      throw new ForbiddenException('This notification is not for you!!');
+    }
+
+    return notification;
   }
 
   async deleteByRecipient(id: string, userId: string) {
@@ -80,7 +95,6 @@ export class NotificationService extends BaseService<AdminNotification> {
         }),
       );
     }
-
     const adminUserIdFromRole: string[] = [];
     const roles = await Promise.all(rolePromises);
 

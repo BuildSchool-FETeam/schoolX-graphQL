@@ -26,9 +26,17 @@ export class NotificationQueryResolver {
     const paginationOpt = this.noticService.buildPaginationOptions(pg);
     const searchOpt = this.noticService.buildSearchOptions(sOpt);
 
-    return this.noticService.getNotification(token, {
+    return this.noticService.getNotifications(token, {
       ...paginationOpt,
       ...searchOpt,
     });
+  }
+
+  @PermissionRequire({ notification: ['R'] })
+  @ResolveField('notification')
+  getNotification(@Context() { req }: any, @Args('id') id: string) {
+    const token = this.noticService.getTokenFromHttpHeader(req.headers);
+
+    return this.noticService.getNotificationById(token, id);
   }
 }
