@@ -1,9 +1,13 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { CacheService } from 'src/common/services/cache.service';
 import { TokenService } from 'src/common/services/token.service';
-import { NotificationInput } from 'src/graphql';
+import { NotificationInput, PaginationInput } from 'src/graphql';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
 import { AdminNotification } from '../Notification.entity';
 import * as _ from 'lodash';
@@ -26,6 +30,16 @@ export class NotificationService extends BaseService<AdminNotification> {
 
   async create(data: NotificationInput, token: string) {
     const adminUser = await this.tokenService.getAdminUserByToken(token);
+
+    if (
+      _.size(data.recipientByAdminIds) === 0 &&
+      _.size(data.recipientByRoles) === 0
+    ) {
+      throw new BadRequestException(
+        'You should enter at least one adminIds or recipients roles',
+      );
+    }
+
     const adminUserIdFromRole = await this.getAdminIdsFromRole(
       data.recipientByRoles,
     );
@@ -44,19 +58,22 @@ export class NotificationService extends BaseService<AdminNotification> {
     return this.noticRepo.save(notic);
   }
 
-  async getNotifications(
+  async getNotificationsReceived(
     adminToken: string,
-    commonOptions: FindManyOptions<AdminNotification>,
+    searchOptions: FindManyOptions<AdminNotification>,
+    paginationInput: PaginationInput,
   ) {
     const adminUser = await this.tokenService.getAdminUserByToken(adminToken);
-    const notifications = await this.findWithOptions(commonOptions);
+    const notifications = await this.findWithOptions(searchOptions);
 
-    return _.filter(notifications, (item) => {
+    const notificationAdminReceived = _.filter(notifications, (item) => {
       return _.includes(
         item.recipientByAdminIds.split(this.SEPARATOR),
         adminUser.id,
       );
     });
+
+    return this.manuallyPagination(notificationAdminReceived, paginationInput);
   }
 
   async getNotificationById(
@@ -79,7 +96,6 @@ export class NotificationService extends BaseService<AdminNotification> {
     const listAdminIds = _.split(notic.recipientByAdminIds, this.SEPARATOR);
 
     _.remove(listAdminIds, (item) => item === userId);
-
     notic.recipientByAdminIds = listAdminIds.join('|');
 
     return this.noticRepo.save(notic);

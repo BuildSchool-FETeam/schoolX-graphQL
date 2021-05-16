@@ -16,8 +16,21 @@ export class NotificationQueryResolver {
   }
 
   @PermissionRequire({ notification: ['R'] })
-  @ResolveField('notifications')
-  getAllNotifications(
+  @ResolveField('notificationsReceived')
+  getNotificationReceived(
+    @Context() { req }: any,
+    @Args('pagination') pg: PaginationInput,
+    @Args('searchOption') sOpt: SearchOptionInput,
+  ) {
+    const token = this.noticService.getTokenFromHttpHeader(req.headers);
+    const searchOpt = this.noticService.buildSearchOptions(sOpt);
+
+    return this.noticService.getNotificationsReceived(token, searchOpt, pg);
+  }
+
+  @PermissionRequire({ notification: ['R'] })
+  @ResolveField('notificationsSent')
+  getNotificationsSent(
     @Context() { req }: any,
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') sOpt: SearchOptionInput,
@@ -26,10 +39,13 @@ export class NotificationQueryResolver {
     const paginationOpt = this.noticService.buildPaginationOptions(pg);
     const searchOpt = this.noticService.buildSearchOptions(sOpt);
 
-    return this.noticService.getNotifications(token, {
-      ...paginationOpt,
-      ...searchOpt,
-    });
+    return this.noticService.findWithOptions(
+      {
+        ...paginationOpt,
+        ...searchOpt,
+      },
+      { token, strictResourceName: 'notification' },
+    );
   }
 
   @PermissionRequire({ notification: ['R'] })

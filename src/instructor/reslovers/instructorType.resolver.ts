@@ -20,7 +20,7 @@ export class InstructorTypeResolver {
       { relations: ['courses'] },
     );
 
-    return this.instructorService.manualPagination(
+    return this.instructorService.manuallyPagination(
       instructorWithCourses.courses,
       pg,
     );

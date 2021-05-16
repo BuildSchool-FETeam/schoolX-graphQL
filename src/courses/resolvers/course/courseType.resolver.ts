@@ -31,7 +31,7 @@ export class CourseTypeResolver {
     const course = await this.courseService.findById(courseParent.id, {
       relations: ['lessons'],
     });
-    return this.courseService.manualPagination(course.lessons, pg);
+    return this.courseService.manuallyPagination(course.lessons, pg);
   }
 
   @ResolveField()

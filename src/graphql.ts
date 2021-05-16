@@ -373,7 +373,8 @@ export class NotificationMutation {
 
 export class NotificationQuery {
     __typename?: 'NotificationQuery';
-    notifications: NotificationType[];
+    notificationsReceived: NotificationType[];
+    notificationsSent: NotificationType[];
     notification: NotificationType;
 }
 

@@ -5,7 +5,11 @@ type NotificationMutation {
 }
 
 type NotificationQuery {
-  notifications(
+  notificationsReceived(
+    pagination: PaginationInput
+    searchOption: SearchOptionInput
+  ): [NotificationType]!
+  notificationsSent(
     pagination: PaginationInput
     searchOption: SearchOptionInput
   ): [NotificationType]!

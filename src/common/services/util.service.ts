@@ -1,7 +1,10 @@
-
 import { InternalServerErrorException } from '@nestjs/common';
 import * as _ from 'lodash';
-import { OrderDirection, PaginationInput, SearchOptionInput } from 'src/graphql';
+import {
+  OrderDirection,
+  PaginationInput,
+  SearchOptionInput,
+} from 'src/graphql';
 import { FindManyOptions, Like } from 'typeorm';
 
 export abstract class UtilService {
@@ -31,7 +34,7 @@ export abstract class UtilService {
     return options;
   }
 
-  manualPagination<T>(listItems: T[], pg: PaginationInput) {
+  manuallyPagination<T>(listItems: T[], pg: PaginationInput) {
     if (!pg) {
       return listItems;
     }
@@ -53,15 +56,15 @@ export abstract class UtilService {
     const findArray: DynamicObject[] = [];
 
     if (!search) {
-      return {}
+      return {};
     }
 
-    _.each(search.searchFields, field => {
-      findArray.push({[field]: Like(`%${search.searchString}%`)})
-    })
+    _.each(search.searchFields, (field) => {
+      findArray.push({ [field]: Like(`%${search.searchString}%`) });
+    });
 
     return {
-      where: [...findArray]
-    }
+      where: [...findArray],
+    };
   }
 }
