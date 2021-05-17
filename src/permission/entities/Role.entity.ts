@@ -13,5 +13,5 @@ export class Role {
   permissionSet: PermissionSet;
 
   @OneToMany(() => AdminUser, (adminUser) => adminUser.role)
-  adminUser: AdminUser;
+  adminUsers: AdminUser[];
 }

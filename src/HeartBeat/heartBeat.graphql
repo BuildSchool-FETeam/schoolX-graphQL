@@ -3,3 +3,7 @@ type Query {
   heartBeat: String!
   heartBeatWithAuth: String!
 }
+
+type Subscription {
+  beatCount(divideNumber: Int!): Int!
+}

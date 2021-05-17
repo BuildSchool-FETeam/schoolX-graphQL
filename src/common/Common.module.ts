@@ -10,13 +10,14 @@ import { FileService } from './services/file.service';
 import { GCStorageService } from './services/GCStorage.service';
 import { ConfigService } from '@nestjs/config';
 import { CacheService } from './services/cache.service';
+import { SubscriptionService } from './services/subscription.service';
 
 @Module({
   imports: [
     forwardRef(() => PermissionModule),
     forwardRef(() => InstructorModule),
     forwardRef(() => CourseModule),
-    CacheModule.register()
+    CacheModule.register(),
   ],
   providers: [
     PasswordService,
@@ -26,7 +27,8 @@ import { CacheService } from './services/cache.service';
     GCStorageService,
     ConfigService,
     CacheService,
-    CronService
+    CronService,
+    SubscriptionService,
   ],
   exports: [
     PasswordService,
@@ -34,7 +36,8 @@ import { CacheService } from './services/cache.service';
     TokenService,
     FileService,
     GCStorageService,
-    CacheService
+    CacheService,
+    SubscriptionService,
   ],
 })
 export class CommonModule {}

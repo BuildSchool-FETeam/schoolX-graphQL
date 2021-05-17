@@ -16,6 +16,12 @@ export abstract class BaseService<T> extends UtilService {
   protected resourceName: string;
   protected cachingService: CacheService;
 
+  /**
+   * BaseService help us solving the problem with the repeatedly using methods or working with DB
+   * @param repo the repository class you use for the child class
+   * @param resourceName using for showing error, and help them know which resources the error come from
+   * @param cachingService if the resource using strict, you should inject the caching service
+   */
   constructor(
     repo: Repository<T>,
     resourceName?: string,
@@ -27,6 +33,13 @@ export abstract class BaseService<T> extends UtilService {
     this.cachingService = cachingService;
   }
 
+  /**
+   * findById using for getting one resource, get the detail
+   * @param id the resource id
+   * @param options the find-one options pass from other services (@interface FindOneOptions)
+   * @param strictConfig params using for strict the resource with permission S
+   * @returns one resource
+   */
   async findById(
     id: string,
     options: FindOneOptions<T> = {},
@@ -44,7 +57,7 @@ export abstract class BaseService<T> extends UtilService {
 
     if (strictConfig) {
       const { adminUser, permissionSet } = await this.getAdminUserCredential(
-        strictConfig,
+        strictConfig.token,
       );
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
@@ -71,40 +84,45 @@ export abstract class BaseService<T> extends UtilService {
     return resource;
   }
 
+  /**
+   * using for query multiple resource
+   * @param options the common options passing from otherService (@interface FindManyOptions
+   * @param strictConfig using for strict the resource with permission S (optional)
+   * @returns many resource from DB
+   */
   async findWithOptions(
     options?: FindManyOptions<T>,
     strictConfig?: IStrictConfig,
   ) {
     if (strictConfig) {
       const { adminUser, permissionSet } = await this.getAdminUserCredential(
-        strictConfig,
+        strictConfig.token,
       );
 
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
       ) {
         if (_.isArray(options.where)) {
-          const strictWhereOptions = _.map(options.where, whereOpt => {
+          const strictWhereOptions = _.map(options.where, (whereOpt) => {
             const whereOptions = _.assign(whereOpt, {
               createdBy: adminUser,
             }) as FindManyOptions<T>;
-    
+
             return whereOptions;
-          })
+          });
           options = {
             ...options,
             where: strictWhereOptions,
           };
-
         } else {
           const whereOptions = _.assign(options.where, {
             createdBy: adminUser,
           }) as FindManyOptions<T>;
-  
+
           options = {
             ...options,
             where: whereOptions,
-            cache: true
+            cache: true,
           };
         }
       }
@@ -119,6 +137,12 @@ export abstract class BaseService<T> extends UtilService {
     return resource;
   }
 
+  /**
+   * Using for delete only one resource
+   * @param id the id of a resource
+   * @param strictConfig params using for strict the resource with permission S
+   * @returns delete information
+   */
   async deleteOneById(id: string, strictConfig?: IStrictConfig) {
     if (strictConfig) {
       await this.findById(id, {}, strictConfig);
@@ -137,9 +161,12 @@ export abstract class BaseService<T> extends UtilService {
     return _.includes(permissionAsString.split('|'), 'S');
   }
 
-  protected async getAdminUserCredential(strictConfig: IStrictConfig) {
+  protected async getAdminUserCredential(token: string) {
+    if (!this.cachingService) {
+      throw new Error('You should inject caching service before using it!!');
+    }
     return await this.cachingService.getValue<ICachedPermissionSet>(
-      `${cacheConstant.PERMISSION}-${strictConfig.token}`,
+      `${cacheConstant.PERMISSION}-${token}`,
     );
   }
 }

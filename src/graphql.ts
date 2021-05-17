@@ -1,6 +1,5 @@
 
-/*
- * ------------------------------------------------------
+/** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -97,6 +96,13 @@ export class InstructorSetInput {
     phone: string;
 }
 
+export class NotificationInput {
+    title: string;
+    content: string;
+    recipientByRoles?: string[];
+    recipientByAdminIds?: string[];
+}
+
 export class PermissionSetInput {
     roleName: string;
     course: string;
@@ -133,7 +139,17 @@ export abstract class IQuery {
 
     abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
 
+    abstract notificationQuery(): NotificationQuery | Promise<NotificationQuery>;
+
     abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
+}
+
+export abstract class ISubscription {
+    __typename?: 'ISubscription';
+
+    abstract beatCount(divideNumber: number): number | Promise<number>;
+
+    abstract notificationCreated(adminUserId: string): NotificationType | Promise<NotificationType>;
 }
 
 export abstract class IMutation {
@@ -154,6 +170,8 @@ export abstract class IMutation {
     abstract documentMutation(): DocumentMutation | Promise<DocumentMutation>;
 
     abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
+
+    abstract notificationMutation(): NotificationMutation | Promise<NotificationMutation>;
 
     abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
 }
@@ -344,6 +362,31 @@ export class InstructorType implements BaseGraphQL {
     phone: string;
     courses: CourseType[];
     createdBy?: AdminUser;
+}
+
+export class NotificationMutation {
+    __typename?: 'NotificationMutation';
+    createNotification?: NotificationType;
+    deleteByOwner: boolean;
+    deleteByRecipient: boolean;
+}
+
+export class NotificationQuery {
+    __typename?: 'NotificationQuery';
+    notificationsReceived: NotificationType[];
+    notificationsSent: NotificationType[];
+    notification: NotificationType;
+}
+
+export class NotificationType implements BaseGraphQL {
+    __typename?: 'NotificationType';
+    id: string;
+    title: string;
+    content: string;
+    createdAt: string;
+    createdBy: AdminUser;
+    updatedAt: string;
+    recipientByAdmins?: AdminUser[];
 }
 
 export class PermissionMutation {

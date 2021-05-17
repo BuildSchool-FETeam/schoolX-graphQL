@@ -23,11 +23,11 @@ export class AdminUser extends BaseEntityWithCreatedBy {
   @Column()
   password: string;
 
-  @ManyToOne(() => Role, (role) => role.adminUser, {
+  @ManyToOne(() => Role, (role) => role.adminUsers, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({
     name: 'role',
   })
-  role: Role
+  role: Role;
 }
