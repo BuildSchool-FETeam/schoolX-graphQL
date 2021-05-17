@@ -9,10 +9,12 @@ type NotificationQuery {
     pagination: PaginationInput
     searchOption: SearchOptionInput
   ): [NotificationType]!
+
   notificationsSent(
     pagination: PaginationInput
     searchOption: SearchOptionInput
   ): [NotificationType]!
+
   notification(id: ID!): NotificationType!
 }
 

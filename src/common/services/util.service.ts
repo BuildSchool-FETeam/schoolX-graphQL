@@ -10,6 +10,11 @@ import { FindManyOptions, Like } from 'typeorm';
 export abstract class UtilService {
   private readonly MAXIMUM_LIMIT = 1000;
 
+  /**
+   * The util function helping you get the token that send back via headers https/http protocol
+   * @param headers contains a lot information we need for authorization
+   * @returns current user token
+   */
   getTokenFromHttpHeader(headers: DynamicObject) {
     const token = _.split(headers.authorization, ' ')[1];
 
@@ -20,6 +25,11 @@ export abstract class UtilService {
     return token;
   }
 
+  /**
+   * Using the default API from typeORM for paging
+   * @param pg Pagination input
+   * @returns proper the many-options for typeORM work with
+   */
   buildPaginationOptions<T>(pg: PaginationInput) {
     const options: FindManyOptions<T> = {};
     if (!pg) {
@@ -34,6 +44,13 @@ export abstract class UtilService {
     return options;
   }
 
+  /**
+   * Because some resources cannot use the default paging API from typeORM so we use this
+   * work-around pagination function, it works the same way except by using programing instead of SQL query
+   * @param listItems List you want to paging
+   * @param pg params for paging
+   * @returns list has been paged
+   */
   manuallyPagination<T>(listItems: T[], pg: PaginationInput) {
     if (!pg) {
       return listItems;
