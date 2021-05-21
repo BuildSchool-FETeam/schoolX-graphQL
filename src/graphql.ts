@@ -47,6 +47,26 @@ export class SignInInput {
     password: string;
 }
 
+export class ClientUserUpdateInput {
+    name?: string;
+    githubUrl?: string;
+    dateOfBirth?: string;
+    homeTown?: string;
+    bio?: string;
+    phone?: string;
+}
+
+export class ClientUserSignupInput {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export class ClientUserSigninInput {
+    email: string;
+    password: string;
+}
+
 export class OrderType {
     orderBy: string;
     direction: OrderDirection;
@@ -133,6 +153,8 @@ export abstract class IQuery {
 
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
+    abstract clientUserQuery(): ClientUserQuery | Promise<ClientUserQuery>;
+
     abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
 
     abstract lessonQuery(): LessonQuery | Promise<LessonQuery>;
@@ -162,6 +184,10 @@ export abstract class IMutation {
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
+
+    abstract clientUserAuthMutation(): ClientUserAuthMutation | Promise<ClientUserAuthMutation>;
+
+    abstract clientUserMutation(): ClientUserMutation | Promise<ClientUserMutation>;
 
     abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
 
@@ -257,6 +283,59 @@ export class AuthPayload {
     token: string;
     userName: string;
     role: string;
+}
+
+export class ClientUserAuthMutation {
+    __typename?: 'ClientUserAuthMutation';
+    signUp: ClientUserAuthResponse;
+    signIn: ClientUserAuthResponse;
+    sendRestorePassword: boolean;
+    resetPassword: boolean;
+}
+
+export class ClientUserMutation {
+    __typename?: 'ClientUserMutation';
+    updateClientUser: ClientUserType;
+    updateClientUserPhoto: ClientUserType;
+}
+
+export class ClientUserQuery {
+    __typename?: 'ClientUserQuery';
+    userDetail: ClientUserType;
+}
+
+export class ClientUserAuthResponse {
+    __typename?: 'ClientUserAuthResponse';
+    id: string;
+    email: string;
+    token: string;
+}
+
+export class ClientUserType {
+    __typename?: 'ClientUserType';
+    id: string;
+    email?: string;
+    password?: string;
+    githubUrl?: string;
+    dayOfBirth?: string;
+    homeTown?: string;
+    bio?: string;
+    phone?: string;
+    imageUrl?: string;
+    filePath?: string;
+    instructor?: InstructorType;
+    achievement: AchievementType;
+}
+
+export class AchievementType {
+    __typename?: 'AchievementType';
+    id: string;
+    rank?: number;
+    score?: number;
+    joinedCourse: CourseType[];
+    follow: ClientUserType[];
+    followedBy: ClientUserType[];
+    completedCourses: CourseType[];
 }
 
 export class File {

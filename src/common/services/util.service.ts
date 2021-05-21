@@ -75,7 +75,6 @@ export abstract class UtilService {
     if (!search) {
       return {};
     }
-
     _.each(search.searchFields, (field) => {
       findArray.push({ [field]: Like(`%${search.searchString}%`) });
     });

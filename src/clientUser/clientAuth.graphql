@@ -1,0 +1,76 @@
+type Mutation {
+  clientUserAuthMutation: ClientUserAuthMutation!
+  clientUserMutation: ClientUserMutation!
+}
+
+type Query {
+  clientUserQuery: ClientUserQuery
+}
+
+type ClientUserAuthMutation {
+  signUp(data: ClientUserSignupInput!): ClientUserAuthResponse!
+  signIn(data: ClientUserSigninInput!): ClientUserAuthResponse!
+  sendRestorePassword(id: ID!, email: String!): Boolean!
+  resetPassword(resetToken: String!, password: String!): Boolean!
+}
+
+type ClientUserMutation {
+  updateClientUser(id: ID!, data: ClientUserUpdateInput!): ClientUserType!
+  updateClientUserPhoto(id: ID!, image: FileUpload!): ClientUserType!
+}
+
+type ClientUserQuery {
+  userDetail(id: ID!): ClientUserType!
+}
+
+input ClientUserUpdateInput {
+  name: String
+  githubUrl: String
+  dateOfBirth: String
+  homeTown: String
+  bio: String
+  phone: String
+}
+
+input ClientUserSignupInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input ClientUserSigninInput {
+  email: String!
+  password: String!
+}
+
+type ClientUserAuthResponse {
+  id: ID!
+  email: String!
+  token: String!
+}
+
+type ClientUserType {
+  id: ID!
+  email: String
+  password: String
+  githubUrl: String
+  dayOfBirth: String
+  homeTown: String
+  bio: String
+  phone: String
+  imageUrl: String
+  filePath: String
+  instructor: InstructorType
+  achievement: AchievementType!
+  # comments: UserComment[];
+}
+
+type AchievementType {
+  id: ID!
+  rank: Int
+  score: Int
+  joinedCourse: [CourseType]!
+  follow: [ClientUserType]!
+  followedBy: [ClientUserType]!
+  completedCourses: [CourseType]!
+}

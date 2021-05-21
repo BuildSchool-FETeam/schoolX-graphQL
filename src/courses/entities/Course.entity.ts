@@ -1,5 +1,5 @@
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
+import { Achievement } from 'src/clientUser/entities/Achivement.entity';
 
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
@@ -51,14 +51,18 @@ export class Course extends BaseEntity {
   @Column()
   requirements: string;
 
-  @ManyToMany(() => ClientUser, (clientUser) => clientUser.courses)
+  @ManyToMany(() => Achievement, (achievement) => achievement.joinedCourse)
   @JoinTable()
-  joiningUsers?: ClientUser[];
+  joinedUsers?: Achievement[];
+
+  @ManyToMany(() => Achievement, (achievement) => achievement.completedCourses)
+  @JoinTable()
+  completedUser?: Achievement[];
 
   @ManyToMany(() => Tag, (tag) => tag.courses)
   tags: Tag[];
 
-  @Column({ nullable: true, default: "Beginner" })
+  @Column({ nullable: true, default: 'Beginner' })
   levels: string;
 
   @OneToMany(() => UserComment, (userComment) => userComment.course)

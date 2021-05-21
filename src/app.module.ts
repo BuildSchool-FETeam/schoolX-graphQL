@@ -16,6 +16,7 @@ import { TagModule } from './tag/tag.module';
 import { InstructorModule } from './instructor/instructor.module';
 import { AssignmentModule } from './assignment/assignment.module';
 import { NotificationModule } from './notification/notification.module';
+import { ClientUserModule } from './clientUser/clientUser.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -63,6 +64,7 @@ const scheduleModule = ScheduleModule.forRoot();
     TagModule,
     AssignmentModule,
     NotificationModule,
+    ClientUserModule,
   ],
   providers: [
     {

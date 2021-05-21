@@ -36,6 +36,33 @@ export class PermissionService extends BaseService<PermissionSet> {
     return permissionSet;
   }
 
+  async getClientUserPermission() {
+    const clientPerm = 'R';
+    const clientPermissionName = 'client_permission';
+
+    const permissionSet = this.permissionRepo.create({
+      course: clientPerm,
+      blog: 'C|R|U|D|S',
+      instructor: clientPerm,
+      user: '',
+      permission: '',
+      notification: '',
+    });
+
+    const existedRole = await this.roleService.findRoleByName(
+      clientPermissionName,
+    );
+    if (existedRole) {
+      return existedRole;
+    }
+
+    const role = await this.roleService.createRole(clientPermissionName);
+
+    permissionSet.role = role;
+    await this.permissionRepo.save(permissionSet);
+    return role;
+  }
+
   savePermissionSet(permissionSet: PermissionSet) {
     return this.permissionRepo.save(permissionSet);
   }
