@@ -4,11 +4,12 @@ type Query {
 
 type InstructorQuery {
   instructors(
-    pagination: PaginationInput, 
+    pagination: PaginationInput
     searchOption: SearchOptionInput
   ): [InstructorType!]!
-  
+
   instructor(id: ID!): InstructorType!
+  totalInstructors: Int!
 }
 
 type Mutation {

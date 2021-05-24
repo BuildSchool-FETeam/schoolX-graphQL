@@ -180,6 +180,7 @@ export class AdminUserQuery {
     __typename?: 'AdminUserQuery';
     adminUsers: AdminUser[];
     adminUser: AdminUser;
+    totalAdminUsers: number;
 }
 
 export class AdminUserMutation {
@@ -270,6 +271,7 @@ export class CourseQuery {
     __typename?: 'CourseQuery';
     courses: CourseType[];
     course: CourseType;
+    totalCourses: number;
 }
 
 export class CourseMutation {
@@ -319,6 +321,7 @@ export class LessonQuery {
     __typename?: 'LessonQuery';
     lesson: LessonType;
     lessonsWithCourseId: LessonType[];
+    totalLessons: number;
 }
 
 export class DocumentType implements BaseGraphQL {
@@ -341,6 +344,7 @@ export class InstructorQuery {
     __typename?: 'InstructorQuery';
     instructors: InstructorType[];
     instructor: InstructorType;
+    totalInstructors: number;
 }
 
 export class InstructorMutation {
@@ -376,6 +380,8 @@ export class NotificationQuery {
     notificationsReceived: NotificationType[];
     notificationsSent: NotificationType[];
     notification: NotificationType;
+    totalNotificationReceived: number;
+    totalNotificationSent: number;
 }
 
 export class NotificationType implements BaseGraphQL {
@@ -384,7 +390,7 @@ export class NotificationType implements BaseGraphQL {
     title: string;
     content: string;
     createdAt: string;
-    createdBy: AdminUser;
+    createdBy?: AdminUser;
     updatedAt: string;
     recipientByAdmins?: AdminUser[];
 }
@@ -400,6 +406,7 @@ export class PermissionQuery {
     permissions?: Permission[];
     permissionWithId?: Permission;
     permissionWithRole?: Permission;
+    totalPermissions: number;
 }
 
 export class Permission {

@@ -42,13 +42,16 @@ export class PermissionQueryResolver {
       filterPattern = new RegExp(searchOpt.searchString);
     }
 
-    return permissions.map((item) => {
-      return {
-        ...item,
-        roleName: item.role.name,
-      };
-    }).filter(item => 
-      filterPattern ? filterPattern.test(item.roleName) : true);
+    return permissions
+      .map((item) => {
+        return {
+          ...item,
+          roleName: item.role.name,
+        };
+      })
+      .filter((item) =>
+        filterPattern ? filterPattern.test(item.roleName) : true,
+      );
   }
 
   @PermissionRequire({ permission: ['R'] })
@@ -79,5 +82,16 @@ export class PermissionQueryResolver {
       ...permissionSet,
       roleName: permissionSet.role.name,
     };
+  }
+
+  @PermissionRequire({ permission: ['R'] })
+  @ResolveField()
+  totalPermissions(@Context() { req }: any) {
+    const token = this.permissionService.getTokenFromHttpHeader(req.headers);
+
+    return this.permissionService.countingTotalItem({
+      token,
+      strictResourceName: 'permission',
+    });
   }
 }

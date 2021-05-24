@@ -43,4 +43,11 @@ export class LessonService extends BaseService<Lesson> {
 
     return this.lessonRepo.save(lesson);
   }
+
+  countingLessonWithCourseId(courseId: string) {
+    return this.lessonRepo
+      .createQueryBuilder('lesson')
+      .where('lesson.courseId = :courseId', { courseId })
+      .getCount();
+  }
 }

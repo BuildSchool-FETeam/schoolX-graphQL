@@ -22,7 +22,7 @@ export class AdminUserQueryResolver {
   async adminUsers(
     @Context() { req }: any,
     @Args('pagination') pg: PaginationInput,
-    @Args('searchOption') sOpt: SearchOptionInput
+    @Args('searchOption') sOpt: SearchOptionInput,
   ) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
 
@@ -46,5 +46,15 @@ export class AdminUserQueryResolver {
       {},
       { token, strictResourceName: 'user' },
     );
+  }
+
+  @ResolveField()
+  @PermissionRequire({ user: ['R'] })
+  totalAdminUsers(@Context() { req }: any) {
+    const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
+    return this.adminUserService.countingTotalItem({
+      token,
+      strictResourceName: 'user',
+    });
   }
 }

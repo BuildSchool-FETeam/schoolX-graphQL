@@ -3,12 +3,16 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity';
 import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
 import { AdminNotification } from '../Notification.entity';
 import * as _ from 'lodash';
+import { NotificationService } from '../services/notification.service';
 
 @Resolver('NotificationType')
 export class NotificationTypeResolver {
   private readonly SEPARATOR = '|';
 
-  constructor(private adminUserService: AdminUserService) {}
+  constructor(
+    private adminUserService: AdminUserService,
+    private notificationService: NotificationService,
+  ) {}
 
   @ResolveField()
   async recipientByAdmins(@Parent() parentNotification: AdminNotification) {
@@ -27,5 +31,15 @@ export class NotificationTypeResolver {
     }
 
     return [];
+  }
+
+  @ResolveField()
+  async createdBy(@Parent() notification: AdminNotification) {
+    const notificationWithAdmin = await this.notificationService.findById(
+      notification.id,
+      { relations: ['createdBy'] },
+    );
+
+    return notificationWithAdmin.createdBy;
   }
 }
