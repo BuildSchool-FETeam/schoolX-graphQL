@@ -14,6 +14,8 @@ services:
       - DB_USER_NAME=postgres
       - DB_PASSWORD=Toan1234
       - DB_NAME=schoolX-dev
+      - SENDGRID_API_KEY=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
+      - EMAIL_SENDER=schoolx.dev.001@gmail.com
     volumes:
       - /home/app/node_modules
       - /home/app/src/migrations

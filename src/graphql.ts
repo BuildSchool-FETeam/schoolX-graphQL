@@ -289,6 +289,7 @@ export class ClientUserAuthMutation {
     __typename?: 'ClientUserAuthMutation';
     signUp: ClientUserAuthResponse;
     signIn: ClientUserAuthResponse;
+    activateAccount: boolean;
     sendRestorePassword: boolean;
     resetPassword: boolean;
 }
@@ -296,7 +297,7 @@ export class ClientUserAuthMutation {
 export class ClientUserMutation {
     __typename?: 'ClientUserMutation';
     updateClientUser: ClientUserType;
-    updateClientUserPhoto: ClientUserType;
+    updateClientUserAvatar: ClientUserType;
 }
 
 export class ClientUserQuery {
@@ -325,6 +326,9 @@ export class ClientUserType {
     filePath?: string;
     instructor?: InstructorType;
     achievement: AchievementType;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export class AchievementType {

@@ -42,6 +42,15 @@ export class ClientUser extends UserBaseEntityUUID {
   @Column({ nullable: true })
   filePath: string;
 
+  @Column({ nullable: true, default: 0 })
+  isActive: 0 | 1;
+
+  @Column({ nullable: true })
+  activationCode: string;
+
+  @Column({ nullable: true })
+  activationCodeExpire: number;
+
   @OneToMany(() => UserComment, (cmt) => cmt.author)
   comments: UserComment[];
 

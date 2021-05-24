@@ -14,12 +14,15 @@ import { InstructorService } from 'src/instructor/services/instructor.service';
 import { CacheService } from './cache.service';
 import { cacheConstant } from '../constants/cache.contant';
 import { Timeout } from '@nestjs/schedule';
+import { ClientUserService } from 'src/clientUser/services/clientUser.service';
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 
 type ArrayPromises = [
   Promise<string[]>,
   Promise<Instructor[]>,
   Promise<Course[]>,
   Promise<LessonDocument[]>,
+  Promise<ClientUser[]>,
 ];
 
 @Injectable()
@@ -32,6 +35,7 @@ export class CronService {
     private courseService: CourseService,
     private lessonDocumentService: LessonDocumentService,
     private cacheService: CacheService,
+    private clientUserService: ClientUserService,
   ) {}
 
   @Timeout(2000)
@@ -43,16 +47,18 @@ export class CronService {
         this.instructorService.findWithOptions(),
         this.courseService.findWithOptions(),
         this.lessonDocumentService.findWithOptions(),
+        this.clientUserService.findWithOptions(),
       ];
       this.logger.debug('[WARNING]: Running cleaning up');
       this.cacheService.setValue(cacheConstant.CLEAR_FILE, true);
 
       Promise.all(promises).then((result) => {
-        const [files, instructors, courses, lessonDocs] = result;
+        const [files, instructors, courses, lessonDocs, clientUser] = result;
         const listFilePaths = [
           ..._.map(instructors, 'filePath'),
           ..._.map(courses, 'filePath'),
           ..._.map(lessonDocs, 'filePath'),
+          ..._.map(clientUser, 'filePath'),
         ];
 
         const trashFiles = _.difference(files, listFilePaths);

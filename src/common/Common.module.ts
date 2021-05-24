@@ -11,12 +11,14 @@ import { GCStorageService } from './services/GCStorage.service';
 import { ConfigService } from '@nestjs/config';
 import { CacheService } from './services/cache.service';
 import { SubscriptionService } from './services/subscription.service';
+import { ClientUserModule } from 'src/clientUser/clientUser.module';
 
 @Module({
   imports: [
     forwardRef(() => PermissionModule),
     forwardRef(() => InstructorModule),
     forwardRef(() => CourseModule),
+    forwardRef(() => ClientUserModule),
     CacheModule.register(),
   ],
   providers: [

@@ -10,13 +10,14 @@ type Query {
 type ClientUserAuthMutation {
   signUp(data: ClientUserSignupInput!): ClientUserAuthResponse!
   signIn(data: ClientUserSigninInput!): ClientUserAuthResponse!
-  sendRestorePassword(id: ID!, email: String!): Boolean!
-  resetPassword(resetToken: String!, password: String!): Boolean!
+  activateAccount(email: String!, activationCode: String!): Boolean!
+  sendRestorePassword(email: String!): Boolean!
+  resetPassword(resetCode: String!, password: String!, email: String!): Boolean!
 }
 
 type ClientUserMutation {
-  updateClientUser(id: ID!, data: ClientUserUpdateInput!): ClientUserType!
-  updateClientUserPhoto(id: ID!, image: FileUpload!): ClientUserType!
+  updateClientUser(data: ClientUserUpdateInput!, id: ID!): ClientUserType!
+  updateClientUserAvatar(id: ID!, image: FileUpload!): ClientUserType!
 }
 
 type ClientUserQuery {
@@ -62,6 +63,9 @@ type ClientUserType {
   filePath: String
   instructor: InstructorType
   achievement: AchievementType!
+  name: String!
+  createdAt: String!
+  updatedAt: String!
   # comments: UserComment[];
 }
 
