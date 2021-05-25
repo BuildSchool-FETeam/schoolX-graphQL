@@ -74,4 +74,10 @@ export class LessonQueryResolver {
 
     return lesson;
   }
+
+  @ResolveField()
+  @PermissionRequire({ course: ['R'] })
+  totalLessons(@Args('courseId') courseId: string) {
+    return this.lessonService.countingLessonWithCourseId(courseId);
+  }
 }

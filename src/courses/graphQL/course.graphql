@@ -4,11 +4,12 @@ type Query {
 
 type CourseQuery {
   courses(
-    pagination: PaginationInput, 
+    pagination: PaginationInput
     searchOption: SearchOptionInput
   ): [CourseType]!
-  
+
   course(id: ID!): CourseType!
+  totalCourses: Int!
 }
 
 type Mutation {

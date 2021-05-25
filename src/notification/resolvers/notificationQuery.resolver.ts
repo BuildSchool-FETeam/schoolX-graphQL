@@ -55,4 +55,20 @@ export class NotificationQueryResolver {
 
     return this.noticService.getNotificationById(token, id);
   }
+
+  @PermissionRequire({ notification: ['R'] })
+  @ResolveField()
+  totalNotificationReceived(@Context() { req }: any) {
+    const token = this.noticService.getTokenFromHttpHeader(req.headers);
+
+    return this.noticService.countNotificationReceived(token);
+  }
+
+  @PermissionRequire({ notification: ['R'] })
+  @ResolveField()
+  totalNotificationSent(@Context() { req }: any) {
+    const token = this.noticService.getTokenFromHttpHeader(req.headers);
+
+    return this.noticService.countNotificationSent(token);
+  }
 }

@@ -157,6 +157,24 @@ export abstract class BaseService<T> extends UtilService {
     return this.repository.delete(id);
   }
 
+  /**
+   * Counting maximum number of items can be retrieved
+   * @param strict StrictConfig using for resource is strict
+   * @returns number of items
+   */
+  async countingTotalItem(strict?: IStrictConfig) {
+    const { adminUser, permissionSet } = await this.getAdminUserCredential(
+      strict.token,
+    );
+    const builder = this.repository.createQueryBuilder('entity');
+
+    if (this.isStrictPermission(permissionSet[strict.strictResourceName])) {
+      builder.where('entity.createdById = :id', { id: adminUser.id });
+    }
+
+    return builder.getCount();
+  }
+
   private isStrictPermission(permissionAsString: string) {
     return _.includes(permissionAsString.split('|'), 'S');
   }

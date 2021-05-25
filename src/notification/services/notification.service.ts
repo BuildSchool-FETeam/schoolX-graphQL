@@ -63,6 +63,18 @@ export class NotificationService extends BaseService<AdminNotification> {
     searchOptions: FindManyOptions<AdminNotification>,
     paginationInput: PaginationInput,
   ) {
+    const notificationAdminReceived = await this.filterNotificationReceived(
+      adminToken,
+      searchOptions,
+    );
+
+    return this.manuallyPagination(notificationAdminReceived, paginationInput);
+  }
+
+  private async filterNotificationReceived(
+    adminToken: string,
+    searchOptions: FindManyOptions<AdminNotification>,
+  ) {
     const adminUser = await this.tokenService.getAdminUserByToken(adminToken);
     const notifications = await this.findWithOptions(searchOptions);
 
@@ -72,8 +84,7 @@ export class NotificationService extends BaseService<AdminNotification> {
         adminUser.id,
       );
     });
-
-    return this.manuallyPagination(notificationAdminReceived, paginationInput);
+    return notificationAdminReceived;
   }
 
   async getNotificationById(
@@ -99,6 +110,21 @@ export class NotificationService extends BaseService<AdminNotification> {
     notic.recipientByAdminIds = listAdminIds.join('|');
 
     return this.noticRepo.save(notic);
+  }
+
+  async countNotificationReceived(adminToken: string) {
+    const notic = await this.filterNotificationReceived(adminToken, {});
+
+    return _.size(_.uniqBy(notic, 'id'));
+  }
+
+  async countNotificationSent(adminToken: string) {
+    const adminUser = await this.tokenService.getAdminUserByToken(adminToken);
+
+    return this.noticRepo
+      .createQueryBuilder('notic')
+      .where('notic.createdById = :id', { id: adminUser.id })
+      .getCount();
   }
 
   private async getAdminIdsFromRole(roleNames: string[]) {
