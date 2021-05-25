@@ -52,4 +52,14 @@ export class CourseQueryResolver {
       ...course,
     };
   }
+
+  @ResolveField('totalCourses')
+  totalCourses(@Context() { req }: any) {
+    const token = this.courseService.getTokenFromHttpHeader(req.headers);
+
+    return this.courseService.countingTotalItem({
+      token,
+      strictResourceName: 'course',
+    });
+  }
 }

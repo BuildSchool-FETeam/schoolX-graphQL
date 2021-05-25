@@ -44,4 +44,14 @@ export class InstructorQueryResolver {
       { token, strictResourceName: 'instructor' },
     );
   }
+
+  @ResolveField()
+  totalInstructors(@Context() { req }: any) {
+    const token = this.instructorService.getTokenFromHttpHeader(req.headers);
+
+    return this.instructorService.countingTotalItem({
+      token,
+      strictResourceName: 'instructor',
+    });
+  }
 }
