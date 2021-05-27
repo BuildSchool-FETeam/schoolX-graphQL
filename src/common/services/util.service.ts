@@ -89,7 +89,7 @@ export abstract class UtilService {
     const expiredTime = Date.now() + 1000 * 3600 * hours;
 
     return {
-      code,
+      code: code.toUpperCase(),
       expiredTime,
     };
   }

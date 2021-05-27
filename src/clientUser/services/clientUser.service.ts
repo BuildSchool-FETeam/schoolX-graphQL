@@ -22,11 +22,11 @@ import {
   StorageFolder,
 } from 'src/common/services/GCStorage.service';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
-import { EmailService } from 'src/Email/email.service';
+import { MailGunService } from 'src/Email/services/mailGun.service';
 
 @Injectable()
 export class ClientUserService extends BaseService<ClientUser> {
-  private SENDER: string;
+  private SENDER = 'schoolx.dev.001@gmail.com';
 
   constructor(
     @InjectRepository(ClientUser)
@@ -36,11 +36,9 @@ export class ClientUserService extends BaseService<ClientUser> {
     private passwordService: PasswordService,
     private tokenService: TokenService,
     private gcStorageService: GCStorageService,
-    private emailService: EmailService,
+    private emailService: MailGunService,
   ) {
     super(clientRepo, 'clientUser');
-
-    this.SENDER = this.emailService.emailSenderDefault;
   }
 
   async createClientUser(data: ClientUserSignupInput) {
@@ -161,6 +159,7 @@ export class ClientUserService extends BaseService<ClientUser> {
     clientUser.activationCode = code;
     clientUser.activationCodeExpire = expiredTime;
 
+    await this.clientRepo.save(clientUser);
     return this.sendEmailWithCode(code, email, 'Reset password');
   }
 
@@ -171,7 +170,7 @@ export class ClientUserService extends BaseService<ClientUser> {
       throw new BadRequestException('Your activation code is invalid!');
     }
 
-    if (this.checkActivationCodeValid(clientUser)) {
+    if (!this.checkActivationCodeValid(clientUser)) {
       throw new BadRequestException('Activation code has been expired!');
     }
 
@@ -203,7 +202,7 @@ export class ClientUserService extends BaseService<ClientUser> {
     email: string,
     emailSubject?: string,
   ) {
-    await this.emailService.sendMail({
+    await this.emailService.sendMailWithCode({
       messageConfig: {
         from: this.SENDER,
         to: email,

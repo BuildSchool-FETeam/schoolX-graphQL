@@ -1,9 +1,10 @@
 import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
-import * as emailTemplate from './email.template';
+import * as emailTemplate from '../email.template';
 import * as sgMail from '@sendgrid/mail';
 import { MailService } from '@sendgrid/mail';
 import { ConfigService } from '@nestjs/config';
 import { Injectable } from '@nestjs/common';
+import { ISendMail } from './mail.base.service';
 
 export interface IMessage {
   to: string;
@@ -14,7 +15,7 @@ export interface IMessage {
 type TemplateName = keyof typeof emailTemplate;
 
 @Injectable()
-export class EmailService {
+export class SendGridEmailService implements ISendMail {
   private sendGridAPIKey: string;
   private sgMail: MailService;
 
@@ -26,7 +27,7 @@ export class EmailService {
     this.sgMail = sgMail;
   }
 
-  sendMail(config: {
+  sendMailWithCode(config: {
     messageConfig: IMessage;
     templateName: TemplateName;
     code: string;

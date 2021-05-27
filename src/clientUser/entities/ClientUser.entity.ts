@@ -48,7 +48,7 @@ export class ClientUser extends UserBaseEntityUUID {
   @Column({ nullable: true })
   activationCode: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'bigint' })
   activationCodeExpire: number;
 
   @OneToMany(() => UserComment, (cmt) => cmt.author)
