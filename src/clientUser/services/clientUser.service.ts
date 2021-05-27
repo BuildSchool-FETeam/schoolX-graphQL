@@ -70,7 +70,6 @@ export class ClientUserService extends BaseService<ClientUser> {
     return {
       id: clientUserResponse.id,
       email: clientUserResponse.email,
-      token: this.tokenService.createToken({ ...clientUserResponse }),
     };
   }
 

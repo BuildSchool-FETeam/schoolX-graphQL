@@ -47,7 +47,7 @@ input ClientUserSigninInput {
 type ClientUserAuthResponse {
   id: ID!
   email: String!
-  token: String!
+  token: String
 }
 
 type ClientUserType {

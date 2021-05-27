@@ -311,7 +311,7 @@ export class ClientUserAuthResponse {
     __typename?: 'ClientUserAuthResponse';
     id: string;
     email: string;
-    token: string;
+    token?: string;
 }
 
 export class ClientUserType {
