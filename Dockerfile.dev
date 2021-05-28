@@ -7,9 +7,6 @@ WORKDIR /home/app
 COPY package.json .
 RUN yarn install
 
-RUN yarn add mailgun-js
-RUN yarn add @types/mailgun-js
-
 RUN npm rebuild bcrypt --build-from-source
 
 COPY . .
