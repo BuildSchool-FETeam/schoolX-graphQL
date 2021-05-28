@@ -27,7 +27,7 @@ type ClientUserQuery {
 input ClientUserUpdateInput {
   name: String
   githubUrl: String
-  dateOfBirth: String
+  dayOfBirth: ScalarDate
   homeTown: String
   bio: String
   phone: String
@@ -55,7 +55,7 @@ type ClientUserType {
   email: String
   password: String
   githubUrl: String
-  dayOfBirth: String
+  dayOfBirth: ScalarDate
   homeTown: String
   bio: String
   phone: String
@@ -64,8 +64,8 @@ type ClientUserType {
   instructor: InstructorType
   achievement: AchievementType!
   name: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
   # comments: UserComment[];
 }
 

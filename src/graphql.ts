@@ -1,5 +1,6 @@
 
-/** ------------------------------------------------------
+/*
+ * ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -50,7 +51,7 @@ export class SignInInput {
 export class ClientUserUpdateInput {
     name?: string;
     githubUrl?: string;
-    dateOfBirth?: string;
+    dayOfBirth?: ScalarDate;
     homeTown?: string;
     bio?: string;
     phone?: string;
@@ -319,7 +320,7 @@ export class ClientUserType {
     email?: string;
     password?: string;
     githubUrl?: string;
-    dayOfBirth?: string;
+    dayOfBirth?: ScalarDate;
     homeTown?: string;
     bio?: string;
     phone?: string;
@@ -328,8 +329,8 @@ export class ClientUserType {
     instructor?: InstructorType;
     achievement: AchievementType;
     name: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
 }
 
 export class AchievementType {
@@ -515,3 +516,4 @@ export class TagType implements BaseGraphQL {
 }
 
 export type FileUpload = any;
+export type ScalarDate = any;

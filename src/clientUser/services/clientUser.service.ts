@@ -178,17 +178,15 @@ export class ClientUserService extends BaseService<ClientUser> {
   }
 
   private async getClientUserFromEmail(email: string) {
-    const existedUser = await this.findWithOptions({
+    const existedUser = await this.clientRepo.findOne({
       where: { email },
     });
 
-    if (_.size(existedUser) === 0) {
+    if (!existedUser) {
       throw new ForbiddenException("This email doesn't exist yet");
     }
 
-    const [existedClientUser] = existedUser;
-
-    return existedClientUser;
+    return existedUser;
   }
 
   private checkActivationCodeValid(clientUser: ClientUser) {

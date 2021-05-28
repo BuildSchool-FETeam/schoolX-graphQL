@@ -12,6 +12,7 @@ import { ConfigService } from '@nestjs/config';
 import { CacheService } from './services/cache.service';
 import { SubscriptionService } from './services/subscription.service';
 import { ClientUserModule } from 'src/clientUser/clientUser.module';
+import { DateScalar } from './scalars/date.scalar';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ClientUserModule } from 'src/clientUser/clientUser.module';
     CacheService,
     CronService,
     SubscriptionService,
+    DateScalar,
   ],
   exports: [
     PasswordService,
