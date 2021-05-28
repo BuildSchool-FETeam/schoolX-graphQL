@@ -1,5 +1,6 @@
 
-/** ------------------------------------------------------
+/*
+ * ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -43,6 +44,26 @@ export class SignUpInput {
 }
 
 export class SignInInput {
+    email: string;
+    password: string;
+}
+
+export class ClientUserUpdateInput {
+    name?: string;
+    githubUrl?: string;
+    dayOfBirth?: ScalarDate;
+    homeTown?: string;
+    bio?: string;
+    phone?: string;
+}
+
+export class ClientUserSignupInput {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export class ClientUserSigninInput {
     email: string;
     password: string;
 }
@@ -133,6 +154,8 @@ export abstract class IQuery {
 
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
+    abstract clientUserQuery(): ClientUserQuery | Promise<ClientUserQuery>;
+
     abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
 
     abstract lessonQuery(): LessonQuery | Promise<LessonQuery>;
@@ -162,6 +185,10 @@ export abstract class IMutation {
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
+
+    abstract clientUserAuthMutation(): ClientUserAuthMutation | Promise<ClientUserAuthMutation>;
+
+    abstract clientUserMutation(): ClientUserMutation | Promise<ClientUserMutation>;
 
     abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
 
@@ -258,6 +285,63 @@ export class AuthPayload {
     token: string;
     userName: string;
     role: string;
+}
+
+export class ClientUserAuthMutation {
+    __typename?: 'ClientUserAuthMutation';
+    signUp: ClientUserAuthResponse;
+    signIn: ClientUserAuthResponse;
+    activateAccount: boolean;
+    sendRestorePassword: boolean;
+    resetPassword: boolean;
+}
+
+export class ClientUserMutation {
+    __typename?: 'ClientUserMutation';
+    updateClientUser: ClientUserType;
+    updateClientUserAvatar: ClientUserType;
+}
+
+export class ClientUserQuery {
+    __typename?: 'ClientUserQuery';
+    userDetail: ClientUserType;
+}
+
+export class ClientUserAuthResponse {
+    __typename?: 'ClientUserAuthResponse';
+    id: string;
+    email: string;
+    token?: string;
+}
+
+export class ClientUserType {
+    __typename?: 'ClientUserType';
+    id: string;
+    email?: string;
+    password?: string;
+    githubUrl?: string;
+    dayOfBirth?: ScalarDate;
+    homeTown?: string;
+    bio?: string;
+    phone?: string;
+    imageUrl?: string;
+    filePath?: string;
+    instructor?: InstructorType;
+    achievement: AchievementType;
+    name: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+}
+
+export class AchievementType {
+    __typename?: 'AchievementType';
+    id: string;
+    rank?: number;
+    score?: number;
+    joinedCourse: CourseType[];
+    follow: ClientUserType[];
+    followedBy: ClientUserType[];
+    completedCourses: CourseType[];
 }
 
 export class File {
@@ -432,3 +516,4 @@ export class TagType implements BaseGraphQL {
 }
 
 export type FileUpload = any;
+export type ScalarDate = any;

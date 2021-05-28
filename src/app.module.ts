@@ -16,6 +16,8 @@ import { TagModule } from './tag/tag.module';
 import { InstructorModule } from './instructor/instructor.module';
 import { AssignmentModule } from './assignment/assignment.module';
 import { NotificationModule } from './notification/notification.module';
+import { ClientUserModule } from './clientUser/clientUser.module';
+import { EmailModule } from './Email/email.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -37,6 +39,7 @@ const graphQLModuleInit = GraphQLModule.forRoot({
 const typeORMModuleInit = TypeOrmModule.forRoot();
 const EnvInitModule = ConfigModule.forRoot({
   envFilePath: ['.env.development'],
+  isGlobal: true,
 });
 
 const cacheManagerModule = CacheModule.register({
@@ -63,6 +66,8 @@ const scheduleModule = ScheduleModule.forRoot();
     TagModule,
     AssignmentModule,
     NotificationModule,
+    ClientUserModule,
+    EmailModule,
   ],
   providers: [
     {

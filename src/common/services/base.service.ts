@@ -17,7 +17,7 @@ export abstract class BaseService<T> extends UtilService {
   protected cachingService: CacheService;
 
   /**
-   * BaseService help us solving the problem with the repeatedly using methods or working with DB
+   * BaseService help us solving the DRY problem or working with DB
    * @param repo the repository class you use for the child class
    * @param resourceName using for showing error, and help them know which resources the error come from
    * @param cachingService if the resource using strict, you should inject the caching service

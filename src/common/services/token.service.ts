@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jwt from 'jsonwebtoken';
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { cacheConstant } from '../constants/cache.contant';
 import { EnvVariable } from '../interfaces/EnvVariable.interface';
 import { CacheService } from './cache.service';
@@ -18,7 +19,7 @@ export class TokenService {
     this.privateKey = this.configService.get('JWT_SECRET');
   }
 
-  createToken(data: AdminUser) {
+  createToken(data: AdminUser | ClientUser) {
     const token = jwt.sign(data, this.privateKey, {
       expiresIn: this.expirationTime,
     });
@@ -36,10 +37,10 @@ export class TokenService {
     }
   }
 
-  async getAdminUserByToken(token: string) {
+  async getAdminUserByToken<T = AdminUser>(token: string) {
     const adminUser = (await this.cacheService.getValue(
       cacheConstant.ADMIN_USER + '-' + token,
-    )) as AdminUser;
+    )) as T;
 
     if (adminUser) {
       return adminUser;
