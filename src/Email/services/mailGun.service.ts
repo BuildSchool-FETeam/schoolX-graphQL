@@ -11,7 +11,7 @@ export class MailGunService implements ISendMail {
   private readonly mailGunInstance: mailGun.Mailgun;
 
   constructor(private configService: ConfigService<EnvVariable>) {
-    this.API_KEY = this.configService.get('MAILGUN_API');
+    this.API_KEY = this.configService.get('MAILGUN_API_KEY');
     this.mailGunInstance = mailGun({
       apiKey: this.API_KEY,
       domain: 'schoolx.xyz',

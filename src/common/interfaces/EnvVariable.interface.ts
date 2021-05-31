@@ -4,5 +4,5 @@ export interface EnvVariable {
   GOOGLE_APPLICATION_CREDENTIALS: string;
   SENDGRID_API_KEY: string;
   EMAIL_SENDER: string;
-  MAILGUN_API: string;
+  MAILGUN_API_KEY: string;
 }

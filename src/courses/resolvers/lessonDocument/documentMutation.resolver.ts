@@ -49,7 +49,6 @@ export class LessonDocumentMutationResolver {
   async removeDocumentFromLesson(@Args('docId') id: string) {
     const doc = await this.documentService.findById(id);
     await this.documentService.removeDocFromLesson(doc.id);
-    this.gcStorageService.deleteFile(doc.filePath);
     return true;
   }
 }
