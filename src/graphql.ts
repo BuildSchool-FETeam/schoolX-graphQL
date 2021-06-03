@@ -48,15 +48,6 @@ export class SignInInput {
     password: string;
 }
 
-export class ClientUserUpdateInput {
-    name?: string;
-    githubUrl?: string;
-    dayOfBirth?: ScalarDate;
-    homeTown?: string;
-    bio?: string;
-    phone?: string;
-}
-
 export class ClientUserSignupInput {
     name: string;
     email: string;
@@ -66,6 +57,15 @@ export class ClientUserSignupInput {
 export class ClientUserSigninInput {
     email: string;
     password: string;
+}
+
+export class ClientUserUpdateInput {
+    name?: string;
+    githubUrl?: string;
+    dayOfBirth?: ScalarDate;
+    homeTown?: string;
+    bio?: string;
+    phone?: string;
 }
 
 export class OrderType {
@@ -296,6 +296,13 @@ export class ClientUserAuthMutation {
     resetPassword: boolean;
 }
 
+export class ClientUserAuthResponse {
+    __typename?: 'ClientUserAuthResponse';
+    id: string;
+    email: string;
+    token?: string;
+}
+
 export class ClientUserMutation {
     __typename?: 'ClientUserMutation';
     updateClientUser: ClientUserType;
@@ -305,13 +312,6 @@ export class ClientUserMutation {
 export class ClientUserQuery {
     __typename?: 'ClientUserQuery';
     userDetail: ClientUserType;
-}
-
-export class ClientUserAuthResponse {
-    __typename?: 'ClientUserAuthResponse';
-    id: string;
-    email: string;
-    token?: string;
 }
 
 export class ClientUserType {
