@@ -15,8 +15,8 @@ type File {
 interface BaseGraphQL {
   id: ID!
   title: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
 }
 
 input OrderType {

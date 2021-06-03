@@ -137,8 +137,8 @@ export class PermissionSetInput {
 export interface BaseGraphQL {
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
 }
 
 export abstract class IQuery {
@@ -229,8 +229,8 @@ export class AssignmentType implements BaseGraphQL {
     __typename?: 'AssignmentType';
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     description: string;
     hints: string[];
     score: number;
@@ -256,8 +256,8 @@ export class TestCaseType implements BaseGraphQL {
     __typename?: 'TestCaseType';
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     input: string;
     expectedOutput: string;
     assignment: AssignmentType;
@@ -368,8 +368,8 @@ export class CourseType implements BaseGraphQL {
     __typename?: 'CourseType';
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     description: string;
     instructor: InstructorType;
     benefits: string[];
@@ -385,8 +385,8 @@ export class LessonType implements BaseGraphQL {
     __typename?: 'LessonType';
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     videoUrl: string;
     votes: number;
     course: CourseType;
@@ -412,8 +412,8 @@ export class DocumentType implements BaseGraphQL {
     __typename?: 'DocumentType';
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     url: string;
     lesson: LessonType;
 }
@@ -441,8 +441,8 @@ export class InstructorType implements BaseGraphQL {
     __typename?: 'InstructorType';
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     name: string;
     description: string;
     email: string;
@@ -473,9 +473,9 @@ export class NotificationType implements BaseGraphQL {
     id: string;
     title: string;
     content: string;
-    createdAt: string;
+    createdAt: ScalarDate;
     createdBy?: AdminUser;
-    updatedAt: string;
+    updatedAt: ScalarDate;
     recipientByAdmins?: AdminUser[];
 }
 
@@ -510,8 +510,8 @@ export class TagType implements BaseGraphQL {
     __typename?: 'TagType';
     id: string;
     title: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     courses: CourseType[];
 }
 

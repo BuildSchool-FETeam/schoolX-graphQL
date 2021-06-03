@@ -12,8 +12,8 @@ input AssignmentSetInput {
 type AssignmentType implements BaseGraphQL {
   id: ID!
   title: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
   description: String!
   hints: [String]!
   score: Int!

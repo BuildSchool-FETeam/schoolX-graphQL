@@ -1,8 +1,8 @@
 type TestCaseType implements BaseGraphQL {
   id: ID!
   title: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
   input: String!
   expectedOutput: String!
   assignment: AssignmentType!

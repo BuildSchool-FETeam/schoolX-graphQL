@@ -34,8 +34,8 @@ input InstructorSetInput {
 type InstructorType implements BaseGraphQL {
   id: ID!
   title: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
   name: String!
   description: String!
   email: String!

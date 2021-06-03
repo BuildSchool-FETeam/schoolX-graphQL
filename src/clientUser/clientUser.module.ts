@@ -12,6 +12,7 @@ import { ClientUserMutationResolver } from './resolvers/clientUserMutation.resol
 import { clientUserQueryResolver } from './resolvers/clientUserQuery.resolver';
 import { clientUserTypeResolver } from './resolvers/clientUserType.resolver';
 import { AchievementService } from './services/achievement.service';
+import { ClientAuthService } from './services/clientAuth.service';
 import { ClientUserService } from './services/clientUser.service';
 
 @Module({
@@ -23,6 +24,7 @@ import { ClientUserService } from './services/clientUser.service';
   ],
   providers: [
     ClientUserService,
+    ClientAuthService,
     AchievementService,
     ClientUserAuthMutationResolver,
     ClientUserMutationResolver,
