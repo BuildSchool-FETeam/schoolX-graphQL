@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { Repository } from 'typeorm';
 import { Tag } from './entities/tag.entity';
+import * as _ from 'lodash'
 
 @Injectable()
 export class TagService extends BaseService<Tag> {
@@ -24,6 +25,17 @@ export class TagService extends BaseService<Tag> {
     } else {
       tag = existedTags[0];
     }
+    return this.tagRepo.save(tag);
+  }
+
+  async removeCourseFromTag(tagId: string, rmCourseId: string) {
+    const tag = await this.findById(tagId, {relations: ['courses']});
+    const cloneTagCourses = _.cloneDeep(tag.courses);
+
+    tag.courses = cloneTagCourses.filter(course => {
+      return course.id != rmCourseId
+    });
+
     return this.tagRepo.save(tag);
   }
 }

@@ -85,6 +85,16 @@ export class CourseService extends BaseService<Course> {
       });
   }
 
+  removeCourseFormTag(removedCourseId: string, tagIds: string[]) {
+    const promises: Array<Promise<any>> = [];
+
+    _.each(tagIds, tagId => {
+      promises.push(this.tagService.removeCourseFromTag(tagId, removedCourseId));
+    })
+
+    return Promise.all(promises)
+  }
+
   private createTags(tags: string[]) {
     return _.map(tags, (tag) => {
       return this.tagService.addTag({

@@ -85,13 +85,15 @@ export class CourseMutationResolver {
     const token = this.courseService.getTokenFromHttpHeader(req.headers);
     const course = await this.courseService.findById(
       id,
-      {},
+      {relations: ['tags']},
       { token, strictResourceName: 'course' },
     );
 
     if (course.filePath) {
       this.gcStorageService.deleteFile(course.filePath);
     }
+
+    await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'))
 
     await this.courseService.deleteOneById(id);
     return true;
