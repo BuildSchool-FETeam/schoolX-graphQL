@@ -32,9 +32,9 @@ type NotificationType implements BaseGraphQL {
   id: ID!
   title: String!
   content: String!
-  createdAt: String!
+  createdAt: ScalarDate!
   createdBy: AdminUser
-  updatedAt: String!
+  updatedAt: ScalarDate!
   recipientByAdmins: [AdminUser]
 }
 

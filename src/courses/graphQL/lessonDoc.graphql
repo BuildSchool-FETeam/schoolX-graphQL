@@ -5,8 +5,8 @@ type Mutation {
 type DocumentType implements BaseGraphQL {
   id: ID!
   title: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
   url: String!
   lesson: LessonType!
 }

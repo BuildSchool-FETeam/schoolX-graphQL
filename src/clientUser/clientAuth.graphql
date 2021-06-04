@@ -1,10 +1,5 @@
 type Mutation {
   clientUserAuthMutation: ClientUserAuthMutation!
-  clientUserMutation: ClientUserMutation!
-}
-
-type Query {
-  clientUserQuery: ClientUserQuery
 }
 
 type ClientUserAuthMutation {
@@ -13,24 +8,6 @@ type ClientUserAuthMutation {
   activateAccount(email: String!, activationCode: String!): Boolean!
   sendRestorePassword(email: String!): Boolean!
   resetPassword(resetCode: String!, password: String!, email: String!): Boolean!
-}
-
-type ClientUserMutation {
-  updateClientUser(data: ClientUserUpdateInput!, id: ID!): ClientUserType!
-  updateClientUserAvatar(id: ID!, image: FileUpload!): ClientUserType!
-}
-
-type ClientUserQuery {
-  userDetail(id: ID!): ClientUserType!
-}
-
-input ClientUserUpdateInput {
-  name: String
-  githubUrl: String
-  dayOfBirth: ScalarDate
-  homeTown: String
-  bio: String
-  phone: String
 }
 
 input ClientUserSignupInput {
@@ -48,33 +25,4 @@ type ClientUserAuthResponse {
   id: ID!
   email: String!
   token: String
-}
-
-type ClientUserType {
-  id: ID!
-  email: String
-  password: String
-  githubUrl: String
-  dayOfBirth: ScalarDate
-  homeTown: String
-  bio: String
-  phone: String
-  imageUrl: String
-  filePath: String
-  instructor: InstructorType
-  achievement: AchievementType!
-  name: String!
-  createdAt: ScalarDate!
-  updatedAt: ScalarDate!
-  # comments: UserComment[];
-}
-
-type AchievementType {
-  id: ID!
-  rank: Int
-  score: Int
-  joinedCourse: [CourseType]!
-  follow: [ClientUserType]!
-  followedBy: [ClientUserType]!
-  completedCourses: [CourseType]!
 }

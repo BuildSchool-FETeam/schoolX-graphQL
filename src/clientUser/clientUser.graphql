@@ -1,0 +1,54 @@
+type Mutation {
+  clientUserMutation: ClientUserMutation!
+}
+
+type Query {
+  clientUserQuery: ClientUserQuery
+}
+
+type ClientUserMutation {
+  updateClientUser(data: ClientUserUpdateInput!, id: ID!): ClientUserType!
+  updateClientUserAvatar(id: ID!, image: FileUpload!): ClientUserType!
+}
+
+type ClientUserQuery {
+  userDetail(id: ID!): ClientUserType!
+}
+
+input ClientUserUpdateInput {
+  name: String
+  githubUrl: String
+  dayOfBirth: ScalarDate
+  homeTown: String
+  bio: String
+  phone: String
+}
+
+type ClientUserType {
+  id: ID!
+  email: String
+  password: String
+  githubUrl: String
+  dayOfBirth: ScalarDate
+  homeTown: String
+  bio: String
+  phone: String
+  imageUrl: String
+  filePath: String
+  instructor: InstructorType
+  achievement: AchievementType!
+  name: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
+  # comments: UserComment[];
+}
+
+type AchievementType {
+  id: ID!
+  rank: Int
+  score: Int
+  joinedCourse(pagination: PaginationInput!): [CourseType]!
+  follow(pagination: PaginationInput!): [ClientUserType]!
+  followedBy(pagination: PaginationInput!): [ClientUserType]!
+  completedCourses(pagination: PaginationInput!): [CourseType]!
+}

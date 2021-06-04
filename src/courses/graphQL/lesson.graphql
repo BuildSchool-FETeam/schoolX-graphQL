@@ -1,8 +1,8 @@
 type LessonType implements BaseGraphQL {
   id: ID!
   title: String!
-  createdAt: String!
-  updatedAt: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
   videoUrl: String!
   votes: Int!
   course: CourseType!
