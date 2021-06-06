@@ -29,7 +29,9 @@ export class TokenService {
 
   verifyAndDecodeToken(token: string) {
     try {
-      const decodedData = jwt.verify(token, this.privateKey) as AdminUser;
+      const decodedData = jwt.verify(token, this.privateKey) as
+        | AdminUser
+        | ClientUser;
 
       return decodedData;
     } catch (err) {

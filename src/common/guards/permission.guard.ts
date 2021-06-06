@@ -34,10 +34,11 @@ export class PermissionGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const graphQLContext = GqlExecutionContext.create(context);
-    const requirePermission = this.reflector.getAllAndOverride<PermissionRequire>(
-      PERMISSION_REQUIRE_KEY,
-      [graphQLContext.getHandler()],
-    );
+    const requirePermission =
+      this.reflector.getAllAndOverride<PermissionRequire>(
+        PERMISSION_REQUIRE_KEY,
+        [graphQLContext.getHandler()],
+      );
 
     if (!this.isResolve(graphQLContext)) {
       return true;
@@ -51,17 +52,17 @@ export class PermissionGuard implements CanActivate {
       return false;
     }
 
-    const {adminUser, token} = decodedToken;
+    const { user, token } = decodedToken;
 
     const userPermissions = await this.permissionService.getPermissionByRole(
-      adminUser.role.name,
+      user.role.name,
     );
 
     await this.cacheService.setValue<ICachedPermissionSet>(
       `${cacheConstant.PERMISSION}-${token}`,
       {
         permissionSet: userPermissions,
-        adminUser: adminUser,
+        adminUser: user instanceof AdminUser ? user : null,
       },
     );
 
@@ -95,7 +96,7 @@ export class PermissionGuard implements CanActivate {
       const headers = context.getContext().req.headers as DynamicObject;
       const token = headers.authorization?.split(' ')[1] as string;
       return {
-        adminUser: this.tokenService.verifyAndDecodeToken(token),
+        user: this.tokenService.verifyAndDecodeToken(token),
         token,
       };
     } catch (err) {

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
 import { BaseService } from 'src/common/services/base.service';
 import { PasswordService } from 'src/common/services/password.service';
@@ -140,6 +140,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
   private async getClientUserFromEmail(email: string) {
     const existedUser = await this.clientRepo.findOne({
       where: { email },
+      relations: ['role'],
     });
 
     if (!existedUser) {

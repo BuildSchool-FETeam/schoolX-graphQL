@@ -5,7 +5,7 @@ import {
   PaginationInput,
   SearchOptionInput,
 } from 'src/graphql';
-import { FindManyOptions, Like } from 'typeorm';
+import { FindManyOptions, ILike } from 'typeorm';
 
 export abstract class UtilService {
   private readonly MAXIMUM_LIMIT = 1000;
@@ -76,9 +76,10 @@ export abstract class UtilService {
       return {};
     }
     _.each(search.searchFields, (field) => {
-      findArray.push({ [field]: Like(`%${search.searchString}%`) });
+      findArray.push({
+        [field]: ILike(`%${search.searchString}%`),
+      });
     });
-
     return {
       where: [...findArray],
     };
