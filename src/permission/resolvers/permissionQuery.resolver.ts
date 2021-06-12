@@ -24,9 +24,8 @@ export class PermissionQueryResolver {
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') searchOpt: SearchOptionInput,
   ) {
-    const pgOptions = this.permissionService.buildPaginationOptions<PermissionSet>(
-      pg,
-    );
+    const pgOptions =
+      this.permissionService.buildPaginationOptions<PermissionSet>(pg);
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
     const permissions = await this.permissionService.findWithOptions(
       {
@@ -39,7 +38,7 @@ export class PermissionQueryResolver {
     let filterPattern: RegExp = null;
 
     if (searchOpt) {
-      filterPattern = new RegExp(searchOpt.searchString);
+      filterPattern = new RegExp(searchOpt.searchString, 'i');
     }
 
     return permissions
