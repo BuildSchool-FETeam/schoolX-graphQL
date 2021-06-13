@@ -47,8 +47,8 @@ type AchievementType {
   id: ID!
   rank: Int
   score: Int
-  joinedCourse(pagination: PaginationInput!): [CourseType]!
-  follow(pagination: PaginationInput!): [ClientUserType]!
-  followedBy(pagination: PaginationInput!): [ClientUserType]!
-  completedCourses(pagination: PaginationInput!): [CourseType]!
+  joinedCourse(pagination: PaginationInput): [CourseType]!
+  follow(pagination: PaginationInput): [ClientUserType]!
+  followedBy(pagination: PaginationInput): [ClientUserType]!
+  completedCourses(pagination: PaginationInput): [CourseType]!
 }

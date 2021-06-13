@@ -13,6 +13,7 @@ import { CacheService } from './services/cache.service';
 import { SubscriptionService } from './services/subscription.service';
 import { ClientUserModule } from 'src/clientUser/clientUser.module';
 import { DateScalar } from './scalars/date.scalar';
+import { ImageProcessService } from './services/imageProcess.service';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { DateScalar } from './scalars/date.scalar';
     CronService,
     SubscriptionService,
     DateScalar,
+    ImageProcessService,
   ],
   exports: [
     PasswordService,
