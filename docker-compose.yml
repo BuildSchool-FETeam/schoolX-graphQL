@@ -9,13 +9,13 @@ services:
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=ticketer-dev-283204-f6b9d5e1193e.json
       - JWT_SECRET=Yasuoganktem20gg
-      - STORAGE_FOLDER=docker_storage_folder
+      - STORAGE_FOLDER=toan-dev-003
       - DB_HOST=postgres-db
       - DB_USER_NAME=postgres
       - DB_PASSWORD=Toan1234
       - DB_NAME=schoolX-dev
       - EMAIL_SENDER=schoolx.dev.001@gmail.com
-      - MAILGUN_API=<ask-me>
+      - MAILGUN_API_KEY=081f8afd66c27304531716de6f5d64fc-fa6e84b7-54d389e0
     volumes:
       - /home/app/node_modules
       - /home/app/src/migrations

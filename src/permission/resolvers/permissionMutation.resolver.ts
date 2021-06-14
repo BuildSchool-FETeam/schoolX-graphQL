@@ -60,11 +60,7 @@ export class PermissionMutationResolver {
   @ResolveField()
   async deletePermission(@Args('id') id: string, @Context() { req }: any) {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
-    const permissions = await this.permissionService.deleteOneById(id, {
-      token,
-      strictResourceName: 'permission',
-    });
-    return !!permissions;
+    return this.permissionService.deletePermission(id, token);
   }
 
   private isRightFormat(perm: PermissionSetInput) {
