@@ -47,6 +47,14 @@ export class RoleService extends BaseService<Role> {
     );
   }
 
+  async deleteRoleByName(removedName: string) {
+    return this.roleRepo
+      .createQueryBuilder('role')
+      .where('role.name = :name', {name: removedName})
+      .delete()
+      .execute()
+  }
+
   async findRoleByName(name: string, options?: FindOneOptions<Role>) {
     return this.roleRepo.findOne({ name }, options);
   }

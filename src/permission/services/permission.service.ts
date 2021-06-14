@@ -114,6 +114,18 @@ export class PermissionService extends BaseService<PermissionSet> {
     };
   }
 
+  async deletePermission(id: string, token: string) {
+    const permission = await this.findById(id, {relations: ['role']});
+    await this.deleteOneById(id, {
+      token,
+      strictResourceName: 'permission',
+    });
+
+    await this.roleService.deleteRoleByName(permission.role.name);
+
+    return true;
+  }
+
   async getPermissionByRole(roleName: string) {
     return this.permissionRepo
       .createQueryBuilder('perm')
