@@ -85,7 +85,7 @@ export class CourseMutationResolver {
     const token = this.courseService.getTokenFromHttpHeader(req.headers);
     const course = await this.courseService.findById(
       id,
-      {relations: ['tags']},
+      { relations: ['tags'] },
       { token, strictResourceName: 'course' },
     );
 
@@ -93,7 +93,7 @@ export class CourseMutationResolver {
       this.gcStorageService.deleteFile(course.filePath);
     }
 
-    await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'))
+    await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'));
 
     await this.courseService.deleteOneById(id);
     return true;
@@ -111,6 +111,12 @@ export class CourseMutationResolver {
       readStream,
       type: StorageFolder.course,
       makePublic: true,
+      imageProcessConfig: {
+        resize: {
+          width: 1200,
+        },
+        changeFormat: 'jpeg',
+      },
     });
     return result;
   }

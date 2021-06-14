@@ -7,6 +7,7 @@ import {
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from '../interfaces/EnvVariable.interface';
+import { ImageProcessService, IProcessConfig } from './imageProcess.service';
 
 export enum StorageFolder {
   instructor = 'Instructors',
@@ -20,7 +21,10 @@ export class GCStorageService {
   private bucket: Bucket;
   private rootFolder: string;
 
-  constructor(private configService: ConfigService<EnvVariable>) {
+  constructor(
+    private configService: ConfigService<EnvVariable>,
+    private imageProcessService: ImageProcessService,
+  ) {
     const storage = new Storage();
     this.bucket = storage.bucket('schoolx-dev-bucket');
     this.rootFolder = this.configService.get('STORAGE_FOLDER');
@@ -39,8 +43,16 @@ export class GCStorageService {
     type: StorageFolder;
     makePublic: boolean;
     additionalPath?: string;
+    imageProcessConfig?: IProcessConfig;
   }): Promise<{ publicUrl: string; filePath: string }> {
-    const { fileName, readStream, type, makePublic, additionalPath } = config;
+    const {
+      fileName,
+      readStream,
+      type,
+      makePublic,
+      additionalPath,
+      imageProcessConfig,
+    } = config;
 
     return new Promise((resolve) => {
       const filePath = additionalPath
@@ -50,7 +62,12 @@ export class GCStorageService {
         : `${this.rootFolder}/${type}/${this.makeFileNameUnique(fileName)}`;
 
       const cloudFile = this.bucket.file(filePath);
-      readStream
+      const transformedStream = this.addProcessImageToStream(
+        imageProcessConfig,
+        readStream,
+      );
+
+      transformedStream
         .pipe(cloudFile.createWriteStream())
         .on('error', (err) => {
           throw new InternalServerErrorException(err);
@@ -98,6 +115,20 @@ export class GCStorageService {
         },
       );
     });
+  }
+
+  private addProcessImageToStream(
+    processConfig: IProcessConfig,
+    stream: ReadStream,
+  ) {
+    if (processConfig) {
+      const transformer =
+        this.imageProcessService.createResizeTransformer(processConfig);
+
+      return stream.pipe(transformer);
+    }
+
+    return stream;
   }
 
   private makeFileNameUnique(fileName: string) {

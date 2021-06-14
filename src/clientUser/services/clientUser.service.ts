@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
-import { PasswordService } from 'src/common/services/password.service';
 import { ClientUserUpdateInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { ClientUser } from '../entities/ClientUser.entity';
@@ -17,7 +16,6 @@ export class ClientUserService extends BaseService<ClientUser> {
   constructor(
     @InjectRepository(ClientUser)
     private clientRepo: Repository<ClientUser>,
-    private passwordService: PasswordService,
     private gcStorageService: GCStorageService,
   ) {
     super(clientRepo, 'clientUser');
@@ -49,6 +47,13 @@ export class ClientUserService extends BaseService<ClientUser> {
       type: StorageFolder.ClientUsers,
       makePublic: true,
       additionalPath: existedUser.email,
+      imageProcessConfig: {
+        resize: {
+          height: 450,
+          width: 450,
+        },
+        changeFormat: 'jpeg',
+      },
     });
 
     existedUser.filePath = filePath;

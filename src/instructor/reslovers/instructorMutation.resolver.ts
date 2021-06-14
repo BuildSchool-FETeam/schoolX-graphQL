@@ -63,6 +63,14 @@ export class InstructorMutationResolver {
         readStream,
         type: StorageFolder.instructor,
         makePublic: true,
+        imageProcessConfig: {
+          resize: {
+            height: 450,
+            width: 450,
+          },
+          changeFormat: 'jpeg',
+          isSharpen: true,
+        },
       });
       imageUrl = promiseObj.publicUrl;
       imgPath = promiseObj.filePath;
