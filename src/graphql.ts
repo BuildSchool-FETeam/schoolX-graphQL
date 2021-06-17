@@ -6,6 +6,12 @@
 
 /* tslint:disable */
 /* eslint-disable */
+export enum ArticleStatus {
+    pending = "pending",
+    accept = "accept",
+    reject = "reject"
+}
+
 export enum OrderDirection {
     ASC = "ASC",
     DESC = "DESC"
@@ -16,6 +22,18 @@ export class AdminUserSetInput {
     name: string;
     role: string;
     password?: string;
+}
+
+export class FilterArticleInput {
+    byTag?: string[];
+    byDate?: CompareInput[];
+}
+
+export class ArticleInputType {
+    title: string;
+    shortDescription: string;
+    content: string;
+    tags: string[];
 }
 
 export class AssignmentSetInput {
@@ -81,6 +99,13 @@ export class PaginationInput {
 export class SearchOptionInput {
     searchString: string;
     searchFields: string[];
+}
+
+export class CompareInput {
+    lt?: number;
+    gt?: number;
+    eq?: number;
+    ne?: number;
 }
 
 export class CourseSetInput {
@@ -149,6 +174,8 @@ export abstract class IQuery {
 
     abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
 
+    abstract articleQuery(): ArticleQuery | Promise<ArticleQuery>;
+
     abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
 
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
@@ -178,6 +205,8 @@ export abstract class IMutation {
     __typename?: 'IMutation';
 
     abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
+
+    abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
 
     abstract assignmentMutation(): AssignmentMutation | Promise<AssignmentMutation>;
 
@@ -222,6 +251,43 @@ export class AdminUser {
     name: string;
     role: string;
     createdBy?: AdminUser;
+}
+
+export class ArticleQuery {
+    __typename?: 'ArticleQuery';
+    articles: ArticleType[];
+    articleDetail?: ArticleType;
+}
+
+export class ArticleMutation {
+    __typename?: 'ArticleMutation';
+    setArticle: ArticleType;
+    deleteArticle: boolean;
+}
+
+export class ArticleType implements BaseGraphQL {
+    __typename?: 'ArticleType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    shortDescription?: string;
+    content?: string;
+    votes: number;
+    status: ArticleStatus;
+    author: ClientUserType;
+    views: number;
+    shares: number;
+    tags?: ArticleTagType[];
+}
+
+export class ArticleTagType implements BaseGraphQL {
+    __typename?: 'ArticleTagType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    articles?: ArticleType[];
 }
 
 export class AssignmentType implements BaseGraphQL {
@@ -445,6 +511,7 @@ export class InstructorType implements BaseGraphQL {
     name: string;
     description: string;
     email: string;
+    clientUser?: ClientUserType;
     imageUrl: string;
     phone: string;
     courses: CourseType[];

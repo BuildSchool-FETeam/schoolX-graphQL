@@ -39,7 +39,7 @@ type InstructorType implements BaseGraphQL {
   name: String!
   description: String!
   email: String!
-  # clientUserId: ClientUser
+  clientUser: ClientUserType
   imageUrl: String!
   phone: String!
   courses(pagination: PaginationInput): [CourseType]!

@@ -34,3 +34,10 @@ input SearchOptionInput {
   searchString: String!
   searchFields: [String!]!
 }
+
+input CompareInput {
+  lt: Int
+  gt: Int
+  eq: Int
+  ne: Int
+}

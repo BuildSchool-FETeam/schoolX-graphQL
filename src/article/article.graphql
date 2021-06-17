@@ -1,0 +1,63 @@
+type Query {
+  articleQuery: ArticleQuery!
+}
+
+type ArticleQuery {
+  articles(
+    pagination: PaginationInput
+    searchOption: SearchOptionInput
+    filterOptions: FilterArticleInput
+  ): [ArticleType]!
+  articleDetail(id: ID!): ArticleType
+}
+
+type Mutation {
+  articleMutation: ArticleMutation!
+}
+
+type ArticleMutation {
+  setArticle(id: ID, data: ArticleInputType!): ArticleType!
+  deleteArticle(id: ID!): Boolean!
+}
+
+input FilterArticleInput {
+  byTag: [ID]
+  byDate: [CompareInput]
+}
+
+input ArticleInputType {
+  title: String!
+  shortDescription: String!
+  content: String!
+  tags: [String!]!
+}
+
+enum ArticleStatus {
+  pending
+  accept
+  reject
+}
+
+type ArticleType implements BaseGraphQL {
+  id: ID!
+  title: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
+  shortDescription: String
+  content: String
+  votes: Int!
+  status: ArticleStatus!
+  author: ClientUserType!
+  views: Int!
+  shares: Int!
+  tags: [ArticleTagType]
+  # comments: UserComment[]
+}
+
+type ArticleTagType implements BaseGraphQL {
+  id: ID!
+  title: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
+  articles: [ArticleType]
+}
