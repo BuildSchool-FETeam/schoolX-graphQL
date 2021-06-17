@@ -20,7 +20,7 @@ export class Article extends BaseEntity {
   @Column({ default: 0 })
   votes: number;
 
-  @Column({ enum: ['reject', 'pending', 'accept'] })
+  @Column({ enum: ['reject', 'pending', 'accept'], default: 'pending'})
   status: ArticleStatus;
 
   @ManyToOne(() => ClientUser, (clientUser) => clientUser.articles)

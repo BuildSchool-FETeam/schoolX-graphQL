@@ -1,3 +1,4 @@
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import {
   CanActivate,
   ExecutionContext,
@@ -19,7 +20,7 @@ import { PermissionSet } from 'src/permission/entities/Permission.entity';
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
 
 export interface ICachedPermissionSet {
-  adminUser: AdminUser;
+  user: AdminUser | ClientUser;
   permissionSet: PermissionSet;
 }
 
@@ -62,7 +63,7 @@ export class PermissionGuard implements CanActivate {
       `${cacheConstant.PERMISSION}-${token}`,
       {
         permissionSet: userPermissions,
-        adminUser: user instanceof AdminUser ? user : null,
+        user: user instanceof AdminUser ? user : null,
       },
     );
 

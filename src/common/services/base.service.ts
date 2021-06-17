@@ -56,7 +56,7 @@ export abstract class BaseService<T> extends UtilService {
     const resource = await this.repository.findOne(id, options);
 
     if (strictConfig) {
-      const { adminUser, permissionSet } = await this.getAdminUserCredential(
+      const { user: adminUser, permissionSet } = await this.getAdminUserCredential(
         strictConfig.token,
       );
       if (
@@ -95,7 +95,7 @@ export abstract class BaseService<T> extends UtilService {
     strictConfig?: IStrictConfig,
   ) {
     if (strictConfig) {
-      const { adminUser, permissionSet } = await this.getAdminUserCredential(
+      const { user: adminUser, permissionSet } = await this.getAdminUserCredential(
         strictConfig.token,
       );
 
@@ -163,7 +163,7 @@ export abstract class BaseService<T> extends UtilService {
    * @returns number of items
    */
   async countingTotalItem(strict?: IStrictConfig) {
-    const { adminUser, permissionSet } = await this.getAdminUserCredential(
+    const { user: adminUser, permissionSet } = await this.getAdminUserCredential(
       strict.token,
     );
     const builder = this.repository.createQueryBuilder('entity');
@@ -179,6 +179,11 @@ export abstract class BaseService<T> extends UtilService {
     return _.includes(permissionAsString.split('|'), 'S');
   }
 
+  /**
+   * Require caching service, inject it before you use this function
+   * @param token String
+   * @returns user credentials which encrypted in the token
+   */
   protected async getAdminUserCredential(token: string) {
     if (!this.cachingService) {
       throw new Error('You should inject caching service before using it!!');
