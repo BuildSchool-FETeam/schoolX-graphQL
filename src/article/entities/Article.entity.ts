@@ -17,10 +17,14 @@ export class Article extends BaseEntity {
   @Column()
   content: string;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, nullable: true })
   votes: number;
 
-  @Column({ enum: ['reject', 'pending', 'accept'], default: 'pending'})
+  @Column({
+    enum: ['reject', 'pending', 'accept'],
+    default: 'pending',
+    nullable: true,
+  })
   status: ArticleStatus;
 
   @ManyToOne(() => ClientUser, (clientUser) => clientUser.articles)
@@ -29,10 +33,10 @@ export class Article extends BaseEntity {
   @OneToMany(() => UserComment, (userComment) => userComment.article)
   comments: UserComment[];
 
-  @Column({ default: 0 })
+  @Column({ default: 0, nullable: true })
   views: number;
 
-  @Column({ default: 0 })
+  @Column({ default: 0, nullable: true })
   shares: number;
 
   @ManyToMany(() => ArticleTag, (at) => at.articles)

@@ -14,21 +14,22 @@ export class ArticleService extends BaseService<Article> {
     @InjectRepository(Article)
     private articleRepo: Repository<Article>,
     private articleTagService: ArticleTagService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
-    super(articleRepo, 'Article')
+    super(articleRepo, 'Article');
   }
 
   async createArticle(data: ArticleInputType, token: string) {
-    const clientUser = await this.tokenService.getAdminUserByToken<ClientUser>(token)
-    
+    const clientUser = await this.tokenService.getAdminUserByToken<ClientUser>(
+      token,
+    );
+
     const article = this.articleRepo.create({
       title: data.title,
       shortDescription: data.shortDescription,
       content: data.content,
-      author: clientUser
-    })
-
+      author: clientUser,
+    });
 
     const tags = await this.articleTagService.createArticleTag(data.tags);
 

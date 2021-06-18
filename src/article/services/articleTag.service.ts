@@ -7,29 +7,29 @@ import * as _ from 'lodash';
 export class ArticleTagService extends BaseService<ArticleTag> {
   constructor(
     @InjectRepository(ArticleTag)
-    private articleTagRepo: Repository<ArticleTag>
+    private articleTagRepo: Repository<ArticleTag>,
   ) {
-    super(articleTagRepo, 'Article Tag')
+    super(articleTagRepo, 'Article Tag');
   }
 
   async createArticleTag(tags: string[]) {
-    const existedTags: ArticleTag[] = [];
-    const promisesAfterCreatedTag: Array<Promise<ArticleTag>> = []
-
-    _.each(tags, async tag => {
-      const existedTag = await this.articleTagRepo.findOne({where: {title: tag}})
+    const promises = _.map(tags, async (tag) => {
+      const existedTag = await this.articleTagRepo.findOne({
+        where: { title: tag },
+        relations: ['articles'],
+      });
 
       if (existedTag) {
-        existedTags.push(existedTag);
+        return this.articleTagRepo.save(existedTag);
       } else {
-        const newTag = this.articleTagRepo.create({title: tag, articles: []})
-        promisesAfterCreatedTag.push(
-          this.articleTagRepo.save(newTag)
-        )
+        const newTag = this.articleTagRepo.create({
+          title: tag,
+        });
+        return this.articleTagRepo.save(newTag);
       }
-    })
+    });
 
-    const newTags = await Promise.all(promisesAfterCreatedTag);
-    return [...existedTags, ...newTags];
+    const allTags = await Promise.all(promises);
+    return allTags;
   }
 }
