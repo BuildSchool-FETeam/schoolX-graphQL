@@ -65,6 +65,6 @@ export class ClientUser extends UserBaseEntityUUID {
   @ManyToOne(() => Role)
   role: Role;
 
-  @OneToMany(() => Article, (article) => article.author)
+  @OneToMany(() => Article, (article) => article.createdBy)
   articles: Article[];
 }

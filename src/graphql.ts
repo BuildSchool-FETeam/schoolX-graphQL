@@ -24,9 +24,15 @@ export class AdminUserSetInput {
     password?: string;
 }
 
+export class ArticleReviewInput {
+    comment?: string;
+    status?: string;
+}
+
 export class FilterArticleInput {
     byTag?: string[];
-    byDate?: CompareInput[];
+    byDate?: CompareInputDate;
+    byStatus?: CompareInputString[];
 }
 
 export class ArticleInputType {
@@ -101,11 +107,18 @@ export class SearchOptionInput {
     searchFields: string[];
 }
 
-export class CompareInput {
-    lt?: number;
-    gt?: number;
-    eq?: number;
-    ne?: number;
+export class CompareInputDate {
+    lt?: ScalarDate;
+    gt?: ScalarDate;
+    eq?: ScalarDate;
+    ne?: ScalarDate;
+}
+
+export class CompareInputString {
+    ct?: string;
+    eq?: string;
+    nc?: string;
+    ne?: string;
 }
 
 export class CourseSetInput {
@@ -256,13 +269,16 @@ export class AdminUser {
 export class ArticleQuery {
     __typename?: 'ArticleQuery';
     articles: ArticleType[];
+    filteredArticles: ArticleType[];
     articleDetail?: ArticleType;
+    tags: ArticleTagType[];
 }
 
 export class ArticleMutation {
     __typename?: 'ArticleMutation';
     setArticle: ArticleType;
     deleteArticle: boolean;
+    reviewArticle?: boolean;
 }
 
 export class ArticleType implements BaseGraphQL {
@@ -275,7 +291,7 @@ export class ArticleType implements BaseGraphQL {
     content?: string;
     votes: number;
     status: ArticleStatus;
-    author: ClientUserType;
+    createdBy: ClientUserType;
     views: number;
     shares: number;
     tags?: ArticleTagType[];

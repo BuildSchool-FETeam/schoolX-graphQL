@@ -7,12 +7,12 @@ export class ArticleTypeResolver {
   constructor(private articleService: ArticleService) {}
 
   @ResolveField()
-  async author(@Parent() article: Article) {
+  async createdBy(@Parent() article: Article) {
     const articleWithAuthor = await this.articleService.findById(article.id, {
-      relations: ['author'],
+      relations: ['createdBy'],
     });
 
-    return articleWithAuthor.author;
+    return articleWithAuthor.createdBy;
   }
 
   @ResolveField()

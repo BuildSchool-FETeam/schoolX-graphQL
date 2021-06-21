@@ -6,9 +6,13 @@ type ArticleQuery {
   articles(
     pagination: PaginationInput
     searchOption: SearchOptionInput
-    filterOptions: FilterArticleInput
   ): [ArticleType]!
+  filteredArticles(filterOptions: FilterArticleInput!): [ArticleType]!
   articleDetail(id: ID!): ArticleType
+  tags(
+    pagination: PaginationInput
+    searchOption: SearchOptionInput
+  ): [ArticleTagType]!
 }
 
 type Mutation {
@@ -18,11 +22,18 @@ type Mutation {
 type ArticleMutation {
   setArticle(id: ID, data: ArticleInputType!): ArticleType!
   deleteArticle(id: ID!): Boolean!
+  reviewArticle(id: ID!, data: ArticleReviewInput): Boolean
+}
+
+input ArticleReviewInput {
+  comment: String
+  status: String
 }
 
 input FilterArticleInput {
   byTag: [ID]
-  byDate: [CompareInput]
+  byDate: CompareInputDate
+  byStatus: [CompareInputString]
 }
 
 input ArticleInputType {
@@ -47,7 +58,7 @@ type ArticleType implements BaseGraphQL {
   content: String
   votes: Int!
   status: ArticleStatus!
-  author: ClientUserType!
+  createdBy: ClientUserType!
   views: Int!
   shares: Int!
   tags: [ArticleTagType]

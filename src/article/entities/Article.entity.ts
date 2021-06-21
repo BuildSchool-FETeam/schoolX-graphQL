@@ -28,7 +28,7 @@ export class Article extends BaseEntity {
   status: ArticleStatus;
 
   @ManyToOne(() => ClientUser, (clientUser) => clientUser.articles)
-  author: ClientUser;
+  createdBy: ClientUser;
 
   @OneToMany(() => UserComment, (userComment) => userComment.article)
   comments: UserComment[];
@@ -38,6 +38,9 @@ export class Article extends BaseEntity {
 
   @Column({ default: 0, nullable: true })
   shares: number;
+
+  // @Column({ nullable: true })
+  // comment: string;
 
   @ManyToMany(() => ArticleTag, (at) => at.articles)
   tags: ArticleTag[];
