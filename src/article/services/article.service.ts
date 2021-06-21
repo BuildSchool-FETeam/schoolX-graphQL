@@ -1,14 +1,16 @@
+import { ComplexQueryBuilderService } from './../../common/services/complexQueryBuilder.service';
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { TokenService } from 'src/common/services/token.service';
 import { ArticleTagService } from './articleTag.service';
-import { ArticleInputType, FilterArticleInput } from './../../graphql';
-import { Brackets, Repository } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { ArticleInputType, FilterArticleInput, ArticleReviewInput, ArticleStatus } from './../../graphql';
+import { Repository } from 'typeorm';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { Article } from 'src/article/entities/Article.entity';
 import { BaseService } from 'src/common/services/base.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import { CacheService } from 'src/common/services/cache.service';
+import { PermissionEnum } from 'src/common/enums/permission.enum';
 
 @Injectable()
 export class ArticleService extends BaseService<Article> {
@@ -18,6 +20,7 @@ export class ArticleService extends BaseService<Article> {
     private articleTagService: ArticleTagService,
     private tokenService: TokenService,
     protected cachingService: CacheService,
+    private queryBuilderService: ComplexQueryBuilderService
   ) {
     super(articleRepo, 'Article', cachingService);
   }
@@ -79,64 +82,37 @@ export class ArticleService extends BaseService<Article> {
     }
 
     if (data.byDate) {
-      articleQuery.andWhere(
-        new Brackets((qb) => {
-          const dummyWhere = qb.where('article.id IS NOT NULL');
+      this.queryBuilderService.addAndWhereToQueryBuilder(articleQuery, {
+        fieldCompare: 'createdAt',
+        alias: 'article',
+        type: 'date'
+      }, data.byDate)
+    }
 
-          _.forOwn(data.byDate, (value, key) => {
-            const {
-              compareString,
-              compareObj,
-            } = this.buildTheCompareStringForDate(
-              {
-                field: 'createdAt',
-                alias: 'article',
-              },
-              value,
-              key,
-            );
-
-            dummyWhere.andWhere(compareString, compareObj);
-          });
-        }),
-      );
+    if (data.byStatus) {
+      this.queryBuilderService.addAndWhereToQueryBuilder(articleQuery, {
+        fieldCompare: 'status',
+        alias: 'article',
+        type: 'string'
+      }, data.byStatus)
     }
 
     return articleQuery.getMany();
   }
 
-  private buildTheCompareStringForDate(
-    stringBuilderConfig: { field: string; alias: string },
-    valueCompare: number,
-    key: string,
-  ) {
-    let compareString = '';
-    let compareVal = {};
-    const { field, alias } = stringBuilderConfig;
+  async reviewArticle(id: string, data: ArticleReviewInput, token: string) {
+    const user = await this.tokenService.getAdminUserByToken(token);
 
-    function _getQueryString(operator: string) {
-      return `${alias}.${field}::date ${operator} :value`;
+    if (user?.role?.name === PermissionEnum.CLIENT_PERMISSION) {
+      throw new ForbiddenException('You don\'t have permission to do this action')
     }
 
-    switch (key) {
-      case 'eq':
-        compareString = _getQueryString('=');
-        break;
-      case 'gt':
-        compareString = _getQueryString('>');
-        break;
-      case 'lt':
-        compareString = _getQueryString('<');
-        break;
-      case 'ne':
-        compareString = _getQueryString('!=');
-        break;
-    }
-    compareVal = { value: valueCompare };
+    const article = await this.findById(id)
 
-    return {
-      compareString,
-      compareObj: compareVal,
-    };
+    article.reviewComment = data.comment;
+    article.status = data.status as ArticleStatus
+
+    return this.articleRepo.save(article);
   }
+
 }

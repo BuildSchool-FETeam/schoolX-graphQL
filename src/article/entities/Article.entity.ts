@@ -39,8 +39,8 @@ export class Article extends BaseEntity {
   @Column({ default: 0, nullable: true })
   shares: number;
 
-  // @Column({ nullable: true })
-  // comment: string;
+  @Column({ nullable: true })
+  reviewComment: string;
 
   @ManyToMany(() => ArticleTag, (at) => at.articles)
   tags: ArticleTag[];

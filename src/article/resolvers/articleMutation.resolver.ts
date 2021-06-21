@@ -1,5 +1,5 @@
 import { AuthGuard } from 'src/common/guards/auth.guard';
-import { ArticleInputType } from './../../graphql';
+import { ArticleInputType, ArticleReviewInput } from './../../graphql';
 import { ArticleService } from './../services/article.service';
 import { UseGuards } from '@nestjs/common';
 import {
@@ -47,5 +47,17 @@ export class ArticleMutationResolver {
       token,
     });
     return true;
+  }
+
+  @PermissionRequire({ blog: ['U'] })
+  @ResolveField()
+  async reviewArticle(
+    @Context() { req }: any, 
+    @Args('id') id: string, 
+    @Args('data') data: ArticleReviewInput
+  ) {
+    const token = this.articleService.getTokenFromHttpHeader(req.headers);
+
+    return this.articleService.reviewArticle(id, data, token)    
   }
 }

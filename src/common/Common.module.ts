@@ -1,3 +1,4 @@
+import { ComplexQueryBuilderService } from './services/complexQueryBuilder.service';
 import { CourseModule } from './../courses/Course.module';
 import { InstructorModule } from './../instructor/instructor.module';
 import { CronService } from './services/cron.service';
@@ -35,6 +36,7 @@ import { ImageProcessService } from './services/imageProcess.service';
     SubscriptionService,
     DateScalar,
     ImageProcessService,
+    ComplexQueryBuilderService
   ],
   exports: [
     PasswordService,
@@ -44,6 +46,7 @@ import { ImageProcessService } from './services/imageProcess.service';
     GCStorageService,
     CacheService,
     SubscriptionService,
+    ComplexQueryBuilderService
   ],
 })
 export class CommonModule {}

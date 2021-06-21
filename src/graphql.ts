@@ -1,5 +1,6 @@
 
-/** ------------------------------------------------------
+/*
+ * ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -26,13 +27,13 @@ export class AdminUserSetInput {
 
 export class ArticleReviewInput {
     comment?: string;
-    status?: string;
+    status?: ArticleStatus;
 }
 
 export class FilterArticleInput {
     byTag?: string[];
     byDate?: CompareInputDate;
-    byStatus?: CompareInputString[];
+    byStatus?: CompareInputString;
 }
 
 export class ArticleInputType {
@@ -278,7 +279,7 @@ export class ArticleMutation {
     __typename?: 'ArticleMutation';
     setArticle: ArticleType;
     deleteArticle: boolean;
-    reviewArticle?: boolean;
+    reviewArticle: ArticleType;
 }
 
 export class ArticleType implements BaseGraphQL {
@@ -295,6 +296,7 @@ export class ArticleType implements BaseGraphQL {
     views: number;
     shares: number;
     tags?: ArticleTagType[];
+    reviewComment?: string;
 }
 
 export class ArticleTagType implements BaseGraphQL {

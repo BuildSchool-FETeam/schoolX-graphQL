@@ -22,18 +22,18 @@ type Mutation {
 type ArticleMutation {
   setArticle(id: ID, data: ArticleInputType!): ArticleType!
   deleteArticle(id: ID!): Boolean!
-  reviewArticle(id: ID!, data: ArticleReviewInput): Boolean
+  reviewArticle(id: ID!, data: ArticleReviewInput): ArticleType!
 }
 
 input ArticleReviewInput {
   comment: String
-  status: String
+  status: ArticleStatus
 }
 
 input FilterArticleInput {
   byTag: [ID]
   byDate: CompareInputDate
-  byStatus: [CompareInputString]
+  byStatus: CompareInputString
 }
 
 input ArticleInputType {
@@ -62,6 +62,7 @@ type ArticleType implements BaseGraphQL {
   views: Int!
   shares: Int!
   tags: [ArticleTagType]
+  reviewComment: String
   # comments: UserComment[]
 }
 
