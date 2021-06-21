@@ -31,7 +31,7 @@ input ArticleReviewInput {
 }
 
 input FilterArticleInput {
-  byTag: [ID]
+  byTag: [String]
   byDate: CompareInputDate
   byStatus: CompareInputString
 }
