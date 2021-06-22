@@ -58,7 +58,7 @@ type ArticleType implements BaseGraphQL {
   content: String
   votes: Int!
   status: ArticleStatus!
-  createdBy: ClientUserType!
+  createdBy: ClientUserType
   views: Int!
   shares: Int!
   tags: [ArticleTagType]

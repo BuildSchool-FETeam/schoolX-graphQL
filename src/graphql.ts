@@ -292,7 +292,7 @@ export class ArticleType implements BaseGraphQL {
     content?: string;
     votes: number;
     status: ArticleStatus;
-    createdBy: ClientUserType;
+    createdBy?: ClientUserType;
     views: number;
     shares: number;
     tags?: ArticleTagType[];

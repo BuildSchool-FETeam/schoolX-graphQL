@@ -56,7 +56,6 @@ export class ArticleService extends BaseService<Article> {
         value && (existedArticle[key] = value);
       }
     });
-
     if (_.size(data.tags) > 0) {
       const tags = await this.articleTagService.createArticleTag(data.tags);
 
@@ -64,6 +63,15 @@ export class ArticleService extends BaseService<Article> {
     }
 
     return this.articleRepo.save(existedArticle);
+  }
+
+  async deleteArticle(id: string, token: string) {
+    const existedData = await this.findById(id, {}, {strictResourceName: 'blog', token})
+
+    existedData.tags = []
+    await this.articleRepo.save(existedData)
+
+    return this.deleteOneById(id, {strictResourceName: 'blog', token});
   }
 
   async filterArticle(data: FilterArticleInput) {
@@ -82,18 +90,18 @@ export class ArticleService extends BaseService<Article> {
     }
 
     if (data.byDate) {
-      this.queryBuilderService.addAndWhereToQueryBuilder(articleQuery, {
+      this.queryBuilderService.addAndWhereCompareToQueryBuilder(articleQuery, {
         fieldCompare: 'createdAt',
-        alias: 'article',
-        type: 'date'
+        tableAlias: 'article',
+        compareType: 'date'
       }, data.byDate)
     }
 
     if (data.byStatus) {
-      this.queryBuilderService.addAndWhereToQueryBuilder(articleQuery, {
+      this.queryBuilderService.addAndWhereCompareToQueryBuilder(articleQuery, {
         fieldCompare: 'status',
-        alias: 'article',
-        type: 'string'
+        tableAlias: 'article',
+        compareType: 'string'
       }, data.byStatus)
     }
 

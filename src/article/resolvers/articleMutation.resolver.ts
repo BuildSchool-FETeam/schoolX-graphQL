@@ -42,10 +42,8 @@ export class ArticleMutationResolver {
   async deleteArticle(@Context() { req }: any, @Args('id') id: string) {
     const token = this.articleService.getTokenFromHttpHeader(req.headers);
 
-    await this.articleService.deleteOneById(id, {
-      strictResourceName: 'blog',
-      token,
-    });
+    await this.articleService.deleteArticle(id, token);
+    
     return true;
   }
 

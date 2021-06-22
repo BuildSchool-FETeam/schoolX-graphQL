@@ -5,23 +5,23 @@ import * as _ from 'lodash';
 
 interface ICompareQueryBuilderConfig {
   fieldCompare: string;
-  alias: string
-  type: 'date' | 'string'
+  tableAlias: string
+  compareType: 'date' | 'string'
 }
 
 @Injectable() 
 export class ComplexQueryBuilderService {
 
-  addAndWhereToQueryBuilder<T>(
+  addAndWhereCompareToQueryBuilder<T>(
     query: SelectQueryBuilder<T>, 
     config: ICompareQueryBuilderConfig,
     data: CompareInputDate | CompareInputString
   ) {
-    const stringCompareBuilderFnc = this.getCompareGenerateFunc(config.type);
+    const stringCompareBuilderFnc = this.getCompareStringGeneratorFunc(config.compareType);
 
     query.andWhere(
       new Brackets((qb) => {
-        const beginningWhere = qb.where(`${config.alias}.id IS NOT NULL`);
+        const beginningWhere = qb.where(`${config.tableAlias}.id IS NOT NULL`);
 
         _.forOwn(data, (value, key) => {
           const {
@@ -30,7 +30,7 @@ export class ComplexQueryBuilderService {
           } = stringCompareBuilderFnc(
             {
               field: config.fieldCompare,
-              alias: config.alias,
+              alias: config.tableAlias,
             },
             value,
             key,
@@ -43,7 +43,7 @@ export class ComplexQueryBuilderService {
     );
   }
 
-  private getCompareGenerateFunc(type: ICompareQueryBuilderConfig['type']) {
+  private getCompareStringGeneratorFunc(type: ICompareQueryBuilderConfig['compareType']) {
     switch (type) {
       case 'date':
         return this.buildTheCompareStringForDate
