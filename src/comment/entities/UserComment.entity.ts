@@ -4,6 +4,7 @@ import { BaseEntity } from 'src/common/entity/base.entity';
 import { Course } from '../../courses/entities/Course.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Article } from 'src/article/entities/Article.entity';
 
 @Entity()
 export class UserComment extends BaseEntity {
@@ -39,4 +40,10 @@ export class UserComment extends BaseEntity {
   })
   @JoinColumn()
   assignment: Assignment;
+
+  @ManyToOne(() => Article, (article) => article.comments, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  article: Article;
 }

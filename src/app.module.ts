@@ -1,3 +1,4 @@
+
 import { ScheduleModule } from '@nestjs/schedule';
 import { CourseModule } from './courses/Course.module';
 import { CacheModule, Module } from '@nestjs/common';
@@ -18,6 +19,7 @@ import { AssignmentModule } from './assignment/assignment.module';
 import { NotificationModule } from './notification/notification.module';
 import { ClientUserModule } from './clientUser/clientUser.module';
 import { EmailModule } from './Email/email.module';
+import { ArticleModule } from 'src/article/article.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -68,6 +70,7 @@ const scheduleModule = ScheduleModule.forRoot();
     NotificationModule,
     ClientUserModule,
     EmailModule,
+    ArticleModule
   ],
   providers: [
     {

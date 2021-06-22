@@ -1,3 +1,4 @@
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import {
   CanActivate,
   ExecutionContext,
@@ -19,7 +20,7 @@ import { PermissionSet } from 'src/permission/entities/Permission.entity';
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
 
 export interface ICachedPermissionSet {
-  adminUser: AdminUser;
+  user: AdminUser | ClientUser;
   permissionSet: PermissionSet;
 }
 
@@ -34,11 +35,10 @@ export class PermissionGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const graphQLContext = GqlExecutionContext.create(context);
-    const requirePermission =
-      this.reflector.getAllAndOverride<PermissionRequire>(
-        PERMISSION_REQUIRE_KEY,
-        [graphQLContext.getHandler()],
-      );
+    const requirePermission = this.reflector.getAllAndOverride<PermissionRequire>(
+      PERMISSION_REQUIRE_KEY,
+      [graphQLContext.getHandler()],
+    );
 
     if (!this.isResolve(graphQLContext)) {
       return true;
@@ -53,7 +53,6 @@ export class PermissionGuard implements CanActivate {
     }
 
     const { user, token } = decodedToken;
-
     const userPermissions = await this.permissionService.getPermissionByRole(
       user.role.name,
     );
@@ -62,7 +61,7 @@ export class PermissionGuard implements CanActivate {
       `${cacheConstant.PERMISSION}-${token}`,
       {
         permissionSet: userPermissions,
-        adminUser: user instanceof AdminUser ? user : null,
+        user: user,
       },
     );
 

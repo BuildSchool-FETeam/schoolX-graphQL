@@ -1,3 +1,4 @@
+import { Article } from 'src/article/entities/Article.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { UserBaseEntityUUID } from 'src/common/entity/base.entity';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
@@ -63,4 +64,7 @@ export class ClientUser extends UserBaseEntityUUID {
 
   @ManyToOne(() => Role)
   role: Role;
+
+  @OneToMany(() => Article, (article) => article.createdBy)
+  articles: Article[];
 }

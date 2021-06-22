@@ -34,3 +34,17 @@ input SearchOptionInput {
   searchString: String!
   searchFields: [String!]!
 }
+
+input CompareInputDate {
+  lt: ScalarDate
+  gt: ScalarDate
+  eq: ScalarDate
+  ne: ScalarDate
+}
+
+input CompareInputString {
+  ct: String
+  eq: String
+  nc: String
+  ne: String
+}

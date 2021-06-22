@@ -55,10 +55,20 @@ export abstract class BaseService<T> extends UtilService {
 
     const resource = await this.repository.findOne(id, options);
 
-    if (strictConfig) {
-      const { adminUser, permissionSet } = await this.getAdminUserCredential(
-        strictConfig.token,
+    if (!resource) {
+      throw new NotFoundException(
+        `${this.resourceName} with id=${id} not found!!`,
       );
+    }
+
+    if (strictConfig) {
+      const {
+        user: adminUser,
+        permissionSet,
+      } = await this.getAdminUserCredential(strictConfig.token);
+
+      console.log(adminUser, permissionSet);
+
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
       ) {
@@ -95,9 +105,10 @@ export abstract class BaseService<T> extends UtilService {
     strictConfig?: IStrictConfig,
   ) {
     if (strictConfig) {
-      const { adminUser, permissionSet } = await this.getAdminUserCredential(
-        strictConfig.token,
-      );
+      const {
+        user: adminUser,
+        permissionSet,
+      } = await this.getAdminUserCredential(strictConfig.token);
 
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
@@ -163,9 +174,10 @@ export abstract class BaseService<T> extends UtilService {
    * @returns number of items
    */
   async countingTotalItem(strict?: IStrictConfig) {
-    const { adminUser, permissionSet } = await this.getAdminUserCredential(
-      strict.token,
-    );
+    const {
+      user: adminUser,
+      permissionSet,
+    } = await this.getAdminUserCredential(strict.token);
     const builder = this.repository.createQueryBuilder('entity');
 
     if (this.isStrictPermission(permissionSet[strict.strictResourceName])) {
@@ -179,6 +191,11 @@ export abstract class BaseService<T> extends UtilService {
     return _.includes(permissionAsString.split('|'), 'S');
   }
 
+  /**
+   * Require caching service, inject it before you use this function
+   * @param token String
+   * @returns user credentials which encrypted in the token
+   */
   protected async getAdminUserCredential(token: string) {
     if (!this.cachingService) {
       throw new Error('You should inject caching service before using it!!');
