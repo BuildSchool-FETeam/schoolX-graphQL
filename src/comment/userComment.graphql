@@ -2,6 +2,29 @@ type Mutation {
   userCommentMutation: UserCommentMutation!
 }
 
+input CommentDataInput {
+  id: ID
+  title: String!
+  content: String!
+}
+
 type UserCommentMutation {
-  addCommentToCourse(courseId: ID!, data: String!): UserCommentType!
+  setCommentToCourse(courseId: ID!, data: CommentDataInput!): UserCommentType!
+  setCommentToLesson(lessonId: ID!, data: CommentDataInput!): UserCommentType!
+  setCommentToAssignment(assignmentId: ID!, data: CommentDataInput!): UserCommentType!
+  setCommentToArticle(articleId: ID!, data: CommentDataInput!): UserCommentType!
+  setReplyComment(commentId: ID!, data: CommentDataInput!): UserCommentType!
+}
+
+type UserCommentType implements BaseGraphQL{
+  id: ID!
+  title: String!
+  content: String!
+  createdAt: ScalarDate!
+  updatedAt: ScalarDate!
+  createdBy: ClientUserType!
+  replyComments: [UserCommentType]!
+  course: CourseType
+  lesson: LessonType
+  # assignment: AssignmentType
 }

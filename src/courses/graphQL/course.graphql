@@ -46,5 +46,5 @@ type CourseType implements BaseGraphQL {
   lessons(pagination: PaginationInput): [LessonType]!
   createdBy: AdminUser
   levels: [String]!
-  comments: [UserCommentType]!
+  comments(pagination: PaginationInput): [UserCommentType]!
 }

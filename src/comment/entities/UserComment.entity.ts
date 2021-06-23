@@ -12,7 +12,7 @@ export class UserComment extends BaseEntity {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  author: ClientUser;
+  createdBy: ClientUser;
 
   @Column()
   content: string;
@@ -20,7 +20,7 @@ export class UserComment extends BaseEntity {
   @Column('int2', { default: 0 })
   votes: number;
 
-  @OneToMany(() => UserComment, (userComment) => userComment.reply)
+  @OneToMany(() => UserComment, (userComment) => userComment.replyTo)
   reply: UserComment[];
 
   @ManyToOne(() => Course, (course) => course.comments, {
@@ -46,4 +46,10 @@ export class UserComment extends BaseEntity {
   })
   @JoinColumn()
   article: Article;
+
+  @ManyToOne(() => UserComment, (userComment) => userComment.reply, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn()
+  replyTo: UserComment;
 }

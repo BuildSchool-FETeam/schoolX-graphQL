@@ -32,4 +32,14 @@ export class LessonTypeResolver {
 
     return parent.assignments;
   }
+
+  @ResolveField()
+  async comments(@Parent() lesson: Lesson) {
+    const parent = await this.lessonService.findById(lesson.id, {
+      select: ['id'],
+      relations: ['comments'],
+    });
+
+    return parent.comments;
+  }
 }
