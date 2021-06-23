@@ -17,7 +17,7 @@ export class UserComment extends BaseEntity {
   @Column()
   content: string;
 
-  @Column('int2')
+  @Column('int2', { default: 0 })
   votes: number;
 
   @OneToMany(() => UserComment, (userComment) => userComment.reply)

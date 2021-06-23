@@ -1,0 +1,7 @@
+type Mutation {
+  userCommentMutation: UserCommentMutation!
+}
+
+type UserCommentMutation {
+  addCommentToCourse(courseId: ID!, data: String!): UserCommentType!
+}
