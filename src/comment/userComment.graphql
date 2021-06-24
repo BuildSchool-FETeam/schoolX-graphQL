@@ -32,7 +32,7 @@ type UserCommentType implements BaseGraphQL {
   createdAt: ScalarDate!
   updatedAt: ScalarDate!
   createdBy: ClientUserType!
-  replyComments: [UserCommentType]!
+  replyComments(pagination: PaginationInput): [UserCommentType]!
   course: CourseType
   lesson: LessonType
   assignment: AssignmentType

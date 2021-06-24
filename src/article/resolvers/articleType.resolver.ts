@@ -1,4 +1,5 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { PaginationInput } from './../../graphql';
+import { Parent, ResolveField, Resolver, Args } from '@nestjs/graphql';
 import { Article } from '../entities/Article.entity';
 import { ArticleService } from '../services/article.service';
 
@@ -25,12 +26,15 @@ export class ArticleTypeResolver {
   }
 
   @ResolveField()
-  async comments(@Parent() article: Article) {
+  async comments(
+    @Parent() article: Article,
+    @Args('pagination') pg: PaginationInput
+  ) {
     const articleWithTags = await this.articleService.findById(article.id, {
       select: ['id'],
       relations: ['comments'],
     });
 
-    return articleWithTags.comments;
+    return this.articleService.manuallyPagination(articleWithTags.comments, pg);
   }
 }
