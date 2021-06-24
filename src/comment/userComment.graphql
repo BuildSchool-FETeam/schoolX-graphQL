@@ -11,12 +11,15 @@ input CommentDataInput {
 type UserCommentMutation {
   setCommentToCourse(courseId: ID!, data: CommentDataInput!): UserCommentType!
   setCommentToLesson(lessonId: ID!, data: CommentDataInput!): UserCommentType!
-  setCommentToAssignment(assignmentId: ID!, data: CommentDataInput!): UserCommentType!
+  setCommentToAssignment(
+    assignmentId: ID!
+    data: CommentDataInput!
+  ): UserCommentType!
   setCommentToArticle(articleId: ID!, data: CommentDataInput!): UserCommentType!
   setReplyComment(commentId: ID!, data: CommentDataInput!): UserCommentType!
 }
 
-type UserCommentType implements BaseGraphQL{
+type UserCommentType implements BaseGraphQL {
   id: ID!
   title: String!
   content: String!
@@ -26,5 +29,6 @@ type UserCommentType implements BaseGraphQL{
   replyComments: [UserCommentType]!
   course: CourseType
   lesson: LessonType
-  # assignment: AssignmentType
+  assignment: AssignmentType
+  article: ArticleType
 }

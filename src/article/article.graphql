@@ -69,7 +69,7 @@ type ArticleType implements BaseGraphQL {
   shares: Int!
   tags: [ArticleTagType]
   reviewComment: String
-  # comments: UserComment[]
+  comments: [UserCommentType]!
 }
 
 type ArticleTagType implements BaseGraphQL {

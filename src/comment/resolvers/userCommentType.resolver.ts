@@ -4,37 +4,55 @@ import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 
 @Resolver('UserCommentType')
 export class UserCommentTypeResolver {
-  constructor(
-    private commentService: UserCommentService
-  ) {}
+  constructor(private commentService: UserCommentService) {}
 
   @ResolveField()
   async createdBy(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['createdBy']
-    })
+      relations: ['createdBy'],
+    });
 
-    return data.createdBy
+    return data.createdBy;
   }
 
   @ResolveField()
   async course(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['course']
-    })
+      relations: ['course'],
+    });
 
-    return data.course
+    return data.course;
   }
 
   @ResolveField()
   async replyComments(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['reply']
-    })
+      relations: ['reply'],
+    });
 
-    return data.reply
+    return data.reply;
+  }
+
+  @ResolveField()
+  async assignment(@Parent() comment: UserComment) {
+    const data = await this.commentService.findById(comment.id, {
+      select: ['id'],
+      relations: ['assignment'],
+    });
+
+    return data.assignment;
+  }
+
+  @ResolveField()
+  async article(@Parent() comment: UserComment) {
+    const data = await this.commentService.findById(comment.id, {
+      select: ['id'],
+      relations: ['article'],
+    });
+
+    return data.article;
   }
 }

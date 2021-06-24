@@ -33,4 +33,14 @@ export class AssignmentTypeResolver {
   async hints(@Parent() parent: Assignment) {
     return parent.hints.split('|');
   }
+
+  @ResolveField()
+  async comments(@Parent() parent: Assignment) {
+    const assignment = await this.assignmentService.findById(parent.id, {
+      select: ['id'],
+      relations: ['comments'],
+    });
+
+    return assignment.comments;
+  }
 }

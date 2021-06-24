@@ -8,11 +8,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { Repository } from 'typeorm';
 import { UserComment } from '../entities/UserComment.entity';
-import * as _ from 'lodash'
+import * as _ from 'lodash';
+import { ArticleService } from 'src/article/services/article.service';
+import { Assignment } from 'src/assignment/entities/Assignment.entity';
 
 interface IResourceAssign<T> {
-  fieldAssign: keyof UserComment
-  data: T
+  fieldAssign: keyof UserComment;
+  data: T;
 }
 
 @Injectable()
@@ -20,70 +22,115 @@ export class UserCommentService extends BaseService<UserComment> {
   constructor(
     @InjectRepository(UserComment)
     private commentRepo: Repository<UserComment>,
+    @InjectRepository(Assignment)
+    private assignmentRepo: Repository<Assignment>,
     private courseService: CourseService,
     private lessonService: LessonService,
-    private tokenService: TokenService
+    private articleService: ArticleService,
+    private tokenService: TokenService,
   ) {
     super(commentRepo, 'Comment');
   }
 
-  async setCommentForCourse(courseId: string, data: CommentDataInput, token: string) {
+  async setCommentForCourse(
+    courseId: string,
+    data: CommentDataInput,
+    token: string,
+  ) {
     const course = await this.courseService.findById(courseId);
     const comment = await this.setComment(
-      data, 
-      {fieldAssign: 'course', data: course},
-      token, 
+      data,
+      { fieldAssign: 'course', data: course },
+      token,
     );
-    
-    return this.commentRepo.save(comment)
+
+    return this.commentRepo.save(comment);
   }
 
-  async setCommentForComment(commentId: string, data: CommentDataInput, token: string) {
+  async setCommentForComment(
+    commentId: string,
+    data: CommentDataInput,
+    token: string,
+  ) {
     const repliedComment = await this.findById(commentId);
     const newCommentReply = await this.setComment(
       data,
-      {fieldAssign: 'replyTo', data: repliedComment},
-      token
-    )
+      { fieldAssign: 'replyTo', data: repliedComment },
+      token,
+    );
 
-    return this.commentRepo.save(newCommentReply)
+    return this.commentRepo.save(newCommentReply);
   }
 
-  async setCommentForLesson(lessonId: string, data: CommentDataInput, token: string) {
+  async setCommentForLesson(
+    lessonId: string,
+    data: CommentDataInput,
+    token: string,
+  ) {
     const lesson = await this.lessonService.findById(lessonId);
     const newCmt = await this.setComment(
       data,
-      {fieldAssign: 'lesson', data: lesson},
-      token
-    )
+      { fieldAssign: 'lesson', data: lesson },
+      token,
+    );
 
-    return this.commentRepo.save(newCmt)
+    return this.commentRepo.save(newCmt);
+  }
+
+  async setCommentForAssignment(
+    assignId: string,
+    data: CommentDataInput,
+    token: string,
+  ) {
+    const assignment = await this.assignmentRepo.findOne(assignId);
+    const newComment = await this.setComment(
+      data,
+      { fieldAssign: 'assignment', data: assignment },
+      token,
+    );
+
+    return this.commentRepo.save(newComment);
+  }
+
+  async setCommentForArticle(
+    articleId: string,
+    data: CommentDataInput,
+    token: string,
+  ) {
+    const article = await this.articleService.findById(articleId);
+    const newComment = await this.setComment(
+      data,
+      { fieldAssign: 'article', data: article },
+      token,
+    );
+
+    return this.commentRepo.save(newComment);
   }
 
   private async setComment<T>(
-    data: CommentDataInput, 
+    data: CommentDataInput,
     resourceAssign: IResourceAssign<T>,
-    token: string, 
+    token: string,
   ) {
-    const user = await this.tokenService.getAdminUserByToken<ClientUser>(token)
+    const user = await this.tokenService.getAdminUserByToken<ClientUser>(token);
 
     if (data.id) {
       const oldComment = await this.findById(data.id);
 
       _.forOwn(data, (value, key) => {
         if (key !== 'id') {
-          value && (oldComment[key] = value)
+          value && (oldComment[key] = value);
         }
-      })
-      
-      return oldComment
+      });
+
+      return oldComment;
     }
 
     return this.commentRepo.create({
       title: data.title,
       content: data.content,
       createdBy: user,
-      [resourceAssign.fieldAssign]: resourceAssign.data
-    })
+      [resourceAssign.fieldAssign]: resourceAssign.data,
+    });
   }
 }

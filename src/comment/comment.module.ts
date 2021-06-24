@@ -7,14 +7,22 @@ import { UserComment } from './entities/UserComment.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserCommentService } from './services/userComment.service';
 import { Module, forwardRef } from '@nestjs/common';
+import { AssignmentModule } from 'src/assignment/assignment.module';
+import { Assignment } from 'src/assignment/entities/Assignment.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserComment]), 
+    TypeOrmModule.forFeature([UserComment, Assignment]),
     forwardRef(() => CourseModule),
     forwardRef(() => ArticleModule),
-    CommonModule
+    ArticleModule,
+    CommonModule,
+    AssignmentModule,
   ],
-  providers: [UserCommentService, UserCommentMutationResolver, UserCommentTypeResolver]
+  providers: [
+    UserCommentService,
+    UserCommentMutationResolver,
+    UserCommentTypeResolver,
+  ],
 })
 export class CommentModule {}

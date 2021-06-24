@@ -23,4 +23,14 @@ export class ArticleTypeResolver {
 
     return articleWithTags.tags;
   }
+
+  @ResolveField()
+  async comments(@Parent() article: Article) {
+    const articleWithTags = await this.articleService.findById(article.id, {
+      select: ['id'],
+      relations: ['comments'],
+    });
+
+    return articleWithTags.comments;
+  }
 }

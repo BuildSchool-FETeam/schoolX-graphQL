@@ -1,6 +1,5 @@
 
-/*
- * ------------------------------------------------------
+/** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -305,6 +304,7 @@ export class ArticleType implements BaseGraphQL {
     shares: number;
     tags?: ArticleTagType[];
     reviewComment?: string;
+    comments: UserCommentType[];
 }
 
 export class ArticleTagType implements BaseGraphQL {
@@ -330,6 +330,7 @@ export class AssignmentType implements BaseGraphQL {
     languageSupport: string[];
     lesson: LessonType;
     testCases: TestCaseType[];
+    comments: UserCommentType[];
 }
 
 export class AssignmentMutation {
@@ -456,6 +457,8 @@ export class UserCommentType implements BaseGraphQL {
     replyComments: UserCommentType[];
     course?: CourseType;
     lesson?: LessonType;
+    assignment?: AssignmentType;
+    article?: ArticleType;
 }
 
 export class File {
