@@ -74,6 +74,17 @@ export class UserCommentMutationResolver {
   }
 
   @ResolveField()
+  async deleteComment(
+    @Args('commentId') commentId: string,
+    @Context() { req }: any,
+  ) {
+    const token = this.commentService.getTokenFromHttpHeader(req.headers);
+
+    await this.commentService.deleteComment(commentId, token);
+    return true;
+  }
+
+  @ResolveField()
   setReplyComment(
     @Args('commentId') commentId: string,
     @Args('data') data: CommentDataInput,

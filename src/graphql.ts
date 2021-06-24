@@ -1,5 +1,6 @@
 
-/** ------------------------------------------------------
+/*
+ * ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -444,6 +445,7 @@ export class UserCommentMutation {
     setCommentToAssignment: UserCommentType;
     setCommentToArticle: UserCommentType;
     setReplyComment: UserCommentType;
+    deleteComment: boolean;
 }
 
 export class UserCommentType implements BaseGraphQL {
