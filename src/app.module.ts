@@ -20,6 +20,7 @@ import { NotificationModule } from './notification/notification.module';
 import { ClientUserModule } from './clientUser/clientUser.module';
 import { EmailModule } from './Email/email.module';
 import { ArticleModule } from 'src/article/article.module';
+import { CommentModule } from './comment/comment.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -70,7 +71,8 @@ const scheduleModule = ScheduleModule.forRoot();
     NotificationModule,
     ClientUserModule,
     EmailModule,
-    ArticleModule
+    ArticleModule,
+    CommentModule
   ],
   providers: [
     {

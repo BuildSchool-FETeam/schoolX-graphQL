@@ -7,8 +7,14 @@ type ArticleQuery {
     pagination: PaginationInput
     searchOption: SearchOptionInput
   ): [ArticleType]!
-  filteredArticles(filterOptions: FilterArticleInput!): [ArticleType]!
+
+  filteredArticles(
+    filterOptions: FilterArticleInput!
+    pagination: PaginationInput
+  ): [ArticleType]!
+
   articleDetail(id: ID!): ArticleType
+
   tags(
     pagination: PaginationInput
     searchOption: SearchOptionInput
@@ -63,7 +69,7 @@ type ArticleType implements BaseGraphQL {
   shares: Int!
   tags: [ArticleTagType]
   reviewComment: String
-  # comments: UserComment[]
+  comments(pagination: PaginationInput): [UserCommentType]!
 }
 
 type ArticleTagType implements BaseGraphQL {

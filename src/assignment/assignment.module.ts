@@ -24,5 +24,6 @@ import { TestCaseQueryResolver } from './resolvers/testCase/testCaseQuery.resolv
     TestCaseType,
     TestCaseQueryResolver,
   ],
+  exports: [AssignmentService],
 })
 export class AssignmentModule {}

@@ -52,7 +52,7 @@ export class ClientUser extends UserBaseEntityUUID {
   @Column({ nullable: true, type: 'bigint' })
   activationCodeExpire: number;
 
-  @OneToMany(() => UserComment, (cmt) => cmt.author)
+  @OneToMany(() => UserComment, (cmt) => cmt.createdBy)
   comments: UserComment[];
 
   @OneToOne(() => Instructor, (instructor) => instructor.user)

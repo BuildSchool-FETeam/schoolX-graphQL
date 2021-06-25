@@ -40,7 +40,7 @@ type ClientUserType {
   name: String!
   createdAt: ScalarDate!
   updatedAt: ScalarDate!
-  # comments: UserComment[];
+  comments: [UserCommentType]!
 }
 
 type AchievementType {
