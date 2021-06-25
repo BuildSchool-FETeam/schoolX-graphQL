@@ -36,6 +36,17 @@ services:
         'run',
         'start:docker',
       ]
+      
+  js-server:  
+    build: 
+      context: .
+      dockerfile: ./servers/js/Dockerfile.dev
+    ports: 
+      - 6001:6001
+    volumes: 
+      - /home/app/node_modules
+      - ./servers/js:/home/app
+
   postgres-db:
     image: postgres
     restart: always
