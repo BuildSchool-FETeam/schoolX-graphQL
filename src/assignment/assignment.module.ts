@@ -31,5 +31,6 @@ import { CommonModule } from 'src/common/Common.module';
     TestCaseType,
     TestCaseQueryResolver,
   ],
+  exports: [AssignmentService],
 })
 export class AssignmentModule {}

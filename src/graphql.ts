@@ -106,6 +106,12 @@ export class ClientUserUpdateInput {
     phone?: string;
 }
 
+export class CommentDataInput {
+    id?: string;
+    title: string;
+    content: string;
+}
+
 export class OrderType {
     orderBy: string;
     direction: OrderDirection;
@@ -246,6 +252,8 @@ export abstract class IMutation {
 
     abstract clientUserMutation(): ClientUserMutation | Promise<ClientUserMutation>;
 
+    abstract userCommentMutation(): UserCommentMutation | Promise<UserCommentMutation>;
+
     abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
 
     abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
@@ -311,6 +319,7 @@ export class ArticleType implements BaseGraphQL {
     shares: number;
     tags?: ArticleTagType[];
     reviewComment?: string;
+    comments: UserCommentType[];
 }
 
 export class ArticleTagType implements BaseGraphQL {
@@ -336,6 +345,7 @@ export class AssignmentType implements BaseGraphQL {
     languageSupport: string[];
     lesson: LessonType;
     testCases: TestCaseType[];
+    comments: UserCommentType[];
 }
 
 export class AssignmentMutation {
@@ -455,6 +465,7 @@ export class ClientUserType {
     name: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
+    comments: UserCommentType[];
 }
 
 export class AchievementType {
@@ -466,6 +477,31 @@ export class AchievementType {
     follow: ClientUserType[];
     followedBy: ClientUserType[];
     completedCourses: CourseType[];
+}
+
+export class UserCommentMutation {
+    __typename?: 'UserCommentMutation';
+    setCommentToCourse: UserCommentType;
+    setCommentToLesson: UserCommentType;
+    setCommentToAssignment: UserCommentType;
+    setCommentToArticle: UserCommentType;
+    setReplyComment: UserCommentType;
+    deleteComment: boolean;
+}
+
+export class UserCommentType implements BaseGraphQL {
+    __typename?: 'UserCommentType';
+    id: string;
+    title: string;
+    content: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    createdBy: ClientUserType;
+    replyComments: UserCommentType[];
+    course?: CourseType;
+    lesson?: LessonType;
+    assignment?: AssignmentType;
+    article?: ArticleType;
 }
 
 export class File {
@@ -503,6 +539,7 @@ export class CourseType implements BaseGraphQL {
     lessons: LessonType[];
     createdBy?: AdminUser;
     levels: string[];
+    comments: UserCommentType[];
 }
 
 export class LessonType implements BaseGraphQL {
@@ -517,6 +554,7 @@ export class LessonType implements BaseGraphQL {
     content: string;
     documents: DocumentType[];
     assignments: AssignmentType[];
+    comments: UserCommentType[];
 }
 
 export class LessonMutation {

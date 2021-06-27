@@ -20,5 +20,6 @@ import { ArticleTagTypeResolver } from './resolvers/articleTagType.resolver';
     ArticleTypeResolver,
     ArticleTagTypeResolver,
   ],
+  exports: [ArticleService],
 })
 export class ArticleModule {}

@@ -40,8 +40,11 @@ export class ArticleQueryResolver {
 
   @PermissionRequire({ blog: ['R'] })
   @ResolveField('filteredArticles')
-  getArticleByFilter(@Args('filterOptions') filterOption: FilterArticleInput) {
-    return this.articleService.filterArticle(filterOption);
+  getArticleByFilter(
+    @Args('filterOptions') filterOption: FilterArticleInput,
+    @Args('pagination') pg: PaginationInput,
+  ) {
+    return this.articleService.filterArticle(filterOption, pg);
   }
 
   @PermissionRequire({ blog: ['R'] })

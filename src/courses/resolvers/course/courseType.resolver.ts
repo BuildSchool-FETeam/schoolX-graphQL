@@ -56,4 +56,16 @@ export class CourseTypeResolver {
   async levels(@Parent() courseParent: Course) {
     return courseParent.levels.split('|');
   }
+
+  @ResolveField()
+  async comments(
+    @Parent() courseParent: Course,
+    @Args('pagination') pg: PaginationInput
+  ) {
+    const course = await this.courseService.findById(courseParent.id, {
+      select: ['id'],
+      relations: ['comments'],
+    });
+    return this.courseService.manuallyPagination(course.comments, pg);
+  }
 }

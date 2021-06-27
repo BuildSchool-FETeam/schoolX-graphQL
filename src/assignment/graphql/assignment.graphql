@@ -22,6 +22,7 @@ type AssignmentType implements BaseGraphQL {
   languageSupport: [String]!
   lesson: LessonType!
   testCases: [TestCaseType!]!
+  comments(pagination: PaginationInput): [UserCommentType]!
 }
 
 input CodeConfigInput {
