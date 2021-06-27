@@ -37,3 +37,5 @@ lerna-debug.log*
 .env
 .env.prod*
 data
+
+servers/*/node_modules

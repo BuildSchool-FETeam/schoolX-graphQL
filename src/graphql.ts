@@ -1,6 +1,5 @@
 
-/*
- * ------------------------------------------------------
+/** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -11,6 +10,13 @@ export enum ArticleStatus {
     pending = "pending",
     accept = "accept",
     reject = "reject"
+}
+
+export enum ProgrammingLanguage {
+    javascript = "javascript",
+    python = "python",
+    CSharp = "CSharp",
+    java = "java"
 }
 
 export enum OrderDirection {
@@ -54,11 +60,19 @@ export class AssignmentSetInput {
     lessonId: string;
 }
 
+export class CodeConfigInput {
+    code: string;
+    language: ProgrammingLanguage;
+}
+
 export class TestCaseSetInput {
     title: string;
-    input: string;
-    expectedOutput: string;
+    runningTestScript: string;
+    expectResult?: string;
     assignmentId: string;
+    generatedExpectResultScript?: string;
+    programingLanguage: ProgrammingLanguage;
+    timeEvaluation?: number;
 }
 
 export class SignUpInput {
@@ -328,11 +342,35 @@ export class AssignmentMutation {
     __typename?: 'AssignmentMutation';
     setAssignment: AssignmentType;
     deleteAssignment?: boolean;
+    runCode: CodeRunResultType;
+    runTestCase: SummaryEvaluationResult;
+}
+
+export class SummaryEvaluationResult {
+    __typename?: 'SummaryEvaluationResult';
+    summaryEvaluation: boolean;
+    testCaseEvaluations: EvaluationResult[];
+}
+
+export class EvaluationResult {
+    __typename?: 'EvaluationResult';
+    testResult: boolean;
+    testCaseId: string;
+    title: string;
+    executeTime?: number;
+    message?: string[];
 }
 
 export class AssignmentQuery {
     __typename?: 'AssignmentQuery';
     assignment: AssignmentType;
+}
+
+export class CodeRunResultType {
+    __typename?: 'CodeRunResultType';
+    executeTime?: number;
+    result?: string[];
+    status?: string;
 }
 
 export class TestCaseType implements BaseGraphQL {
@@ -341,9 +379,12 @@ export class TestCaseType implements BaseGraphQL {
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
-    input: string;
-    expectedOutput: string;
+    runningTestScript: string;
+    generatedExpectResultScript?: string;
+    expectResult?: string;
     assignment: AssignmentType;
+    programingLanguage: string;
+    timeEvaluation?: number;
 }
 
 export class TestCaseMutation {

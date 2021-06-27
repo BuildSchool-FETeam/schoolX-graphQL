@@ -1,61 +1,59 @@
 const express = require('express');
 const cors = require('cors');
-const {v4} = require('uuid')
+const { v4 } = require('uuid');
 const fs = require('fs');
 const { runCode } = require('./runCode');
 
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
 
-app.use(cors())
+app.use(cors());
 
-app.get('/hello', (req,res) => {
-  res.send("HELLO FROM JS")
-})
+app.get('/hello', (req, res) => {
+  res.send('HELLO FROM JS');
+});
 
 app.post('/js/playground', (req, res) => {
-  const {code} = req.body
-  const name = `${v4()}.js`
-  fs.writeFileSync(name, code)
+  const { code } = req.body;
+  const name = `${v4()}.js`;
+  fs.writeFileSync(name, code);
 
-  let result; 
-  
+  let result;
+
   try {
-    const {stderr, stdout, executeTime} = runCode(name)
-    stdout && (result = {status: 'success', result: stdout, executeTime})  
-    stderr && (result = {status: 'error', result: stderr, executeTime})
+    const { stderr, stdout, executeTime } = runCode(name);
+    stdout && (result = { status: 'success', result: stdout, executeTime });
+    stderr && (result = { status: 'error', result: stderr, executeTime });
 
-    res.json(result)
-    fs.unlinkSync(name)
-
+    res.json(result);
+    fs.unlinkSync(name);
   } catch (err) {
-    fs.unlinkSync(name)
+    fs.unlinkSync(name);
     console.log(`Exception occurred!!!`, err);
   }
-})
+});
 
 app.post('/js/test', (req, res) => {
-  const {code, command} = req.body
-  const name = `${v4()}.js`
-  fs.writeFileSync(name, code)
-  fs.appendFileSync(name, command)
+  const { code, command } = req.body;
+  const name = `${v4()}.js`;
+  fs.writeFileSync(name, code);
+  fs.appendFileSync(name, `\n ${command}`);
 
-  let result; 
+  let result;
   try {
-    const {stderr, stdout, executeTime} = runCode(name)
-    stdout && (result = {status: 'success', result: stdout, executeTime})  
-    stderr && (result = {status: 'error', result: stderr, executeTime})
+    const { stderr, stdout, executeTime } = runCode(name);
+    stdout && (result = { status: 'success', result: stdout, executeTime });
+    stderr && (result = { status: 'error', result: stderr, executeTime });
 
-    res.json(result)
-    fs.unlinkSync(name)
-
+    res.json(result);
+    fs.unlinkSync(name);
   } catch (err) {
-    fs.unlinkSync(name)
+    fs.unlinkSync(name);
     console.log(`Exception occurred!!!`, err);
   }
-})
+});
 
 app.listen(6001, () => {
   console.log('JS mini server listen from 6001');
-})
+});

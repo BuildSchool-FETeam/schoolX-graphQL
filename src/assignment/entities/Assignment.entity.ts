@@ -1,7 +1,16 @@
+import { Achievement } from 'src/clientUser/entities/Achivement.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { TestCase } from './Testcase.entity';
 
 @Entity()
@@ -21,7 +30,7 @@ export class Assignment extends BaseEntity {
   @Column()
   hints: string;
 
-  @Column('int4', {default: 10, nullable: true})
+  @Column('int4', { default: 10, nullable: true })
   score: number;
 
   @Column()
@@ -34,5 +43,9 @@ export class Assignment extends BaseEntity {
   languageSupport: string;
 
   @OneToMany(() => TestCase, (testCase) => testCase.assignment)
-  testCases: TestCase[]
+  testCases: TestCase[];
+
+  @ManyToMany(() => Achievement, (achie) => achie.completedAssignment)
+  @JoinTable()
+  usersComplete: Assignment[];
 }

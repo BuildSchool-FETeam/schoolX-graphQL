@@ -1,3 +1,4 @@
+import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { Course } from 'src/courses/entities/Course.entity';
 import {
   Column,
@@ -42,4 +43,8 @@ export class Achievement {
   @ManyToMany(() => Course, (course) => course.completedUser)
   @JoinTable()
   completedCourses: Course[];
+
+  @ManyToMany(() => Assignment, (assign) => assign.usersComplete)
+  @JoinTable()
+  completedAssignment: Assignment[];
 }

@@ -24,9 +24,32 @@ type AssignmentType implements BaseGraphQL {
   testCases: [TestCaseType!]!
 }
 
+input CodeConfigInput {
+  code: String!
+  language: ProgrammingLanguage!
+}
+
 type AssignmentMutation {
   setAssignment(id: ID, data: AssignmentSetInput!): AssignmentType!
   deleteAssignment(id: ID!): Boolean
+  runCode(code: String!, language: ProgrammingLanguage): CodeRunResultType!
+  runTestCase(
+    assignmentId: ID!
+    data: CodeConfigInput!
+  ): SummaryEvaluationResult!
+}
+
+type SummaryEvaluationResult {
+  summaryEvaluation: Boolean!
+  testCaseEvaluations: [EvaluationResult]!
+}
+
+type EvaluationResult {
+  testResult: Boolean!
+  testCaseId: String!
+  title: String!
+  executeTime: Int
+  message: [String]
 }
 
 type AssignmentQuery {
@@ -35,6 +58,12 @@ type AssignmentQuery {
 
 type Query {
   assignmentQuery: AssignmentQuery!
+}
+
+type CodeRunResultType {
+  executeTime: Int
+  result: [String]
+  status: String
 }
 
 type Mutation {
