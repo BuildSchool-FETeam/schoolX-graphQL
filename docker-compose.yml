@@ -17,12 +17,11 @@ services:
       - DB_NAME=schoolX-dev
       - EMAIL_SENDER=schoolx.dev.001@gmail.com
       - MAILGUN_API_KEY=<inbox>
-      - JS_MINI_SERVER=js-server
+      - JS_MINI_SERVER=http://js-server:6001
     volumes:
       - /home/app/node_modules
       - /home/app/src/migrations
       - /home/app/dist
-      # - /home/app/scripts
       - ./src:/home/app/src
     depends_on:
       - postgres-db
