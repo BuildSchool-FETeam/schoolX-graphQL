@@ -91,8 +91,10 @@ export class AssignmentService extends BaseService<Assignment> {
       miniServerService,
     );
 
-    const runningTestResult = await Promise.all(runningTestResultPromises);
-    const runningExpectScript = await Promise.all(runningExpectScriptPromises);
+    const [runningTestResult, runningExpectScript] = [
+      await Promise.all(runningTestResultPromises),
+      await Promise.all(runningExpectScriptPromises),
+    ];
 
     const evaluatedResults = this.evaluateTestCaseResult(
       runningTestResult,
@@ -131,9 +133,9 @@ export class AssignmentService extends BaseService<Assignment> {
     evaluatingTestCases: TestCase[],
   ) {
     const listEvaluation: EvaluationResult[] = [];
-    const message: string[] = [];
 
     _.each(resultFromTests, (resultTest, i) => {
+      const message: string[] = [];
       if (resultTest.status === 'error') {
         listEvaluation.push({
           testResult: false,
