@@ -70,7 +70,12 @@ export class ClientAuthService extends BaseService<ClientUser> {
 
   async loginWithEmailAndPassword(data: ClientUserSigninInput) {
     const { email, password } = data;
-    const existedClientUser = await this.getClientUserFromEmail(email);
+    const existedClientUser = await this.getClientUserFromEmail(email, [
+      'id',
+      'password',
+      'email',
+      'isActive',
+    ]);
 
     if (!existedClientUser.isActive) {
       throw new ForbiddenException(
@@ -137,8 +142,12 @@ export class ClientAuthService extends BaseService<ClientUser> {
     return this.clientRepo.save(clientUser);
   }
 
-  private async getClientUserFromEmail(email: string) {
+  private async getClientUserFromEmail(
+    email: string,
+    select: Array<keyof ClientUser> = [],
+  ) {
     const existedUser = await this.clientRepo.findOne({
+      select,
       where: { email },
       relations: ['role'],
     });

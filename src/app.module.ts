@@ -1,4 +1,3 @@
-
 import { ScheduleModule } from '@nestjs/schedule';
 import { CourseModule } from './courses/Course.module';
 import { CacheModule, Module } from '@nestjs/common';
@@ -20,6 +19,7 @@ import { NotificationModule } from './notification/notification.module';
 import { ClientUserModule } from './clientUser/clientUser.module';
 import { EmailModule } from './Email/email.module';
 import { ArticleModule } from 'src/article/article.module';
+import { MiniServerModule } from './mini-server/mini-server.module';
 import { CommentModule } from './comment/comment.module';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
@@ -72,7 +72,8 @@ const scheduleModule = ScheduleModule.forRoot();
     ClientUserModule,
     EmailModule,
     ArticleModule,
-    CommentModule
+    MiniServerModule,
+    CommentModule,
   ],
   providers: [
     {

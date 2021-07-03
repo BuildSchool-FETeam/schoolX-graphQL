@@ -3,16 +3,29 @@ type TestCaseType implements BaseGraphQL {
   title: String!
   createdAt: ScalarDate!
   updatedAt: ScalarDate!
-  input: String!
-  expectedOutput: String!
+  runningTestScript: String!
+  generatedExpectResultScript: String
+  expectResult: String
   assignment: AssignmentType!
+  programingLanguage: String!
+  timeEvaluation: Int
+}
+
+enum ProgrammingLanguage {
+  javascript
+  python
+  CSharp
+  java
 }
 
 input TestCaseSetInput {
   title: String!
-  input: String!
-  expectedOutput: String!
+  runningTestScript: String!
+  expectResult: String
   assignmentId: ID!
+  generatedExpectResultScript: String
+  programingLanguage: ProgrammingLanguage!
+  timeEvaluation: Int
 }
 
 type TestCaseMutation {

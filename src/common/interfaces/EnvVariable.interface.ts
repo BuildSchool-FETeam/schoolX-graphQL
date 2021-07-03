@@ -5,4 +5,5 @@ export interface EnvVariable {
   SENDGRID_API_KEY: string;
   EMAIL_SENDER: string;
   MAILGUN_API_KEY: string;
+  JS_MINI_SERVER: string;
 }
