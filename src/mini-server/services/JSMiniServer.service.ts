@@ -1,24 +1,19 @@
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
-import {
-  ITestCaseConfig,
-  MiniServerDTO,
-  MiniServerService,
-} from './miniServer.interface';
-import * as axios from 'axios';
 import { Injectable } from '@nestjs/common';
+import { MiniServerBaseService } from './base/MiniServer.base.service';
+import {
+  IMiniServerService,
+  MiniServerDTO,
+  ITestCaseConfig,
+} from './base/miniServer.interface';
 
 @Injectable()
-export class JSMiniServerService implements MiniServerService {
-  axiosInstance: axios.AxiosInstance;
-  host: string;
-
+export class JSMiniServerService
+  extends MiniServerBaseService
+  implements IMiniServerService {
   constructor(private configService: ConfigService<EnvVariable>) {
-    this.host = this.configService.get<string>('JS_MINI_SERVER');
-    this.axiosInstance = axios.default.create({
-      baseURL: this.host,
-      timeout: 10000,
-    });
+    super(configService, 'JS_MINI_SERVER');
   }
 
   async runCode(code: string) {

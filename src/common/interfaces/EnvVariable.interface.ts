@@ -6,4 +6,5 @@ export interface EnvVariable {
   EMAIL_SENDER: string;
   MAILGUN_API_KEY: string;
   JS_MINI_SERVER: string;
+  JAVA_MINI_SERVER: string;
 }
