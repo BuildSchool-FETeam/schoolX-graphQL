@@ -18,6 +18,7 @@ services:
       - EMAIL_SENDER=schoolx.dev.001@gmail.com
       - MAILGUN_API_KEY=<inbox>
       - JS_MINI_SERVER=http://js-server:6001
+      - JAVA_MINI_SERVER=http://java-server:6002
     volumes:
       - /home/app/node_modules
       - /home/app/src/migrations
@@ -46,6 +47,16 @@ services:
     volumes:
       - /home/app/node_modules
       - ./servers/js:/home/app
+
+  java-server:
+    build:
+      context: .
+      dockerfile: ./servers/java/Dockerfile.dev
+    ports:
+      - 6002:6002
+    volumes:
+      - /home/app/node_modules
+      - ./servers/java:/home/app
 
   postgres-db:
     image: postgres

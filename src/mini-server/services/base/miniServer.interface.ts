@@ -14,7 +14,7 @@ export interface MiniServerDTO {
   result: string[];
 }
 
-export interface MiniServerService {
+export interface IMiniServerService {
   runCode(code: string): Promise<TestResponse>;
   runCodeWithTestCase(
     code: string,

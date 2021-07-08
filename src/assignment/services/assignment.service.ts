@@ -12,9 +12,10 @@ import {
   TestCaseProgrammingLanguage,
 } from '../entities/Testcase.entity';
 import {
-  MiniServerService,
+  IMiniServerService,
   TestResponse,
-} from 'src/mini-server/services/miniServer.interface';
+} from 'src/mini-server/services/base/miniServer.interface';
+import { JavaMiniServerService } from 'src/mini-server/services/JavaMiniServer.service';
 
 @Injectable()
 export class AssignmentService extends BaseService<Assignment> {
@@ -23,6 +24,7 @@ export class AssignmentService extends BaseService<Assignment> {
     private assignmentRepo: Repository<Assignment>,
     private lessonService: LessonService,
     private miniJSServerService: JSMiniServerService,
+    private miniJavaServerService: JavaMiniServerService,
   ) {
     super(assignmentRepo, 'Assignment');
   }
@@ -114,7 +116,7 @@ export class AssignmentService extends BaseService<Assignment> {
 
   private mappingExpectResultPromises(
     testCaseWillBeEvaluated: TestCase[],
-    miniServerService: MiniServerService,
+    miniServerService: IMiniServerService,
   ) {
     return _.map(testCaseWillBeEvaluated, (tc) => {
       const { expectResult, generatedExpectResultScript } = tc;
@@ -211,10 +213,12 @@ export class AssignmentService extends BaseService<Assignment> {
 
   private getServiceByLanguage(
     language: TestCaseProgrammingLanguage,
-  ): MiniServerService {
+  ): IMiniServerService {
     switch (language) {
       case TestCaseProgrammingLanguage.javascript:
         return this.miniJSServerService;
+      case TestCaseProgrammingLanguage.java:
+        return this.miniJavaServerService;
     }
   }
 }
