@@ -1,3 +1,4 @@
+import { PythonMiniServerService } from './../../mini-server/services/PythonMiniServer.service';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
@@ -25,6 +26,7 @@ export class AssignmentService extends BaseService<Assignment> {
     private lessonService: LessonService,
     private miniJSServerService: JSMiniServerService,
     private miniJavaServerService: JavaMiniServerService,
+    private miniPythonServerService: PythonMiniServerService
   ) {
     super(assignmentRepo, 'Assignment');
   }
@@ -219,6 +221,8 @@ export class AssignmentService extends BaseService<Assignment> {
         return this.miniJSServerService;
       case TestCaseProgrammingLanguage.java:
         return this.miniJavaServerService;
+      case TestCaseProgrammingLanguage.python:
+        return this.miniPythonServerService
     }
   }
 }

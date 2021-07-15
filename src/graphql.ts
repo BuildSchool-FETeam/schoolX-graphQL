@@ -1,6 +1,5 @@
 
-/*
- * ------------------------------------------------------
+/** ------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -16,7 +15,7 @@ export enum ArticleStatus {
 export enum ProgrammingLanguage {
     javascript = "javascript",
     python = "python",
-    CSharp = "CSharp",
+    CPlus = "CPlus",
     java = "java"
 }
 

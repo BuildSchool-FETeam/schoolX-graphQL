@@ -41,6 +41,7 @@
     "@types/lodash": "^4.14.168",
     "@types/mailgun-js": "^0.22.0",
     "@types/sharp": "^0.28.3",
+    "apollo-cache-control": "^0.14.0",
     "apollo-server-express": "^2.21.0",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.0",

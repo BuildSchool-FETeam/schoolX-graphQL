@@ -5,7 +5,7 @@ import { Assignment } from './Assignment.entity';
 export enum TestCaseProgrammingLanguage {
   javascript = 'javascript',
   python = 'python',
-  CSharp = 'CSharp',
+  CPlus = 'CPlus',
   java = 'java',
 }
 

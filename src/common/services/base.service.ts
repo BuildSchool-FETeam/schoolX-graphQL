@@ -67,8 +67,6 @@ export abstract class BaseService<T> extends UtilService {
         permissionSet,
       } = await this.getAdminUserCredential(strictConfig.token);
 
-      console.log(adminUser, permissionSet);
-
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
       ) {
