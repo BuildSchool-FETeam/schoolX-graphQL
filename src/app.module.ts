@@ -25,9 +25,6 @@ import { CommentModule } from './comment/comment.module';
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
   installSubscriptionHandlers: true,
-  subscriptions: {
-    path: '/subscriptions',
-  },
   definitions: {
     path: join(process.cwd(), 'src/graphql.ts'),
     outputAs: 'class',
@@ -37,6 +34,7 @@ const graphQLModuleInit = GraphQLModule.forRoot({
     origin: 'http://localhost:3000',
   },
   fieldResolverEnhancers: ['guards'],
+  subscriptions: {},
 });
 
 const typeORMModuleInit = TypeOrmModule.forRoot();
