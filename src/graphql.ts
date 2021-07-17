@@ -1,5 +1,6 @@
 
-/** ------------------------------------------------------
+/*
+ * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
  * -------------------------------------------------------
  */
@@ -28,18 +29,18 @@ export class AdminUserSetInput {
     email: string;
     name: string;
     role: string;
-    password?: string;
+    password?: Nullable<string>;
 }
 
 export class ArticleReviewInput {
-    comment?: string;
-    status?: ArticleStatus;
+    comment?: Nullable<string>;
+    status?: Nullable<ArticleStatus>;
 }
 
 export class FilterArticleInput {
-    byTag?: string[];
-    byDate?: CompareInputDate;
-    byStatus?: CompareInputString;
+    byTag?: Nullable<Nullable<string>[]>;
+    byDate?: Nullable<CompareInputDate>;
+    byStatus?: Nullable<CompareInputString>;
 }
 
 export class ArticleInputType {
@@ -52,11 +53,11 @@ export class ArticleInputType {
 export class AssignmentSetInput {
     title: string;
     description: string;
-    hints: string[];
+    hints: Nullable<string>[];
     score: number;
     input: string;
     output: string;
-    languageSupport: string[];
+    languageSupport: Nullable<string>[];
     lessonId: string;
 }
 
@@ -68,11 +69,11 @@ export class CodeConfigInput {
 export class TestCaseSetInput {
     title: string;
     runningTestScript: string;
-    expectResult?: string;
+    expectResult?: Nullable<string>;
     assignmentId: string;
-    generatedExpectResultScript?: string;
+    generatedExpectResultScript?: Nullable<string>;
     programingLanguage: ProgrammingLanguage;
-    timeEvaluation?: number;
+    timeEvaluation?: Nullable<number>;
 }
 
 export class SignUpInput {
@@ -98,16 +99,16 @@ export class ClientUserSigninInput {
 }
 
 export class ClientUserUpdateInput {
-    name?: string;
-    githubUrl?: string;
-    dayOfBirth?: ScalarDate;
-    homeTown?: string;
-    bio?: string;
-    phone?: string;
+    name?: Nullable<string>;
+    githubUrl?: Nullable<string>;
+    dayOfBirth?: Nullable<ScalarDate>;
+    homeTown?: Nullable<string>;
+    bio?: Nullable<string>;
+    phone?: Nullable<string>;
 }
 
 export class CommentDataInput {
-    id?: string;
+    id?: Nullable<string>;
     title: string;
     content: string;
 }
@@ -118,9 +119,9 @@ export class OrderType {
 }
 
 export class PaginationInput {
-    order?: OrderType;
-    skip?: number;
-    limit?: number;
+    order?: Nullable<OrderType>;
+    skip?: Nullable<number>;
+    limit?: Nullable<number>;
 }
 
 export class SearchOptionInput {
@@ -129,17 +130,17 @@ export class SearchOptionInput {
 }
 
 export class CompareInputDate {
-    lt?: ScalarDate;
-    gt?: ScalarDate;
-    eq?: ScalarDate;
-    ne?: ScalarDate;
+    lt?: Nullable<ScalarDate>;
+    gt?: Nullable<ScalarDate>;
+    eq?: Nullable<ScalarDate>;
+    ne?: Nullable<ScalarDate>;
 }
 
 export class CompareInputString {
-    ct?: string;
-    eq?: string;
-    nc?: string;
-    ne?: string;
+    ct?: Nullable<string>;
+    eq?: Nullable<string>;
+    nc?: Nullable<string>;
+    ne?: Nullable<string>;
 }
 
 export class CourseSetInput {
@@ -148,9 +149,9 @@ export class CourseSetInput {
     instructorId: string;
     benefits: string[];
     requirements: string[];
-    image?: FileUpload;
+    image?: Nullable<FileUpload>;
     tags: string[];
-    levels: string[];
+    levels: Nullable<string>[];
 }
 
 export class LessonSetInput {
@@ -158,7 +159,7 @@ export class LessonSetInput {
     videoUrl: string;
     courseId: string;
     content: string;
-    documents?: FileUpload[];
+    documents?: Nullable<Nullable<FileUpload>[]>;
 }
 
 export class AddDocumentInput {
@@ -170,16 +171,16 @@ export class InstructorSetInput {
     title: string;
     description: string;
     email: string;
-    ClientUserId?: string;
-    image?: FileUpload;
+    ClientUserId?: Nullable<string>;
+    image?: Nullable<FileUpload>;
     phone: string;
 }
 
 export class NotificationInput {
     title: string;
     content: string;
-    recipientByRoles?: string[];
-    recipientByAdminIds?: string[];
+    recipientByRoles?: Nullable<Nullable<string>[]>;
+    recipientByAdminIds?: Nullable<Nullable<string>[]>;
 }
 
 export class PermissionSetInput {
@@ -206,7 +207,7 @@ export abstract class IQuery {
 
     abstract heartBeatWithAuth(): string | Promise<string>;
 
-    abstract adminUserQuery(): AdminUserQuery | Promise<AdminUserQuery>;
+    abstract adminUserQuery(): Nullable<AdminUserQuery> | Promise<Nullable<AdminUserQuery>>;
 
     abstract articleQuery(): ArticleQuery | Promise<ArticleQuery>;
 
@@ -214,11 +215,11 @@ export abstract class IQuery {
 
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
-    abstract clientUserQuery(): ClientUserQuery | Promise<ClientUserQuery>;
+    abstract clientUserQuery(): Nullable<ClientUserQuery> | Promise<Nullable<ClientUserQuery>>;
 
-    abstract courseQuery(): CourseQuery | Promise<CourseQuery>;
+    abstract courseQuery(): Nullable<CourseQuery> | Promise<Nullable<CourseQuery>>;
 
-    abstract lessonQuery(): LessonQuery | Promise<LessonQuery>;
+    abstract lessonQuery(): Nullable<LessonQuery> | Promise<Nullable<LessonQuery>>;
 
     abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
 
@@ -238,7 +239,7 @@ export abstract class ISubscription {
 export abstract class IMutation {
     __typename?: 'IMutation';
 
-    abstract adminUserMutation(): AdminUserMutation | Promise<AdminUserMutation>;
+    abstract adminUserMutation(): Nullable<AdminUserMutation> | Promise<Nullable<AdminUserMutation>>;
 
     abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
 
@@ -258,18 +259,18 @@ export abstract class IMutation {
 
     abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
 
-    abstract documentMutation(): DocumentMutation | Promise<DocumentMutation>;
+    abstract documentMutation(): Nullable<DocumentMutation> | Promise<Nullable<DocumentMutation>>;
 
     abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
     abstract notificationMutation(): NotificationMutation | Promise<NotificationMutation>;
 
-    abstract permissionMutation(): PermissionMutation | Promise<PermissionMutation>;
+    abstract permissionMutation(): Nullable<PermissionMutation> | Promise<Nullable<PermissionMutation>>;
 }
 
 export class AdminUserQuery {
     __typename?: 'AdminUserQuery';
-    adminUsers: AdminUser[];
+    adminUsers: Nullable<AdminUser>[];
     adminUser: AdminUser;
     totalAdminUsers: number;
 }
@@ -277,7 +278,7 @@ export class AdminUserQuery {
 export class AdminUserMutation {
     __typename?: 'AdminUserMutation';
     setAdminUser: AdminUser;
-    deleteAdminUser?: boolean;
+    deleteAdminUser?: Nullable<boolean>;
 }
 
 export class AdminUser {
@@ -286,15 +287,15 @@ export class AdminUser {
     email: string;
     name: string;
     role: string;
-    createdBy?: AdminUser;
+    createdBy?: Nullable<AdminUser>;
 }
 
 export class ArticleQuery {
     __typename?: 'ArticleQuery';
-    articles: ArticleType[];
-    filteredArticles: ArticleType[];
-    articleDetail?: ArticleType;
-    tags: ArticleTagType[];
+    articles: Nullable<ArticleType>[];
+    filteredArticles: Nullable<ArticleType>[];
+    articleDetail?: Nullable<ArticleType>;
+    tags: Nullable<ArticleTagType>[];
 }
 
 export class ArticleMutation {
@@ -310,16 +311,16 @@ export class ArticleType implements BaseGraphQL {
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
-    shortDescription?: string;
-    content?: string;
+    shortDescription?: Nullable<string>;
+    content?: Nullable<string>;
     votes: number;
     status: ArticleStatus;
-    createdBy?: ClientUserType;
+    createdBy?: Nullable<ClientUserType>;
     views: number;
     shares: number;
-    tags?: ArticleTagType[];
-    reviewComment?: string;
-    comments: UserCommentType[];
+    tags?: Nullable<Nullable<ArticleTagType>[]>;
+    reviewComment?: Nullable<string>;
+    comments: Nullable<UserCommentType>[];
 }
 
 export class ArticleTagType implements BaseGraphQL {
@@ -328,7 +329,7 @@ export class ArticleTagType implements BaseGraphQL {
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
-    articles?: ArticleType[];
+    articles?: Nullable<Nullable<ArticleType>[]>;
 }
 
 export class AssignmentType implements BaseGraphQL {
@@ -338,20 +339,20 @@ export class AssignmentType implements BaseGraphQL {
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     description: string;
-    hints: string[];
+    hints: Nullable<string>[];
     score: number;
     input: string;
     output: string;
-    languageSupport: string[];
+    languageSupport: Nullable<string>[];
     lesson: LessonType;
     testCases: TestCaseType[];
-    comments: UserCommentType[];
+    comments: Nullable<UserCommentType>[];
 }
 
 export class AssignmentMutation {
     __typename?: 'AssignmentMutation';
     setAssignment: AssignmentType;
-    deleteAssignment?: boolean;
+    deleteAssignment?: Nullable<boolean>;
     runCode: CodeRunResultType;
     runTestCase: SummaryEvaluationResult;
 }
@@ -359,7 +360,7 @@ export class AssignmentMutation {
 export class SummaryEvaluationResult {
     __typename?: 'SummaryEvaluationResult';
     summaryEvaluation: boolean;
-    testCaseEvaluations: EvaluationResult[];
+    testCaseEvaluations: Nullable<EvaluationResult>[];
 }
 
 export class EvaluationResult {
@@ -367,8 +368,8 @@ export class EvaluationResult {
     testResult: boolean;
     testCaseId: string;
     title: string;
-    executeTime?: number;
-    message?: string[];
+    executeTime?: Nullable<number>;
+    message?: Nullable<Nullable<string>[]>;
 }
 
 export class AssignmentQuery {
@@ -378,9 +379,9 @@ export class AssignmentQuery {
 
 export class CodeRunResultType {
     __typename?: 'CodeRunResultType';
-    executeTime?: number;
-    result?: string[];
-    status?: string;
+    executeTime?: Nullable<number>;
+    result?: Nullable<Nullable<string>[]>;
+    status?: Nullable<string>;
 }
 
 export class TestCaseType implements BaseGraphQL {
@@ -390,17 +391,17 @@ export class TestCaseType implements BaseGraphQL {
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     runningTestScript: string;
-    generatedExpectResultScript?: string;
-    expectResult?: string;
+    generatedExpectResultScript?: Nullable<string>;
+    expectResult?: Nullable<string>;
     assignment: AssignmentType;
     programingLanguage: string;
-    timeEvaluation?: number;
+    timeEvaluation?: Nullable<number>;
 }
 
 export class TestCaseMutation {
     __typename?: 'TestCaseMutation';
     setTestCase: TestCaseType;
-    deleteTestCase?: boolean;
+    deleteTestCase?: Nullable<boolean>;
 }
 
 export class TestCaseQuery {
@@ -434,7 +435,7 @@ export class ClientUserAuthResponse {
     __typename?: 'ClientUserAuthResponse';
     id: string;
     email: string;
-    token?: string;
+    token?: Nullable<string>;
 }
 
 export class ClientUserMutation {
@@ -451,32 +452,32 @@ export class ClientUserQuery {
 export class ClientUserType {
     __typename?: 'ClientUserType';
     id: string;
-    email?: string;
-    password?: string;
-    githubUrl?: string;
-    dayOfBirth?: ScalarDate;
-    homeTown?: string;
-    bio?: string;
-    phone?: string;
-    imageUrl?: string;
-    filePath?: string;
-    instructor?: InstructorType;
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+    githubUrl?: Nullable<string>;
+    dayOfBirth?: Nullable<ScalarDate>;
+    homeTown?: Nullable<string>;
+    bio?: Nullable<string>;
+    phone?: Nullable<string>;
+    imageUrl?: Nullable<string>;
+    filePath?: Nullable<string>;
+    instructor?: Nullable<InstructorType>;
     achievement: AchievementType;
     name: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
-    comments: UserCommentType[];
+    comments: Nullable<UserCommentType>[];
 }
 
 export class AchievementType {
     __typename?: 'AchievementType';
     id: string;
-    rank?: number;
-    score?: number;
-    joinedCourse: CourseType[];
-    follow: ClientUserType[];
-    followedBy: ClientUserType[];
-    completedCourses: CourseType[];
+    rank?: Nullable<number>;
+    score?: Nullable<number>;
+    joinedCourse: Nullable<CourseType>[];
+    follow: Nullable<ClientUserType>[];
+    followedBy: Nullable<ClientUserType>[];
+    completedCourses: Nullable<CourseType>[];
 }
 
 export class UserCommentMutation {
@@ -497,11 +498,11 @@ export class UserCommentType implements BaseGraphQL {
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     createdBy: ClientUserType;
-    replyComments: UserCommentType[];
-    course?: CourseType;
-    lesson?: LessonType;
-    assignment?: AssignmentType;
-    article?: ArticleType;
+    replyComments: Nullable<UserCommentType>[];
+    course?: Nullable<CourseType>;
+    lesson?: Nullable<LessonType>;
+    assignment?: Nullable<AssignmentType>;
+    article?: Nullable<ArticleType>;
 }
 
 export class File {
@@ -513,7 +514,7 @@ export class File {
 
 export class CourseQuery {
     __typename?: 'CourseQuery';
-    courses: CourseType[];
+    courses: Nullable<CourseType>[];
     course: CourseType;
     totalCourses: number;
 }
@@ -534,12 +535,12 @@ export class CourseType implements BaseGraphQL {
     instructor: InstructorType;
     benefits: string[];
     requirements: string[];
-    imageUrl?: string;
+    imageUrl?: Nullable<string>;
     tags: TagType[];
-    lessons: LessonType[];
-    createdBy?: AdminUser;
-    levels: string[];
-    comments: UserCommentType[];
+    lessons: Nullable<LessonType>[];
+    createdBy?: Nullable<AdminUser>;
+    levels: Nullable<string>[];
+    comments: Nullable<UserCommentType>[];
 }
 
 export class LessonType implements BaseGraphQL {
@@ -552,9 +553,9 @@ export class LessonType implements BaseGraphQL {
     votes: number;
     course: CourseType;
     content: string;
-    documents: DocumentType[];
-    assignments: AssignmentType[];
-    comments: UserCommentType[];
+    documents: Nullable<DocumentType>[];
+    assignments: Nullable<AssignmentType>[];
+    comments: Nullable<UserCommentType>[];
 }
 
 export class LessonMutation {
@@ -566,7 +567,7 @@ export class LessonMutation {
 export class LessonQuery {
     __typename?: 'LessonQuery';
     lesson: LessonType;
-    lessonsWithCourseId: LessonType[];
+    lessonsWithCourseId: Nullable<LessonType>[];
     totalLessons: number;
 }
 
@@ -596,7 +597,7 @@ export class InstructorQuery {
 export class InstructorMutation {
     __typename?: 'InstructorMutation';
     setInstructor: InstructorType;
-    deleteInstructor?: boolean;
+    deleteInstructor?: Nullable<boolean>;
 }
 
 export class InstructorType implements BaseGraphQL {
@@ -608,24 +609,24 @@ export class InstructorType implements BaseGraphQL {
     name: string;
     description: string;
     email: string;
-    clientUser?: ClientUserType;
+    clientUser?: Nullable<ClientUserType>;
     imageUrl: string;
     phone: string;
-    courses: CourseType[];
-    createdBy?: AdminUser;
+    courses: Nullable<CourseType>[];
+    createdBy?: Nullable<AdminUser>;
 }
 
 export class NotificationMutation {
     __typename?: 'NotificationMutation';
-    createNotification?: NotificationType;
+    createNotification?: Nullable<NotificationType>;
     deleteByOwner: boolean;
     deleteByRecipient: boolean;
 }
 
 export class NotificationQuery {
     __typename?: 'NotificationQuery';
-    notificationsReceived: NotificationType[];
-    notificationsSent: NotificationType[];
+    notificationsReceived: Nullable<NotificationType>[];
+    notificationsSent: Nullable<NotificationType>[];
     notification: NotificationType;
     totalNotificationReceived: number;
     totalNotificationSent: number;
@@ -637,9 +638,9 @@ export class NotificationType implements BaseGraphQL {
     title: string;
     content: string;
     createdAt: ScalarDate;
-    createdBy?: AdminUser;
+    createdBy?: Nullable<AdminUser>;
     updatedAt: ScalarDate;
-    recipientByAdmins?: AdminUser[];
+    recipientByAdmins?: Nullable<Nullable<AdminUser>[]>;
 }
 
 export class PermissionMutation {
@@ -650,9 +651,9 @@ export class PermissionMutation {
 
 export class PermissionQuery {
     __typename?: 'PermissionQuery';
-    permissions?: Permission[];
-    permissionWithId?: Permission;
-    permissionWithRole?: Permission;
+    permissions?: Nullable<Nullable<Permission>[]>;
+    permissionWithId?: Nullable<Permission>;
+    permissionWithRole?: Nullable<Permission>;
     totalPermissions: number;
 }
 
@@ -666,7 +667,7 @@ export class Permission {
     blog: string;
     notification: string;
     instructor: string;
-    createdBy?: AdminUser;
+    createdBy?: Nullable<AdminUser>;
 }
 
 export class TagType implements BaseGraphQL {
@@ -675,8 +676,9 @@ export class TagType implements BaseGraphQL {
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
-    courses: CourseType[];
+    courses: Nullable<CourseType>[];
 }
 
 export type FileUpload = any;
 export type ScalarDate = any;
+type Nullable<T> = T | null;

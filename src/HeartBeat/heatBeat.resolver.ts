@@ -1,7 +1,7 @@
 import { AuthGuard } from './../common/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Subscription } from '@nestjs/graphql';
-import { PubSub } from 'apollo-server-express';
+import { PubSub } from 'graphql-subscriptions';
 
 @Resolver()
 export class HeartBeat {
