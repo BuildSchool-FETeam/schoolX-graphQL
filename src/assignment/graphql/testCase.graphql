@@ -14,7 +14,7 @@ type TestCaseType implements BaseGraphQL {
 enum ProgrammingLanguage {
   javascript
   python
-  CSharp
+  CPlus
   java
 }
 

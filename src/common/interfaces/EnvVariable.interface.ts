@@ -7,4 +7,5 @@ export interface EnvVariable {
   MAILGUN_API_KEY: string;
   JS_MINI_SERVER: string;
   JAVA_MINI_SERVER: string;
+  PYTHON_MINI_SERVER: string;
 }
