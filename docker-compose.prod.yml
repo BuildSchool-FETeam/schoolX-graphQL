@@ -34,7 +34,7 @@ services:
       ]
 
   js-server:
-    image: superknife0512/schoolx-js-servers
+    image: superknife0512/schoolx-js-server
 
   java-server:
     image: superknife0512/schoolx-java-server
