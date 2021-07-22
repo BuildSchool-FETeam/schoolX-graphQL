@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 services:
   app:
     image: superknife0512/schoolx-graphql
@@ -19,11 +19,6 @@ services:
       - JS_MINI_SERVER=http://js-server:6001
       - JAVA_MINI_SERVER=http://java-server:6002
       - PYTHON_MINI_SERVER=http://python-server:6003
-    volumes:
-      - /home/app/node_modules
-      - /home/app/src/migrations
-      - /home/app/dist
-      - ./src:/home/app/src
     depends_on:
       - postgres-db
     command:
@@ -39,24 +34,13 @@ services:
       ]
 
   js-server:
-    image: superknife0512/schoolx-js-server
-    volumes:
-      - /home/app/node_modules
-      - ./servers/js:/home/app
+    image: superknife0512/schoolx-js-servers
 
   java-server:
     image: superknife0512/schoolx-java-server
-    ports:
-      - 6002:6002
-    volumes:
-      - /home/app/node_modules
-      - ./servers/java:/home/app
 
   python-server:
     image: superknife0512/schoolx-python-server
-    volumes:
-      - /home/app/node_modules
-      - ./servers/python:/home/app
 
   postgres-db:
     image: postgres
@@ -66,7 +50,7 @@ services:
       - POSTGRES_PASSWORD=Toan1234
       - POSTGRES_DB=schoolX-dev
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - /home/data:/var/lib/postgresql/data
   adminer:
     image: adminer
     restart: always
