@@ -51,6 +51,8 @@ services:
       - POSTGRES_DB=schoolX-dev
     volumes:
       - /home/data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
   adminer:
     image: adminer
     restart: always
