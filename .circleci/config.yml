@@ -1,0 +1,28 @@
+version: 2.1
+
+jobs:
+  build_dev:
+    steps:
+      - run:
+          name: build docker
+          command: bash ./scripts/build-image.sh
+  deploy_dev:
+    steps:
+      - run:
+          name: deploy
+          command: docker build -t deploy-dev ./scripts/deploy-dev && docker run deploy-dev
+
+workflows:
+  build_and_deploy_dev:
+    jobs:
+      - build_dev:
+          filters:
+            branches:
+              only: deploy-test
+
+      - deploy_dev:
+          filters:
+            branches:
+              only: deploy-test
+          requires:
+            - build
