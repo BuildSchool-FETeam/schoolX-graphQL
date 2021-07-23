@@ -21,6 +21,7 @@ import { EmailModule } from './Email/email.module';
 import { ArticleModule } from 'src/article/article.module';
 import { MiniServerModule } from './mini-server/mini-server.module';
 import { CommentModule } from './comment/comment.module';
+import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload';
 
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
@@ -35,6 +36,9 @@ const graphQLModuleInit = GraphQLModule.forRoot({
   },
   fieldResolverEnhancers: ['guards'],
   subscriptions: {},
+  resolvers: {
+    Upload: GraphQLUpload,
+  },
 });
 
 const typeORMModuleInit = TypeOrmModule.forRoot();

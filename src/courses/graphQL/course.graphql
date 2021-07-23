@@ -27,7 +27,7 @@ input CourseSetInput {
   instructorId: ID!
   benefits: [String!]!
   requirements: [String!]!
-  image: FileUpload
+  image: Upload
   tags: [String!]!
   levels: [String]!
 }

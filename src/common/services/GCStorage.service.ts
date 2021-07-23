@@ -26,7 +26,7 @@ export class GCStorageService {
     private imageProcessService: ImageProcessService,
   ) {
     const storage = new Storage();
-    this.bucket = storage.bucket('schoolx-dev-bucket');
+    this.bucket = storage.bucket('schoolx-dev-storage');
     this.rootFolder = this.configService.get('STORAGE_FOLDER');
   }
 
@@ -122,8 +122,9 @@ export class GCStorageService {
     stream: ReadStream,
   ) {
     if (processConfig) {
-      const transformer =
-        this.imageProcessService.createResizeTransformer(processConfig);
+      const transformer = this.imageProcessService.createResizeTransformer(
+        processConfig,
+      );
 
       return stream.pipe(transformer);
     }

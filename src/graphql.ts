@@ -149,7 +149,7 @@ export class CourseSetInput {
     instructorId: string;
     benefits: string[];
     requirements: string[];
-    image?: Nullable<FileUpload>;
+    image?: Nullable<Upload>;
     tags: string[];
     levels: Nullable<string>[];
 }
@@ -159,11 +159,11 @@ export class LessonSetInput {
     videoUrl: string;
     courseId: string;
     content: string;
-    documents?: Nullable<Nullable<FileUpload>[]>;
+    documents?: Nullable<Nullable<Upload>[]>;
 }
 
 export class AddDocumentInput {
-    file: FileUpload;
+    file: Upload;
 }
 
 export class InstructorSetInput {
@@ -172,7 +172,7 @@ export class InstructorSetInput {
     description: string;
     email: string;
     ClientUserId?: Nullable<string>;
-    image?: Nullable<FileUpload>;
+    image?: Nullable<Upload>;
     phone: string;
 }
 
@@ -679,6 +679,6 @@ export class TagType implements BaseGraphQL {
     courses: Nullable<CourseType>[];
 }
 
-export type FileUpload = any;
+export type Upload = any;
 export type ScalarDate = any;
 type Nullable<T> = T | null;

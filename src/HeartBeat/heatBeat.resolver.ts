@@ -7,7 +7,7 @@ import { PubSub } from 'graphql-subscriptions';
 export class HeartBeat {
   @Query()
   heartBeat() {
-    return 'Ba dum !!!';
+    return 'Yamate kudasai';
   }
 
   @Query()

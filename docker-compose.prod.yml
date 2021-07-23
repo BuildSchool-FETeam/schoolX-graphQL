@@ -5,7 +5,7 @@ services:
     ports:
       - 3001:3001
     environment:
-      - GOOGLE_APPLICATION_CREDENTIALS=ticketer-dev-283204-f6b9d5e1193e.json
+      - GOOGLE_APPLICATION_CREDENTIALS=storage-service-account.json
       - JWT_SECRET=Yasuoganktem20gg
       # - STORAGE_FOLDER=toan-dev-003
       - STORAGE_FOLDER=storage-folder
