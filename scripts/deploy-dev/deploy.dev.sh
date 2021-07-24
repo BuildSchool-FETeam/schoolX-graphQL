@@ -9,7 +9,8 @@ INSTANCE='schoolx-dev-compute'
 PROJECT='multi-k8s-320211'
 
 COMMAND="""
-  cd /home/superknife0511/schoolX-graphQL && 
+  cd /home/superknife0511/schoolX-graphQL &&
+  git stash && 
   sudo git checkout dev &&
   sudo git pull origin dev &&
   sudo docker image prune -af &&
