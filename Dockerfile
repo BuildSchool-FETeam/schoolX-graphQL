@@ -11,5 +11,6 @@ RUN npm rebuild bcrypt --build-from-source
 
 COPY . .
 RUN dos2unix scripts/*.sh
+RUN chmod 700 scripts/*.sh
 
 CMD [ "npm", "run", "start" ]
