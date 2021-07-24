@@ -122,7 +122,7 @@ b. For more convenience when uploading file and testing, you can use **Altair**
 Download: [https://altair.sirmuel.design/]
 
 ```
-mutation AddDocs($file: FileUpload!) {
+mutation AddDocs($file: Upload!) {
 documentMutation {
   addDocumentToLesson(lessonId: 8, data: {
     file: $file

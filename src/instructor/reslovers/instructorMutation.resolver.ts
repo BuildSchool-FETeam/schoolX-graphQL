@@ -42,6 +42,7 @@ export class InstructorMutationResolver {
     let imageUrl = '';
     let imgPath = '';
     let existedInstructor: Instructor;
+
     const token = this.instructorService.getTokenFromHttpHeader(req.headers);
 
     if (id) {

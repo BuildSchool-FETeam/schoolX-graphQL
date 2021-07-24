@@ -8,7 +8,7 @@ type Query {
 
 type ClientUserMutation {
   updateClientUser(data: ClientUserUpdateInput!, id: ID!): ClientUserType!
-  updateClientUserAvatar(id: ID!, image: FileUpload!): ClientUserType!
+  updateClientUserAvatar(id: ID!, image: Upload!): ClientUserType!
 }
 
 type ClientUserQuery {

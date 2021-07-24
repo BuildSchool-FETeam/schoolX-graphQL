@@ -27,7 +27,7 @@ input InstructorSetInput {
   description: String!
   email: String!
   ClientUserId: ID
-  image: FileUpload
+  image: Upload
   phone: String!
 }
 

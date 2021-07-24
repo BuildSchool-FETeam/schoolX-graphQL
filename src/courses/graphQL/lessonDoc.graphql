@@ -12,7 +12,7 @@ type DocumentType implements BaseGraphQL {
 }
 
 input AddDocumentInput {
-  file: FileUpload!
+  file: Upload!
 }
 
 type DocumentMutation {
