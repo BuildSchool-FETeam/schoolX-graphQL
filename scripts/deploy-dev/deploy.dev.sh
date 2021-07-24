@@ -21,7 +21,7 @@ COMMAND="""
   sudo docker-compose -f docker-compose.prod.yml up -d
 """
 
-gcloud auth activate-service-account --key-file=./compute-service-account.json
+gcloud auth activate-service-account --key-file=/app/compute-service-account.json
 gcloud compute ssh --project=$PROJECT --zone=us-east1-b $INSTANCE --command="$COMMAND" -q
 
 echo "SUCCESS"
