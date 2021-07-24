@@ -11,6 +11,7 @@ before_install:
 
 script:
   - echo "SUCCESS- TEST"
+  - ls scripts/deploy-dev
 
 deploy:
   provider: script

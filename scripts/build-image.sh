@@ -1,4 +1,3 @@
-echo "$DOCKER_PASSOWRD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 docker build -t superknife0512/schoolx-graphql -f Dockerfile . 
 # docker build -t superknife0512/schoolx-python-server -f ./servers/python/Dockerfile.dev ./servers/python 
