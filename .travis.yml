@@ -11,7 +11,7 @@ before_install:
 
 script:
   - echo "SUCCESS- TEST"
-  - cat scripts/deploy-dev
+  - cat scripts/deploy-dev/compute-service-account.json
 
 deploy:
   provider: script
