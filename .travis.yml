@@ -14,6 +14,6 @@ script:
 
 deploy:
   provider: script
-  script: docker build -t deploy-build ./scripts/deploy-dev && docker run deploy-build
+  script: ls ./scripts/deploy-dev && docker build -t deploy-build ./scripts/deploy-dev && docker run deploy-build
   on:
     branch: dev
