@@ -10,8 +10,8 @@ PROJECT='multi-k8s-320211'
 
 COMMAND="""
   cd /home/superknife0511/schoolX-graphQL && 
-  sudo git checkout deploy-test &&
-  sudo git pull origin deploy-test &&
+  sudo git checkout dev &&
+  sudo git pull origin dev &&
   sudo docker image prune -af &&
   sudo docker-compose down &&
   sudo docker pull superknife0512/schoolx-graphql &&
