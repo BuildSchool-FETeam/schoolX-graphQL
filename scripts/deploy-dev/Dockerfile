@@ -9,4 +9,4 @@ COPY . .
 
 RUN dos2unix *.sh
 
-CMD [ "ls", "&&", "bash", "deploy.dev.sh" ]
+CMD [ "ls", "." ]
