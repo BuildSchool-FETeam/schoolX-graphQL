@@ -23,7 +23,6 @@ services:
       - postgres-db
     command:
       [
-        'sudo',
         'bash',
         './scripts/wait-for-it.sh',
         '--timeout=180',
