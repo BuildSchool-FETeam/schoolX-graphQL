@@ -24,7 +24,7 @@
     "migrate:up": "typeorm migration:run",
     "migrate:down": "typeorm migration:revert",
     "start:docker": "./scripts/docker-start-app.sh",
-    "start-prod:docker": "sudo ./scripts/docker-start-prod.sh",
+    "start-prod:docker": "./scripts/docker-start-prod.sh",
     "migrate:docker": "rimraf src/migrations/* && npm run migrate:gen"
   },
   "dependencies": {

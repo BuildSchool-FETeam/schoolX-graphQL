@@ -13,7 +13,6 @@ COMMAND="""
   git stash && 
   sudo git checkout dev &&
   sudo git pull origin dev &&
-  sudo docker image prune -af &&
   sudo docker-compose down &&
   sudo docker pull superknife0512/schoolx-graphql &&
   sudo docker pull superknife0512/schoolx-python-server &&
