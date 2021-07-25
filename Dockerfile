@@ -8,6 +8,7 @@ COPY package.json .
 RUN npm install
 
 RUN npm rebuild bcrypt --build-from-source
+RUN yarn add mailgun-js
 
 COPY . .
 RUN dos2unix scripts/*.sh
