@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
 import { IMessage, ISendMail, TemplateName } from './mail.base.service';
@@ -35,6 +35,11 @@ export class MailGunService implements ISendMail {
       html: replacedStr,
     };
 
-    return this.mailGunInstance.messages().send(data);
+    return this.mailGunInstance.messages().send(data, (err, body) => {
+      console.log('EMAIL', body);
+      if (err) {
+        throw new InternalServerErrorException(err);
+      }
+    });
   }
 }
