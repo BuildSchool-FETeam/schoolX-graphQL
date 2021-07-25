@@ -15,8 +15,6 @@ export class MailGunService implements ISendMail {
     this.mailGunInstance = mailGun({
       apiKey: this.API_KEY,
       domain: 'schoolx.xyz',
-      host: this.configService.get('MAILGUN_HOST'),
-      protocol: 'https:',
     });
   }
 
@@ -25,7 +23,6 @@ export class MailGunService implements ISendMail {
     messageConfig: IMessage;
     code: string;
   }) {
-    console.log(this.API_KEY);
     const { templateName, messageConfig, code } = config;
     const templateSelected = emailTemplates[templateName];
     let replacedStr = '';
