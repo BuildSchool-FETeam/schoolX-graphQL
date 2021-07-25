@@ -1,4 +1,4 @@
-FROM google/cloud-sdk:alpine-latest
+FROM google/cloud-sdk:alpine
 
 RUN apt-get update -y
 RUN apt-get install -y dos2unix
