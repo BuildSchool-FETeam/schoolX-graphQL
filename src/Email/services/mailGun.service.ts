@@ -15,6 +15,7 @@ export class MailGunService implements ISendMail {
     this.mailGunInstance = mailGun({
       apiKey: this.API_KEY,
       domain: 'schoolx.xyz',
+      host: this.configService.get('MAILGUN_HOST'),
     });
   }
 
