@@ -23,6 +23,7 @@ export class MailGunService implements ISendMail {
     messageConfig: IMessage;
     code: string;
   }) {
+    console.log(this.API_KEY);
     const { templateName, messageConfig, code } = config;
     const templateSelected = emailTemplates[templateName];
     let replacedStr = '';
