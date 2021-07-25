@@ -1,11 +1,11 @@
 FROM google/cloud-sdk:alpine
 
-RUN apt-get update -y
-RUN apt-get install -y dos2unix
+# RUN apt-get update -y
+# RUN apt-get install -y dos2unix
 
 WORKDIR /app
 COPY . .
 
-RUN dos2unix *.sh
+# RUN dos2unix *.sh
 
 CMD [ "bash", "deploy.dev.sh" ]
