@@ -13,7 +13,7 @@ COMMAND="""
   git stash && 
   sudo git checkout dev &&
   sudo git pull origin dev &&
-  docker-compose down &&
+  docker-compose -f docker-compose.prod.yml down &&
   docker pull superknife0512/schoolx-graphql &&
   docker pull superknife0512/schoolx-python-server &&
   docker pull superknife0512/schoolx-java-server &&
