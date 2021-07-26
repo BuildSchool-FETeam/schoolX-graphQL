@@ -13,7 +13,7 @@ import { TokenService } from 'src/common/services/token.service';
 import { MailGunService } from 'src/Email/services/mailGun.service';
 import { ClientUserSignupInput, ClientUserSigninInput } from 'src/graphql';
 import { PermissionService } from 'src/permission/services/permission.service';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 import { ClientUser } from '../entities/ClientUser.entity';
 import { AchievementService } from './achievement.service';
 
@@ -146,11 +146,14 @@ export class ClientAuthService extends BaseService<ClientUser> {
     email: string,
     select: Array<keyof ClientUser> = [],
   ) {
-    const existedUser = await this.clientRepo.findOne({
-      select,
+    const findObj: FindOneOptions = {
       where: { email },
       relations: ['role'],
-    });
+    };
+
+    _.size(select) > 0 && (findObj.select = select);
+
+    const existedUser = await this.clientRepo.findOne(findObj);
 
     if (!existedUser) {
       throw new ForbiddenException("This email doesn't exist yet");

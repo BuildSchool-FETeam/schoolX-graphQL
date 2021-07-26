@@ -41,35 +41,35 @@ services:
         'start:docker',
       ]
 
-  js-server:
-    build:
-      context: .
-      dockerfile: ./servers/js/Dockerfile.dev
-    ports:
-      - 6001:6001
-    volumes:
-      - /home/app/node_modules
-      - ./servers/js:/home/app
+  # js-server:
+  #   build:
+  #     context: .
+  #     dockerfile: ./servers/js/Dockerfile.dev
+  #   ports:
+  #     - 6001:6001
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/js:/home/app
 
-  java-server:
-    build:
-      context: .
-      dockerfile: ./servers/java/Dockerfile.dev
-    ports:
-      - 6002:6002
-    volumes:
-      - /home/app/node_modules
-      - ./servers/java:/home/app
+  # java-server:
+  #   build:
+  #     context: .
+  #     dockerfile: ./servers/java/Dockerfile.dev
+  #   ports:
+  #     - 6002:6002
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/java:/home/app
 
-  python-server:
-    build:
-      context: .
-      dockerfile: ./servers/python/Dockerfile.dev
-    ports:
-      - 6003:6003
-    volumes:
-      - /home/app/node_modules
-      - ./servers/python:/home/app
+  # python-server:
+  #   build:
+  #     context: .
+  #     dockerfile: ./servers/python/Dockerfile.dev
+  #   ports:
+  #     - 6003:6003
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/python:/home/app
 
   postgres-db:
     image: postgres
