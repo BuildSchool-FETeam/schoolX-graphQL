@@ -16,7 +16,7 @@ app.get('/hello', (req, res) => {
 
 function writeCodeToFile(code) {
   const dirName = '/home/app/javaFiles/temp_' + Date.now();
-  const className = /public class (.*) {/.exec(code)?.[1] || 'Main';
+  const className = /public class (.*) ?{/.exec(code)?.[1] || 'Main';
   fs.mkdirSync(dirName);
   const path = `${dirName}/${className}.java`;
   fs.writeFileSync(path, code);
@@ -26,7 +26,7 @@ function writeCodeToFile(code) {
 function injectTheMainFunctionCode(code, command) {
   const mainPattern = /main/;
   code = code.replace(mainPattern, 'dummyFunc');
-  const index = code.indexOf('public static void dummyFunc(String[]');
+  const index = code.indexOf('public static void dummyFunc(String');
   code = [code.slice(0, index), command, code.slice(index)].join('');
   return code;
 }
