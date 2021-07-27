@@ -26,7 +26,7 @@ function writeCodeToFile(code) {
 function injectTheMainFunctionCode(code, command) {
   const mainPattern = /main/;
   code = code.replace(mainPattern, 'dummyFunc');
-  const index = code.indexOf('public static void dummyFunc(String[] Args)');
+  const index = code.indexOf('public static void dummyFunc(String[]');
   code = [code.slice(0, index), command, code.slice(index)].join('');
   return code;
 }
