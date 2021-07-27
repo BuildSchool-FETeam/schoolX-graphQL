@@ -16,7 +16,7 @@ app.get('/hello', (req, res) => {
 
 function writeCodeToFile(code) {
   const dirName = '/home/app/javaFiles/temp_' + Date.now();
-  const className = /public class (.*) ?{/.exec(code)?.[1] || 'Main';
+  const className = /public class (\w+) ?{/.exec(code)?.[1] || 'Main';
   fs.mkdirSync(dirName);
   const path = `${dirName}/${className}.java`;
   fs.writeFileSync(path, code);
