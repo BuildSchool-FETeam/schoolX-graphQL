@@ -13,7 +13,7 @@ import { Instructor } from 'src/instructor/entities/Instructor.entity';
 import { InstructorService } from 'src/instructor/services/instructor.service';
 import { CacheService } from './cache.service';
 import { cacheConstant } from '../constants/cache.contant';
-import { Timeout } from '@nestjs/schedule';
+// import { Timeout } from '@nestjs/schedule';
 import { ClientUserService } from 'src/clientUser/services/clientUser.service';
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 
@@ -38,7 +38,7 @@ export class CronService {
     private clientUserService: ClientUserService,
   ) {}
 
-  @Timeout(2000)
+  // @Timeout(2000)
   // @Cron('0 0 * * *') PRODUCTION ONLY
   async clearTrashFiles() {
     try {

@@ -123,11 +123,9 @@ export class ArticleService extends BaseService<Article> {
       );
     }
 
-    const queryData = await articleQuery.getMany();
+    this.queryBuilderPagination(articleQuery, pagination);
 
-    if (pagination) {
-      return this.manuallyPagination(queryData, pagination);
-    }
+    const queryData = await articleQuery.getMany();
 
     return queryData;
   }

@@ -2,7 +2,6 @@ import { ReadStream } from 'typeorm/platform/PlatformTools';
 import {
   Injectable,
   InternalServerErrorException,
-  BadRequestException,
 } from '@nestjs/common';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
@@ -95,7 +94,8 @@ export class GCStorageService {
       await cloudFile.delete();
       return true;
     } catch (err) {
-      throw new BadRequestException(err);
+      console.log(err);
+      // throw new BadRequestException(err);
     }
   }
 

@@ -5,7 +5,7 @@ import {
   PaginationInput,
   SearchOptionInput,
 } from 'src/graphql';
-import { FindManyOptions, ILike } from 'typeorm';
+import { FindManyOptions, ILike, SelectQueryBuilder } from 'typeorm';
 
 export abstract class UtilService {
   private readonly MAXIMUM_LIMIT = 1000;
@@ -67,6 +67,24 @@ export abstract class UtilService {
       .value();
 
     return order.direction === OrderDirection.ASC ? items : _.reverse(items);
+  }
+
+  /**
+   * Using this pagination helper when the service using queryBuilder instead of findOptions
+   * @param query Query builder
+   * @param pagination pagination input
+   */
+  queryBuilderPagination<T>(
+    query: SelectQueryBuilder<T>,
+    pagination: PaginationInput,
+  ) {
+    if (pagination) {
+      const { limit, skip, order } = pagination;
+
+      limit && query.take(limit);
+      skip && query.skip(skip);
+      order && query.orderBy(order.orderBy, order.direction);
+    }
   }
 
   buildSearchOptions<T>(search: SearchOptionInput): FindManyOptions<T> {
