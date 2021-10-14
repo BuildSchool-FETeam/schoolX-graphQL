@@ -98,6 +98,11 @@ export class ClientUserSigninInput {
     password: string;
 }
 
+export class AchievementUpdateRankOrScore {
+    rank?: Nullable<number>;
+    score?: Nullable<number>;
+}
+
 export class ClientUserUpdateInput {
     name?: Nullable<string>;
     githubUrl?: Nullable<string>;
@@ -252,6 +257,8 @@ export abstract class IMutation {
     abstract clientUserAuthMutation(): ClientUserAuthMutation | Promise<ClientUserAuthMutation>;
 
     abstract clientUserMutation(): ClientUserMutation | Promise<ClientUserMutation>;
+
+    abstract achievementMutation(): AchievementMutation | Promise<AchievementMutation>;
 
     abstract userCommentMutation(): UserCommentMutation | Promise<UserCommentMutation>;
 
@@ -442,6 +449,15 @@ export class ClientUserMutation {
     __typename?: 'ClientUserMutation';
     updateClientUser: ClientUserType;
     updateClientUserAvatar: ClientUserType;
+}
+
+export class AchievementMutation {
+    __typename?: 'AchievementMutation';
+    updateRankOrScore: AchievementType;
+    updateJoinedCourse: AchievementType;
+    updateFollow: AchievementType;
+    updateFollowedBy: AchievementType;
+    updateCompletedCourses: AchievementType;
 }
 
 export class ClientUserQuery {

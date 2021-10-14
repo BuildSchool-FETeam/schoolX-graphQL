@@ -1,5 +1,6 @@
 type Mutation {
   clientUserMutation: ClientUserMutation!
+  achievementMutation: AchievementMutation!
 }
 
 type Query {
@@ -11,8 +12,21 @@ type ClientUserMutation {
   updateClientUserAvatar(id: ID!, image: Upload!): ClientUserType!
 }
 
+type AchievementMutation {
+  updateRankOrScore(id: ID!, data: AchievementUpdateRankOrScore!): AchievementType!
+  updateJoinedCourse(id: ID!, idCourse: ID!): AchievementType!
+  updateFollow(id: ID!, idUser: ID!): AchievementType!
+  updateFollowedBy(id: ID!, idUser: ID!): AchievementType!
+  updateCompletedCourses(id: ID!, idCourse: ID!): AchievementType!
+}
+
 type ClientUserQuery {
   userDetail(id: ID!): ClientUserType!
+}
+
+input AchievementUpdateRankOrScore {
+  rank: Int
+  score: Int
 }
 
 input ClientUserUpdateInput {

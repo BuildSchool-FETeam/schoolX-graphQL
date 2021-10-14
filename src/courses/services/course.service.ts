@@ -1,7 +1,7 @@
 import { CacheService } from './../../common/services/cache.service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Course } from 'src/courses/entities/Course.entity';
 import { BaseService, IStrictConfig } from 'src/common/services/base.service';
 import * as _ from 'lodash';
@@ -9,6 +9,7 @@ import { TagService } from 'src/tag/tag.service';
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
 import { CourseSetInput } from 'src/graphql';
 import { InstructorService } from 'src/instructor/services/instructor.service';
+import { Achievement } from 'src/clientUser/entities/Achivement.entity';
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string;
@@ -83,6 +84,14 @@ export class CourseService extends BaseService<Course> {
 
         return this.courseRepo.save(existedCourse);
       });
+  }
+
+  async updateJoinedCourse(id: string, achievement: Achievement) {
+    const existedCourse = await this.findById(id);
+
+    existedCourse['joinedUsers'].push(achievement);
+
+    return this.courseRepo.save(existedCourse);
   }
 
   removeCourseFormTag(removedCourseId: string, tagIds: string[]) {
