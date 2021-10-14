@@ -9,6 +9,9 @@ RUN npm install
 
 RUN npm rebuild bcrypt --build-from-source
 
+RUN npm install ts-morph
+RUN npm install -D @apollo/gateway 
+
 COPY . .
 RUN dos2unix scripts/*.sh
 RUN chmod 700 scripts/*.sh

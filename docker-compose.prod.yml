@@ -44,7 +44,7 @@ services:
     image: superknife0512/schoolx-python-server
 
   postgres-db:
-    image: postgres
+    image: postgres:13.4
     restart: always
     environment:
       - POSTGRES_USER=postgres
