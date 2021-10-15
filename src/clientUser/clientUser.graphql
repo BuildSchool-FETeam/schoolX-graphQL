@@ -15,8 +15,7 @@ type ClientUserMutation {
 type AchievementMutation {
   updateRankOrScore(id: ID!, data: AchievementUpdateRankOrScore!): AchievementType!
   updateJoinedCourse(id: ID!, idCourse: ID!): AchievementType!
-  updateFollow(id: ID!, idUser: ID!): AchievementType!
-  updateFollowedBy(id: ID!, idUser: ID!): AchievementType!
+  updateFollow(id: ID!, idFollow: ID!): AchievementType!
   updateCompletedCourses(id: ID!, idCourse: ID!): AchievementType!
 }
 
@@ -62,7 +61,7 @@ type AchievementType {
   rank: Int
   score: Int
   joinedCourse(pagination: PaginationInput): [CourseType]!
-  follow(pagination: PaginationInput): [ClientUserType]!
-  followedBy(pagination: PaginationInput): [ClientUserType]!
+  follow(pagination: PaginationInput): [AchievementType]!
+  followedBy(pagination: PaginationInput): [AchievementType]!
   completedCourses(pagination: PaginationInput): [CourseType]!
 }

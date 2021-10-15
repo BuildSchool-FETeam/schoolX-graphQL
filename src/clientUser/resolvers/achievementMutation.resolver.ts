@@ -7,11 +7,11 @@ import { AchievementService } from "../services/achievement.service";
 
 @UseGuards(AuthGuard)
 @Resolver('AchievementMutation')
-export class AchievementMutation {
+export class AchievementMutationResolver {
     constructor(private achiService: AchievementService){}
 
     @Mutation()
-    achivementMutation() {
+    achievementMutation() {
         return {};
     }
 
@@ -34,20 +34,13 @@ export class AchievementMutation {
     @ResolveField()
     updateFollow(
         @Args('id') id: string,
-        @Args('idUser') idUser: string
+        @Args('idFollow') idFollow: string
     ): Promise<Achievement> {
-        return this.achiService.updateFollow(id, idUser);
+        return this.achiService.updateFollow(id, idFollow);
     }
 
     @ResolveField()
-    updateFollowedBy(
-        @Args('id') id: string,
-        @Args('idUser') idUser: string
-    ): Promise<Achievement> {
-        return this.achiService.updateFollowedBy(id, idUser);
-    }
-    @ResolveField()
-    updateCompletedCourse(
+    updateCompletedCourses(
         @Args('id') id: string,
         @Args('idCourse') idCourse: string
     ): Promise<Achievement> {

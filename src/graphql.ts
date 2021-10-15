@@ -456,7 +456,6 @@ export class AchievementMutation {
     updateRankOrScore: AchievementType;
     updateJoinedCourse: AchievementType;
     updateFollow: AchievementType;
-    updateFollowedBy: AchievementType;
     updateCompletedCourses: AchievementType;
 }
 
@@ -491,8 +490,8 @@ export class AchievementType {
     rank?: Nullable<number>;
     score?: Nullable<number>;
     joinedCourse: Nullable<CourseType>[];
-    follow: Nullable<ClientUserType>[];
-    followedBy: Nullable<ClientUserType>[];
+    follow: Nullable<AchievementType>[];
+    followedBy: Nullable<AchievementType>[];
     completedCourses: Nullable<CourseType>[];
 }
 

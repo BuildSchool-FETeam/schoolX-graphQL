@@ -15,7 +15,6 @@ export class AchievementService extends BaseService<Achievement> {
     @InjectRepository(Achievement)
     private achiRepo: Repository<Achievement>,
     private courseService: CourseService,
-    private clientUserService: ClientUserService
   ) {
     super(achiRepo, 'User achievement');
   }
@@ -31,48 +30,61 @@ export class AchievementService extends BaseService<Achievement> {
 
   async updateRankOrScore(id: string, data: AchievementUpdateRankOrScore): Promise<Achievement> {
     const existedAchievement = await this.findById(id);
+
     _.forOwn(data, (value, key) => {
       value && (existedAchievement[key] += value);
-    })
+    });
 
     return this.achiRepo.save(existedAchievement);
   }
 
   async updateJoinedCourse(id: string, idCourse: string): Promise<Achievement> {
-    const existedAchievement = await this.findById(id);
-    const course = await this.courseService.updateJoinedCourse(idCourse, existedAchievement);
-
-    existedAchievement['joinedCourse'].push(course);
+    const [existedAchi, course] = await Promise.all([
+      this.findById(id),
+      this.courseService.findById(idCourse)
+    ])
     
-    return this.achiRepo.save(existedAchievement);
+    if(!existedAchi.joinedCourse) existedAchi.joinedCourse = [course];
+    else existedAchi.joinedCourse.push(course);
+    
+    return this.achiRepo.save(existedAchi);
   }
 
-  async updateFollow(id: string, idUser: string): Promise<Achievement> {
+  async updateFollow(id: string, idAchiFollow: string): Promise<Achievement> {
+    const [existAchi, user] = await Promise.all([
+      this.findById(id),
+      this.findById(idAchiFollow)
+    ])
 
-    const existedAchievement = await this.findById(id);
-    const existedUser = await this.clientUserService.findById(idUser);
+    this.updateFollowedBy(idAchiFollow, id);
 
-    existedAchievement['follow'].push(existedUser);
+    if(!existAchi.follow) existAchi.follow = [user]
+    else existAchi.follow.push(user)
 
-    return this.achiRepo.save(existedAchievement);
+    return this.achiRepo.save(existAchi);
   }
 
-  async updateFollowedBy(id: string, idUser: string): Promise<Achievement> {
+  async updateFollowedBy(id: string, idAchiFollowMe: string): Promise<Achievement> {
+    const [existedAchi, achiFollowMe] = await Promise.all([
+      this.findById(id),
+      this.findById(idAchiFollowMe)
+    ])
 
-    const existedAchievement = await this.findById(id);
-    const existedUser = await this.clientUserService.findById(idUser);
+    if(!existedAchi.followedBy) existedAchi.followedBy = [achiFollowMe];
+    else existedAchi.followedBy.push(achiFollowMe)
 
-    existedAchievement['followedBy'].push(existedUser);
-
-    return this.achiRepo.save(existedAchievement);
+    return this.achiRepo.save(existedAchi);
   }
 
   async updateCompletedCourse(id: string, idCourse: string): Promise<Achievement> {
-    const existedAchievement = await this.findById(id);
-    const course = await this.courseService.updateJoinedCourse(idCourse, existedAchievement);
+    const [existedAchi, course] = await Promise.all([
+      this.findById(id),
+      this.courseService.findById(idCourse)
+    ]);
 
-    existedAchievement['completedCourses'].push(course);
+    if(!existedAchi.completedCourses) existedAchi.completedCourses = [course];
+    else existedAchi.completedCourses.push(course)
     
-    return this.achiRepo.save(existedAchievement);
+    return this.achiRepo.save(existedAchi);
   }
 }

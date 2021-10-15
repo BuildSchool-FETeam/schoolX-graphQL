@@ -31,11 +31,11 @@ export class Achievement {
 
   @ManyToMany(() => Achievement)
   @JoinTable()
-  follow: ClientUser[];
+  follow: Achievement[];
 
   @ManyToMany(() => Achievement)
   @JoinTable()
-  followedBy: ClientUser[];
+  followedBy: Achievement[];
 
   @Column()
   score: number;

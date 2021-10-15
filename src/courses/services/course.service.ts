@@ -86,14 +86,6 @@ export class CourseService extends BaseService<Course> {
       });
   }
 
-  async updateJoinedCourse(id: string, achievement: Achievement) {
-    const existedCourse = await this.findById(id);
-
-    existedCourse['joinedUsers'].push(achievement);
-
-    return this.courseRepo.save(existedCourse);
-  }
-
   removeCourseFormTag(removedCourseId: string, tagIds: string[]) {
     const promises: Array<Promise<any>> = [];
 
