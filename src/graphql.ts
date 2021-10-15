@@ -20,6 +20,21 @@ export enum ProgrammingLanguage {
     java = "java"
 }
 
+export enum StatusScoreAndRank {
+    UP = "UP",
+    DOWN = "DOWN"
+}
+
+export enum StatusCourse {
+    JOIN = "JOIN",
+    LEAVE = "LEAVE"
+}
+
+export enum StatusFollow {
+    UNFOLLOW = "UNFOLLOW",
+    FOLLOW = "FOLLOW"
+}
+
 export enum OrderDirection {
     ASC = "ASC",
     DESC = "DESC"
@@ -98,9 +113,24 @@ export class ClientUserSigninInput {
     password: string;
 }
 
-export class AchievementUpdateRankOrScore {
-    rank?: Nullable<number>;
-    score?: Nullable<number>;
+export class ClientUserUpdateRank {
+    rank: number;
+    direction: StatusScoreAndRank;
+}
+
+export class ClientUserUpdateScore {
+    score: number;
+    direction: StatusScoreAndRank;
+}
+
+export class ClientUserUpdateJoinedCourse {
+    idCourse: string;
+    direction: StatusCourse;
+}
+
+export class ClientUserUpdateFollow {
+    idFollow: string;
+    direction: StatusFollow;
 }
 
 export class ClientUserUpdateInput {
@@ -257,8 +287,6 @@ export abstract class IMutation {
     abstract clientUserAuthMutation(): ClientUserAuthMutation | Promise<ClientUserAuthMutation>;
 
     abstract clientUserMutation(): ClientUserMutation | Promise<ClientUserMutation>;
-
-    abstract achievementMutation(): AchievementMutation | Promise<AchievementMutation>;
 
     abstract userCommentMutation(): UserCommentMutation | Promise<UserCommentMutation>;
 
@@ -449,14 +477,11 @@ export class ClientUserMutation {
     __typename?: 'ClientUserMutation';
     updateClientUser: ClientUserType;
     updateClientUserAvatar: ClientUserType;
-}
-
-export class AchievementMutation {
-    __typename?: 'AchievementMutation';
-    updateRankOrScore: AchievementType;
-    updateJoinedCourse: AchievementType;
-    updateFollow: AchievementType;
-    updateCompletedCourses: AchievementType;
+    updateRank: boolean;
+    updateScore: boolean;
+    updateJoinedCourse: boolean;
+    updateFollow: boolean;
+    updateCompletedCourses: boolean;
 }
 
 export class ClientUserQuery {
@@ -490,8 +515,8 @@ export class AchievementType {
     rank?: Nullable<number>;
     score?: Nullable<number>;
     joinedCourse: Nullable<CourseType>[];
-    follow: Nullable<AchievementType>[];
-    followedBy: Nullable<AchievementType>[];
+    follow: Nullable<ClientUserType>[];
+    followedBy: Nullable<ClientUserType>[];
     completedCourses: Nullable<CourseType>[];
 }
 

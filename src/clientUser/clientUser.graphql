@@ -1,6 +1,5 @@
 type Mutation {
   clientUserMutation: ClientUserMutation!
-  achievementMutation: AchievementMutation!
 }
 
 type Query {
@@ -9,23 +8,51 @@ type Query {
 
 type ClientUserMutation {
   updateClientUser(data: ClientUserUpdateInput!, id: ID!): ClientUserType!
-  updateClientUserAvatar(id: ID!, image: Upload!): ClientUserType!
-}
-
-type AchievementMutation {
-  updateRankOrScore(id: ID!, data: AchievementUpdateRankOrScore!): AchievementType!
-  updateJoinedCourse(id: ID!, idCourse: ID!): AchievementType!
-  updateFollow(id: ID!, idFollow: ID!): AchievementType!
-  updateCompletedCourses(id: ID!, idCourse: ID!): AchievementType!
+  updateClientUserAvatar(image: Upload!): ClientUserType!
+  updateRank(data: ClientUserUpdateRank): Boolean!
+  updateScore(data: ClientUserUpdateScore): Boolean!
+  updateJoinedCourse(data: ClientUserUpdateJoinedCourse): Boolean!
+  updateFollow(data: ClientUserUpdateFollow): Boolean!
+  updateCompletedCourses(idCourse: ID!): Boolean!
 }
 
 type ClientUserQuery {
   userDetail(id: ID!): ClientUserType!
 }
 
-input AchievementUpdateRankOrScore {
-  rank: Int
-  score: Int
+enum StatusScoreAndRank {
+  UP
+  DOWN
+}
+
+enum StatusCourse {
+  JOIN
+  LEAVE
+}
+
+enum StatusFollow {
+  UNFOLLOW,
+  FOLLOW
+}
+
+input ClientUserUpdateRank {
+  rank: Int!
+  direction: StatusScoreAndRank!
+}
+
+input ClientUserUpdateScore {
+  score: Int!
+  direction: StatusScoreAndRank!
+}
+
+input ClientUserUpdateJoinedCourse {
+  idCourse: ID!,
+  direction: StatusCourse!
+}
+
+input ClientUserUpdateFollow {
+  idFollow: ID!,
+  direction: StatusFollow!
 }
 
 input ClientUserUpdateInput {
@@ -61,7 +88,7 @@ type AchievementType {
   rank: Int
   score: Int
   joinedCourse(pagination: PaginationInput): [CourseType]!
-  follow(pagination: PaginationInput): [AchievementType]!
-  followedBy(pagination: PaginationInput): [AchievementType]!
+  follow(pagination: PaginationInput): [ClientUserType]!
+  followedBy(pagination: PaginationInput): [ClientUserType]!
   completedCourses(pagination: PaginationInput): [CourseType]!
 }

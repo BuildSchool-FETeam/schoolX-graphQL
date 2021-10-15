@@ -7,7 +7,6 @@ import { EmailModule } from 'src/Email/email.module';
 import { PermissionModule } from 'src/permission/permission.module';
 import { Achievement } from './entities/Achivement.entity';
 import { ClientUser } from './entities/ClientUser.entity';
-import { AchievementMutationResolver } from './resolvers/achievementMutation.resolver';
 import { AchievementTypeResolver } from './resolvers/achievementType.resolver';
 import { ClientUserAuthMutationResolver } from './resolvers/clientUserAuthMutation.resolver';
 import { ClientUserMutationResolver } from './resolvers/clientUserMutation.resolver';
@@ -31,7 +30,6 @@ import { ClientUserService } from './services/clientUser.service';
     AchievementService,
     ClientUserAuthMutationResolver,
     ClientUserMutationResolver,
-    AchievementMutationResolver,
     clientUserQueryResolver,
     clientUserTypeResolver,
     AchievementTypeResolver,
