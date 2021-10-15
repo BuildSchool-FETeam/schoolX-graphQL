@@ -6,7 +6,7 @@ import { Achievement } from '../entities/Achivement.entity';
 import { ClientUser } from '../entities/ClientUser.entity';
 import * as _ from "lodash";
 import { Course } from 'src/courses/entities/Course.entity';
-import { ClientUserUpdateFollow, ClientUserUpdateJoinedCourse, StatusCourse, StatusFollow } from 'src/graphql';
+import { ClientUserUpdateJoinedCourse, ActionCourse, ActionFollow } from 'src/graphql';
 import { CourseService } from 'src/courses/services/course.service';
 
 @Injectable()
@@ -55,12 +55,12 @@ export class AchievementService extends BaseService<Achievement> {
       this.findById(id),
       this.courseService.findById(data.idCourse)
     ]);
-    let newCourses: Course[] = !existedAchi.joinedCourse ? [] : existedAchi.joinedCourse;
+    const newCourses: Course[] = !existedAchi.joinedCourse ? [] : existedAchi.joinedCourse;
 
-    if(data.direction === StatusCourse.JOIN) {
+    if(data.action === ActionCourse.JOIN) {
       newCourses.push(course);
     }else {
-      newCourses = newCourses.filter((course) => course.id !== data.idCourse);
+      _.remove(newCourses ,(course) => course.id !== data.idCourse);
     }
 
     existedAchi.joinedCourse = newCourses;
@@ -71,15 +71,15 @@ export class AchievementService extends BaseService<Achievement> {
   async updateFollow(
     id: string,
     userFollow: ClientUser,
-    status: StatusFollow
+    status: ActionFollow
   ){
     const existedAchi = await this.findById(id);
-    let follow = !existedAchi.follow ? [] : existedAchi.follow;
+    const follow = !existedAchi.follow ? [] : existedAchi.follow;
 
-    if(status === StatusFollow.FOLLOW) {
+    if(status === ActionFollow.FOLLOW) {
       follow.push(userFollow);
     }else {
-      follow = follow.filter((user) => user.id !== userFollow.id);
+      _.remove(follow ,(user) => user.id !== userFollow.id);
     }
     existedAchi.follow = follow
 
@@ -89,15 +89,15 @@ export class AchievementService extends BaseService<Achievement> {
   async updateFollowedMe(
     id: string,
     userFollowedMe: ClientUser,
-    status: StatusFollow
+    status: ActionFollow
   ) {
     const existedAchi = await this.findById(id);
-    let followedMe = !existedAchi.followedBy ? [] : existedAchi.followedBy;
+    const followedMe = !existedAchi.followedBy ? [] : existedAchi.followedBy;
 
-    if(status === StatusFollow.FOLLOW){
+    if(status === ActionFollow.FOLLOW){
       followedMe.push(userFollowedMe)
     }else {
-      followedMe = followedMe.filter(user => user.id !== userFollowedMe.id);
+      _.remove(followedMe, (user) => user.id !== userFollowedMe.id )
     }
 
     existedAchi.followedBy = followedMe;
@@ -114,7 +114,7 @@ export class AchievementService extends BaseService<Achievement> {
       this.courseService.findById(idCourse)
     ]);
 
-    let completedCourse = !existedAchi.completedCourses ? [] : existedAchi.completedCourses;
+    const completedCourse = !existedAchi.completedCourses ? [] : existedAchi.completedCourses;
 
     completedCourse.push(course);
     existedAchi.completedCourses = completedCourse;

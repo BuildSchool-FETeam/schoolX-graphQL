@@ -20,39 +20,39 @@ type ClientUserQuery {
   userDetail(id: ID!): ClientUserType!
 }
 
-enum StatusScoreAndRank {
+enum ActionRankAndScore {
   UP
   DOWN
 }
 
-enum StatusCourse {
+enum ActionCourse {
   JOIN
   LEAVE
 }
 
-enum StatusFollow {
+enum ActionFollow {
   UNFOLLOW,
   FOLLOW
 }
 
 input ClientUserUpdateRank {
   rank: Int!
-  direction: StatusScoreAndRank!
+  isAdd: ActionRankAndScore!
 }
 
 input ClientUserUpdateScore {
   score: Int!
-  direction: StatusScoreAndRank!
+  isAdd: ActionRankAndScore!
 }
 
 input ClientUserUpdateJoinedCourse {
   idCourse: ID!,
-  direction: StatusCourse!
+  action: ActionCourse!
 }
 
 input ClientUserUpdateFollow {
   idFollow: ID!,
-  direction: StatusFollow!
+  action: ActionFollow!
 }
 
 input ClientUserUpdateInput {

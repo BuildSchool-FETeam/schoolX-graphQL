@@ -11,7 +11,6 @@ import { ClientUserService } from '../services/clientUser.service';
 export class ClientUserMutationResolver {
   constructor(
     private clientUserService: ClientUserService,
-    private tokenService: TokenService
   ) {}
 
   @Mutation()
@@ -40,8 +39,7 @@ export class ClientUserMutationResolver {
     @Args('data') data: ClientUserUpdateRank,
     @Context() { req }: any
   ) {
-    const token = this.clientUserService.getTokenFromHttpHeader(req.headers);
-    const { id } = this.tokenService.verifyAndDecodeToken(token);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
     await this.clientUserService.updateRank(id, data);
 
@@ -53,8 +51,7 @@ export class ClientUserMutationResolver {
     @Args('data') data: ClientUserUpdateScore,
     @Context() { req }: any
   ) {
-    const token = this.clientUserService.getTokenFromHttpHeader(req.headers);
-    const { id } = this.tokenService.verifyAndDecodeToken(token);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
     
     await this.clientUserService.updateScore(id, data);
 
@@ -66,8 +63,7 @@ export class ClientUserMutationResolver {
     @Args('data') data: ClientUserUpdateJoinedCourse,
     @Context() { req }: any
   ) {
-    const token = this.clientUserService.getTokenFromHttpHeader(req.headers);
-    const { id } = this.tokenService.verifyAndDecodeToken(token);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
     await this.clientUserService.updateJoinedCourse(id, data);
 
@@ -79,8 +75,7 @@ export class ClientUserMutationResolver {
     @Args('data') data: ClientUserUpdateFollow,
     @Context() { req }: any
   ) {
-    const token = this.clientUserService.getTokenFromHttpHeader(req.headers);
-    const { id } = this.tokenService.verifyAndDecodeToken(token);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
     await this.clientUserService.updateFollow(id, data);
 
@@ -92,8 +87,7 @@ export class ClientUserMutationResolver {
     @Args('idCourse') idCourse: string,
     @Context() { req }: any
   ) {
-    const token = this.clientUserService.getTokenFromHttpHeader(req.headers);
-    const { id } = this.tokenService.verifyAndDecodeToken(token);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
     await this.clientUserService.updateCompletedCourses(id, idCourse);
 

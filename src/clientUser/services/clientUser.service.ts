@@ -7,7 +7,7 @@ import {
   ClientUserUpdateJoinedCourse, 
   ClientUserUpdateRank, 
   ClientUserUpdateScore, 
-  StatusScoreAndRank } from 'src/graphql';
+  ActionRankAndScore } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { ClientUser } from '../entities/ClientUser.entity';
 import * as _ from 'lodash';
@@ -17,7 +17,7 @@ import {
 } from 'src/common/services/GCStorage.service';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import { AchievementService } from './achievement.service';
-import { CourseService } from 'src/courses/services/course.service';
+import { TokenService } from 'src/common/services/token.service';
 
 @Injectable()
 export class ClientUserService extends BaseService<ClientUser> {
@@ -26,6 +26,7 @@ export class ClientUserService extends BaseService<ClientUser> {
     private clientRepo: Repository<ClientUser>,
     private gcStorageService: GCStorageService,
     private achievementService: AchievementService,
+    private tokenService: TokenService
   ) {
     super(clientRepo, 'clientUser');
   }
@@ -77,7 +78,7 @@ export class ClientUserService extends BaseService<ClientUser> {
   ) {
     const existedUser = await this.findById(id, {relations: ["achievement"]});
 
-    if(data.direction === StatusScoreAndRank.DOWN) {
+    if(data.isAdd === ActionRankAndScore.DOWN) {
       this.achievementService.updateRank(existedUser.achievement.id, data.rank);
     }else this.achievementService.updateRank(existedUser.achievement.id, 0 - data.rank);
 
@@ -89,7 +90,7 @@ export class ClientUserService extends BaseService<ClientUser> {
   ) {
     const existedUser = await this.findById(id, {relations: ["achievement"]});
 
-    if(data.direction === StatusScoreAndRank.DOWN) {
+    if(data.isAdd === ActionRankAndScore.DOWN) {
       this.achievementService.updateScore(existedUser.achievement.id, 0 - data.score);
     }else this.achievementService.updateScore(existedUser.achievement.id, data.score);
   }
@@ -116,12 +117,12 @@ export class ClientUserService extends BaseService<ClientUser> {
       this.achievementService.updateFollow(
         existedUser.achievement.id,
         userFollow,
-        data.direction
+        data.action
       ),
       this.achievementService.updateFollowedMe(
         userFollow.achievement.id,
         existedUser,
-        data.direction
+        data.action
       )
     ])
   }
@@ -133,5 +134,12 @@ export class ClientUserService extends BaseService<ClientUser> {
     const {achievement} = await this.findById(id, {relations: ["achievement"]});
 
     this.achievementService.updateCompletedCourses(achievement.id, idCourse)
+  }
+
+  getIdUserByHeaders(headers) {
+    const token = this.getTokenFromHttpHeader(headers);
+    const { id } = this.tokenService.verifyAndDecodeToken(token);
+
+    return id;
   }
 }

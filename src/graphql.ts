@@ -20,17 +20,17 @@ export enum ProgrammingLanguage {
     java = "java"
 }
 
-export enum StatusScoreAndRank {
+export enum ActionRankAndScore {
     UP = "UP",
     DOWN = "DOWN"
 }
 
-export enum StatusCourse {
+export enum ActionCourse {
     JOIN = "JOIN",
     LEAVE = "LEAVE"
 }
 
-export enum StatusFollow {
+export enum ActionFollow {
     UNFOLLOW = "UNFOLLOW",
     FOLLOW = "FOLLOW"
 }
@@ -115,22 +115,22 @@ export class ClientUserSigninInput {
 
 export class ClientUserUpdateRank {
     rank: number;
-    direction: StatusScoreAndRank;
+    isAdd: ActionRankAndScore;
 }
 
 export class ClientUserUpdateScore {
     score: number;
-    direction: StatusScoreAndRank;
+    isAdd: ActionRankAndScore;
 }
 
 export class ClientUserUpdateJoinedCourse {
     idCourse: string;
-    direction: StatusCourse;
+    action: ActionCourse;
 }
 
 export class ClientUserUpdateFollow {
     idFollow: string;
-    direction: StatusFollow;
+    action: ActionFollow;
 }
 
 export class ClientUserUpdateInput {
