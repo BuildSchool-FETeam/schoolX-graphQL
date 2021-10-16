@@ -2,7 +2,12 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Context, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { TokenService } from 'src/common/services/token.service';
-import { ClientUserUpdateFollow, ClientUserUpdateInput, ClientUserUpdateJoinedCourse, ClientUserUpdateRank, ClientUserUpdateScore, Upload } from 'src/graphql';
+import { 
+  UpdateFollow, 
+  ClientUserUpdateInput,
+  UpdateJoinedCourse, 
+  UpdateScore, 
+  Upload } from 'src/graphql';
 import { ClientUser } from '../entities/ClientUser.entity';
 import { ClientUserService } from '../services/clientUser.service';
 
@@ -35,20 +40,8 @@ export class ClientUserMutationResolver {
   }
 
   @ResolveField()
-  async updateRank(
-    @Args('data') data: ClientUserUpdateRank,
-    @Context() { req }: any
-  ) {
-    const id = this.clientUserService.getIdUserByHeaders(req.headers);
-
-    await this.clientUserService.updateRank(id, data);
-
-    return true;
-  }
-
-  @ResolveField()
   async updateScore(
-    @Args('data') data: ClientUserUpdateScore,
+    @Args('data') data: UpdateScore,
     @Context() { req }: any
   ) {
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
@@ -60,26 +53,25 @@ export class ClientUserMutationResolver {
   
   @ResolveField()
   async updateJoinedCourse(
-    @Args('data') data: ClientUserUpdateJoinedCourse,
+    @Args('data') data: UpdateJoinedCourse,
     @Context() { req }: any
   ) {
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
-    await this.clientUserService.updateJoinedCourse(id, data);
-
-    return true;
+    return this.clientUserService.updateJoinedCourse(id, data);
   }
   
   @ResolveField()
   async updateFollow(
-    @Args('data') data: ClientUserUpdateFollow,
+    @Args('data') data: UpdateFollow,
     @Context() { req }: any
-  ) {
+  ){
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
-    await this.clientUserService.updateFollow(id, data);
+    if(id === data.idFollow) return false;
 
-    return true;
+
+    return this.clientUserService.updateFollow(id, data);;
   }
 
   @ResolveField()

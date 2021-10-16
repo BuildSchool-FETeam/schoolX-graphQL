@@ -20,11 +20,6 @@ export enum ProgrammingLanguage {
     java = "java"
 }
 
-export enum ActionRankAndScore {
-    UP = "UP",
-    DOWN = "DOWN"
-}
-
 export enum ActionCourse {
     JOIN = "JOIN",
     LEAVE = "LEAVE"
@@ -113,22 +108,17 @@ export class ClientUserSigninInput {
     password: string;
 }
 
-export class ClientUserUpdateRank {
-    rank: number;
-    isAdd: ActionRankAndScore;
-}
-
-export class ClientUserUpdateScore {
+export class UpdateScore {
     score: number;
-    isAdd: ActionRankAndScore;
+    isAdd: boolean;
 }
 
-export class ClientUserUpdateJoinedCourse {
+export class UpdateJoinedCourse {
     idCourse: string;
     action: ActionCourse;
 }
 
-export class ClientUserUpdateFollow {
+export class UpdateFollow {
     idFollow: string;
     action: ActionFollow;
 }
@@ -477,7 +467,6 @@ export class ClientUserMutation {
     __typename?: 'ClientUserMutation';
     updateClientUser: ClientUserType;
     updateClientUserAvatar: ClientUserType;
-    updateRank: boolean;
     updateScore: boolean;
     updateJoinedCourse: boolean;
     updateFollow: boolean;
@@ -580,6 +569,7 @@ export class CourseType implements BaseGraphQL {
     lessons: Nullable<LessonType>[];
     createdBy?: Nullable<AdminUser>;
     levels: Nullable<string>[];
+    joinedUsers: Nullable<ClientUserType>[];
     comments: Nullable<UserCommentType>[];
 }
 

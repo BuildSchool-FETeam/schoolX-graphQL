@@ -6,7 +6,7 @@ import { Achievement } from '../entities/Achivement.entity';
 import { ClientUser } from '../entities/ClientUser.entity';
 import * as _ from "lodash";
 import { Course } from 'src/courses/entities/Course.entity';
-import { ClientUserUpdateJoinedCourse, ActionCourse, ActionFollow } from 'src/graphql';
+import { UpdateJoinedCourse, ActionCourse, ActionFollow } from 'src/graphql';
 import { CourseService } from 'src/courses/services/course.service';
 
 @Injectable()
@@ -28,14 +28,6 @@ export class AchievementService extends BaseService<Achievement> {
     return this.achiRepo.save(data);
   }
 
-  async updateRank(id: string, rank: number) {
-    const existedAchi = await this.findById(id);
-    const newRank = existedAchi.rank + rank;
-
-    existedAchi.rank = newRank;
-
-    return this.achiRepo.save(existedAchi);
-  }
 
   async updateScore(id: string, score: number) {
     const existedAchi = await this.findById(id);
@@ -48,24 +40,28 @@ export class AchievementService extends BaseService<Achievement> {
 
   async updateJoinedCourse(
     id: string, 
-    data: ClientUserUpdateJoinedCourse
+    data: UpdateJoinedCourse
   ) {
 
     const [existedAchi, course] = await Promise.all([
-      this.findById(id),
+      this.findById(id, {relations: ["joinedCourse"]}),
       this.courseService.findById(data.idCourse)
     ]);
     const newCourses: Course[] = !existedAchi.joinedCourse ? [] : existedAchi.joinedCourse;
+    const checkAvaiable = _.filter(newCourses, ['id', course.id]);    
 
     if(data.action === ActionCourse.JOIN) {
+      if(checkAvaiable.length !== 0) return false;
       newCourses.push(course);
     }else {
-      _.remove(newCourses ,(course) => course.id !== data.idCourse);
+      if(checkAvaiable.length === 0) return false;
+      _.remove(newCourses ,(course) => course.id.toString() === data.idCourse);
     }
 
     existedAchi.joinedCourse = newCourses;
+    this.achiRepo.save(existedAchi);
 
-    return this.achiRepo.save(existedAchi);
+    return true;
   }
 
   async updateFollow(
@@ -73,17 +69,22 @@ export class AchievementService extends BaseService<Achievement> {
     userFollow: ClientUser,
     status: ActionFollow
   ){
-    const existedAchi = await this.findById(id);
+    const existedAchi = await this.findById(id, {relations: ["follow"]});
     const follow = !existedAchi.follow ? [] : existedAchi.follow;
+    const checkAvaiable = _.filter(follow, ['id', userFollow.id]);
 
     if(status === ActionFollow.FOLLOW) {
+      if(checkAvaiable.length !== 0) return false;
       follow.push(userFollow);
     }else {
-      _.remove(follow ,(user) => user.id !== userFollow.id);
+      if(checkAvaiable.length === 0) return false;
+      _.remove(follow ,(user) => user.id === userFollow.id);
     }
-    existedAchi.follow = follow
 
-    return this.achiRepo.save(existedAchi);
+    existedAchi.follow = follow
+    await this.achiRepo.save(existedAchi);
+
+    return true; 
   }
 
   async updateFollowedMe(
@@ -91,18 +92,22 @@ export class AchievementService extends BaseService<Achievement> {
     userFollowedMe: ClientUser,
     status: ActionFollow
   ) {
-    const existedAchi = await this.findById(id);
+    const existedAchi = await this.findById(id, {relations: ["followedBy"]});
     const followedMe = !existedAchi.followedBy ? [] : existedAchi.followedBy;
+    const checkAvaiable = _.filter(followedMe, ['id', userFollowedMe.id]);
 
     if(status === ActionFollow.FOLLOW){
+      if(checkAvaiable.length !== 0) return false;
       followedMe.push(userFollowedMe)
     }else {
-      _.remove(followedMe, (user) => user.id !== userFollowedMe.id )
+      if(checkAvaiable.length === 0) return false;
+      _.remove(followedMe, (user) => user.id === userFollowedMe.id )
     }
 
     existedAchi.followedBy = followedMe;
+    await this.achiRepo.save(existedAchi);
 
-    return this.achiRepo.save(existedAchi);
+    return true; 
   }
 
   async updateCompletedCourses(

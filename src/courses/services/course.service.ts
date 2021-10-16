@@ -1,5 +1,5 @@
 import { CacheService } from './../../common/services/cache.service';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Course } from 'src/courses/entities/Course.entity';
@@ -7,8 +7,9 @@ import { BaseService, IStrictConfig } from 'src/common/services/base.service';
 import * as _ from 'lodash';
 import { TagService } from 'src/tag/tag.service';
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
-import { CourseSetInput } from 'src/graphql';
+import { ActionCourse, CourseSetInput } from 'src/graphql';
 import { InstructorService } from 'src/instructor/services/instructor.service';
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string;
@@ -83,6 +84,25 @@ export class CourseService extends BaseService<Course> {
 
         return this.courseRepo.save(existedCourse);
       });
+  }
+
+  async updateJoinedUsers(id: string, user: ClientUser, action: ActionCourse) {
+    const course = await this.findById(id, {relations: ["joinedUsers"]});
+    const users = !course.joinedUsers ? [] : course.joinedUsers;
+    const checkAvaiable = _.filter(users, ['id', user.id]);
+
+    if(action === ActionCourse.JOIN) {
+      if(checkAvaiable.length !== 0) return false;
+      users.push(user)
+    }else{
+      if(checkAvaiable.length === 0) return false;
+      _.remove(users, (oldUser) => oldUser.id === user.id)
+    }
+
+    course.joinedUsers = users;
+    this.courseRepo.save(course);
+    
+    return true;
   }
 
   removeCourseFormTag(removedCourseId: string, tagIds: string[]) {

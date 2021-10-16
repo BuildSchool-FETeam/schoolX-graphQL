@@ -68,4 +68,16 @@ export class CourseTypeResolver {
     });
     return this.courseService.manuallyPagination(course.comments, pg);
   }
+
+  @ResolveField()
+  async joinedUsers(
+    @Parent() courseParent: Course,
+    @Args('pagination') pg: PaginationInput
+  ){
+    const course = await this.courseService.findById(courseParent.id, {
+      relations: ['joinedUsers']
+    });
+
+    return course.joinedUsers;
+  }
 }

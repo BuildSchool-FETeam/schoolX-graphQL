@@ -9,20 +9,14 @@ type Query {
 type ClientUserMutation {
   updateClientUser(data: ClientUserUpdateInput!, id: ID!): ClientUserType!
   updateClientUserAvatar(image: Upload!): ClientUserType!
-  updateRank(data: ClientUserUpdateRank): Boolean!
-  updateScore(data: ClientUserUpdateScore): Boolean!
-  updateJoinedCourse(data: ClientUserUpdateJoinedCourse): Boolean!
-  updateFollow(data: ClientUserUpdateFollow): Boolean!
+  updateScore(data: UpdateScore): Boolean!
+  updateJoinedCourse(data: UpdateJoinedCourse): Boolean!
+  updateFollow(data: UpdateFollow): Boolean!
   updateCompletedCourses(idCourse: ID!): Boolean!
 }
 
 type ClientUserQuery {
   userDetail(id: ID!): ClientUserType!
-}
-
-enum ActionRankAndScore {
-  UP
-  DOWN
 }
 
 enum ActionCourse {
@@ -35,22 +29,17 @@ enum ActionFollow {
   FOLLOW
 }
 
-input ClientUserUpdateRank {
-  rank: Int!
-  isAdd: ActionRankAndScore!
-}
-
-input ClientUserUpdateScore {
+input UpdateScore {
   score: Int!
-  isAdd: ActionRankAndScore!
+  isAdd: Boolean!
 }
 
-input ClientUserUpdateJoinedCourse {
+input UpdateJoinedCourse {
   idCourse: ID!,
   action: ActionCourse!
 }
 
-input ClientUserUpdateFollow {
+input UpdateFollow {
   idFollow: ID!,
   action: ActionFollow!
 }

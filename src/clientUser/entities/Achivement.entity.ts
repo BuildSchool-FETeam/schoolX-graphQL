@@ -25,7 +25,7 @@ export class Achievement {
   @Column()
   rank: number;
 
-  @ManyToMany(() => Course, (course) => course.joinedUsers)
+  @ManyToMany(() => Course)
   @JoinTable()
   joinedCourse: Course[];
 

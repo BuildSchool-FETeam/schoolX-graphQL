@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { 
-  ClientUserUpdateFollow,
+  UpdateFollow,
   ClientUserUpdateInput, 
-  ClientUserUpdateJoinedCourse, 
-  ClientUserUpdateRank, 
-  ClientUserUpdateScore, 
-  ActionRankAndScore } from 'src/graphql';
+  UpdateJoinedCourse,  
+  UpdateScore, 
+} from 'src/graphql';
 import { Repository } from 'typeorm';
 import { ClientUser } from '../entities/ClientUser.entity';
 import * as _ from 'lodash';
@@ -18,6 +17,7 @@ import {
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import { AchievementService } from './achievement.service';
 import { TokenService } from 'src/common/services/token.service';
+import { CourseService } from 'src/courses/services/course.service';
 
 @Injectable()
 export class ClientUserService extends BaseService<ClientUser> {
@@ -26,7 +26,8 @@ export class ClientUserService extends BaseService<ClientUser> {
     private clientRepo: Repository<ClientUser>,
     private gcStorageService: GCStorageService,
     private achievementService: AchievementService,
-    private tokenService: TokenService
+    private tokenService: TokenService,
+    private courseService: CourseService
   ) {
     super(clientRepo, 'clientUser');
   }
@@ -72,48 +73,40 @@ export class ClientUserService extends BaseService<ClientUser> {
     return this.clientRepo.save(existedUser);
   }
 
-  async updateRank(
-    id: string,
-    data: ClientUserUpdateRank
-  ) {
-    const existedUser = await this.findById(id, {relations: ["achievement"]});
-
-    if(data.isAdd === ActionRankAndScore.DOWN) {
-      this.achievementService.updateRank(existedUser.achievement.id, data.rank);
-    }else this.achievementService.updateRank(existedUser.achievement.id, 0 - data.rank);
-
-  }
-
   async updateScore(
     id: string,
-    data: ClientUserUpdateScore
+    data: UpdateScore
   ) {
     const existedUser = await this.findById(id, {relations: ["achievement"]});
 
-    if(data.isAdd === ActionRankAndScore.DOWN) {
+    if(!data.isAdd) {
       this.achievementService.updateScore(existedUser.achievement.id, 0 - data.score);
     }else this.achievementService.updateScore(existedUser.achievement.id, data.score);
   }
 
   async updateJoinedCourse(
     id: string,
-    data: ClientUserUpdateJoinedCourse
+    data: UpdateJoinedCourse
   ){
-    const {achievement} = await this.findById(id, {relations: ["achievement"]});
-    
-    this.achievementService.updateJoinedCourse(achievement.id, data);
+    const user = await this.findById(id, {relations: ["achievement"]});
+    const { achievement } = user;
+
+    return Promise.all([
+      this.achievementService.updateJoinedCourse(achievement.id, data),
+      this.courseService.updateJoinedUsers(data.idCourse, user, data.action)
+    ]).then(res => res[0] && res[1]);
   }
 
   async updateFollow(
     id: string,
-    data: ClientUserUpdateFollow
+    data: UpdateFollow
   ){
     const [existedUser, userFollow] = await Promise.all([
       this.findById(id, {relations: ["achievement"]}),
       this.findById(data.idFollow, {relations: ["achievement"]})
     ]);
   
-     Promise.all([
+    return Promise.all([
       this.achievementService.updateFollow(
         existedUser.achievement.id,
         userFollow,
@@ -124,14 +117,14 @@ export class ClientUserService extends BaseService<ClientUser> {
         existedUser,
         data.action
       )
-    ])
+    ]).then(res => res[0] && res[1]);
   }
 
   async updateCompletedCourses(
     id: string,
     idCourse: string
   ){
-    const {achievement} = await this.findById(id, {relations: ["achievement"]});
+    const { achievement } = await this.findById(id, { relations: ["achievement"] });
 
     this.achievementService.updateCompletedCourses(achievement.id, idCourse)
   }
