@@ -70,13 +70,13 @@ export class AchievementService extends BaseService<Achievement> {
   ){
     const existedAchi = await this.findById(id, {relations: ["follow"]});
     const follow: ClientUser[] = _.clone(existedAchi.follow);
-    const checkAvaiable = _.some(follow, ['id', userFollow.id]);
+    const checkAvailable = _.some(follow, ['id', userFollow.id]);
 
     if(status === ActionFollow.FOLLOW) {
-      if(checkAvaiable) { return false }
+      if(checkAvailable) { return false }
       follow.push(userFollow);
     }else {
-      if(!checkAvaiable) { return false }
+      if(!checkAvailable) { return false }
       _.remove(follow ,(user) => user.id === userFollow.id);
     }
 
@@ -93,13 +93,13 @@ export class AchievementService extends BaseService<Achievement> {
   ) {
     const existedAchi = await this.findById(id, {relations: ["followedBy"]});
     const followedMe: ClientUser[] = _.clone(existedAchi.followedBy);
-    const checkAvaiable = _.some(followedMe, ['id', userFollowedMe.id]);
+    const checkAvailable = _.some(followedMe, ['id', userFollowedMe.id]);
 
     if(status === ActionFollow.FOLLOW){
-      if(checkAvaiable) { return false };
+      if(checkAvailable) { return false };
       followedMe.push(userFollowedMe)
     }else {
-      if(!checkAvaiable) { return false }; 
+      if(!checkAvailable) { return false }; 
       _.remove(followedMe, (user) => user.id === userFollowedMe.id )
     }
 
