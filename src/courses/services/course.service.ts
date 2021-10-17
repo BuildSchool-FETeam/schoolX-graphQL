@@ -88,14 +88,14 @@ export class CourseService extends BaseService<Course> {
 
   async updateJoinedUsers(id: string, user: ClientUser, action: ActionCourse) {
     const course = await this.findById(id, {relations: ["joinedUsers"]});
-    const users = !course.joinedUsers ? [] : course.joinedUsers;
-    const checkAvaiable = _.filter(users, ['id', user.id]);
+    const users: ClientUser[] = _.clone(course.joinedUsers);
+    const checkAvaiable = _.some(users, ['id', user.id]);
 
     if(action === ActionCourse.JOIN) {
-      if(checkAvaiable.length !== 0) return false;
+      if(checkAvaiable) { return false };
       users.push(user)
     }else{
-      if(checkAvaiable.length === 0) return false;
+      if(!checkAvaiable) { return false };
       _.remove(users, (oldUser) => oldUser.id === user.id)
     }
 

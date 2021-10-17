@@ -70,7 +70,6 @@ export class ClientUserMutationResolver {
 
     if(id === data.idFollow) return false;
 
-
     return this.clientUserService.updateFollow(id, data);;
   }
 

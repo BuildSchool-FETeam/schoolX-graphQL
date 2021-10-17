@@ -28,7 +28,6 @@ export class AchievementService extends BaseService<Achievement> {
     return this.achiRepo.save(data);
   }
 
-
   async updateScore(id: string, score: number) {
     const existedAchi = await this.findById(id);
     const newScore = existedAchi.score + score
@@ -47,14 +46,14 @@ export class AchievementService extends BaseService<Achievement> {
       this.findById(id, {relations: ["joinedCourse"]}),
       this.courseService.findById(data.idCourse)
     ]);
-    const newCourses: Course[] = !existedAchi.joinedCourse ? [] : existedAchi.joinedCourse;
-    const checkAvaiable = _.filter(newCourses, ['id', course.id]);    
+    const newCourses: Course[] = _.clone(existedAchi.joinedCourse);
+    const checkAvailable = _.some(newCourses, ['id', course.id]);    
 
     if(data.action === ActionCourse.JOIN) {
-      if(checkAvaiable.length !== 0) return false;
+      if(checkAvailable) { return false };
       newCourses.push(course);
-    }else {
-      if(checkAvaiable.length === 0) return false;
+    }else if(checkAvailable){
+      if(!checkAvailable) { return false };
       _.remove(newCourses ,(course) => course.id.toString() === data.idCourse);
     }
 
@@ -70,14 +69,14 @@ export class AchievementService extends BaseService<Achievement> {
     status: ActionFollow
   ){
     const existedAchi = await this.findById(id, {relations: ["follow"]});
-    const follow = !existedAchi.follow ? [] : existedAchi.follow;
-    const checkAvaiable = _.filter(follow, ['id', userFollow.id]);
+    const follow: ClientUser[] = _.clone(existedAchi.follow);
+    const checkAvaiable = _.some(follow, ['id', userFollow.id]);
 
     if(status === ActionFollow.FOLLOW) {
-      if(checkAvaiable.length !== 0) return false;
+      if(checkAvaiable) { return false }
       follow.push(userFollow);
     }else {
-      if(checkAvaiable.length === 0) return false;
+      if(!checkAvaiable) { return false }
       _.remove(follow ,(user) => user.id === userFollow.id);
     }
 
@@ -93,14 +92,14 @@ export class AchievementService extends BaseService<Achievement> {
     status: ActionFollow
   ) {
     const existedAchi = await this.findById(id, {relations: ["followedBy"]});
-    const followedMe = !existedAchi.followedBy ? [] : existedAchi.followedBy;
-    const checkAvaiable = _.filter(followedMe, ['id', userFollowedMe.id]);
+    const followedMe: ClientUser[] = _.clone(existedAchi.followedBy);
+    const checkAvaiable = _.some(followedMe, ['id', userFollowedMe.id]);
 
     if(status === ActionFollow.FOLLOW){
-      if(checkAvaiable.length !== 0) return false;
+      if(checkAvaiable) { return false };
       followedMe.push(userFollowedMe)
     }else {
-      if(checkAvaiable.length === 0) return false;
+      if(!checkAvaiable) { return false }; 
       _.remove(followedMe, (user) => user.id === userFollowedMe.id )
     }
 
@@ -119,7 +118,7 @@ export class AchievementService extends BaseService<Achievement> {
       this.courseService.findById(idCourse)
     ]);
 
-    const completedCourse = !existedAchi.completedCourses ? [] : existedAchi.completedCourses;
+    const completedCourse: Course[] = _.clone(existedAchi.completedCourses)
 
     completedCourse.push(course);
     existedAchi.completedCourses = completedCourse;
