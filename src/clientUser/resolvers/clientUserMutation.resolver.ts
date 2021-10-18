@@ -1,13 +1,22 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import { AuthGuard } from 'src/common/guards/auth.guard';
-import { ClientUserUpdateInput, Upload } from 'src/graphql';
+import { TokenService } from 'src/common/services/token.service';
+import { 
+  UpdateFollow, 
+  ClientUserUpdateInput,
+  UpdateJoinedCourse, 
+  UpdateScore, 
+  Upload } from 'src/graphql';
+import { ClientUser } from '../entities/ClientUser.entity';
 import { ClientUserService } from '../services/clientUser.service';
 
 @UseGuards(AuthGuard)
 @Resolver('ClientUserMutation')
 export class ClientUserMutationResolver {
-  constructor(private clientUserService: ClientUserService) {}
+  constructor(
+    private clientUserService: ClientUserService,
+  ) {}
 
   @Mutation()
   clientUserMutation() {
@@ -28,5 +37,49 @@ export class ClientUserMutationResolver {
     @Args('image') image: Upload,
   ) {
     return this.clientUserService.updateUserAvatar(id, image);
+  }
+
+  @ResolveField()
+  async updateScore(
+    @Args('data') data: UpdateScore,
+    @Context() { req }: any
+  ) {
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
+    
+    await this.clientUserService.updateScore(id, data);
+
+    return true;
+  }
+  
+  @ResolveField()
+  async updateJoinedCourse(
+    @Args('data') data: UpdateJoinedCourse,
+    @Context() { req }: any
+  ) {
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
+
+    return this.clientUserService.updateJoinedCourse(id, data);
+  }
+  
+  @ResolveField()
+  async updateFollow(
+    @Args('data') data: UpdateFollow,
+    @Context() { req }: any
+  ){
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
+
+    if(id === data.idFollow) return false;
+
+    return this.clientUserService.updateFollow(id, data);;
+  }
+
+  @ResolveField()
+  async updateCompletedCourses(
+    @Args('idCourse') idCourse: string,
+    @Context() { req }: any
+  ) {
+    const id = this.clientUserService.getIdUserByHeaders(req.headers);
+
+    return this.clientUserService.updateCompletedCourses(id, idCourse);
   }
 }

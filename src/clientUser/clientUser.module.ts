@@ -2,6 +2,7 @@ import { forwardRef } from '@nestjs/common';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from 'src/common/Common.module';
+import { CourseModule } from 'src/courses/Course.module';
 import { EmailModule } from 'src/Email/email.module';
 import { PermissionModule } from 'src/permission/permission.module';
 import { Achievement } from './entities/Achivement.entity';
@@ -21,6 +22,7 @@ import { ClientUserService } from './services/clientUser.service';
     PermissionModule,
     TypeOrmModule.forFeature([ClientUser, Achievement]),
     EmailModule,
+    forwardRef(() => CourseModule)
   ],
   providers: [
     ClientUserService,

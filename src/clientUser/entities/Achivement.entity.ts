@@ -25,15 +25,15 @@ export class Achievement {
   @Column()
   rank: number;
 
-  @ManyToMany(() => Course, (course) => course.joinedUsers)
+  @ManyToMany(() => Course)
   @JoinTable()
   joinedCourse: Course[];
 
-  @ManyToMany(() => Achievement)
+  @ManyToMany(() => ClientUser)
   @JoinTable()
   follow: ClientUser[];
 
-  @ManyToMany(() => Achievement)
+  @ManyToMany(() => ClientUser)
   @JoinTable()
   followedBy: ClientUser[];
 
