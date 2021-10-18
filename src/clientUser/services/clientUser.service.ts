@@ -91,7 +91,7 @@ export class ClientUserService extends BaseService<ClientUser> {
     const user = await this.findById(id, {relations: ["achievement"]});
     const { achievement } = user;
     const updated = await this.achievementService.updateJoinedCourse(achievement.id, data);
-    console.log(updated)
+
     if(!updated) { return false }
     
     this.courseService.updateJoinedUsers(data.idCourse, user, data.action)
