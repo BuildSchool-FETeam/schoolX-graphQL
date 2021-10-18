@@ -46,7 +46,7 @@ export class AchievementService extends BaseService<Achievement> {
       this.findById(id, {relations: ["joinedCourse"]}),
       this.courseService.findById(data.idCourse)
     ]);
-    const newCourses: Course[] = _.clone(existedAchi.joinedCourse);
+    const newCourses: Course[] = _.cloneDeep(existedAchi.joinedCourse);
     const checkAvailable = _.some(newCourses, ['id', course.id]);    
 
     if(data.action === ActionCourse.JOIN) {
@@ -69,7 +69,7 @@ export class AchievementService extends BaseService<Achievement> {
     status: ActionFollow
   ){
     const existedAchi = await this.findById(id, {relations: ["follow"]});
-    const follow: ClientUser[] = _.clone(existedAchi.follow);
+    const follow: ClientUser[] = _.cloneDeep(existedAchi.follow);
     const checkAvailable = _.some(follow, ['id', userFollow.id]);
 
     if(status === ActionFollow.FOLLOW) {
@@ -92,7 +92,7 @@ export class AchievementService extends BaseService<Achievement> {
     status: ActionFollow
   ) {
     const existedAchi = await this.findById(id, {relations: ["followedBy"]});
-    const followedMe: ClientUser[] = _.clone(existedAchi.followedBy);
+    const followedMe: ClientUser[] = _.cloneDeep(existedAchi.followedBy);
 
     if(status === ActionFollow.FOLLOW){
       followedMe.push(userFollowedMe)
@@ -115,7 +115,7 @@ export class AchievementService extends BaseService<Achievement> {
       this.courseService.findById(idCourse)
     ]);
 
-    const completedCourse: Course[] = _.clone(existedAchi.completedCourses)
+    const completedCourse: Course[] = _.cloneDeep(existedAchi.completedCourses)
 
     completedCourse.push(course);
     existedAchi.completedCourses = completedCourse;
