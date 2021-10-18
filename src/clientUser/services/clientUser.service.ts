@@ -90,11 +90,13 @@ export class ClientUserService extends BaseService<ClientUser> {
   ){
     const user = await this.findById(id, {relations: ["achievement"]});
     const { achievement } = user;
+    const updated = await this.achievementService.updateJoinedCourse(achievement.id, data);
+    console.log(updated)
+    if(!updated) { return false }
+    
+    this.courseService.updateJoinedUsers(data.idCourse, user, data.action)
 
-    return Promise.all([
-      this.achievementService.updateJoinedCourse(achievement.id, data),
-      this.courseService.updateJoinedUsers(data.idCourse, user, data.action)
-    ]).then(res => res[0] && res[1]);
+    return true;
   }
 
   async updateFollow(
@@ -105,19 +107,22 @@ export class ClientUserService extends BaseService<ClientUser> {
       this.findById(id, {relations: ["achievement"]}),
       this.findById(data.idFollow, {relations: ["achievement"]})
     ]);
-  
-    return Promise.all([
-      this.achievementService.updateFollow(
+
+    const updated = await this.achievementService.updateFollow(
         existedUser.achievement.id,
         userFollow,
         data.action
-      ),
-      this.achievementService.updateFollowedMe(
+      );
+
+    if(!updated) { return false };
+
+    this.achievementService.updateFollowedMe(
         userFollow.achievement.id,
         existedUser,
         data.action
-      )
-    ]).then(res => res[0] && res[1]);
+    );
+
+    return true;
   }
 
   async updateCompletedCourses(

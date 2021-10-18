@@ -52,7 +52,7 @@ export class AchievementService extends BaseService<Achievement> {
     if(data.action === ActionCourse.JOIN) {
       if(checkAvailable) { return false };
       newCourses.push(course);
-    }else if(checkAvailable){
+    }else{
       if(!checkAvailable) { return false };
       _.remove(newCourses ,(course) => course.id.toString() === data.idCourse);
     }
@@ -93,13 +93,10 @@ export class AchievementService extends BaseService<Achievement> {
   ) {
     const existedAchi = await this.findById(id, {relations: ["followedBy"]});
     const followedMe: ClientUser[] = _.clone(existedAchi.followedBy);
-    const checkAvailable = _.some(followedMe, ['id', userFollowedMe.id]);
 
     if(status === ActionFollow.FOLLOW){
-      if(checkAvailable) { return false };
       followedMe.push(userFollowedMe)
     }else {
-      if(!checkAvailable) { return false }; 
       _.remove(followedMe, (user) => user.id === userFollowedMe.id )
     }
 
