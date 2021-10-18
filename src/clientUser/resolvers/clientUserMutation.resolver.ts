@@ -80,8 +80,6 @@ export class ClientUserMutationResolver {
   ) {
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
-    await this.clientUserService.updateCompletedCourses(id, idCourse);
-
-    return true;
+    return this.clientUserService.updateCompletedCourses(id, idCourse);
   }
 }

@@ -111,15 +111,21 @@ export class AchievementService extends BaseService<Achievement> {
     idCourse: string
   ){
     const [existedAchi, course] = await Promise.all([
-      this.findById(id),
+      this.findById(id, {relations: ['completedCourses', 'joinedCourse']}),
       this.courseService.findById(idCourse)
     ]);
 
-    const completedCourse: Course[] = _.cloneDeep(existedAchi.completedCourses)
+    const completedCourse: Course[] = _.cloneDeep(existedAchi.completedCourses);
+    const joinedCourse: Course[] = _.cloneDeep(existedAchi.joinedCourse);
+    const checkAvailable = _.some(completedCourse, ['id', parseInt(idCourse)]);
+    const checkJoined = _.some(joinedCourse, ['id', parseInt(idCourse)]);
+
+    if(checkAvailable || !checkJoined) { return false };
 
     completedCourse.push(course);
     existedAchi.completedCourses = completedCourse;
 
-    return this.achiRepo.save(existedAchi);
+    await this.achiRepo.save(existedAchi);
+    return true;
   }
 }

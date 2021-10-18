@@ -131,7 +131,7 @@ export class ClientUserService extends BaseService<ClientUser> {
   ){
     const { achievement } = await this.findById(id, { relations: ["achievement"] });
 
-    this.achievementService.updateCompletedCourses(achievement.id, idCourse)
+    return this.achievementService.updateCompletedCourses(achievement.id, idCourse)
   }
 
   getIdUserByHeaders(headers) {
