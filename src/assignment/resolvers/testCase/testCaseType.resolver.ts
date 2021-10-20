@@ -9,9 +9,9 @@ export class TestCaseTypeResolver {
   @ResolveField()
   async assignment(@Parent() tcParent: TestCase) {
     const testCase = await this.tcService.findById(tcParent.id, {
-      relations: ['assignment'],
+      relations: ['codeChallenge'],
     });
 
-    return testCase.assignment;
+    return testCase.codeChallenge;
   }
 }

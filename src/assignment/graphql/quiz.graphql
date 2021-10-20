@@ -1,0 +1,5 @@
+type QuizType {
+    assignment: AssignmentType!
+    description: String!
+    question: [QuestionType!]!
+}

@@ -1,4 +1,4 @@
-import { Achievement } from 'src/clientUser/entities/Achivement.entity';
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
@@ -11,7 +11,8 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { TestCase } from './Testcase.entity';
+import { CodeChallenge } from './CodeChallenge.entity';
+import { Quiz } from './Quiz.entity';
 
 @Entity()
 export class Assignment extends BaseEntity {
@@ -33,19 +34,13 @@ export class Assignment extends BaseEntity {
   @Column('int4', { default: 10, nullable: true })
   score: number;
 
-  @Column()
-  input: string;
+  @OneToMany(() => Quiz, quiz => quiz.assignment)
+  quizs: Quiz[];
 
-  @Column()
-  output: string;
+  @OneToMany(() => CodeChallenge, codeChalenge => codeChalenge.assignment)
+  codeChallenges: CodeChallenge[]
 
-  @Column()
-  languageSupport: string;
-
-  @OneToMany(() => TestCase, (testCase) => testCase.assignment)
-  testCases: TestCase[];
-
-  @ManyToMany(() => Achievement, (achie) => achie.completedAssignment)
+  @ManyToMany(() => ClientUser)
   @JoinTable()
-  usersComplete: Assignment[];
+  usersComplete: ClientUser[];
 }

@@ -44,7 +44,7 @@ export class Achievement {
   @JoinTable()
   completedCourses: Course[];
 
-  @ManyToMany(() => Assignment, (assign) => assign.usersComplete)
+  @ManyToMany(() => Assignment)
   @JoinTable()
   completedAssignment: Assignment[];
 }

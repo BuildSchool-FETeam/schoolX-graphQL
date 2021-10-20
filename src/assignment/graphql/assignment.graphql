@@ -3,9 +3,6 @@ input AssignmentSetInput {
   description: String!
   hints: [String]!
   score: Int!
-  input: String!
-  output: String!
-  languageSupport: [String]!
   lessonId: ID!
 }
 
@@ -17,11 +14,8 @@ type AssignmentType implements BaseGraphQL {
   description: String!
   hints: [String]!
   score: Int!
-  input: String!
-  output: String!
-  languageSupport: [String]!
   lesson: LessonType!
-  testCases: [TestCaseType!]!
+  codeChallenges(pagination: PaginationInput): [CodeChallengeType]!
   comments(pagination: PaginationInput): [UserCommentType]!
 }
 
@@ -30,12 +24,17 @@ input CodeConfigInput {
   language: ProgrammingLanguage!
 }
 
+
+
 type AssignmentMutation {
-  setAssignment(id: ID, data: AssignmentSetInput!): AssignmentType!
+  # setQuiz(id: ID, idAssign: ID, data: AssignmentSetInput!): AssignmentType!
+  createCodeChallenge(data: CodeChallengeSetInput!, dataAssign: AssignmentSetInput): AssignmentType!
+  updateCodeChallenge(id: ID!, data: CodeChallengeSetInput): AssignmentType!
+  deleteCodeChallenge(id: ID!): AssignmentType!
   deleteAssignment(id: ID!): Boolean
   runCode(code: String!, language: ProgrammingLanguage): CodeRunResultType!
   runTestCase(
-    assignmentId: ID!
+    challengeId: ID!
     data: CodeConfigInput!
   ): SummaryEvaluationResult!
 }

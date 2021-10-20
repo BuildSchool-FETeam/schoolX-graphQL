@@ -13,10 +13,13 @@ import { TestCaseType } from 'src/graphql';
 import { TestCaseQueryResolver } from './resolvers/testCase/testCaseQuery.resolver';
 import { MiniServerModule } from 'src/mini-server/mini-server.module';
 import { CommonModule } from 'src/common/Common.module';
+import { CodeChallengeService } from './services/codeChallenge.service';
+import { CodeChallenge } from './entities/CodeChallenge.entity';
+import { CodeChallengeTypeResolver } from './resolvers/codeChallenge/codeChallengeType.resolver';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Assignment, TestCase]),
+    TypeOrmModule.forFeature([Assignment, TestCase, CodeChallenge]),
     CourseModule,
     MiniServerModule,
     CommonModule,
@@ -30,6 +33,8 @@ import { CommonModule } from 'src/common/Common.module';
     TestCaseMutationResolver,
     TestCaseType,
     TestCaseQueryResolver,
+    CodeChallengeService,
+    CodeChallengeTypeResolver
   ],
   exports: [AssignmentService],
 })

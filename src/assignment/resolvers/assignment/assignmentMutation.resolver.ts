@@ -1,8 +1,9 @@
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+import { CodeChallenge } from 'src/assignment/entities/CodeChallenge.entity';
 import { TestCaseProgrammingLanguage } from 'src/assignment/entities/Testcase.entity';
 import { AuthGuard } from 'src/common/guards/auth.guard';
-import { AssignmentSetInput, CodeConfigInput } from 'src/graphql';
+import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput } from 'src/graphql';
 import { Assignment } from '../../entities/Assignment.entity';
 import { AssignmentService } from '../../services/assignment.service';
 
@@ -17,20 +18,27 @@ export class AssignmentMutationResolver {
   }
 
   @ResolveField()
-  async setAssignment(
-    @Args('data') data: AssignmentSetInput,
-    @Args('id') id?: string,
+  async createCodeChallenge(
+    @Args('data') codeChallenge: CodeChallengeSetInput,
+    @Args('dataAssign') dataAssign: AssignmentSetInput 
   ) {
-    let assign: Assignment;
-    if (!id) {
-      assign = await this.assignmentService.createAssignment({ ...data });
-    } else {
-      assign = await this.assignmentService.updateAssignment(id, { ...data });
+    if(!codeChallenge.assignmentId && !dataAssign) {
+      throw new BadRequestException("Assignment no existed, must have dataAssign to create Assignment")
     }
+    return this.assignmentService.createCodeChallenge(codeChallenge, dataAssign);
+  }
 
-    return {
-      ...assign,
-    };
+  async updateCodeChallenge(
+    @Args('id') id: string,
+    @Args('data') data: CodeChallengeSetInput
+  ){
+
+  }
+
+  async deleteCodeChallenge(
+    @Args('id') id: string,
+  ){
+
   }
 
   @ResolveField()
@@ -49,9 +57,9 @@ export class AssignmentMutationResolver {
 
   @ResolveField()
   async runTestCase(
-    @Args('assignmentId') assignmentId: string,
+    @Args('challengeId') challengeId: string,
     @Args('data') data: CodeConfigInput,
   ) {
-    return this.assignmentService.runTestCase(assignmentId, data);
+    return this.assignmentService.runTestCase(challengeId, data);
   }
 }

@@ -1,0 +1,9 @@
+type QuestionType implements BaseGraphQL{
+    id: ID!
+    title: String!
+    createdAt: ScalarDate!
+    updatedAt: ScalarDate!
+    quiz: QuizType
+    options: [String!]!
+    result: String
+}

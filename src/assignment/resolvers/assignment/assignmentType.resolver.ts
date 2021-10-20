@@ -17,20 +17,6 @@ export class AssignmentTypeResolver {
   }
 
   @ResolveField()
-  async testCases(@Parent() parent: Assignment) {
-    const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ['testCases'],
-    });
-
-    return assignment.testCases;
-  }
-
-  @ResolveField()
-  async languageSupport(@Parent() parent: Assignment) {
-    return parent.languageSupport.split('|');
-  }
-
-  @ResolveField()
   async hints(@Parent() parent: Assignment) {
     return parent.hints.split('|');
   }
@@ -46,5 +32,17 @@ export class AssignmentTypeResolver {
     });
 
     return this.assignmentService.manuallyPagination(assignment.comments, pg);
+  }
+
+  @ResolveField()
+  async codeChallenges(
+    @Parent() parent: Assignment,
+    @Args('pagination') pg: PaginationInput
+  ) {
+    const assignment = await this.assignmentService.findById(parent.id, {
+      relations: ["codeChallenges"]
+    })
+
+    return this.assignmentService.manuallyPagination(assignment.codeChallenges, pg);
   }
 }

@@ -65,9 +65,6 @@ export class AssignmentSetInput {
     description: string;
     hints: Nullable<string>[];
     score: number;
-    input: string;
-    output: string;
-    languageSupport: Nullable<string>[];
     lessonId: string;
 }
 
@@ -76,11 +73,19 @@ export class CodeConfigInput {
     language: ProgrammingLanguage;
 }
 
+export class CodeChallengeSetInput {
+    title: string;
+    assignmentId?: Nullable<string>;
+    input: string;
+    output: string;
+    languageSupport: Nullable<string>[];
+}
+
 export class TestCaseSetInput {
     title: string;
     runningTestScript: string;
     expectResult?: Nullable<string>;
-    assignmentId: string;
+    codeChallengeId: string;
     generatedExpectResultScript?: Nullable<string>;
     programingLanguage: ProgrammingLanguage;
     timeEvaluation?: Nullable<number>;
@@ -366,17 +371,16 @@ export class AssignmentType implements BaseGraphQL {
     description: string;
     hints: Nullable<string>[];
     score: number;
-    input: string;
-    output: string;
-    languageSupport: Nullable<string>[];
     lesson: LessonType;
-    testCases: TestCaseType[];
+    codeChallenges: Nullable<CodeChallengeType>[];
     comments: Nullable<UserCommentType>[];
 }
 
 export class AssignmentMutation {
     __typename?: 'AssignmentMutation';
-    setAssignment: AssignmentType;
+    createCodeChallenge: AssignmentType;
+    updateCodeChallenge: AssignmentType;
+    deleteCodeChallenge: AssignmentType;
     deleteAssignment?: Nullable<boolean>;
     runCode: CodeRunResultType;
     runTestCase: SummaryEvaluationResult;
@@ -407,6 +411,37 @@ export class CodeRunResultType {
     executeTime?: Nullable<number>;
     result?: Nullable<Nullable<string>[]>;
     status?: Nullable<string>;
+}
+
+export class CodeChallengeType implements BaseGraphQL {
+    __typename?: 'CodeChallengeType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    assignment: AssignmentType;
+    input: string;
+    output: string;
+    languageSupport: Nullable<string>[];
+    testCases: TestCaseType[];
+}
+
+export class QuestionType implements BaseGraphQL {
+    __typename?: 'QuestionType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    quiz?: Nullable<QuizType>;
+    options: string[];
+    result?: Nullable<string>;
+}
+
+export class QuizType {
+    __typename?: 'QuizType';
+    assignment: AssignmentType;
+    description: string;
+    question: QuestionType[];
 }
 
 export class TestCaseType implements BaseGraphQL {
