@@ -43,8 +43,8 @@ services:
 
   js-server:
     build:
-      context: .
-      dockerfile: ./servers/js/Dockerfile.dev
+      context: ./servers/js
+      dockerfile: Dockerfile.dev
     ports:
       - 6001:6001
     volumes:
@@ -53,8 +53,8 @@ services:
 
   java-server:
     build:
-      context: .
-      dockerfile: ./servers/java/Dockerfile.dev
+      context: ./servers/java
+      dockerfile: Dockerfile.dev
     ports:
       - 6002:6002
     volumes:
@@ -63,8 +63,8 @@ services:
 
   python-server:
     build:
-      context: .
-      dockerfile: ./servers/python/Dockerfile.dev
+      context: ./servers/python
+      dockerfile: Dockerfile.dev
     ports:
       - 6003:6003
     volumes:
