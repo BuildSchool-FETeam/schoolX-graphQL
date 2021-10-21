@@ -87,7 +87,7 @@ export class AssignmentService extends BaseService<Assignment> {
       assignment = await this.findById(data.assignmentId);
       this.codeChallengeService.updateChallenge(idChallenge, data, assignment);
     }
-    return assignment;
+    return assignment
   }
 
   async deleteCodeChallenge(id: string){

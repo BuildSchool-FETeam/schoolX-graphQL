@@ -28,9 +28,8 @@ input CodeConfigInput {
 
 type AssignmentMutation {
   # setQuiz(id: ID, idAssign: ID, data: AssignmentSetInput!): AssignmentType!
-  createCodeChallenge(data: CodeChallengeSetInput!, dataAssign: AssignmentSetInput): AssignmentType!
-  updateCodeChallenge(id: ID!, data: CodeChallengeSetInput): AssignmentType!
-  deleteCodeChallenge(id: ID!): AssignmentType!
+  setCodeChallenge(id: ID, data: CodeChallengeSetInput!, dataAssign: AssignmentSetInput): AssignmentType!
+  deleteCodeChallenge(id: ID!): Boolean!
   deleteAssignment(id: ID!): Boolean
   runCode(code: String!, language: ProgrammingLanguage): CodeRunResultType!
   runTestCase(

@@ -379,8 +379,8 @@ export class AssignmentType implements BaseGraphQL {
 export class AssignmentMutation {
     __typename?: 'AssignmentMutation';
     createCodeChallenge: AssignmentType;
-    updateCodeChallenge: AssignmentType;
-    deleteCodeChallenge: AssignmentType;
+    updateCodeChallenge: boolean;
+    deleteCodeChallenge: boolean;
     deleteAssignment?: Nullable<boolean>;
     runCode: CodeRunResultType;
     runTestCase: SummaryEvaluationResult;

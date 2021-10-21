@@ -18,27 +18,29 @@ export class AssignmentMutationResolver {
   }
 
   @ResolveField()
-  async createCodeChallenge(
+  async setCodeChallenge(
+    @Args('id') id: string,
     @Args('data') codeChallenge: CodeChallengeSetInput,
     @Args('dataAssign') dataAssign: AssignmentSetInput 
   ) {
     if(!codeChallenge.assignmentId && !dataAssign) {
       throw new BadRequestException("Assignment no existed, must have dataAssign to create Assignment")
     }
-    return this.assignmentService.createCodeChallenge(codeChallenge, dataAssign);
-  }
 
-  async updateCodeChallenge(
-    @Args('id') id: string,
-    @Args('data') data: CodeChallengeSetInput
-  ){
+    let assignment: Assignment;
+    if(!id) {
+      assignment = await this.assignmentService.createCodeChallenge(codeChallenge, dataAssign);
+    }else {
+      assignment = await this.assignmentService.updateCodeChallenge(id, codeChallenge);
+    }
 
+    return assignment;
   }
 
   async deleteCodeChallenge(
     @Args('id') id: string,
   ){
-
+    return this.assignmentService.deleteCodeChallenge(id);
   }
 
   @ResolveField()
