@@ -570,6 +570,7 @@ export class CourseType implements BaseGraphQL {
     createdBy?: Nullable<AdminUser>;
     levels: Nullable<string>[];
     joinedUsers: Nullable<ClientUserType>[];
+    completedUser: Nullable<ClientUserType>[];
     comments: Nullable<UserCommentType>[];
 }
 

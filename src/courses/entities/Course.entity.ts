@@ -56,9 +56,9 @@ export class Course extends BaseEntity {
   @JoinTable()
   joinedUsers?: ClientUser[];
 
-  @ManyToMany(() => Achievement, (achievement) => achievement.completedCourses)
+  @ManyToMany(() => ClientUser)
   @JoinTable()
-  completedUser?: Achievement[];
+  completedUser?: ClientUser[];
 
   @ManyToMany(() => Tag, (tag) => tag.courses)
   tags: Tag[];
