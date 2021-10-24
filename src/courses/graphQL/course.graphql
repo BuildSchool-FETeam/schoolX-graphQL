@@ -47,5 +47,6 @@ type CourseType implements BaseGraphQL {
   createdBy: AdminUser
   levels: [String]!
   joinedUsers(pagination: PaginationInput): [ClientUserType]!
+  completedUser(pagination: PaginationInput): [ClientUserType]!
   comments(pagination: PaginationInput): [UserCommentType]!
 }

@@ -40,7 +40,7 @@ export class Achievement {
   @Column()
   score: number;
 
-  @ManyToMany(() => Course, (course) => course.completedUser)
+  @ManyToMany(() => Course)
   @JoinTable()
   completedCourses: Course[];
 

@@ -102,6 +102,18 @@ export class CourseService extends BaseService<Course> {
     return true;
   }
 
+  async updateCompletedUser(id: string, user: ClientUser) {
+    const course = await this.findById(id, {relations: ["completedUser"]});
+    const users: ClientUser[] = _.cloneDeep(course.completedUser);
+
+    users.push(user)
+
+    course.completedUser = users;
+    this.courseRepo.save(course);
+    
+    return true;
+  }
+
   removeCourseFormTag(removedCourseId: string, tagIds: string[]) {
     const promises: Array<Promise<any>> = [];
 

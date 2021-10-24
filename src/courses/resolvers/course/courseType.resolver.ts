@@ -80,4 +80,17 @@ export class CourseTypeResolver {
 
     return course.joinedUsers;
   }
+
+  @ResolveField()
+  async completedUser(
+    @Parent() courseParent: Course,
+    @Args('pagination') pg: PaginationInput
+  ){
+    const course = await this.courseService.findById(courseParent.id, {
+      relations: ["completedUser"]
+    })
+
+    return this.courseService.manuallyPagination(course.completedUser, pg);
+  }
+
 }

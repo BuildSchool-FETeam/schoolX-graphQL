@@ -129,9 +129,12 @@ export class ClientUserService extends BaseService<ClientUser> {
     id: string,
     idCourse: string
   ){
-    const { achievement } = await this.findById(id, { relations: ["achievement"] });
+    const user = await this.findById(id, { relations: ["achievement"] });
+    const update = await this.achievementService.updateCompletedCourses(user.achievement.id, idCourse);
 
-    return this.achievementService.updateCompletedCourses(achievement.id, idCourse)
+    if(!update) { return false }
+
+    return this.courseService.updateCompletedUser(idCourse, user);
   }
 
   getIdUserByHeaders(headers) {
