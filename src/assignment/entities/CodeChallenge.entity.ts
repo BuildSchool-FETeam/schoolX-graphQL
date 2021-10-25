@@ -6,6 +6,15 @@ import { TestCase } from "./Testcase.entity";
 @Entity()
 export class CodeChallenge extends BaseEntity{
 
+    @Column()
+    description: string;
+
+    @Column()
+    hints: string;
+
+    @Column('int4', { default: 10, nullable: true })
+    score: number;
+
     @ManyToOne(() => Assignment, assignment => assignment.codeChallenges, {
         onDelete: "CASCADE"
     })

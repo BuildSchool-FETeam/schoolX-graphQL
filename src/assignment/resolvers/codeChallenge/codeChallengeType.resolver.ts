@@ -10,6 +10,15 @@ export class CodeChallengeTypeResolver {
     ) {}
 
     @ResolveField()
+    async assignment(@Parent() parent: CodeChallenge) {
+        const codeChallenge = await this.codeChallengeService.findById(parent.id, {
+            relations: ["assignment"]
+        })
+
+        return codeChallenge.assignment;
+    }
+
+    @ResolveField()
     async testCases(@Parent() parent: CodeChallenge) {
         const codeChallenge = await this.codeChallengeService.findById(parent.id, {
             relations: ['testCases'],
@@ -21,5 +30,10 @@ export class CodeChallengeTypeResolver {
     @ResolveField()
     async languageSupport(@Parent() parent: CodeChallenge) {
         return parent.languageSupport.split('|');
+    }
+
+    @ResolveField()
+    async hints(@Parent() parent: CodeChallenge) {
+        return parent.hints.split('|');
     }
 }

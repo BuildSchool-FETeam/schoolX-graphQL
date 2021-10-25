@@ -29,6 +29,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
         const codeChallenge = await this.codeChallengeRepo.create({
             ...data,
             languageSupport: data.languageSupport.join("|"),
+            hints: data.hints.join("|"),
             assignment
         })
 
@@ -41,7 +42,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
         _.forOwn(data, (value, key) => {
             if('assignmentId' === key && assignment){
                 challenge.assignment =  assignment;
-            } else if ('languageSupport' === key) {
+            } else if ('languageSupport' === key || key === 'hints') {
                 challenge[key] = (value as string[]).join('|');
             } else {
                 value && (challenge[key] = value);

@@ -15,12 +15,6 @@ export class AssignmentTypeResolver {
 
     return assignment.lesson;
   }
-
-  @ResolveField()
-  async hints(@Parent() parent: Assignment) {
-    return parent.hints.split('|');
-  }
-
   @ResolveField()
   async comments(
     @Parent() parent: Assignment,

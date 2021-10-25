@@ -1,8 +1,5 @@
 input AssignmentSetInput {
   title: String!
-  description: String!
-  hints: [String]!
-  score: Int!
   lessonId: ID!
 }
 
@@ -11,11 +8,9 @@ type AssignmentType implements BaseGraphQL {
   title: String!
   createdAt: ScalarDate!
   updatedAt: ScalarDate!
-  description: String!
-  hints: [String]!
-  score: Int!
   lesson: LessonType!
   codeChallenges(pagination: PaginationInput): [CodeChallengeType]!
+  quizs(pagination: PaginationInput): [QuizType]!
   comments(pagination: PaginationInput): [UserCommentType]!
 }
 

@@ -26,7 +26,6 @@ export class AssignmentService extends BaseService<Assignment> {
     const lesson = await this.lessonService.findById(data.lessonId);
     const assignment = this.assignmentRepo.create({
       ...data,
-      hints: data.hints.join('|'),
       lesson,
     });
 
@@ -40,9 +39,7 @@ export class AssignmentService extends BaseService<Assignment> {
     _.forOwn(data, (value, key) => {
       if (key === 'lessonId') {
         assignment.lesson = lesson;
-      } else if (['hints'].includes(key)) {
-        assignment[key] = (value as string[]).join('|');
-      } else {
+      }else {
         value && (assignment[key] = value);
       }
     });
@@ -99,14 +96,23 @@ export class AssignmentService extends BaseService<Assignment> {
     })
 
     const codeChallenges = _.cloneDeep(assignment.codeChallenges);
-    const checkAvailable = _.some(codeChallenges ,['id', id]);
+    const [checkAvailable, isRemoveAssign] = await Promise.all([
+      _.some(codeChallenges ,['id', id]),
+      this.checkRemoveAssgin(codeChallenge.assignment.id)
+    ])
 
     if(!checkAvailable) {
       return false;
+    }else if(isRemoveAssign){
+      Promise.all([
+        _.remove(codeChallenges, ['id', id]),
+        this.codeChallengeService.deleteOneById(id),
+        this.deleteOneById(codeChallenge.assignment.id)
+      ])
     }else {
       Promise.all([
         _.remove(codeChallenges, ['id', id]),
-        this.codeChallengeService.deleteOneById(id)
+        this.codeChallengeService.deleteOneById(id),
       ])
     }
 
@@ -116,124 +122,15 @@ export class AssignmentService extends BaseService<Assignment> {
     return true;
   }
 
-  // private mappingExpectResultPromises(
-  //   testCaseWillBeEvaluated: TestCase[],
-  //   miniServerService: IMiniServerService,
-  // ) {
-  //   return _.map(testCaseWillBeEvaluated, (tc) => {
-  //     const { expectResult, generatedExpectResultScript } = tc;
+  private async checkRemoveAssgin(id: string) {
+    const {codeChallenges} = await this.findById(id, {
+      relations: ["codeChallenges"]
+    })
 
-  //     if (expectResult) {
-  //       return this.createExpectResultPromise(expectResult);
-  //     } else if (generatedExpectResultScript) {
-  //       return miniServerService.runCode(generatedExpectResultScript);
-  //     }
-  //   });
-  // }
+    if(
+      codeChallenges.length === 0
+    ) { return true }
 
-  // private evaluateTestCaseResult(
-  //   resultFromTests: TestResponse[],
-  //   expectResult: TestResponse[],
-  //   evaluatingTestCases: TestCase[],
-  // ) {
-  //   const listEvaluation: EvaluationResult[] = [];
-
-  //   _.each(resultFromTests, (resultTest, i) => {
-  //     const message: string[] = [];
-  //     if (resultTest.status === 'error') {
-  //       listEvaluation.push({
-  //         testResult: false,
-  //         testCaseId: evaluatingTestCases[i].id,
-  //         title: evaluatingTestCases[i].title,
-  //         executeTime: resultTest.executeTime,
-  //         message: resultTest.result,
-  //       });
-
-  //       return;
-  //     }
-
-  //     const { errors, compareResult } = this.compareExpectAndTestResult(
-  //       resultTest.result,
-  //       expectResult[i].result,
-  //     );
-  //     let evaluationResult = compareResult;
-
-  //     !compareResult &&
-  //       message.push(`Expect "${errors[1]}" but got "${errors[0]}"`);
-
-  //     if (evaluatingTestCases[i].timeEvaluation) {
-  //       const timeCompareResult =
-  //         resultTest.executeTime < evaluatingTestCases[i].timeEvaluation;
-
-  //       evaluationResult = evaluationResult && timeCompareResult;
-  //       !timeCompareResult &&
-  //         message.push(
-  //           `Expect the function run in ${evaluatingTestCases[i].timeEvaluation} miliseconds
-  //            but yours runs in ${resultTest.executeTime} miliseconds`,
-  //         );
-  //     }
-
-  //     listEvaluation.push({
-  //       testResult: evaluationResult,
-  //       testCaseId: evaluatingTestCases[i].id,
-  //       title: evaluatingTestCases[i].title,
-  //       executeTime: resultTest.executeTime,
-  //       message,
-  //     });
-  //   });
-
-  //   return listEvaluation;
-  // }
-
-  // private compareExpectAndTestResult(
-  //   testResults: string[],
-  //   expectedResult: string[],
-  // ) {
-  //   let error: [TestResult, ExpectResult] = ['', ''];
-  //   const test = _.every(testResults, (result, i) => {
-  //     if (result !== expectedResult[i]) {
-  //       error = [result, expectedResult[i]];
-  //     }
-  //     return result === expectedResult[i];
-  //   });
-
-  //   return {
-  //     compareResult: test,
-  //     errors: _.compact(error),
-  //   };
-  // }
-
-  // private createExpectResultPromise(expectResult: string) {
-  //   return new Promise<TestResponse>((resolve) => {
-  //     resolve({
-  //       executeTime: 0,
-  //       status: 'success',
-  //       result: [expectResult],
-  //     });
-  //   });
-  // }
-
-  // private getServiceByLanguage(
-  //   language: TestCaseProgrammingLanguage,
-  // ): IMiniServerService {
-  //   switch (language) {
-  //     case TestCaseProgrammingLanguage.javascript:
-  //       return this.miniJSServerService;
-  //     case TestCaseProgrammingLanguage.java:
-  //       return this.miniJavaServerService;
-  //     case TestCaseProgrammingLanguage.python:
-  //       return this.miniPythonServerService
-  //   }
-  // }
+    return false;
+  }
 }
-
-// type ExpectResult = string;
-// type TestResult = string;
-
-// export interface EvaluationResult {
-//   testResult: boolean;
-//   testCaseId: string;
-//   title: string;
-//   executeTime: number;
-//   message: string[];
-// }

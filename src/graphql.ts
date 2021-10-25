@@ -62,9 +62,6 @@ export class ArticleInputType {
 
 export class AssignmentSetInput {
     title: string;
-    description: string;
-    hints: Nullable<string>[];
-    score: number;
     lessonId: string;
 }
 
@@ -75,9 +72,12 @@ export class CodeConfigInput {
 
 export class CodeChallengeSetInput {
     title: string;
+    description: string;
     assignmentId?: Nullable<string>;
     input: string;
     output: string;
+    hints: Nullable<string>[];
+    score: number;
     languageSupport: Nullable<string>[];
 }
 
@@ -368,11 +368,9 @@ export class AssignmentType implements BaseGraphQL {
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
-    description: string;
-    hints: Nullable<string>[];
-    score: number;
     lesson: LessonType;
     codeChallenges: Nullable<CodeChallengeType>[];
+    quizs: Nullable<QuizType>[];
     comments: Nullable<UserCommentType>[];
 }
 
@@ -421,6 +419,8 @@ export class CodeChallengeType implements BaseGraphQL {
     assignment: AssignmentType;
     input: string;
     output: string;
+    hints: Nullable<string>[];
+    score: number;
     languageSupport: Nullable<string>[];
     testCases: TestCaseType[];
 }

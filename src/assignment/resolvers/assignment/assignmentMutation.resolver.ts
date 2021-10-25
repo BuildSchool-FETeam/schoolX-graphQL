@@ -1,6 +1,5 @@
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
-import { CodeChallenge } from 'src/assignment/entities/CodeChallenge.entity';
 import { TestCaseProgrammingLanguage } from 'src/assignment/entities/Testcase.entity';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput } from 'src/graphql';

@@ -25,15 +25,6 @@ export class Assignment extends BaseEntity {
   @OneToMany(() => UserComment, (cmt) => cmt.assignment)
   comments: UserComment[];
 
-  @Column()
-  description: string;
-
-  @Column()
-  hints: string;
-
-  @Column('int4', { default: 10, nullable: true })
-  score: number;
-
   @OneToMany(() => Quiz, quiz => quiz.assignment)
   quizs: Quiz[];
 

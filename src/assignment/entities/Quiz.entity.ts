@@ -5,15 +5,20 @@ import { Question } from "./Question.entity";
 
 @Entity()
 export class Quiz extends BaseEntity{
+    @Column()
+    description: string;
+
+    @Column()
+    hints: string;
+
+    @Column('int4', { default: 10, nullable: true })
+    score: number;
 
     @ManyToOne(() => Assignment, assignment => assignment.quizs, {
         onDelete: "CASCADE"
     })
     @JoinColumn()
     assignment: Assignment
-
-    @Column()
-    description: string
 
     @OneToMany(() => Question, question => question.quiz)
     questions: Question[]
