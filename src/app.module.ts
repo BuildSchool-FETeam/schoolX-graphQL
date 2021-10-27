@@ -23,6 +23,17 @@ import { MiniServerModule } from './mini-server/mini-server.module';
 import { CommentModule } from './comment/comment.module';
 import { GraphQLUpload } from 'graphql-upload';
 
+const typeORMModuleInit = TypeOrmModule.forRoot();
+const EnvInitModule = ConfigModule.forRoot({
+  envFilePath: ['.env.development', '.env'],
+  isGlobal: true,
+});
+
+const cacheManagerModule = CacheModule.register({
+  ttl: 1000, // 1000s
+  max: 100,
+});
+
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
   installSubscriptionHandlers: true,
@@ -32,7 +43,7 @@ const graphQLModuleInit = GraphQLModule.forRoot({
     emitTypenameField: true,
   },
   cors: {
-    origin: 'http://localhost:3000',
+    origin: process.env.CORS,
   },
   fieldResolverEnhancers: ['guards'],
   subscriptions: {},
@@ -41,16 +52,6 @@ const graphQLModuleInit = GraphQLModule.forRoot({
   },
 });
 
-const typeORMModuleInit = TypeOrmModule.forRoot();
-const EnvInitModule = ConfigModule.forRoot({
-  envFilePath: ['.env.development'],
-  isGlobal: true,
-});
-
-const cacheManagerModule = CacheModule.register({
-  ttl: 1000, // 1000s
-  max: 100,
-});
 
 const scheduleModule = ScheduleModule.forRoot();
 
