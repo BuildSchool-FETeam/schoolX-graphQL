@@ -34,6 +34,8 @@ const cacheManagerModule = CacheModule.register({
   max: 100,
 });
 
+console.log(process.env.CORS)
+
 const graphQLModuleInit = GraphQLModule.forRoot({
   typePaths: ['./**/*.graphql'],
   installSubscriptionHandlers: true,
