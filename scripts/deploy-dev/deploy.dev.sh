@@ -9,7 +9,9 @@ INSTANCE='schoolx-dev-compute'
 PROJECT='multi-k8s-320211'
 
 COMMAND="""
-  cd /home/superknife0511/schoolX-graphQL 
+  sudo git stash &&
+  sudo git pull origin dev &&
+  cd /home/superknife0511/schoolX-graphQL &&
   docker-compose -f docker-compose.prod.yml down &&
   docker pull superknife0512/schoolx-graphql &&
   docker pull superknife0512/schoolx-python-server &&
