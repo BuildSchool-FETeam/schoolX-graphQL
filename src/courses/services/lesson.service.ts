@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
+import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonSetInput } from 'src/graphql';
 import { Repository } from 'typeorm';
@@ -13,6 +14,7 @@ export class LessonService extends BaseService<Lesson> {
     @InjectRepository(Lesson)
     private lessonRepo: Repository<Lesson>,
     private courseService: CourseService,
+    private assignService: AssignmentService
   ) {
     super(lessonRepo, 'Lesson');
   }
@@ -49,5 +51,17 @@ export class LessonService extends BaseService<Lesson> {
       .createQueryBuilder('lesson')
       .where('lesson.courseId = :courseId', { courseId })
       .getCount();
+  }
+
+  async getTypeAssignment(id: string, idAssign: string) {
+    const lesson = await this.findById(id, 
+      {relations: ["assignment"]}  
+    )
+
+    return this.assignService.getTypeAssign(lesson.assignment.id, idAssign);
+  }
+
+  async getCodeChallenge(id: string) {
+    return this.assignService.findById(id);
   }
 }

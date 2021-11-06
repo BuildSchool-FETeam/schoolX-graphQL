@@ -19,7 +19,10 @@ input CodeConfigInput {
   language: ProgrammingLanguage!
 }
 
-
+enum TypeAssign {
+  codeChallenge
+  quiz
+}
 
 type AssignmentMutation {
   # setQuiz(id: ID, idAssign: ID, data: AssignmentSetInput!): AssignmentType!

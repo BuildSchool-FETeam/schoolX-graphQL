@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput } from 'src/graphql';
+import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput, TypeAssign } from 'src/graphql';
 import { Repository } from 'typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
@@ -16,11 +16,28 @@ export class AssignmentService extends BaseService<Assignment> {
   constructor(
     @InjectRepository(Assignment)
     private assignmentRepo: Repository<Assignment>,
+    @Inject(forwardRef(() => LessonService))
     private lessonService: LessonService,
     private codeChallengeService: CodeChallengeService,
   ) {
     super(assignmentRepo, 'Assignment');
   }
+
+  async getTypeAssign(id, idAssign) {
+    const assignment = await this.findById(id,
+     {relations: ["codeChallenges", "quizs"]}  
+    )
+
+    const [codeChallenge, quizs] = await Promise.all([
+      _.some(assignment.codeChallenges, ['id', idAssign]),
+      _.some(assignment.quizs, ['id', idAssign])
+    ])
+
+    if(codeChallenge) { return TypeAssign.codeChallenge }
+    if(quizs) { return TypeAssign.quiz }
+
+    throw new NotFoundException(`Assignment with id ${idAssign} is not exist`);
+  } 
 
   async createAssignment(data: AssignmentSetInput) {
     const lesson = await this.lessonService.findById(data.lessonId);
@@ -53,6 +70,10 @@ export class AssignmentService extends BaseService<Assignment> {
 
   async runTestCase(challengeId: string, data: CodeConfigInput) {
     return this.codeChallengeService.runTestCase(challengeId, data);
+  }
+
+  async getCodeChallenge(id: string) {
+    return this.codeChallengeService.findById(id);
   }
 
   async createCodeChallenge(data: CodeChallengeSetInput, dataAssign: AssignmentSetInput ) {

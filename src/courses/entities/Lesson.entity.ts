@@ -1,7 +1,7 @@
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { Course } from './Course.entity';
 import { LessonDocument } from './LessonDocument.entity';
 
@@ -25,8 +25,8 @@ export class Lesson extends BaseEntity {
   @OneToMany(() => UserComment, (cmt) => cmt.lesson)
   comments: UserComment[];
 
-  @OneToMany(() => Assignment, (assign) => assign.lesson)
-  assignments: Assignment[];
+  @OneToOne(() => Assignment, (assign) => assign.lesson)
+  assignment: Assignment;
 
   @OneToMany(() => LessonDocument, (doc) => doc.lesson)
   documents: LessonDocument[];

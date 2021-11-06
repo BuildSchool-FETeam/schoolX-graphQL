@@ -13,6 +13,11 @@ export enum ArticleStatus {
     reject = "reject"
 }
 
+export enum TypeAssign {
+    codeChallenge = "codeChallenge",
+    quiz = "quiz"
+}
+
 export enum ProgrammingLanguage {
     javascript = "javascript",
     python = "python",
@@ -633,6 +638,8 @@ export class LessonQuery {
     lesson: LessonType;
     lessonsWithCourseId: Nullable<LessonType>[];
     totalLessons: number;
+    getTypeAssignment: TypeAssign;
+    getCodeChallenge: CodeChallengeType;
 }
 
 export class DocumentType implements BaseGraphQL {

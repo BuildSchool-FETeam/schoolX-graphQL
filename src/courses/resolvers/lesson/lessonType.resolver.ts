@@ -31,7 +31,7 @@ export class LessonTypeResolver {
       relations: ['assignments'],
     });
 
-    return parent.assignments;
+    return parent.assignment;
   }
 
   @ResolveField()

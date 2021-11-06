@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CourseModule } from 'src/courses/Course.module';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
@@ -20,7 +20,7 @@ import { CodeChallengeTypeResolver } from './resolvers/codeChallenge/codeChallen
 @Module({
   imports: [
     TypeOrmModule.forFeature([Assignment, TestCase, CodeChallenge]),
-    CourseModule,
+    forwardRef(() => CourseModule),
     MiniServerModule,
     CommonModule,
   ],

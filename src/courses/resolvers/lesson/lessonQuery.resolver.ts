@@ -80,4 +80,17 @@ export class LessonQueryResolver {
   totalLessons(@Args('courseId') courseId: string) {
     return this.lessonService.countingLessonWithCourseId(courseId);
   }
+
+  @ResolveField()
+  getTypeAssignment(
+    @Args('idLesson') idLesson: string,
+    @Args('idAssign') idAssign: string
+  ) {
+    return this.lessonService.getTypeAssignment(idLesson, idAssign);
+  }
+
+  @ResolveField()
+  getCodeChallenge(id: string){
+    return this.getCodeChallenge(id);
+  }
 }
