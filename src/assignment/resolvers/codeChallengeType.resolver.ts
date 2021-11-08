@@ -1,6 +1,6 @@
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
-import { CodeChallenge } from "src/assignment/entities/CodeChallenge.entity";
-import { CodeChallengeService } from "src/assignment/services/codeChallenge.service";
+import { CodeChallenge } from "src/assignment/entities/codeChallenge/CodeChallenge.entity";
+import { CodeChallengeService } from "src/assignment/services/codeChallenge/codeChallenge.service";
 
 @Resolver('CodeChallengeType')
 export class CodeChallengeTypeResolver {

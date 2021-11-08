@@ -8,10 +8,9 @@ import { JavaMiniServerService } from "src/mini-server/services/JavaMiniServer.s
 import { JSMiniServerService } from "src/mini-server/services/JSMiniServer.service";
 import { PythonMiniServerService } from "src/mini-server/services/PythonMiniServer.service";
 import { Repository } from "typeorm";
-import { Assignment } from "../entities/Assignment.entity";
-import { CodeChallenge } from "../entities/CodeChallenge.entity";
-import { TestCase, TestCaseProgrammingLanguage } from "../entities/Testcase.entity";
-import { AssignmentService } from "./assignment.service";
+import { Assignment } from "src/assignment/entities/Assignment.entity";
+import { CodeChallenge } from "src/assignment/entities/codeChallenge/CodeChallenge.entity";
+import { TestCase, TestCaseProgrammingLanguage } from "src/assignment/entities/codeChallenge/Testcase.entity";
 
 @Injectable()
 export class CodeChallengeService extends BaseService<CodeChallenge> {

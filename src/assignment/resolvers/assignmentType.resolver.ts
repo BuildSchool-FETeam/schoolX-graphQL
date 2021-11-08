@@ -1,4 +1,4 @@
-import { PaginationInput } from './../../../graphql';
+import { PaginationInput } from '../../graphql';
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';

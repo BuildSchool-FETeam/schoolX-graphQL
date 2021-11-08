@@ -1,6 +1,6 @@
 import { BaseEntity } from "src/common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { Assignment } from "./Assignment.entity";
+import { Assignment } from "../Assignment.entity";
 import { TestCase } from "./Testcase.entity";
 
 @Entity()

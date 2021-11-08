@@ -8,8 +8,8 @@ import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import {
   TestCaseProgrammingLanguage,
-} from '../entities/Testcase.entity';
-import { CodeChallengeService } from './codeChallenge.service';
+} from '../entities/codeChallenge/Testcase.entity';
+import { CodeChallengeService } from './codeChallenge/codeChallenge.service';
 
 @Injectable()
 export class AssignmentService extends BaseService<Assignment> {

@@ -1,9 +1,8 @@
 import { BaseService } from 'src/common/services/base.service';
-import { TestCase } from 'src/assignment/entities/Testcase.entity';
+import { TestCase } from 'src/assignment/entities/codeChallenge/Testcase.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TestCaseSetInput } from 'src/graphql';
-import { AssignmentService } from './assignment.service';
 import * as _ from 'lodash';
 import { BadRequestException } from '@nestjs/common';
 import { CodeChallengeService } from './codeChallenge.service';

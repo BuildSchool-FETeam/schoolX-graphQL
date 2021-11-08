@@ -1,4 +1,4 @@
-import { BadRequestException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Res, UseGuards } from '@nestjs/common';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import * as _ from 'lodash';
 import { AuthGuard } from 'src/common/guards/auth.guard';
@@ -11,7 +11,7 @@ import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { LessonDocument } from 'src/courses/entities/LessonDocument.entity';
 import { LessonDocumentService } from 'src/courses/services/document.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { LessonSetInput } from 'src/graphql';
+import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('LessonMutation')
@@ -83,5 +83,36 @@ export class LessonMutationResolver {
       url: publicUrl,
       filePath,
     });
+  }
+
+  @ResolveField()
+  setCodeChallenge(
+    @Args('id') id: string,
+    @Args('data') data: CodeChallengeSetInput,
+    @Args('dataAssign') dataAssign: AssignmentSetInput
+  ) {
+    return this.lessonService.setCodeChallenge(id, data, dataAssign);
+  }
+
+  @ResolveField()
+  deleteCodeChallenge(
+    @Args('id') id: string
+  ){
+    this.lessonService.deleteCodeChallenge(id);
+  }
+
+  @ResolveField()
+  deleteAssignment(
+    @Args('id') id: string
+  ){
+    return this.lessonService.deleteAssignment(id);
+  }
+
+  @ResolveField()
+  runTestCase(
+    @Args('challengeId') challengeId: string,
+    @Args('data') data: CodeConfigInput
+  ){
+    return this.lessonService.runTestCase(challengeId, data);
   }
 }

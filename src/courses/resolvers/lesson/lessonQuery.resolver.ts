@@ -91,6 +91,6 @@ export class LessonQueryResolver {
 
   @ResolveField()
   getCodeChallenge(id: string){
-    return this.getCodeChallenge(id);
+    return this.lessonService.getCodeChallenge(id);
   }
 }

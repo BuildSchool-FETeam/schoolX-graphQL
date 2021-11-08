@@ -246,8 +246,6 @@ export abstract class IQuery {
 
     abstract articleQuery(): ArticleQuery | Promise<ArticleQuery>;
 
-    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
-
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
     abstract clientUserQuery(): Nullable<ClientUserQuery> | Promise<Nullable<ClientUserQuery>>;
@@ -277,8 +275,6 @@ export abstract class IMutation {
     abstract adminUserMutation(): Nullable<AdminUserMutation> | Promise<Nullable<AdminUserMutation>>;
 
     abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
-
-    abstract assignmentMutation(): AssignmentMutation | Promise<AssignmentMutation>;
 
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
@@ -379,15 +375,6 @@ export class AssignmentType implements BaseGraphQL {
     comments: Nullable<UserCommentType>[];
 }
 
-export class AssignmentMutation {
-    __typename?: 'AssignmentMutation';
-    setCodeChallenge: AssignmentType;
-    deleteCodeChallenge: boolean;
-    deleteAssignment?: Nullable<boolean>;
-    runCode: CodeRunResultType;
-    runTestCase: SummaryEvaluationResult;
-}
-
 export class SummaryEvaluationResult {
     __typename?: 'SummaryEvaluationResult';
     summaryEvaluation: boolean;
@@ -401,11 +388,6 @@ export class EvaluationResult {
     title: string;
     executeTime?: Nullable<number>;
     message?: Nullable<Nullable<string>[]>;
-}
-
-export class AssignmentQuery {
-    __typename?: 'AssignmentQuery';
-    assignment: AssignmentType;
 }
 
 export class CodeRunResultType {
@@ -441,8 +423,12 @@ export class QuestionType implements BaseGraphQL {
     result?: Nullable<string>;
 }
 
-export class QuizType {
+export class QuizType implements BaseGraphQL {
     __typename?: 'QuizType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
     assignment: AssignmentType;
     description: string;
     question: QuestionType[];
@@ -631,6 +617,10 @@ export class LessonMutation {
     __typename?: 'LessonMutation';
     setLesson: LessonType;
     deleteLesson: boolean;
+    setCodeChallenge: AssignmentType;
+    deleteCodeChallenge: boolean;
+    deleteAssignment: boolean;
+    runTestCase: SummaryEvaluationResult;
 }
 
 export class LessonQuery {

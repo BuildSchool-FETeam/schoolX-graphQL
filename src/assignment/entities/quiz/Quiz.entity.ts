@@ -1,15 +1,12 @@
 import { BaseEntity } from "src/common/entity/base.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany } from "typeorm";
-import { Assignment } from "./Assignment.entity";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import { Assignment } from "../Assignment.entity";
 import { Question } from "./Question.entity";
 
 @Entity()
 export class Quiz extends BaseEntity{
     @Column()
     description: string;
-
-    @Column()
-    hints: string;
 
     @Column('int4', { default: 10, nullable: true })
     score: number;

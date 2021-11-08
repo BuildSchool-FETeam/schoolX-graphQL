@@ -1,9 +1,10 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
+import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
-import { LessonSetInput } from 'src/graphql';
+import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { Lesson } from '../entities/Lesson.entity';
 import { CourseService } from './course.service';
@@ -63,5 +64,39 @@ export class LessonService extends BaseService<Lesson> {
 
   async getCodeChallenge(id: string) {
     return this.assignService.findById(id);
+  }
+
+  async runTestCase(challengeId: string, data: CodeConfigInput) {
+    return this.assignService.runTestCase(challengeId, data);
+  }
+
+  async setCodeChallenge(
+    id: string,
+    codeChallenge: CodeChallengeSetInput,
+    dataAssign: AssignmentSetInput
+  ) {
+    if(!codeChallenge.assignmentId && !dataAssign) {
+      throw new BadRequestException("Assignment no existed, must have dataAssign to create Assignment")
+    }
+
+    let assignment: Assignment;
+    if(!id) {
+      assignment = await this.assignService.createCodeChallenge(codeChallenge, dataAssign);
+    }else {
+      assignment = await this.assignService.updateCodeChallenge(id, codeChallenge);
+    }
+
+    return assignment;
+  }
+
+  async deleteCodeChallenge(
+    id: string
+  ){
+    return this.assignService.deleteCodeChallenge(id);
+  }
+
+  async deleteAssignment(id: string) {
+    await this.assignService.deleteOneById(id);
+    return true;
   }
 }

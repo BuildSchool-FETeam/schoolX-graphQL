@@ -1,6 +1,5 @@
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Assignment } from './Assignment.entity';
 import { CodeChallenge } from './CodeChallenge.entity';
 
 export enum TestCaseProgrammingLanguage {

@@ -11,8 +11,8 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { CodeChallenge } from './CodeChallenge.entity';
-import { Quiz } from './Quiz.entity';
+import { CodeChallenge } from './codeChallenge/CodeChallenge.entity';
+import { Quiz } from './quiz/Quiz.entity';
 
 @Entity()
 export class Assignment extends BaseEntity {

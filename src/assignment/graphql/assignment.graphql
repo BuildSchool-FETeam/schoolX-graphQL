@@ -24,18 +24,6 @@ enum TypeAssign {
   quiz
 }
 
-type AssignmentMutation {
-  # setQuiz(id: ID, idAssign: ID, data: AssignmentSetInput!): AssignmentType!
-  setCodeChallenge(id: ID, data: CodeChallengeSetInput!, dataAssign: AssignmentSetInput): AssignmentType!
-  deleteCodeChallenge(id: ID!): Boolean!
-  deleteAssignment(id: ID!): Boolean
-  runCode(code: String!, language: ProgrammingLanguage): CodeRunResultType!
-  runTestCase(
-    challengeId: ID!
-    data: CodeConfigInput!
-  ): SummaryEvaluationResult!
-}
-
 type SummaryEvaluationResult {
   summaryEvaluation: Boolean!
   testCaseEvaluations: [EvaluationResult]!
@@ -49,20 +37,8 @@ type EvaluationResult {
   message: [String]
 }
 
-type AssignmentQuery {
-  assignment(id: ID!): AssignmentType!
-}
-
-type Query {
-  assignmentQuery: AssignmentQuery!
-}
-
 type CodeRunResultType {
   executeTime: Int
   result: [String]
   status: String
-}
-
-type Mutation {
-  assignmentMutation: AssignmentMutation!
 }
