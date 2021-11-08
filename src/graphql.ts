@@ -65,11 +65,6 @@ export class ArticleInputType {
     tags: string[];
 }
 
-export class AssignmentSetInput {
-    title: string;
-    lessonId: string;
-}
-
 export class CodeConfigInput {
     code: string;
     language: ProgrammingLanguage;
@@ -78,7 +73,7 @@ export class CodeConfigInput {
 export class CodeChallengeSetInput {
     title: string;
     description: string;
-    assignmentId?: Nullable<string>;
+    lessonId: string;
     input: string;
     output: string;
     hints: Nullable<string>[];
@@ -363,12 +358,9 @@ export class ArticleTagType implements BaseGraphQL {
     articles?: Nullable<Nullable<ArticleType>[]>;
 }
 
-export class AssignmentType implements BaseGraphQL {
+export class AssignmentType {
     __typename?: 'AssignmentType';
     id: string;
-    title: string;
-    createdAt: ScalarDate;
-    updatedAt: ScalarDate;
     lesson: LessonType;
     codeChallenges: Nullable<CodeChallengeType>[];
     quizs: Nullable<QuizType>[];
@@ -432,6 +424,13 @@ export class QuizType implements BaseGraphQL {
     assignment: AssignmentType;
     description: string;
     question: QuestionType[];
+}
+
+export class QuizSetInput {
+    __typename?: 'QuizSetInput';
+    title: string;
+    assignmentId?: Nullable<string>;
+    description: string;
 }
 
 export class TestCaseType implements BaseGraphQL {
@@ -609,7 +608,7 @@ export class LessonType implements BaseGraphQL {
     course: CourseType;
     content: string;
     documents: Nullable<DocumentType>[];
-    assignments: Nullable<AssignmentType>[];
+    assignment: AssignmentType;
     comments: Nullable<UserCommentType>[];
 }
 
@@ -619,7 +618,6 @@ export class LessonMutation {
     deleteLesson: boolean;
     setCodeChallenge: AssignmentType;
     deleteCodeChallenge: boolean;
-    deleteAssignment: boolean;
     runTestCase: SummaryEvaluationResult;
 }
 

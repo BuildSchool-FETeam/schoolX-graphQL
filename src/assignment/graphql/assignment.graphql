@@ -1,13 +1,5 @@
-input AssignmentSetInput {
-  title: String!
-  lessonId: ID!
-}
-
-type AssignmentType implements BaseGraphQL {
+type AssignmentType{
   id: ID!
-  title: String!
-  createdAt: ScalarDate!
-  updatedAt: ScalarDate!
   lesson: LessonType!
   codeChallenges(pagination: PaginationInput): [CodeChallengeType]!
   quizs(pagination: PaginationInput): [QuizType]!

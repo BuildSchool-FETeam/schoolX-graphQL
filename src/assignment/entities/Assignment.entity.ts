@@ -10,12 +10,16 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CodeChallenge } from './codeChallenge/CodeChallenge.entity';
 import { Quiz } from './quiz/Quiz.entity';
 
 @Entity()
-export class Assignment extends BaseEntity {
+export class Assignment{
+  @PrimaryGeneratedColumn()
+  id: string
+  
   @ManyToOne(() => Lesson, (lesson) => lesson, {
     onDelete: 'CASCADE',
   })

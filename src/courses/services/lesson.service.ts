@@ -1,10 +1,10 @@
-import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
-import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { Lesson } from '../entities/Lesson.entity';
 import { CourseService } from './course.service';
@@ -73,15 +73,11 @@ export class LessonService extends BaseService<Lesson> {
   async setCodeChallenge(
     id: string,
     codeChallenge: CodeChallengeSetInput,
-    dataAssign: AssignmentSetInput
   ) {
-    if(!codeChallenge.assignmentId && !dataAssign) {
-      throw new BadRequestException("Assignment no existed, must have dataAssign to create Assignment")
-    }
 
     let assignment: Assignment;
     if(!id) {
-      assignment = await this.assignService.createCodeChallenge(codeChallenge, dataAssign);
+      assignment = await this.assignService.createCodeChallenge(codeChallenge);
     }else {
       assignment = await this.assignService.updateCodeChallenge(id, codeChallenge);
     }
@@ -93,10 +89,5 @@ export class LessonService extends BaseService<Lesson> {
     id: string
   ){
     return this.assignService.deleteCodeChallenge(id);
-  }
-
-  async deleteAssignment(id: string) {
-    await this.assignService.deleteOneById(id);
-    return true;
   }
 }

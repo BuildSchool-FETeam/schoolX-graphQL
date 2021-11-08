@@ -11,7 +11,7 @@ import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { LessonDocument } from 'src/courses/entities/LessonDocument.entity';
 import { LessonDocumentService } from 'src/courses/services/document.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('LessonMutation')
@@ -89,9 +89,8 @@ export class LessonMutationResolver {
   setCodeChallenge(
     @Args('id') id: string,
     @Args('data') data: CodeChallengeSetInput,
-    @Args('dataAssign') dataAssign: AssignmentSetInput
   ) {
-    return this.lessonService.setCodeChallenge(id, data, dataAssign);
+    return this.lessonService.setCodeChallenge(id, data);
   }
 
   @ResolveField()
@@ -99,13 +98,6 @@ export class LessonMutationResolver {
     @Args('id') id: string
   ){
     this.lessonService.deleteCodeChallenge(id);
-  }
-
-  @ResolveField()
-  deleteAssignment(
-    @Args('id') id: string
-  ){
-    return this.lessonService.deleteAssignment(id);
   }
 
   @ResolveField()

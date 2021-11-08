@@ -8,7 +8,7 @@ type LessonType implements BaseGraphQL {
   course: CourseType!
   content: String!
   documents: [DocumentType]!
-  assignments: [AssignmentType]!
+  assignment: AssignmentType!
   comments(pagination: PaginationInput): [UserCommentType]!
 }
 
@@ -23,9 +23,8 @@ input LessonSetInput {
 type LessonMutation {
   setLesson(id: ID, data: LessonSetInput!): LessonType!
   deleteLesson(id: ID): Boolean!
-  setCodeChallenge(id: ID, data: CodeChallengeSetInput!, dataAssign: AssignmentSetInput): AssignmentType!
+  setCodeChallenge(id: ID, data: CodeChallengeSetInput!): AssignmentType!
   deleteCodeChallenge(id: ID!): Boolean!
-  deleteAssignment(id: ID!): Boolean!
   runTestCase(
     challengeId: ID!
     data: CodeConfigInput!

@@ -13,7 +13,7 @@ export class QuizTypeResolver {
         const quiz = await this.quizService.findById(parent.id,
             {relations: ["assignment"]}
         )
-        return this.assignment;
+        return quiz.assignment;
     }
 
     @ResolveField()

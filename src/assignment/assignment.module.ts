@@ -14,10 +14,13 @@ import { CommonModule } from 'src/common/Common.module';
 import { CodeChallengeService } from './services/codeChallenge/codeChallenge.service';
 import { CodeChallenge } from './entities/codeChallenge/CodeChallenge.entity';
 import { CodeChallengeTypeResolver } from './resolvers/codeChallengeType.resolver';
+import { QuizService } from './services/quiz/quiz.service';
+import { QuizTypeResolver } from './resolvers/quiz/quizType.resolver';
+import { Quiz } from './entities/quiz/Quiz.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Assignment, TestCase, CodeChallenge]),
+    TypeOrmModule.forFeature([Assignment, TestCase, CodeChallenge, Quiz]),
     forwardRef(() => CourseModule),
     MiniServerModule,
     CommonModule,
@@ -30,7 +33,9 @@ import { CodeChallengeTypeResolver } from './resolvers/codeChallengeType.resolve
     TestCaseType,
     TestCaseQueryResolver,
     CodeChallengeService,
-    CodeChallengeTypeResolver
+    CodeChallengeTypeResolver,
+    QuizService,
+    QuizTypeResolver
   ],
   exports: [AssignmentService],
 })

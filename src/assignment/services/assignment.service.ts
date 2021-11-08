@@ -2,14 +2,12 @@ import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { AssignmentSetInput, CodeChallengeSetInput, CodeConfigInput, TypeAssign } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, TypeAssign } from 'src/graphql';
 import { Repository } from 'typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
-import {
-  TestCaseProgrammingLanguage,
-} from '../entities/codeChallenge/Testcase.entity';
 import { CodeChallengeService } from './codeChallenge/codeChallenge.service';
+import { QuizService } from './quiz/quiz.service';
 
 @Injectable()
 export class AssignmentService extends BaseService<Assignment> {
@@ -19,6 +17,7 @@ export class AssignmentService extends BaseService<Assignment> {
     @Inject(forwardRef(() => LessonService))
     private lessonService: LessonService,
     private codeChallengeService: CodeChallengeService,
+    private quizService: QuizService
   ) {
     super(assignmentRepo, 'Assignment');
   }
@@ -39,35 +38,21 @@ export class AssignmentService extends BaseService<Assignment> {
     throw new NotFoundException(`Assignment with id ${idAssign} is not exist`);
   } 
 
-  async createAssignment(data: AssignmentSetInput) {
-    const lesson = await this.lessonService.findById(data.lessonId);
+  async createAssignment(lessonId: string,) {
+    const lesson = await this.lessonService.findById(lessonId);
     const assignment = this.assignmentRepo.create({
-      ...data,
-      lesson,
+      // ...data,
+      lesson
     });
 
     return this.assignmentRepo.save(assignment);
   }
 
-  async updateAssignment(id: string, data: AssignmentSetInput) {
-    const assignment = await this.findById(id);
-    const lesson = await this.lessonService.findById(data.lessonId);
-
-    _.forOwn(data, (value, key) => {
-      if (key === 'lessonId') {
-        assignment.lesson = lesson;
-      }else {
-        value && (assignment[key] = value);
-      }
-    });
-
-    return this.assignmentRepo.save(assignment);
-  }
-
-  async runCode(code: string, language: TestCaseProgrammingLanguage) {
-    return this.codeChallengeService.runCode(code, language);
-  }
-
+  /**
+   * -------------------------
+   * Code Challenge Service
+   * -------------------------
+  */
   async runTestCase(challengeId: string, data: CodeConfigInput) {
     return this.codeChallengeService.runTestCase(challengeId, data);
   }
@@ -76,14 +61,16 @@ export class AssignmentService extends BaseService<Assignment> {
     return this.codeChallengeService.findById(id);
   }
 
-  async createCodeChallenge(data: CodeChallengeSetInput, dataAssign: AssignmentSetInput ) {
+  async createCodeChallenge(data: CodeChallengeSetInput) {
+    const lesson = await this.lessonService.findById(data.lessonId, {relations: ["assignment"]})
+ 
     let assignment: Assignment;
 
-    if(!data.assignmentId) {
-      assignment = await this.createAssignment(dataAssign);
+    if(!data.lessonId || !lesson.assignment) {
+      assignment = await this.createAssignment(data.lessonId);
       assignment.codeChallenges = [];
     }else {
-      assignment = await this.findById(data.assignmentId, {relations: ["codeChallenges"]})
+      assignment = await this.findById(lesson.assignment.id, {relations: ["codeChallenges"]})
     }
 
     const codeChallenges = _.cloneDeep(assignment.codeChallenges);
@@ -99,10 +86,12 @@ export class AssignmentService extends BaseService<Assignment> {
 
     let assignment: Assignment;
 
-    if(!data.assignmentId) {
+    if(!data.lessonId) {
       this.codeChallengeService.updateChallenge(idChallenge, data);
     }else{
-      assignment = await this.findById(data.assignmentId);
+      const lesson = await this.lessonService.findById(data.lessonId, {relations: ["assignment"]});
+
+      assignment = await this.findById(lesson.assignment.id);
       this.codeChallengeService.updateChallenge(idChallenge, data, assignment);
     }
     return assignment
@@ -142,6 +131,37 @@ export class AssignmentService extends BaseService<Assignment> {
     
     return true;
   }
+  /**
+   * -----------------------------
+   * Code Challenge Service end 
+   * -----------------------------
+  */
+
+  /**
+   * ---------------
+   * Quiz Service
+   * ---------------
+  */
+  async getQuiz(id: string) {
+    return this.quizService.findById(id)
+  }
+
+  async createQuiz() {
+
+  }
+
+  async updateQuiz() {
+
+  }
+
+  async deleteQuiz() {
+
+  }
+  /**
+   * -------------------
+   * Quiz Service end
+   * -------------------
+  */
 
   private async checkRemoveAssgin(id: string) {
     const {codeChallenges} = await this.findById(id, {
