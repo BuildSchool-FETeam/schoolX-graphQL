@@ -23,12 +23,15 @@ input LessonSetInput {
 type LessonMutation {
   setLesson(id: ID, data: LessonSetInput!): LessonType!
   deleteLesson(id: ID): Boolean!
-  setCodeChallenge(id: ID, data: CodeChallengeSetInput!): AssignmentType!
+
+  setCodeChallenge(id: ID, data: CodeChallengeSetInput!): CodeChallengeType!
   deleteCodeChallenge(id: ID!): Boolean!
   runTestCase(
     challengeId: ID!
     data: CodeConfigInput!
   ): SummaryEvaluationResult!
+
+  setQuiz(id: ID, data: QuizSetInput!): QuizType!
 }
 
 type Mutation {

@@ -90,7 +90,7 @@ export class LessonQueryResolver {
   }
 
   @ResolveField()
-  getCodeChallenge(id: string){
+  getCodeChallenge(@Args('id') id: string){
     return this.lessonService.getCodeChallenge(id);
   }
 }

@@ -8,8 +8,9 @@ type QuizType implements BaseGraphQL{
     question: [QuestionType!]!
 }
 
-type QuizSetInput {
+input QuizSetInput {
     title: String!
-    assignmentId: String
+    lessonId: String!
     description: String!
+    score: Int!
 }

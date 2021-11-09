@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
+import { CodeChallenge } from 'src/assignment/entities/codeChallenge/CodeChallenge.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
 import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
@@ -63,7 +64,7 @@ export class LessonService extends BaseService<Lesson> {
   }
 
   async getCodeChallenge(id: string) {
-    return this.assignService.findById(id);
+    return this.assignService.getCodeChallenge(id);
   }
 
   async runTestCase(challengeId: string, data: CodeConfigInput) {
@@ -75,7 +76,7 @@ export class LessonService extends BaseService<Lesson> {
     codeChallenge: CodeChallengeSetInput,
   ) {
 
-    let assignment: Assignment;
+    let assignment: CodeChallenge;
     if(!id) {
       assignment = await this.assignService.createCodeChallenge(codeChallenge);
     }else {

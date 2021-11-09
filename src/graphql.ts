@@ -81,6 +81,13 @@ export class CodeChallengeSetInput {
     languageSupport: Nullable<string>[];
 }
 
+export class QuizSetInput {
+    title: string;
+    lessonId: string;
+    description: string;
+    score: number;
+}
+
 export class TestCaseSetInput {
     title: string;
     runningTestScript: string;
@@ -426,13 +433,6 @@ export class QuizType implements BaseGraphQL {
     question: QuestionType[];
 }
 
-export class QuizSetInput {
-    __typename?: 'QuizSetInput';
-    title: string;
-    assignmentId?: Nullable<string>;
-    description: string;
-}
-
 export class TestCaseType implements BaseGraphQL {
     __typename?: 'TestCaseType';
     id: string;
@@ -616,9 +616,10 @@ export class LessonMutation {
     __typename?: 'LessonMutation';
     setLesson: LessonType;
     deleteLesson: boolean;
-    setCodeChallenge: AssignmentType;
+    setCodeChallenge: CodeChallengeType;
     deleteCodeChallenge: boolean;
     runTestCase: SummaryEvaluationResult;
+    setQuiz: QuizType;
 }
 
 export class LessonQuery {
