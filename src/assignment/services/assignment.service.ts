@@ -70,7 +70,7 @@ export class AssignmentService extends BaseService<Assignment> {
  
     let assignment: Assignment;
 
-    if(!data.lessonId || !lesson.assignment) {
+    if(!lesson.assignment) {
       assignment = await this.createAssignment(data.lessonId);
       assignment.codeChallenges = [];
     }else {
@@ -180,8 +180,9 @@ export class AssignmentService extends BaseService<Assignment> {
 
     quizs.push(quiz);
     assign.quizs = quizs;
+    this.assignmentRepo.save(assign);
 
-    return this.assignmentRepo.save(assign)
+    return quiz; 
   }
 
   async updateQuiz(id: string, data: QuizSetInput) {
@@ -207,8 +208,9 @@ export class AssignmentService extends BaseService<Assignment> {
     const quizs = _.cloneDeep(assignment.quizs);
     quizs.push(quiz)
     assignment.quizs = quizs;
+    this.assignmentRepo.save(assignment);
 
-    return this.assignmentRepo.save(assignment);
+    return quiz;
   }
 
   async deleteQuiz(id: string) {
