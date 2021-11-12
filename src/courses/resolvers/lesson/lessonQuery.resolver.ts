@@ -93,4 +93,9 @@ export class LessonQueryResolver {
   getCodeChallenge(@Args('id') id: string){
     return this.lessonService.getCodeChallenge(id);
   }
+
+  @ResolveField()
+  getQuiz(@Args('id') id: string) {
+    return this.lessonService.getQuiz(id);
+  }
 }

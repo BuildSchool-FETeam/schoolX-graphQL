@@ -2,7 +2,7 @@ import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 import { Question } from "src/assignment/entities/quiz/Question.entity";
 import { QuestionService } from "src/assignment/services/quiz/question.service";
 
-@Resolver()
+@Resolver('QuestionType')
 export class QuestionTypeResolver {
 
     constructor(private questionService: QuestionService){}
@@ -15,7 +15,7 @@ export class QuestionTypeResolver {
     }
 
     @ResolveField()
-    async option(@Parent() parent: Question) {
+    async options(@Parent() parent: Question) {
         return parent.options.split("|");
     }
 }

@@ -125,7 +125,7 @@ export class AssignmentService extends BaseService<Assignment> {
 
     const codeChallenges = _.cloneDeep(assignment.codeChallenges);
     const [checkAvailable, isRemoveAssign] = await Promise.all([
-      _.some(codeChallenges ,['id', id]),
+      _.some(codeChallenges ,['id', parseInt(id)]),
       this.checkRemoveAssgin(codeChallenge.assignment.id)
     ])
 
@@ -133,13 +133,13 @@ export class AssignmentService extends BaseService<Assignment> {
       return false;
     }else if(isRemoveAssign){
       Promise.all([
-        _.remove(codeChallenges, ['id', id]),
+        _.remove(codeChallenges, ['id', parseInt(id)]),
         this.codeChallengeService.deleteOneById(id),
         this.deleteOneById(codeChallenge.assignment.id)
       ])
     }else {
       Promise.all([
-        _.remove(codeChallenges, ['id', id]),
+        _.remove(codeChallenges, ['id', parseInt(id)]),
         this.codeChallengeService.deleteOneById(id),
       ])
     }
@@ -175,7 +175,7 @@ export class AssignmentService extends BaseService<Assignment> {
       assign = await this.findById(assignment.id, {relations: ["quizs"]});
     }
 
-    const quizs = _.cloneDeep(assignment.quizs);
+    const quizs = _.cloneDeep(assign.quizs);
     const quiz = await this.quizService.createQuiz(data, assign);
 
     quizs.push(quiz);
@@ -192,7 +192,7 @@ export class AssignmentService extends BaseService<Assignment> {
 
     if(!lesson.assignment) {
       assignment = await this.createAssignment(data.lessonId);
-      assignment.codeChallenges = []
+      assignment.quizs = []
 
       quiz = await this.quizService.updateQuiz(id, data, assignment);
     }else {
@@ -223,7 +223,7 @@ export class AssignmentService extends BaseService<Assignment> {
 
     const quizs = _.cloneDeep(assignment.quizs);
     const [checkAvailable, isRemoveAssign] = await Promise.all([
-      _.some(quizs ,['id', id]),
+      _.some(quizs ,['id', parseInt(id)]),
       this.checkRemoveAssgin(quiz.assignment.id)
     ])
 
@@ -231,13 +231,13 @@ export class AssignmentService extends BaseService<Assignment> {
       return false;
     }else if(isRemoveAssign){
       Promise.all([
-        _.remove(quizs, ['id', id]),
+        _.remove(quizs, ['id', parseInt(id)]),
         this.quizService.deleteOneById(id),
         this.deleteOneById(quiz.assignment.id)
       ])
     }else {
       Promise.all([
-        _.remove(quizs, ['id', id]),
+        _.remove(quizs, ['id', parseInt(id)]),
         this.quizService.deleteOneById(id),
       ])
     }
@@ -254,12 +254,13 @@ export class AssignmentService extends BaseService<Assignment> {
   */
 
   private async checkRemoveAssgin(id: string) {
-    const {codeChallenges} = await this.findById(id, {
-      relations: ["codeChallenges"]
+    const {codeChallenges, quizs} = await this.findById(id, {
+      relations: ["codeChallenges", "quizs"]
     })
 
     if(
-      codeChallenges.length === 0
+      codeChallenges.length === 0 &&
+      quizs.length === 0
     ) { return true }
 
     return false;

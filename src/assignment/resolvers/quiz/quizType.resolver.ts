@@ -2,7 +2,7 @@ import { Parent, ResolveField, Resolver } from "@nestjs/graphql";
 import { Quiz } from "src/assignment/entities/quiz/Quiz.entity";
 import { QuizService } from "src/assignment/services/quiz/quiz.service";
 
-@Resolver()
+@Resolver('QuizType')
 export class QuizTypeResolver {
     constructor(
         private quizService: QuizService

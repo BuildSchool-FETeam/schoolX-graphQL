@@ -5,7 +5,7 @@ type QuizType implements BaseGraphQL{
     updatedAt: ScalarDate!
     assignment: AssignmentType!
     description: String!
-    question: [QuestionType!]!
+    questions: [QuestionType!]!
 }
 
 input QuizSetInput {

@@ -1,8 +1,8 @@
 type AssignmentType{
   id: ID!
   lesson: LessonType!
-  codeChallenges(pagination: PaginationInput): [CodeChallengeType]!
-  quizs(pagination: PaginationInput): [QuizType]!
+  codeChallenges: [CodeChallengeType]!
+  quizs: [QuizType]!
   comments(pagination: PaginationInput): [UserCommentType]!
 }
 

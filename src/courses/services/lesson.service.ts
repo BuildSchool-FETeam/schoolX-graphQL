@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { CodeChallenge } from 'src/assignment/entities/codeChallenge/CodeChallenge.entity';
+import { Quiz } from 'src/assignment/entities/quiz/Quiz.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
-import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput, QuizSetInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { Lesson } from '../entities/Lesson.entity';
 import { CourseService } from './course.service';
@@ -16,7 +17,7 @@ export class LessonService extends BaseService<Lesson> {
     @InjectRepository(Lesson)
     private lessonRepo: Repository<Lesson>,
     private courseService: CourseService,
-    private assignService: AssignmentService
+    private assignService: AssignmentService,
   ) {
     super(lessonRepo, 'Lesson');
   }
@@ -90,5 +91,30 @@ export class LessonService extends BaseService<Lesson> {
     id: string
   ){
     return this.assignService.deleteCodeChallenge(id);
+  }
+
+  async getQuiz(id: string) {
+    return this.assignService.getQuiz(id);
+  }
+
+  async setQuiz(
+    id: string,
+    data: QuizSetInput
+  ){
+    let assignment: Quiz;
+
+    if(!id) {
+      assignment = await this.assignService.createQuiz(data);
+    }else{
+      assignment = await this.assignService.updateQuiz(id, data);
+    }
+
+    return assignment
+  }
+
+  async deleteQuiz(
+    id: string
+  ) {
+    return this.assignService.deleteQuiz(id);
   }
 }

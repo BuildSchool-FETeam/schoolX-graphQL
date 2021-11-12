@@ -3,7 +3,30 @@ type QuestionType implements BaseGraphQL{
     title: String!
     createdAt: ScalarDate!
     updatedAt: ScalarDate!
-    quiz: QuizType
+    quiz: QuizType!
     options: [String!]!
-    result: String
+    isMutiple: Boolean!
+    result: Int
+    results: [Int!]
+}
+
+input QuestionSetInput {
+    idQuiz: ID!
+    title: String!
+    options: [String!]!
+    isMutiple: Boolean!
+    results: [Int!]!
+}
+
+type QuestionMutation{
+    setQuestion(id: ID, data: QuestionSetInput!): QuestionType!
+    deleteQuestion(id: ID!): Boolean!
+}
+
+type Mutation {
+    questionMutation: QuestionMutation!
+}
+
+type QuestionQuery{
+    question(id: ID!): QuestionType!
 }

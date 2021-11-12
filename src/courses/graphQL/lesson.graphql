@@ -32,6 +32,7 @@ type LessonMutation {
   ): SummaryEvaluationResult!
 
   setQuiz(id: ID, data: QuizSetInput!): QuizType!
+  deleteQuiz(id: ID!): Boolean
 }
 
 type Mutation {
@@ -53,4 +54,5 @@ type LessonQuery {
   totalLessons(courseId: ID!): Int!
   getTypeAssignment(idLesson: ID!, idAssign: ID!): TypeAssign!
   getCodeChallenge(id: ID!): CodeChallengeType!
+  getQuiz(id: ID!): QuizType!
 }

@@ -6,7 +6,7 @@ import { Quiz } from "./Quiz.entity";
 export class Question extends BaseEntity{
 
     @ManyToOne(() => Quiz, quiz => quiz.questions, {
-        onDelete: "CASCADE"
+        onDelete: "CASCADE",
     })
     @JoinColumn()
     quiz: Quiz
@@ -15,5 +15,14 @@ export class Question extends BaseEntity{
     options: string
 
     @Column()
-    result: string
+    isMutiple: boolean
+
+    @Column({nullable: true})
+    result?: number
+
+    @Column('int', {
+        nullable: true, 
+        array: true
+    })
+    results?: number[]
 }

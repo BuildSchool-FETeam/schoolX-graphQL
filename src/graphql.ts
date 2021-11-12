@@ -81,6 +81,14 @@ export class CodeChallengeSetInput {
     languageSupport: Nullable<string>[];
 }
 
+export class QuestionSetInput {
+    idQuiz: string;
+    title: string;
+    options: string[];
+    isMutiple: boolean;
+    results: number[];
+}
+
 export class QuizSetInput {
     title: string;
     lessonId: string;
@@ -278,6 +286,8 @@ export abstract class IMutation {
 
     abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
 
+    abstract questionMutation(): QuestionMutation | Promise<QuestionMutation>;
+
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
@@ -417,9 +427,22 @@ export class QuestionType implements BaseGraphQL {
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
-    quiz?: Nullable<QuizType>;
+    quiz: QuizType;
     options: string[];
-    result?: Nullable<string>;
+    isMutiple: boolean;
+    result?: Nullable<number>;
+    results?: Nullable<number[]>;
+}
+
+export class QuestionMutation {
+    __typename?: 'QuestionMutation';
+    setQuestion: QuestionType;
+    deleteQuestion: boolean;
+}
+
+export class QuestionQuery {
+    __typename?: 'QuestionQuery';
+    question: QuestionType;
 }
 
 export class QuizType implements BaseGraphQL {
@@ -430,7 +453,7 @@ export class QuizType implements BaseGraphQL {
     updatedAt: ScalarDate;
     assignment: AssignmentType;
     description: string;
-    question: QuestionType[];
+    questions: QuestionType[];
 }
 
 export class TestCaseType implements BaseGraphQL {
@@ -620,6 +643,7 @@ export class LessonMutation {
     deleteCodeChallenge: boolean;
     runTestCase: SummaryEvaluationResult;
     setQuiz: QuizType;
+    deleteQuiz?: Nullable<boolean>;
 }
 
 export class LessonQuery {
@@ -629,6 +653,7 @@ export class LessonQuery {
     totalLessons: number;
     getTypeAssignment: TypeAssign;
     getCodeChallenge: CodeChallengeType;
+    getQuiz: QuizType;
 }
 
 export class DocumentType implements BaseGraphQL {
