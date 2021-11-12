@@ -16,8 +16,7 @@ import { CodeChallengeTypeResolver } from './resolvers/codeChallenge/codeChallen
 import { QuizService } from './services/quiz/quiz.service';
 import { QuizTypeResolver } from './resolvers/quiz/quizType.resolver';
 import { Quiz } from './entities/quiz/Quiz.entity';
-import { QuestionMutationResolver } from './resolvers/quiz/question/questionMutation.resolver';
-import { QuestionTypeResolver } from './resolvers/quiz/question/questionType.resolver';
+import { QuestionTypeResolver } from './resolvers/quiz/questionType.resolver';
 import { QuestionService } from './services/quiz/question.service';
 import { Question } from './entities/quiz/Question.entity';
 
@@ -40,7 +39,6 @@ import { Question } from './entities/quiz/Question.entity';
     QuizTypeResolver,
     QuestionService,
     QuestionTypeResolver,
-    QuestionMutationResolver
   ],
   exports: [AssignmentService],
 })

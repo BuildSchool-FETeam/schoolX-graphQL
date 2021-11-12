@@ -74,17 +74,10 @@ export class LessonService extends BaseService<Lesson> {
 
   async setCodeChallenge(
     id: string,
-    codeChallenge: CodeChallengeSetInput,
+    data: CodeChallengeSetInput,
   ) {
 
-    let assignment: CodeChallenge;
-    if(!id) {
-      assignment = await this.assignService.createCodeChallenge(codeChallenge);
-    }else {
-      assignment = await this.assignService.updateCodeChallenge(id, codeChallenge);
-    }
-
-    return assignment;
+    return this.assignService.setCodeChallenge(id, data);
   }
 
   async deleteCodeChallenge(
@@ -101,15 +94,7 @@ export class LessonService extends BaseService<Lesson> {
     id: string,
     data: QuizSetInput
   ){
-    let assignment: Quiz;
-
-    if(!id) {
-      assignment = await this.assignService.createQuiz(data);
-    }else{
-      assignment = await this.assignService.updateQuiz(id, data);
-    }
-
-    return assignment
+    return this.assignService.setQuiz(id, data);
   }
 
   async deleteQuiz(

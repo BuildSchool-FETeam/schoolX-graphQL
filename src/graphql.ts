@@ -86,7 +86,8 @@ export class QuestionSetInput {
     title: string;
     options: string[];
     isMutiple: boolean;
-    results: number[];
+    result?: Nullable<number>;
+    results?: Nullable<number[]>;
 }
 
 export class QuizSetInput {
@@ -286,8 +287,6 @@ export abstract class IMutation {
 
     abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
 
-    abstract questionMutation(): QuestionMutation | Promise<QuestionMutation>;
-
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
@@ -432,17 +431,6 @@ export class QuestionType implements BaseGraphQL {
     isMutiple: boolean;
     result?: Nullable<number>;
     results?: Nullable<number[]>;
-}
-
-export class QuestionMutation {
-    __typename?: 'QuestionMutation';
-    setQuestion: QuestionType;
-    deleteQuestion: boolean;
-}
-
-export class QuestionQuery {
-    __typename?: 'QuestionQuery';
-    question: QuestionType;
 }
 
 export class QuizType implements BaseGraphQL {

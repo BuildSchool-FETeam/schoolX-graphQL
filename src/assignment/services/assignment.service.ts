@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonService } from 'src/courses/services/lesson.service';
@@ -29,15 +29,10 @@ export class AssignmentService extends BaseService<Assignment> {
     const assignment = await this.findById(id,
      {relations: ["codeChallenges", "quizs"]}  
     )
+    const codeChallenges = _.some(assignment.codeChallenges, ['id', parseInt(idAssign)]);
+    const quizs = _.some(assignment.quizs, ['id', parseInt(idAssign)]);
 
-    const [codeChallenge, quizs] = await Promise.all([
-      _.some(assignment.codeChallenges, ['id', parseInt(idAssign)]),
-      _.some(assignment.quizs, ['id', parseInt(idAssign)])
-    ])
-
-    console.log(codeChallenge, quizs);
-
-    if(codeChallenge) { return TypeAssign.codeChallenge }
+    if(codeChallenges) { return TypeAssign.codeChallenge }
     if(quizs) { return TypeAssign.quiz }
 
     throw new NotFoundException(`Assignment with id ${idAssign} is not exist`);
@@ -65,89 +60,16 @@ export class AssignmentService extends BaseService<Assignment> {
     return this.codeChallengeService.findById(id);
   }
 
-  async createCodeChallenge(data: CodeChallengeSetInput) {
-    const lesson = await this.lessonService.findById(data.lessonId, {relations: ["assignment"]})
- 
-    let assignment: Assignment;
-
-    if(!lesson.assignment) {
-      assignment = await this.createAssignment(data.lessonId);
-      assignment.codeChallenges = [];
-    }else {
-      assignment = await this.findById(lesson.assignment.id, {relations: ["codeChallenges"]})
+  async setCodeChallenge(id: string, data: CodeChallengeSetInput) {
+    if(!id) {
+      return this.codeChallengeService.create(data);
+    }else{
+      return this.codeChallengeService.update(id, data);
     }
-
-    const codeChallenges = _.cloneDeep(assignment.codeChallenges);
-    const challenge = await this.codeChallengeService.createChallenge(data, assignment);
-    
-    codeChallenges.push(challenge);
-    assignment.codeChallenges = codeChallenges;
-    this.assignmentRepo.save(assignment);
-
-    return challenge; 
-  }
-
-  async updateCodeChallenge(id: string, data: CodeChallengeSetInput) {
-    const lesson = await this.lessonService.findById(data.lessonId, {relations: ["assignment"]});
-    let assignment: Assignment;
-    let codeChallenge: CodeChallenge;
-
-    if(!lesson.assignment) {
-      assignment = await this.createAssignment(data.lessonId);
-      assignment.codeChallenges = []
-
-      codeChallenge = await this.codeChallengeService.updateChallenge(id, data, assignment);
-    }else {
-      assignment = await this.findById(lesson.assignment.id, {relations: ["codeChallenges", "lesson"]});
-
-      if(assignment.lesson.id.toString() === data.lessonId.toString()){
-        codeChallenge = await this.codeChallengeService.updateChallenge(id, data);
-      }else {
-        codeChallenge = await this.codeChallengeService.updateChallenge(id, data, assignment);
-      }
-    }
-
-    const codeChallenges = _.cloneDeep(assignment.codeChallenges);
-    codeChallenges.push(codeChallenge)
-    assignment.codeChallenges = codeChallenges;
-    this.assignmentRepo.save(assignment);
-
-    return codeChallenge;
   }
 
   async deleteCodeChallenge(id: string){
-    const codeChallenge = await this.codeChallengeService.findById(id, {
-      relations: ["assignment"]
-    });
-    const assignment = await this.findById(codeChallenge.assignment.id, {
-      relations: ["codeChallenges"]
-    })
-
-    const codeChallenges = _.cloneDeep(assignment.codeChallenges);
-    const [checkAvailable, isRemoveAssign] = await Promise.all([
-      _.some(codeChallenges ,['id', parseInt(id)]),
-      this.checkRemoveAssgin(codeChallenge.assignment.id)
-    ])
-
-    if(!checkAvailable) {
-      return false;
-    }else if(isRemoveAssign){
-      Promise.all([
-        _.remove(codeChallenges, ['id', parseInt(id)]),
-        this.codeChallengeService.deleteOneById(id),
-        this.deleteOneById(codeChallenge.assignment.id)
-      ])
-    }else {
-      Promise.all([
-        _.remove(codeChallenges, ['id', parseInt(id)]),
-        this.codeChallengeService.deleteOneById(id),
-      ])
-    }
-
-    assignment.codeChallenges = codeChallenges;
-    await this.assignmentRepo.save(assignment);
-    
-    return true;
+    return this.codeChallengeService.delete(id)
   }
   /**
    * -----------------------------
@@ -164,88 +86,16 @@ export class AssignmentService extends BaseService<Assignment> {
     return this.quizService.findById(id)
   }
 
-  async createQuiz(data: QuizSetInput) {
-    const { assignment } = await this.lessonService.findById(data.lessonId, {relations: ["assignment"]});
-    
-    let assign: Assignment;
-    if(!assignment) {
-      assign = await this.createAssignment(data.lessonId);
-      assign.quizs = []
+  async setQuiz(id: string, data: QuizSetInput) {
+    if(!id) {
+      return this.quizService.create(data);
     }else{
-      assign = await this.findById(assignment.id, {relations: ["quizs"]});
+      return this.quizService.update(id, data);
     }
-
-    const quizs = _.cloneDeep(assign.quizs);
-    const quiz = await this.quizService.createQuiz(data, assign);
-
-    quizs.push(quiz);
-    assign.quizs = quizs;
-    this.assignmentRepo.save(assign);
-
-    return quiz; 
-  }
-
-  async updateQuiz(id: string, data: QuizSetInput) {
-    const lesson = await this.lessonService.findById(data.lessonId, {relations: ["assignment"]});
-    let assignment: Assignment;
-    let quiz: Quiz;
-
-    if(!lesson.assignment) {
-      assignment = await this.createAssignment(data.lessonId);
-      assignment.quizs = []
-
-      quiz = await this.quizService.updateQuiz(id, data, assignment);
-    }else {
-      assignment = await this.findById(lesson.assignment.id, {relations: ["quizs", "lesson"]});
-
-      if(assignment.lesson.id.toString() === data.lessonId.toString()){
-        quiz = await this.quizService.updateQuiz(id, data);
-      }else {
-        quiz = await this.quizService.updateQuiz(id, data, assignment);
-      }
-    }
-
-    const quizs = _.cloneDeep(assignment.quizs);
-    quizs.push(quiz)
-    assignment.quizs = quizs;
-    this.assignmentRepo.save(assignment);
-
-    return quiz;
   }
 
   async deleteQuiz(id: string) {
-    const quiz = await this.quizService.findById(id, {
-      relations: ["assignment"]
-    });
-    const assignment = await this.findById(quiz.assignment.id, {
-      relations: ["quizs"]
-    })
-
-    const quizs = _.cloneDeep(assignment.quizs);
-    const [checkAvailable, isRemoveAssign] = await Promise.all([
-      _.some(quizs ,['id', parseInt(id)]),
-      this.checkRemoveAssgin(quiz.assignment.id)
-    ])
-
-    if(!checkAvailable) {
-      return false;
-    }else if(isRemoveAssign){
-      Promise.all([
-        _.remove(quizs, ['id', parseInt(id)]),
-        this.quizService.deleteOneById(id),
-        this.deleteOneById(quiz.assignment.id)
-      ])
-    }else {
-      Promise.all([
-        _.remove(quizs, ['id', parseInt(id)]),
-        this.quizService.deleteOneById(id),
-      ])
-    }
-
-    assignment.quizs = quizs;
-    await this.assignmentRepo.save(assignment);
-    
-    return true;
+    return this.quizService.delete(id);
   }
   /**
    * -------------------
@@ -253,7 +103,7 @@ export class AssignmentService extends BaseService<Assignment> {
    * -------------------
   */
 
-  private async checkRemoveAssgin(id: string) {
+  async deleteAssgin(id: string) {
     const {codeChallenges, quizs} = await this.findById(id, {
       relations: ["codeChallenges", "quizs"]
     })
@@ -261,8 +111,8 @@ export class AssignmentService extends BaseService<Assignment> {
     if(
       codeChallenges.length === 0 &&
       quizs.length === 0
-    ) { return true }
-
-    return false;
+    ) { 
+      this.deleteOneById(id);
+    }
   }
 }

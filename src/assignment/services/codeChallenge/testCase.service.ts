@@ -46,7 +46,7 @@ export class TestCaseService extends BaseService<TestCase> {
     const codeChallenge = await this.codeChallengeService.findById(data.codeChallengeId);
 
     _.forOwn(data, (value, key) => {
-      if (key === 'assignmentId') {
+      if (key === 'codeChallengeId') {
         existedTc.codeChallenge = codeChallenge;
       } else {
         value && (existedTc[key] = value);

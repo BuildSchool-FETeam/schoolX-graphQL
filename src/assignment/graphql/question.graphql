@@ -15,18 +15,6 @@ input QuestionSetInput {
     title: String!
     options: [String!]!
     isMutiple: Boolean!
-    results: [Int!]!
-}
-
-type QuestionMutation{
-    setQuestion(id: ID, data: QuestionSetInput!): QuestionType!
-    deleteQuestion(id: ID!): Boolean!
-}
-
-type Mutation {
-    questionMutation: QuestionMutation!
-}
-
-type QuestionQuery{
-    question(id: ID!): QuestionType!
+    result: Int
+    results: [Int!]
 }

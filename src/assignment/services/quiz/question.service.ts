@@ -21,8 +21,6 @@ export class QuestionService extends BaseService<Question> {
         const {idQuiz, results, ...infor} = data;
         const quiz = await this.quizService.findById(idQuiz);
 
-        console.log(quiz);
-
         let result: number;
         let question: Question;
 
@@ -60,7 +58,7 @@ export class QuestionService extends BaseService<Question> {
         }else { newData = {...info, results: results} }
 
         _.forOwn(newData, (value, key) => {
-            if(key === "quiz" && question.quiz.id !== quiz.id) {
+            if(key === "idQuiz" && question.quiz.id !== quiz.id) {
                 question.quiz = quiz
             }else if(key === "options") {
                 question.options = data.options.join("|")

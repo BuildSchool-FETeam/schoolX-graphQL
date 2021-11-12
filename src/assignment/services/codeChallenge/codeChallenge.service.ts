@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as _ from "lodash";
 import { BaseService } from "src/common/services/base.service";
@@ -11,6 +11,8 @@ import { Repository } from "typeorm";
 import { Assignment } from "src/assignment/entities/Assignment.entity";
 import { CodeChallenge } from "src/assignment/entities/codeChallenge/CodeChallenge.entity";
 import { TestCase, TestCaseProgrammingLanguage } from "src/assignment/entities/codeChallenge/Testcase.entity";
+import { AssignmentService } from "../assignment.service";
+import { LessonService } from "src/courses/services/lesson.service";
 
 @Injectable()
 export class CodeChallengeService extends BaseService<CodeChallenge> {
@@ -20,11 +22,25 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
         private miniJSServerService: JSMiniServerService,
         private miniJavaServerService: JavaMiniServerService,
         private miniPythonServerService: PythonMiniServerService,
+        @Inject(forwardRef(() => AssignmentService))
+        private assignService: AssignmentService,
+        @Inject(forwardRef(() => LessonService))
+        private lessonService: LessonService
     ){
         super(codeChallengeRepo, "CodeChallenge")
     }
 
-    async createChallenge(data: CodeChallengeSetInput, assignment: Assignment) {
+    async create(data: CodeChallengeSetInput) {
+        const lesson = await this.lessonService.findById(data.lessonId, {relations: ["assignment"]})
+ 
+        let assignment: Assignment;
+
+        if(!lesson.assignment) {
+            assignment = await this.assignService.createAssignment(data.lessonId);
+        }else {
+            assignment = await this.assignService.findById(lesson.assignment.id)
+        }
+
         const codeChallenge = await this.codeChallengeRepo.create({
             ...data,
             languageSupport: data.languageSupport.join("|"),
@@ -35,22 +51,49 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
         return this.codeChallengeRepo.save(codeChallenge);
     }
 
-    async updateChallenge(id: string, data: CodeChallengeSetInput, assignment?: Assignment) {
-        const challenge = await this.findById(id);
+    async update(id: string, data: CodeChallengeSetInput) {
+        const [lesson, codeChallenge] = await Promise.all([
+            this.lessonService.findById(data.lessonId, {relations: ["assignment"]}),
+            this.findById(id, {relations: ["assignment"]})
+          ])
+         
+        if(lesson.assignment.id !== codeChallenge.assignment.id) {
+            throw new BadRequestException(`Lesson with id ${lesson.id} is not contain this challenge`)
+        }
 
         _.forOwn(data, (value, key) => {
-            if('assignmentId' === key && assignment){
-                challenge.assignment =  assignment;
+            if(key === "lessonId"){
+                codeChallenge.assignment = lesson.assignment;
             } else if ('languageSupport' === key || key === 'hints') {
-                challenge[key] = (value as string[]).join('|');
+                codeChallenge[key] = (value as string[]).join('|');
             } else {
-                value && (challenge[key] = value);
+                value && (codeChallenge[key] = value);
             }
         });
 
-        return this.codeChallengeRepo.save(challenge);
+        return this.codeChallengeRepo.save(codeChallenge);
     }
     
+    async delete(id: string) {
+        const codeChallenge = await this.findById(id, {
+            relations: ["assignment"]
+        });
+        const assignment = await this.assignService.findById(codeChallenge.assignment.id, {
+            relations: ["codeChallenges"]
+        })
+
+        const checkAvailable = _.some(assignment.codeChallenges ,['id', parseInt(id)]);
+      
+        if(!checkAvailable) {
+            return false;
+        }
+
+        const deleted = await this.deleteOneById(id);
+        this.assignService.deleteAssgin(assignment.id);
+          
+        return !!deleted;
+    }
+
     async runCode(code: string, language: TestCaseProgrammingLanguage) {
         const serverService = this.getServiceByLanguage(language);
         const { result, status, executeTime } = await serverService.runCode(code);
