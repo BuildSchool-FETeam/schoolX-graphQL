@@ -12,5 +12,6 @@ input QuizSetInput {
     title: String!
     lessonId: String!
     description: String!
+    questions: [QuestionSetInput!]!
     score: Int!
 }

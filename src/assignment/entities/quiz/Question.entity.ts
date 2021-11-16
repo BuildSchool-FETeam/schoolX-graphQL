@@ -5,14 +5,17 @@ import { Quiz } from "./Quiz.entity";
 @Entity()
 export class Question extends BaseEntity{
 
+    @Column()
+    order: number
+
     @ManyToOne(() => Quiz, quiz => quiz.questions, {
         onDelete: "CASCADE",
     })
     @JoinColumn()
     quiz: Quiz
 
-    @Column()
-    options: string
+    @Column("text", {array: true})
+    options: string[]
 
     @Column()
     isMutiple: boolean
@@ -25,4 +28,7 @@ export class Question extends BaseEntity{
         array: true
     })
     results?: number[]
+
+    @Column()
+    timeByMinute: number
 }

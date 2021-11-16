@@ -61,8 +61,8 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  async deleteLesson(@Args('id') id: string) {
-    return !!this.lessonService.deleteOneById(id);
+  deleteLesson(@Args('id') id: string) {
+    return this.lessonService.deleteOneById(id);
   }
 
   private async uploadFileAndAddDocument(
@@ -97,8 +97,7 @@ export class LessonMutationResolver {
   deleteCodeChallenge(
     @Args('id') id: string
   ){
-    this.lessonService.deleteCodeChallenge(id);
-    return true;
+    return this.lessonService.deleteCodeChallenge(id);
   }
 
   @ResolveField()

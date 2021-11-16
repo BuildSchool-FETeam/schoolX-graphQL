@@ -80,7 +80,7 @@ export class LessonService extends BaseService<Lesson> {
     return this.assignService.setCodeChallenge(id, data);
   }
 
-  async deleteCodeChallenge(
+  deleteCodeChallenge(
     id: string
   ){
     return this.assignService.deleteCodeChallenge(id);

@@ -13,9 +13,4 @@ export class QuestionTypeResolver {
 
         return question.quiz;
     }
-
-    @ResolveField()
-    async options(@Parent() parent: Question) {
-        return parent.options.split("|");
-    }
 }

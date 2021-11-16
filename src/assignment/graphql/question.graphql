@@ -11,10 +11,12 @@ type QuestionType implements BaseGraphQL{
 }
 
 input QuestionSetInput {
-    idQuiz: ID!
+    id: ID
+    order: Int!
     title: String!
     options: [String!]!
     isMutiple: Boolean!
     result: Int
     results: [Int!]
+    timeByMinute: Int!
 }

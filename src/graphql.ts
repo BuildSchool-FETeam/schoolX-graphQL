@@ -82,18 +82,21 @@ export class CodeChallengeSetInput {
 }
 
 export class QuestionSetInput {
-    idQuiz: string;
+    id?: Nullable<string>;
+    order: number;
     title: string;
     options: string[];
     isMutiple: boolean;
     result?: Nullable<number>;
     results?: Nullable<number[]>;
+    timeByMinute: number;
 }
 
 export class QuizSetInput {
     title: string;
     lessonId: string;
     description: string;
+    questions: QuestionSetInput[];
     score: number;
 }
 
