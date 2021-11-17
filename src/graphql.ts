@@ -642,9 +642,9 @@ export class LessonQuery {
     lesson: LessonType;
     lessonsWithCourseId: Nullable<LessonType>[];
     totalLessons: number;
-    getTypeAssignment: TypeAssign;
-    getCodeChallenge: CodeChallengeType;
-    getQuiz: QuizType;
+    typeAssignment: TypeAssign;
+    codeChallenge: CodeChallengeType;
+    quiz: QuizType;
 }
 
 export class DocumentType implements BaseGraphQL {

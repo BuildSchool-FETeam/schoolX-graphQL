@@ -82,7 +82,7 @@ export class LessonQueryResolver {
   }
 
   @ResolveField()
-  getTypeAssignment(
+  typeAssignment(
     @Args('idLesson') idLesson: string,
     @Args('idAssign') idAssign: string
   ) {
@@ -90,12 +90,12 @@ export class LessonQueryResolver {
   }
 
   @ResolveField()
-  getCodeChallenge(@Args('id') id: string){
+  codeChallenge(@Args('id') id: string){
     return this.lessonService.getCodeChallenge(id);
   }
 
   @ResolveField()
-  getQuiz(@Args('id') id: string) {
+  quiz(@Args('id') id: string) {
     return this.lessonService.getQuiz(id);
   }
 }
