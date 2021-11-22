@@ -82,11 +82,11 @@ export class LessonQueryResolver {
   }
 
   @ResolveField()
-  typeAssignment(
-    @Args('idLesson') idLesson: string,
-    @Args('idAssign') idAssign: string
+  getTypeOfAssignment(
+    @Args('lessonId') lessonId: string,
+    @Args('assignmentId') assignmentId: string
   ) {
-    return this.lessonService.getTypeAssignment(idLesson, idAssign);
+    return this.lessonService.getTypeAssignment(lessonId, assignmentId);
   }
 
   @ResolveField()

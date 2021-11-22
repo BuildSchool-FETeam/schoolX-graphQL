@@ -643,7 +643,7 @@ export class LessonQuery {
     lesson: LessonType;
     lessonsWithCourseId: Nullable<LessonType>[];
     totalLessons: number;
-    typeAssignment: TypeAssign;
+    getTypeOfAssignment: TypeAssign;
     codeChallenge: CodeChallengeType;
     quiz: QuizType;
 }

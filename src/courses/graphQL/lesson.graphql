@@ -53,7 +53,7 @@ type LessonQuery {
   ): [LessonType]!
 
   totalLessons(courseId: ID!): Int!
-  typeAssignment(idLesson: ID!, idAssign: ID!): TypeAssign!
+  getTypeOfAssignment(lessonId: ID!, assignmentId: ID!): TypeAssign!
   codeChallenge(id: ID!): CodeChallengeType!
   quiz(id: ID!): QuizType!
 }
