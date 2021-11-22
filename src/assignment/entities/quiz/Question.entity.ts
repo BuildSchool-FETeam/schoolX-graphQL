@@ -1,11 +1,11 @@
 import { BaseEntity } from "src/common/entity/base.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToOne } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
 import { Quiz } from "./Quiz.entity";
 
 @Entity()
 export class Question extends BaseEntity{
 
-    @Column()
+    @Column({nullable: true})
     order: number
 
     @ManyToOne(() => Quiz, quiz => quiz.questions, {
@@ -14,10 +14,10 @@ export class Question extends BaseEntity{
     @JoinColumn()
     quiz: Quiz
 
-    @Column("text", {array: true})
+    @Column("text", {array: true, nullable: true})
     options: string[]
 
-    @Column()
+    @Column({nullable: true})
     isMutiple: boolean
 
     @Column({nullable: true})
@@ -29,6 +29,6 @@ export class Question extends BaseEntity{
     })
     results?: number[]
 
-    @Column()
+    @Column({nullable: true, default: 0})
     timeByMinute: number
 }
