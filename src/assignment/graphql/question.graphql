@@ -1,5 +1,6 @@
 type QuestionType implements BaseGraphQL{
     id: ID!
+    order: Int!
     title: String!
     createdAt: ScalarDate!
     updatedAt: ScalarDate!
@@ -12,7 +13,6 @@ type QuestionType implements BaseGraphQL{
 
 input QuestionSetInput {
     id: ID
-    order: Int!
     title: String!
     options: [String!]!
     isMutiple: Boolean!

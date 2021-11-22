@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { CodeChallenge } from 'src/assignment/entities/codeChallenge/CodeChallenge.entity';
+import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
 import { Quiz } from 'src/assignment/entities/quiz/Quiz.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
@@ -68,7 +69,11 @@ export class LessonService extends BaseService<Lesson> {
     return this.assignService.getCodeChallenge(id);
   }
 
-  async runTestCase(challengeId: string, data: CodeConfigInput) {
+  async runCode(code: string, language: TestCaseProgrammingLanguage) {
+    return this.assignService.runCode(code, language);
+  }
+
+  runTestCase(challengeId: string, data: CodeConfigInput) {
     return this.assignService.runTestCase(challengeId, data);
   }
 

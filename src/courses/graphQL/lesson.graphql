@@ -26,6 +26,7 @@ type LessonMutation {
 
   setCodeChallenge(id: ID, data: CodeChallengeSetInput!): CodeChallengeType!
   deleteCodeChallenge(id: ID!): Boolean!
+  runCode(code: String!, language: ProgrammingLanguage!): CodeRunResultType!
   runTestCase(
     challengeId: ID!
     data: CodeConfigInput!

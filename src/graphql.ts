@@ -83,7 +83,6 @@ export class CodeChallengeSetInput {
 
 export class QuestionSetInput {
     id?: Nullable<string>;
-    order: number;
     title: string;
     options: string[];
     isMutiple: boolean;
@@ -426,6 +425,7 @@ export class CodeChallengeType implements BaseGraphQL {
 export class QuestionType implements BaseGraphQL {
     __typename?: 'QuestionType';
     id: string;
+    order: number;
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
@@ -632,6 +632,7 @@ export class LessonMutation {
     deleteLesson: boolean;
     setCodeChallenge: CodeChallengeType;
     deleteCodeChallenge: boolean;
+    runCode: CodeRunResultType;
     runTestCase: SummaryEvaluationResult;
     setQuiz: QuizType;
     deleteQuiz?: Nullable<boolean>;

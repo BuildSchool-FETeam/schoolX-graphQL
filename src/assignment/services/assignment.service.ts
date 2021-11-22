@@ -11,6 +11,7 @@ import { QuizService } from './quiz/quiz.service';
 import e from 'cors';
 import { CodeChallenge } from '../entities/codeChallenge/CodeChallenge.entity';
 import { Quiz } from '../entities/quiz/Quiz.entity';
+import { TestCaseProgrammingLanguage } from '../entities/codeChallenge/Testcase.entity';
 
 @Injectable()
 export class AssignmentService extends BaseService<Assignment> {
@@ -52,7 +53,11 @@ export class AssignmentService extends BaseService<Assignment> {
    * Code Challenge Service
    * -------------------------
   */
-  async runTestCase(challengeId: string, data: CodeConfigInput) {
+  runCode(code: string, language: TestCaseProgrammingLanguage) {
+    return this.codeChallengeService.runCode(code, language);
+  }
+
+  runTestCase(challengeId: string, data: CodeConfigInput) {
     return this.codeChallengeService.runTestCase(challengeId, data);
   }
 

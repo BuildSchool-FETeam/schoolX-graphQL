@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as _  from "lodash";
 import { BaseService } from "src/common/services/base.service";
@@ -16,6 +16,14 @@ export class QuestionService extends BaseService<Question> {
     }
 
     async saveData(data: QuestionSetInput[]) {
+
+        _.map(data, (elem, index) => {
+            if(elem.options.length < 2) {
+                throw new BadRequestException(`Question ${elem.title} must have least 2 options`);
+            }
+            elem["order"] = index + 1;
+        })
+
         return this.questionRepo.save(data);
     }
 

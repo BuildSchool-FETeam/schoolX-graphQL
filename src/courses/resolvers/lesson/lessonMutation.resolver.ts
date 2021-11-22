@@ -1,6 +1,7 @@
 import { BadRequestException, Res, UseGuards } from '@nestjs/common';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import * as _ from 'lodash';
+import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import {
@@ -61,8 +62,8 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  deleteLesson(@Args('id') id: string) {
-    return this.lessonService.deleteOneById(id);
+  async deleteLesson(@Args('id') id: string) {
+    return await this.lessonService.deleteOneById(id);
   }
 
   private async uploadFileAndAddDocument(
@@ -98,6 +99,14 @@ export class LessonMutationResolver {
     @Args('id') id: string
   ){
     return this.lessonService.deleteCodeChallenge(id);
+  }
+
+  @ResolveField()
+  runCode(
+    @Args("code") code: string,
+    @Args("language") language: TestCaseProgrammingLanguage
+  ){
+    return this.lessonService.runCode(code, language);
   }
 
   @ResolveField()
