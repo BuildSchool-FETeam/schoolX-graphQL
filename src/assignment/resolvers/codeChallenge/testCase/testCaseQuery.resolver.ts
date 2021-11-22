@@ -1,5 +1,5 @@
 import { Args, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { TestCaseService } from 'src/assignment/services/testCase.service';
+import { TestCaseService } from 'src/assignment/services/codeChallenge/testCase.service';
 
 @Resolver('TestCaseQuery')
 export class TestCaseQueryResolver {

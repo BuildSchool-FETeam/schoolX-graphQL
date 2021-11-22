@@ -1,0 +1,17 @@
+type QuizType implements BaseGraphQL{
+    id: ID!
+    title: String!
+    createdAt: ScalarDate!
+    updatedAt: ScalarDate!
+    assignment: AssignmentType!
+    description: String!
+    questions: [QuestionType!]!
+}
+
+input QuizSetInput {
+    title: String!
+    lessonId: String!
+    description: String!
+    questions: [QuestionSetInput!]!
+    score: Int!
+}

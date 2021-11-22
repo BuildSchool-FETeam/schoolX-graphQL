@@ -1,5 +1,5 @@
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
-import { TestCaseService } from 'src/assignment/services/testCase.service';
+import { TestCaseService } from 'src/assignment/services/codeChallenge/testCase.service';
 import { TestCaseSetInput } from 'src/graphql';
 
 @Resolver('TestCaseMutation')

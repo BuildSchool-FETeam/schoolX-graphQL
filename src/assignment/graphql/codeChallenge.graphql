@@ -1,0 +1,25 @@
+
+type CodeChallengeType implements BaseGraphQL{
+    id: ID!
+    title: String!
+    createdAt: ScalarDate!
+    updatedAt: ScalarDate!
+    assignment: AssignmentType!
+    input: String!
+    output: String!
+    hints: [String]!
+    score: Int!
+    languageSupport: [String]!
+    testCases: [TestCaseType!]!
+}
+
+input CodeChallengeSetInput {
+    title: String!
+    description: String!
+    lessonId: ID!
+    input: String!
+    output: String!
+    hints: [String]!
+    score: Int!
+    languageSupport: [String]!
+}

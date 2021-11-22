@@ -1,4 +1,4 @@
-import { Achievement } from 'src/clientUser/entities/Achivement.entity';
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
@@ -10,11 +10,16 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { TestCase } from './Testcase.entity';
+import { CodeChallenge } from './codeChallenge/CodeChallenge.entity';
+import { Quiz } from './quiz/Quiz.entity';
 
 @Entity()
-export class Assignment extends BaseEntity {
+export class Assignment{
+  @PrimaryGeneratedColumn()
+  id: string
+  
   @ManyToOne(() => Lesson, (lesson) => lesson, {
     onDelete: 'CASCADE',
   })
@@ -24,28 +29,13 @@ export class Assignment extends BaseEntity {
   @OneToMany(() => UserComment, (cmt) => cmt.assignment)
   comments: UserComment[];
 
-  @Column()
-  description: string;
+  @OneToMany(() => Quiz, quiz => quiz.assignment)
+  quizs: Quiz[];
 
-  @Column()
-  hints: string;
+  @OneToMany(() => CodeChallenge, codeChalenge => codeChalenge.assignment)
+  codeChallenges: CodeChallenge[]
 
-  @Column('int4', { default: 10, nullable: true })
-  score: number;
-
-  @Column()
-  input: string;
-
-  @Column()
-  output: string;
-
-  @Column()
-  languageSupport: string;
-
-  @OneToMany(() => TestCase, (testCase) => testCase.assignment)
-  testCases: TestCase[];
-
-  @ManyToMany(() => Achievement, (achie) => achie.completedAssignment)
+  @ManyToMany(() => ClientUser)
   @JoinTable()
-  usersComplete: Assignment[];
+  usersComplete: ClientUser[];
 }

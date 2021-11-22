@@ -1,8 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
+import { Assignment } from 'src/assignment/entities/Assignment.entity';
+import { CodeChallenge } from 'src/assignment/entities/codeChallenge/CodeChallenge.entity';
+import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
+import { Quiz } from 'src/assignment/entities/quiz/Quiz.entity';
+import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
-import { LessonSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput, QuizSetInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { Lesson } from '../entities/Lesson.entity';
 import { CourseService } from './course.service';
@@ -13,6 +18,7 @@ export class LessonService extends BaseService<Lesson> {
     @InjectRepository(Lesson)
     private lessonRepo: Repository<Lesson>,
     private courseService: CourseService,
+    private assignService: AssignmentService,
   ) {
     super(lessonRepo, 'Lesson');
   }
@@ -49,5 +55,56 @@ export class LessonService extends BaseService<Lesson> {
       .createQueryBuilder('lesson')
       .where('lesson.courseId = :courseId', { courseId })
       .getCount();
+  }
+
+  async getTypeAssignment(id: string, idAssign: string) {
+    const lesson = await this.findById(id, 
+      {relations: ["assignment"]}  
+    )
+
+    return this.assignService.getTypeAssign(lesson.assignment.id, idAssign);
+  }
+
+  async getCodeChallenge(id: string) {
+    return this.assignService.getCodeChallenge(id);
+  }
+
+  async runCode(code: string, language: TestCaseProgrammingLanguage) {
+    return this.assignService.runCode(code, language);
+  }
+
+  runTestCase(challengeId: string, data: CodeConfigInput) {
+    return this.assignService.runTestCase(challengeId, data);
+  }
+
+  async setCodeChallenge(
+    id: string,
+    data: CodeChallengeSetInput,
+  ) {
+
+    return this.assignService.setCodeChallenge(id, data);
+  }
+
+  deleteCodeChallenge(
+    id: string
+  ){
+    return this.assignService.deleteCodeChallenge(id);
+  }
+
+  async getQuiz(id: string) {
+    return this.assignService.getQuiz(id);
+  }
+
+  async setQuiz(
+    id: string,
+    data: QuizSetInput
+  ){
+    return this.assignService.setQuiz(id, data);
+  }
+
+  async deleteQuiz(
+    id: string
+  ) {
+    return this.assignService.deleteQuiz(id);
   }
 }

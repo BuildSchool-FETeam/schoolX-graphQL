@@ -22,7 +22,7 @@ input TestCaseSetInput {
   title: String!
   runningTestScript: String!
   expectResult: String
-  assignmentId: ID!
+  codeChallengeId: ID!
   generatedExpectResultScript: String
   programingLanguage: ProgrammingLanguage!
   timeEvaluation: Int

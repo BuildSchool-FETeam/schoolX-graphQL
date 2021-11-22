@@ -1,23 +1,23 @@
 import { BaseService } from 'src/common/services/base.service';
-import { TestCase } from 'src/assignment/entities/Testcase.entity';
+import { TestCase } from 'src/assignment/entities/codeChallenge/Testcase.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TestCaseSetInput } from 'src/graphql';
-import { AssignmentService } from './assignment.service';
 import * as _ from 'lodash';
 import { BadRequestException } from '@nestjs/common';
+import { CodeChallengeService } from './codeChallenge.service';
 
 export class TestCaseService extends BaseService<TestCase> {
   constructor(
     @InjectRepository(TestCase)
     private testCaseRepo: Repository<TestCase>,
-    private assignmentService: AssignmentService,
+    private codeChallengeService: CodeChallengeService,
   ) {
     super(testCaseRepo, 'TestCase');
   }
 
   async createTestCase(data: TestCaseSetInput) {
-    const assignment = await this.assignmentService.findById(data.assignmentId);
+    const codeChallenge = await this.codeChallengeService.findById(data.codeChallengeId);
 
     if (
       _.isNil(data.generatedExpectResultScript) &&
@@ -35,7 +35,7 @@ export class TestCaseService extends BaseService<TestCase> {
       runningTestScript: data.runningTestScript,
       programingLanguage: data.programingLanguage,
       timeEvaluation: data.timeEvaluation,
-      assignment,
+      codeChallenge
     });
 
     return this.testCaseRepo.save(tc);
@@ -43,11 +43,11 @@ export class TestCaseService extends BaseService<TestCase> {
 
   async updateTestCase(id: string, data: TestCaseSetInput) {
     const existedTc = await this.findById(id);
-    const assignment = await this.assignmentService.findById(data.assignmentId);
+    const codeChallenge = await this.codeChallengeService.findById(data.codeChallengeId);
 
     _.forOwn(data, (value, key) => {
-      if (key === 'assignmentId') {
-        existedTc.assignment = assignment;
+      if (key === 'codeChallengeId') {
+        existedTc.codeChallenge = codeChallenge;
       } else {
         value && (existedTc[key] = value);
       }

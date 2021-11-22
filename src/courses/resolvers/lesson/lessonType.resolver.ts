@@ -26,12 +26,12 @@ export class LessonTypeResolver {
   }
 
   @ResolveField()
-  async assignments(@Parent() lesson: Lesson) {
+  async assignment(@Parent() lesson: Lesson) {
     const parent = await this.lessonService.findById(lesson.id, {
-      relations: ['assignments'],
+      relations: ['assignment'],
     });
 
-    return parent.assignments;
+    return parent.assignment;
   }
 
   @ResolveField()

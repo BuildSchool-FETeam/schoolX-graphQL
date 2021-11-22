@@ -1,6 +1,7 @@
-import { BadRequestException, UseGuards } from '@nestjs/common';
+import { BadRequestException, Res, UseGuards } from '@nestjs/common';
 import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import * as _ from 'lodash';
+import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import {
@@ -11,7 +12,7 @@ import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { LessonDocument } from 'src/courses/entities/LessonDocument.entity';
 import { LessonDocumentService } from 'src/courses/services/document.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { LessonSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput, QuizSetInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('LessonMutation')
@@ -62,7 +63,7 @@ export class LessonMutationResolver {
 
   @ResolveField()
   async deleteLesson(@Args('id') id: string) {
-    return !!this.lessonService.deleteOneById(id);
+    return await this.lessonService.deleteOneById(id);
   }
 
   private async uploadFileAndAddDocument(
@@ -83,5 +84,51 @@ export class LessonMutationResolver {
       url: publicUrl,
       filePath,
     });
+  }
+
+  @ResolveField()
+  setCodeChallenge(
+    @Args('id') id: string,
+    @Args('data') data: CodeChallengeSetInput,
+  ) {
+    return this.lessonService.setCodeChallenge(id, data);
+  }
+
+  @ResolveField()
+  deleteCodeChallenge(
+    @Args('id') id: string
+  ){
+    return this.lessonService.deleteCodeChallenge(id);
+  }
+
+  @ResolveField()
+  runCode(
+    @Args("code") code: string,
+    @Args("language") language: TestCaseProgrammingLanguage
+  ){
+    return this.lessonService.runCode(code, language);
+  }
+
+  @ResolveField()
+  runTestCase(
+    @Args('challengeId') challengeId: string,
+    @Args('data') data: CodeConfigInput
+  ){
+    return this.lessonService.runTestCase(challengeId, data);
+  }
+
+  @ResolveField()
+  setQuiz(
+    @Args('id') id: string,
+    @Args('data') data: QuizSetInput
+  ){
+    return this.lessonService.setQuiz(id, data);
+  }
+
+  @ResolveField()
+  deleteQuiz(
+    @Args('id') id: string
+  ) {
+    return this.lessonService.deleteQuiz(id);
   }
 }

@@ -1,6 +1,6 @@
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Assignment } from './Assignment.entity';
+import { CodeChallenge } from './CodeChallenge.entity';
 
 export enum TestCaseProgrammingLanguage {
   javascript = 'javascript',
@@ -26,9 +26,9 @@ export class TestCase extends BaseEntity {
   @Column({ enum: TestCaseProgrammingLanguage })
   programingLanguage: string;
 
-  @ManyToOne(() => Assignment, (assign) => assign.testCases, {
+  @ManyToOne(() => CodeChallenge, (assign) => assign.testCases, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  assignment: Assignment;
+  codeChallenge: CodeChallenge;
 }

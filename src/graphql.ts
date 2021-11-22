@@ -13,6 +13,11 @@ export enum ArticleStatus {
     reject = "reject"
 }
 
+export enum TypeAssign {
+    codeChallenge = "codeChallenge",
+    quiz = "quiz"
+}
+
 export enum ProgrammingLanguage {
     javascript = "javascript",
     python = "python",
@@ -60,27 +65,45 @@ export class ArticleInputType {
     tags: string[];
 }
 
-export class AssignmentSetInput {
-    title: string;
-    description: string;
-    hints: Nullable<string>[];
-    score: number;
-    input: string;
-    output: string;
-    languageSupport: Nullable<string>[];
-    lessonId: string;
-}
-
 export class CodeConfigInput {
     code: string;
     language: ProgrammingLanguage;
+}
+
+export class CodeChallengeSetInput {
+    title: string;
+    description: string;
+    lessonId: string;
+    input: string;
+    output: string;
+    hints: Nullable<string>[];
+    score: number;
+    languageSupport: Nullable<string>[];
+}
+
+export class QuestionSetInput {
+    id?: Nullable<string>;
+    title: string;
+    options: string[];
+    isMutiple: boolean;
+    result?: Nullable<number>;
+    results?: Nullable<number[]>;
+    timeByMinute: number;
+}
+
+export class QuizSetInput {
+    title: string;
+    lessonId: string;
+    description: string;
+    questions: QuestionSetInput[];
+    score: number;
 }
 
 export class TestCaseSetInput {
     title: string;
     runningTestScript: string;
     expectResult?: Nullable<string>;
-    assignmentId: string;
+    codeChallengeId: string;
     generatedExpectResultScript?: Nullable<string>;
     programingLanguage: ProgrammingLanguage;
     timeEvaluation?: Nullable<number>;
@@ -236,8 +259,6 @@ export abstract class IQuery {
 
     abstract articleQuery(): ArticleQuery | Promise<ArticleQuery>;
 
-    abstract assignmentQuery(): AssignmentQuery | Promise<AssignmentQuery>;
-
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
     abstract clientUserQuery(): Nullable<ClientUserQuery> | Promise<Nullable<ClientUserQuery>>;
@@ -267,8 +288,6 @@ export abstract class IMutation {
     abstract adminUserMutation(): Nullable<AdminUserMutation> | Promise<Nullable<AdminUserMutation>>;
 
     abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
-
-    abstract assignmentMutation(): AssignmentMutation | Promise<AssignmentMutation>;
 
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
@@ -357,29 +376,13 @@ export class ArticleTagType implements BaseGraphQL {
     articles?: Nullable<Nullable<ArticleType>[]>;
 }
 
-export class AssignmentType implements BaseGraphQL {
+export class AssignmentType {
     __typename?: 'AssignmentType';
     id: string;
-    title: string;
-    createdAt: ScalarDate;
-    updatedAt: ScalarDate;
-    description: string;
-    hints: Nullable<string>[];
-    score: number;
-    input: string;
-    output: string;
-    languageSupport: Nullable<string>[];
     lesson: LessonType;
-    testCases: TestCaseType[];
+    codeChallenges: Nullable<CodeChallengeType>[];
+    quizs: Nullable<QuizType>[];
     comments: Nullable<UserCommentType>[];
-}
-
-export class AssignmentMutation {
-    __typename?: 'AssignmentMutation';
-    setAssignment: AssignmentType;
-    deleteAssignment?: Nullable<boolean>;
-    runCode: CodeRunResultType;
-    runTestCase: SummaryEvaluationResult;
 }
 
 export class SummaryEvaluationResult {
@@ -397,16 +400,51 @@ export class EvaluationResult {
     message?: Nullable<Nullable<string>[]>;
 }
 
-export class AssignmentQuery {
-    __typename?: 'AssignmentQuery';
-    assignment: AssignmentType;
-}
-
 export class CodeRunResultType {
     __typename?: 'CodeRunResultType';
     executeTime?: Nullable<number>;
     result?: Nullable<Nullable<string>[]>;
     status?: Nullable<string>;
+}
+
+export class CodeChallengeType implements BaseGraphQL {
+    __typename?: 'CodeChallengeType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    assignment: AssignmentType;
+    input: string;
+    output: string;
+    hints: Nullable<string>[];
+    score: number;
+    languageSupport: Nullable<string>[];
+    testCases: TestCaseType[];
+}
+
+export class QuestionType implements BaseGraphQL {
+    __typename?: 'QuestionType';
+    id: string;
+    order: number;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    quiz: QuizType;
+    options: string[];
+    isMutiple: boolean;
+    result?: Nullable<number>;
+    results?: Nullable<number[]>;
+}
+
+export class QuizType implements BaseGraphQL {
+    __typename?: 'QuizType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    assignment: AssignmentType;
+    description: string;
+    questions: QuestionType[];
 }
 
 export class TestCaseType implements BaseGraphQL {
@@ -585,7 +623,7 @@ export class LessonType implements BaseGraphQL {
     course: CourseType;
     content: string;
     documents: Nullable<DocumentType>[];
-    assignments: Nullable<AssignmentType>[];
+    assignment: AssignmentType;
     comments: Nullable<UserCommentType>[];
 }
 
@@ -593,6 +631,12 @@ export class LessonMutation {
     __typename?: 'LessonMutation';
     setLesson: LessonType;
     deleteLesson: boolean;
+    setCodeChallenge: CodeChallengeType;
+    deleteCodeChallenge: boolean;
+    runCode: CodeRunResultType;
+    runTestCase: SummaryEvaluationResult;
+    setQuiz: QuizType;
+    deleteQuiz?: Nullable<boolean>;
 }
 
 export class LessonQuery {
@@ -600,6 +644,9 @@ export class LessonQuery {
     lesson: LessonType;
     lessonsWithCourseId: Nullable<LessonType>[];
     totalLessons: number;
+    getTypeOfAssignment: TypeAssign;
+    codeChallenge: CodeChallengeType;
+    quiz: QuizType;
 }
 
 export class DocumentType implements BaseGraphQL {
