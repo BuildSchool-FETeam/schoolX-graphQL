@@ -414,6 +414,7 @@ export class CodeChallengeType implements BaseGraphQL {
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     assignment: AssignmentType;
+    description: string;
     input: string;
     output: string;
     hints: Nullable<string>[];

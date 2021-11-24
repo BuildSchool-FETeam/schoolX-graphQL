@@ -5,6 +5,7 @@ type CodeChallengeType implements BaseGraphQL{
     createdAt: ScalarDate!
     updatedAt: ScalarDate!
     assignment: AssignmentType!
+    description: String!
     input: String!
     output: String!
     hints: [String]!
