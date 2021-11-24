@@ -414,6 +414,7 @@ export class CodeChallengeType implements BaseGraphQL {
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     assignment: AssignmentType;
+    description: string;
     input: string;
     output: string;
     hints: Nullable<string>[];
@@ -623,7 +624,7 @@ export class LessonType implements BaseGraphQL {
     course: CourseType;
     content: string;
     documents: Nullable<DocumentType>[];
-    assignment: AssignmentType;
+    assignment?: Nullable<AssignmentType>;
     comments: Nullable<UserCommentType>[];
 }
 
