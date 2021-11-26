@@ -6,7 +6,7 @@ type TestCaseType implements BaseGraphQL {
   runningTestScript: String!
   generatedExpectResultScript: String
   expectResult: String
-  codeChallenge: CodeChallengeType!
+  codeChallenge: CodeChallengeType
   programingLanguage: String!
   timeEvaluation: Int
 }
