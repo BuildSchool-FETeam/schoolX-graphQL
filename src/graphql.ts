@@ -457,7 +457,7 @@ export class TestCaseType implements BaseGraphQL {
     runningTestScript: string;
     generatedExpectResultScript?: Nullable<string>;
     expectResult?: Nullable<string>;
-    assignment: AssignmentType;
+    codeChallenge: CodeChallengeType;
     programingLanguage: string;
     timeEvaluation?: Nullable<number>;
 }
