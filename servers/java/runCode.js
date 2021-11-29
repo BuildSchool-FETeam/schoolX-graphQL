@@ -4,7 +4,9 @@ exports.runCode = (dirName, className) => {
   const start = Date.now();
   try {
     const jsProcess = spawnSync('./runJavaCode.sh', [dirName, className]);
-    const stdout = jsProcess.stdout?.toString().trim().split('\n').slice(1);
+    const stdout = jsProcess.stdout?.toString().trim()
+      .split('\n').slice(1)
+      
     const stderr = jsProcess.stderr?.toString().trim();
 
     const finish = Date.now();
