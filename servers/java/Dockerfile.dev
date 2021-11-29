@@ -16,7 +16,7 @@ COPY . .
 
 RUN apt-get update -y
 RUN apt-get install -y dos2unix
-RUN dos2unix ./runJavaCode.sh
 RUN chmod 700 ./runJavaCode.sh
+RUN dos2unix ./runJavaCode.sh
 
 CMD ["npm", "run", "start"]
