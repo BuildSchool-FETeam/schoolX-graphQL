@@ -6,6 +6,8 @@ type QuizType implements BaseGraphQL{
     assignment: AssignmentType!
     description: String!
     questions: [QuestionType!]!
+    score: Int!
+    timeByMinute: Int!
 }
 
 input QuizSetInput {
@@ -14,4 +16,5 @@ input QuizSetInput {
     description: String!
     questions: [QuestionSetInput!]!
     score: Int!
+    timeByMinute: Int!
 }

@@ -18,5 +18,4 @@ input QuestionSetInput {
     isMutiple: Boolean!
     result: Int
     results: [Int!]
-    timeByMinute: Int!
 }
