@@ -18,7 +18,7 @@ export class Question extends BaseEntity{
     options: string[]
 
     @Column({nullable: true})
-    isMutiple: boolean
+    isMultiple: boolean
 
     @Column({nullable: true})
     result?: number
@@ -28,7 +28,4 @@ export class Question extends BaseEntity{
         array: true
     })
     results?: number[]
-
-    @Column({nullable: true, default: 0})
-    timeByMinute: number
 }

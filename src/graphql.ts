@@ -85,10 +85,9 @@ export class QuestionSetInput {
     id?: Nullable<string>;
     title: string;
     options: string[];
-    isMutiple: boolean;
+    isMultiple: boolean;
     result?: Nullable<number>;
     results?: Nullable<number[]>;
-    timeByMinute: number;
 }
 
 export class QuizSetInput {
@@ -97,6 +96,7 @@ export class QuizSetInput {
     description: string;
     questions: QuestionSetInput[];
     score: number;
+    timeByMinute: number;
 }
 
 export class TestCaseSetInput {
@@ -431,7 +431,7 @@ export class QuestionType implements BaseGraphQL {
     updatedAt: ScalarDate;
     quiz: QuizType;
     options: string[];
-    isMutiple: boolean;
+    isMultiple: boolean;
     result?: Nullable<number>;
     results?: Nullable<number[]>;
 }
@@ -445,6 +445,8 @@ export class QuizType implements BaseGraphQL {
     assignment: AssignmentType;
     description: string;
     questions: QuestionType[];
+    score: number;
+    timeByMinute: number;
 }
 
 export class TestCaseType implements BaseGraphQL {

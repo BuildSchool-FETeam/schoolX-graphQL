@@ -6,7 +6,7 @@ type QuestionType implements BaseGraphQL{
     updatedAt: ScalarDate!
     quiz: QuizType!
     options: [String!]!
-    isMutiple: Boolean!
+    isMultiple: Boolean!
     result: Int
     results: [Int!]
 }
@@ -15,8 +15,7 @@ input QuestionSetInput {
     id: ID
     title: String!
     options: [String!]!
-    isMutiple: Boolean!
+    isMultiple: Boolean!
     result: Int
     results: [Int!]
-    timeByMinute: Int!
 }
