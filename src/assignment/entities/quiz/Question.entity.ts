@@ -18,7 +18,7 @@ export class Question extends BaseEntity{
     options: string[]
 
     @Column({nullable: true})
-    isMutiple: boolean
+    isMultiple: boolean
 
     @Column({nullable: true})
     result?: number
