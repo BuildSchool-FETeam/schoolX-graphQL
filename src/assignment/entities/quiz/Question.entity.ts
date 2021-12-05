@@ -28,7 +28,4 @@ export class Question extends BaseEntity{
         array: true
     })
     results?: number[]
-
-    @Column({nullable: true, default: 0})
-    timeByMinute: number
 }
