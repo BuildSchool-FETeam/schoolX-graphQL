@@ -1,16 +1,12 @@
 import { ClientUser } from "src/clientUser/entities/ClientUser.entity";
-import { UserComment } from "src/comment/entities/UserComment.entity";
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { FileAssignment } from "./fileAssignment.entity";
-import { Submit } from "./Submit.entity";
+import { SubmitAssignment } from "./SubmitAssignment.entity";
 
 @Entity()
 export class Student {
     @PrimaryGeneratedColumn()
     id: string
-
-    @OneToMany(() => UserComment, (userComment) => userComment.student)
-    comments: UserComment[]
 
     @OneToOne(() => ClientUser)
     @JoinColumn()
@@ -19,8 +15,8 @@ export class Student {
     @Column({nullable: true})
     reApply?: boolean
 
-    @OneToMany(() => Submit, (submit) => submit.student)
-    submits: Submit[]
+    @OneToMany(() => SubmitAssignment, (submitAssignment) => submitAssignment.student)
+    submitAssignments: SubmitAssignment[]
 
     @ManyToOne(() => FileAssignment, (fileAssignment) => fileAssignment.students, {
         onDelete: "CASCADE"

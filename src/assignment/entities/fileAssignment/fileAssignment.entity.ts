@@ -24,13 +24,19 @@ export class FileAssignment implements BaseEntity {
     maxScore: number
 
     @Column()
-    estimateTime: number
+    estimateTimeInMinute: number
 
     @Column({nullable: true})
-    instruction: string
+    contentInstruct: string
 
     @Column({nullable: true})
-    explain: string
+    videoInstruct: string
+
+    @Column({nullable: true})
+    explainContent: string
+
+    @Column({nullable: true})
+    explainVideo: string
 
     @OneToMany(() => Student, (fileAssignment) => fileAssignment.fileAssignment)
     students: Student[]

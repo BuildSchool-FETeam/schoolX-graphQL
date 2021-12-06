@@ -457,8 +457,10 @@ export class FileAssignmentType implements BaseGraphQL {
     description?: Nullable<string>;
     maxScore: number;
     estimateTime: number;
-    instruction?: Nullable<string>;
-    explain?: Nullable<string>;
+    contentInstruct?: Nullable<string>;
+    videoInstruct?: Nullable<string>;
+    explainContent?: Nullable<string>;
+    explainVideo?: Nullable<string>;
     students?: Nullable<Nullable<StudentType>[]>;
     asssignment: AssignmentType;
 }
@@ -466,22 +468,23 @@ export class FileAssignmentType implements BaseGraphQL {
 export class StudentType {
     __typename?: 'StudentType';
     id: string;
-    comments?: Nullable<Nullable<UserCommentType>[]>;
     user: ClientUserType;
-    submits: SubmitType[];
+    submitAssignments: SubmitAssignmentType[];
     reApply: boolean;
     fileAssignment: FileAssignmentType;
 }
 
-export class SubmitType implements BaseGraphQL {
-    __typename?: 'SubmitType';
+export class SubmitAssignmentType implements BaseGraphQL {
+    __typename?: 'SubmitAssignmentType';
     id: string;
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     description?: Nullable<string>;
     order: number;
+    fileUrl: string;
     student: StudentType;
+    comment?: Nullable<Nullable<UserCommentType>[]>;
 }
 
 export class QuestionType implements BaseGraphQL {
@@ -609,7 +612,7 @@ export class UserCommentType implements BaseGraphQL {
     lesson?: Nullable<LessonType>;
     assignment?: Nullable<AssignmentType>;
     article?: Nullable<ArticleType>;
-    student?: Nullable<StudentType>;
+    student?: Nullable<SubmitAssignmentType>;
 }
 
 export class File {

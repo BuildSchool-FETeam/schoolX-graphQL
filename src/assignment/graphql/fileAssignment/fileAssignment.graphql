@@ -5,9 +5,11 @@ type FileAssignmentType implements BaseGraphQL{
     updatedAt: ScalarDate!
     description: String
     maxScore: Int!
-    estimateTime: Int!
-    instruction: String
-    explain: String
+    estimateTimeInMinute: Int!
+    contentInstruct: String
+    videoInstruct: String
+    explainContent: String
+    explainVideo: String
     students: [StudentType]
     asssignment: AssignmentType!
 }
