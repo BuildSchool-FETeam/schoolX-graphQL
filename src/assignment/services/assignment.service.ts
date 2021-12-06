@@ -1,17 +1,15 @@
-import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { CodeChallengeSetInput, CodeConfigInput, QuizSetInput, TypeAssign } from 'src/graphql';
-import { Code, Repository } from 'typeorm';
+import { CodeChallengeSetInput, CodeConfigInput, FileAssignmentSetInput, QuizSetInput, TypeAssign } from 'src/graphql';
+import { Repository } from 'typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { CodeChallengeService } from './codeChallenge/codeChallenge.service';
 import { QuizService } from './quiz/quiz.service';
-import e from 'cors';
-import { CodeChallenge } from '../entities/codeChallenge/CodeChallenge.entity';
-import { Quiz } from '../entities/quiz/Quiz.entity';
 import { TestCaseProgrammingLanguage } from '../entities/codeChallenge/Testcase.entity';
+import { FileAssignmentService } from './fileAssignment/fileAssignment.service';
 
 @Injectable()
 export class AssignmentService extends BaseService<Assignment> {
@@ -21,20 +19,23 @@ export class AssignmentService extends BaseService<Assignment> {
     @Inject(forwardRef(() => LessonService))
     private lessonService: LessonService,
     private codeChallengeService: CodeChallengeService,
-    private quizService: QuizService
+    private quizService: QuizService,
+    private fileAssignService: FileAssignmentService
   ) {
     super(assignmentRepo, 'Assignment');
   }
 
   async getTypeAssign(id, idAssign) {
     const assignment = await this.findById(id,
-     {relations: ["codeChallenges", "quizs"]}  
+     {relations: ["codeChallenges", "quizs", "fileAssignments"]}  
     )
     const codeChallenges = _.some(assignment.codeChallenges, ['id', parseInt(idAssign)]);
     const quizs = _.some(assignment.quizs, ['id', parseInt(idAssign)]);
+    const fileAssignment = _.some(assignment.fileAssignments, ['id', parseInt(idAssign)]);
 
     if(codeChallenges) { return TypeAssign.codeChallenge }
     if(quizs) { return TypeAssign.quiz }
+    if(fileAssignment) { return TypeAssign.fileAssignment }
 
     throw new NotFoundException(`Assignment with id ${idAssign} is not exist`);
   } 
@@ -62,7 +63,9 @@ export class AssignmentService extends BaseService<Assignment> {
   }
 
   async getCodeChallenge(id: string) {
-    return this.codeChallengeService.findById(id);
+    return this.codeChallengeService.findById(id, {
+      relations: ["assignment", "testCases"]
+    });
   }
 
   async setCodeChallenge(id: string, data: CodeChallengeSetInput) {
@@ -88,7 +91,9 @@ export class AssignmentService extends BaseService<Assignment> {
    * ---------------
   */
   async getQuiz(id: string) {
-    return this.quizService.findById(id)
+    return this.quizService.findById(id, {
+      relations: ["assignment", "questions"]
+    })
   }
 
   async setQuiz(id: string, data: QuizSetInput) {
@@ -108,14 +113,45 @@ export class AssignmentService extends BaseService<Assignment> {
    * -------------------
   */
 
+  /**
+   * ---------------------------
+   *  File Assignment Service
+   * ---------------------------
+  */ 
+
+  async getFileAssign(id: string) {
+    return this.fileAssignService.findById(id, {
+      relations: ["assignment", "students"]
+    })
+  }
+
+  async setFileAssign(id: string, data: FileAssignmentSetInput) {
+    if(!id){
+      return this.fileAssignService.create(data);
+    }else{
+      return this.fileAssignService.update(id, data);
+    }
+  }
+
+  async deleteFileAssign(id: string) {
+    return this.fileAssignService.delete(id);
+  }
+
+  /**
+   * ------------------------------
+   * File Assignment Service end
+   * ------------------------------
+  */
+
   async deleteAssgin(id: string) {
-    const {codeChallenges, quizs} = await this.findById(id, {
-      relations: ["codeChallenges", "quizs"]
+    const {codeChallenges, quizs, fileAssignments} = await this.findById(id, {
+      relations: ["codeChallenges", "quizs", "fileAssignments"]
     })
 
     if(
       codeChallenges.length === 0 &&
-      quizs.length === 0
+      quizs.length === 0 &&
+      fileAssignments.length === 0
     ) { 
       this.deleteOneById(id);
     }

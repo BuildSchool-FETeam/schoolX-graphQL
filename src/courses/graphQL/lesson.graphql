@@ -33,7 +33,10 @@ type LessonMutation {
   ): SummaryEvaluationResult!
 
   setQuiz(id: ID, data: QuizSetInput!): QuizType!
-  deleteQuiz(id: ID!): Boolean
+  deleteQuiz(id: ID!): Boolean!
+
+  setFileAssignment(id: ID, data: FileAssignmentSetInput!): FileAssignmentType!
+  deleteFileAssignment(id: ID!): Boolean!
 }
 
 type Mutation {
@@ -56,4 +59,5 @@ type LessonQuery {
   getTypeOfAssignment(lessonId: ID!, assignmentId: ID!): TypeAssign!
   codeChallenge(id: ID!): CodeChallengeType!
   quiz(id: ID!): QuizType!
+  fileAssignment(id: ID!): FileAssignmentType!
 }

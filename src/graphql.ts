@@ -15,7 +15,8 @@ export enum ArticleStatus {
 
 export enum TypeAssign {
     codeChallenge = "codeChallenge",
-    quiz = "quiz"
+    quiz = "quiz",
+    fileAssignment = "fileAssignment"
 }
 
 export enum ProgrammingLanguage {
@@ -89,6 +90,30 @@ export class TestCaseSetInput {
     generatedExpectResultScript?: Nullable<string>;
     programingLanguage: ProgrammingLanguage;
     timeEvaluation?: Nullable<number>;
+}
+
+export class FileAssignmentSetInput {
+    title: string;
+    description?: Nullable<string>;
+    maxScore: number;
+    estimateTimeInMinute: number;
+    contentInstruct?: Nullable<string>;
+    videoInstruct?: Nullable<string>;
+    explainContent?: Nullable<string>;
+    explainVideo?: Nullable<string>;
+    lessonId: string;
+}
+
+export class StudentSetInput {
+    userId: string;
+    reApply?: Nullable<boolean>;
+    submitAssignments: SubmitAssignmentSetInput[];
+}
+
+export class SubmitAssignmentSetInput {
+    title: string;
+    description?: Nullable<string>;
+    files?: Nullable<Nullable<Upload>[]>;
 }
 
 export class QuestionSetInput {
@@ -679,7 +704,9 @@ export class LessonMutation {
     runCode: CodeRunResultType;
     runTestCase: SummaryEvaluationResult;
     setQuiz: QuizType;
-    deleteQuiz?: Nullable<boolean>;
+    deleteQuiz: boolean;
+    setFileAssignment: FileAssignmentType;
+    deleteFileAssignment: boolean;
 }
 
 export class LessonQuery {
@@ -690,6 +717,7 @@ export class LessonQuery {
     getTypeOfAssignment: TypeAssign;
     codeChallenge: CodeChallengeType;
     quiz: QuizType;
+    fileAssignment: FileAssignmentType;
 }
 
 export class DocumentType implements BaseGraphQL {

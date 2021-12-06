@@ -9,3 +9,9 @@ type SubmitAssignmentType implements BaseGraphQL{
     student: StudentType!
     comments: [UserCommentType]
 }
+
+input SubmitAssignmentSetInput {
+    title: String!
+    description: String
+    files: [Upload]
+}

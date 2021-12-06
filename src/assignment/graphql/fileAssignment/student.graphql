@@ -5,3 +5,9 @@ type StudentType {
     reApply: Boolean!
     fileAssignment: FileAssignmentType!
 }
+
+input StudentSetInput {
+    userId: ID!
+    reApply: Boolean
+    submitAssignments: [SubmitAssignmentSetInput!]!
+}

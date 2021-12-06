@@ -12,7 +12,7 @@ import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { LessonDocument } from 'src/courses/entities/LessonDocument.entity';
 import { LessonDocumentService } from 'src/courses/services/document.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput, QuizSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, FileAssignmentSetInput, LessonSetInput, QuizSetInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('LessonMutation')
@@ -130,5 +130,20 @@ export class LessonMutationResolver {
     @Args('id') id: string
   ) {
     return this.lessonService.deleteQuiz(id);
+  }
+
+  @ResolveField()
+  setFileAssignment(
+    @Args("id") id: string,
+    @Args("data") data: FileAssignmentSetInput
+  ){
+    return this.lessonService.setFileAssignment(id, data);
+  }
+
+  @ResolveField()
+  deleteFileAssignment(
+    @Args("id") id: string
+  ){
+    return this.lessonService.deleteFileAssignment(id);
   }
 }

@@ -7,7 +7,7 @@ import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallen
 import { Quiz } from 'src/assignment/entities/quiz/Quiz.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
-import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput, QuizSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, FileAssignmentSetInput, LessonSetInput, QuizSetInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { Lesson } from '../entities/Lesson.entity';
 import { CourseService } from './course.service';
@@ -106,5 +106,17 @@ export class LessonService extends BaseService<Lesson> {
     id: string
   ) {
     return this.assignService.deleteQuiz(id);
+  }
+
+  async getFileAssignment(id: string){
+    return this.assignService.getFileAssign(id);
+  }
+
+  async setFileAssignment(id: string, data: FileAssignmentSetInput) {
+    return this.assignService.setFileAssign(id, data);
+  }
+
+  async deleteFileAssignment(id: string) {
+    return this.assignService.deleteAssgin(id);
   }
 }

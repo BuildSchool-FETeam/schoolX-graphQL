@@ -1,5 +1,5 @@
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
+import { Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { CourseService } from 'src/courses/services/course.service';
 import { LessonService } from 'src/courses/services/lesson.service';
@@ -70,32 +70,35 @@ export class LessonQueryResolver {
   @PermissionRequire({ course: ['R'] })
   @ResolveField('lesson')
   async getLessonDetail(@Args('id') id: string) {
-    const lesson = await this.lessonService.findById(id);
-
-    return lesson;
+    return await this.lessonService.findById(id);
   }
 
   @ResolveField()
   @PermissionRequire({ course: ['R'] })
-  totalLessons(@Args('courseId') courseId: string) {
-    return this.lessonService.countingLessonWithCourseId(courseId);
+  async totalLessons(@Args('courseId') courseId: string) {
+    return await this.lessonService.countingLessonWithCourseId(courseId);
   }
 
   @ResolveField()
-  getTypeOfAssignment(
+  async getTypeOfAssignment(
     @Args('lessonId') lessonId: string,
     @Args('assignmentId') assignmentId: string
   ) {
-    return this.lessonService.getTypeAssignment(lessonId, assignmentId);
+    return await this.lessonService.getTypeAssignment(lessonId, assignmentId);
   }
 
   @ResolveField()
-  codeChallenge(@Args('id') id: string){
-    return this.lessonService.getCodeChallenge(id);
+  async codeChallenge(@Args('id') id: string){
+    return await this.lessonService.getCodeChallenge(id);
   }
 
   @ResolveField()
-  quiz(@Args('id') id: string) {
-    return this.lessonService.getQuiz(id);
+  async quiz(@Args('id') id: string) {
+    return await this.lessonService.getQuiz(id);
+  }
+
+  @ResolveField()
+  async fileAssignment(@Args("id") id: string){
+    return await this.lessonService.getFileAssignment(id)
   }
 }

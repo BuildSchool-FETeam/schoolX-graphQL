@@ -13,3 +13,15 @@ type FileAssignmentType implements BaseGraphQL{
     students: [StudentType]
     assignment: AssignmentType!
 }
+
+input FileAssignmentSetInput {
+    title: String!
+    description: String
+    maxScore: Int!
+    estimateTimeInMinute: Int!
+    contentInstruct: String
+    videoInstruct: String
+    explainContent: String
+    explainVideo: String
+    lessonId: ID!
+}
