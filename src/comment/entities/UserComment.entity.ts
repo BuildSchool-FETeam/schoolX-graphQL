@@ -5,6 +5,7 @@ import { Course } from '../../courses/entities/Course.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Article } from 'src/article/entities/Article.entity';
+import { Student } from 'src/assignment/entities/fileAssignment/student.entity';
 
 @Entity()
 export class UserComment extends BaseEntity {
@@ -52,4 +53,10 @@ export class UserComment extends BaseEntity {
   })
   @JoinColumn()
   replyTo: UserComment;
+
+  @ManyToOne(() => Student, (submit) => submit.comments, {
+    onDelete: "CASCADE"
+  })
+  @JoinColumn()
+  student: Student
 }

@@ -37,4 +37,5 @@ type UserCommentType implements BaseGraphQL {
   lesson: LessonType
   assignment: AssignmentType
   article: ArticleType
+  student: StudentType
 }

@@ -1,0 +1,9 @@
+type StudentType {
+    id: ID!
+    score: Int!
+    comments: [UserCommentType]
+    student: ClientUserType!
+    reApply: Boolean
+    submits: [SubmitType]
+    fileAssignment: FileAssignmentType!
+}

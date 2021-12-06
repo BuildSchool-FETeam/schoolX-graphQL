@@ -81,6 +81,16 @@ export class CodeChallengeSetInput {
     languageSupport: Nullable<string>[];
 }
 
+export class TestCaseSetInput {
+    title: string;
+    runningTestScript: string;
+    expectResult?: Nullable<string>;
+    codeChallengeId: string;
+    generatedExpectResultScript?: Nullable<string>;
+    programingLanguage: ProgrammingLanguage;
+    timeEvaluation?: Nullable<number>;
+}
+
 export class QuestionSetInput {
     id?: Nullable<string>;
     title: string;
@@ -97,16 +107,6 @@ export class QuizSetInput {
     description: string;
     questions: QuestionSetInput[];
     score: number;
-}
-
-export class TestCaseSetInput {
-    title: string;
-    runningTestScript: string;
-    expectResult?: Nullable<string>;
-    codeChallengeId: string;
-    generatedExpectResultScript?: Nullable<string>;
-    programingLanguage: ProgrammingLanguage;
-    timeEvaluation?: Nullable<number>;
 }
 
 export class SignUpInput {
@@ -423,31 +423,6 @@ export class CodeChallengeType implements BaseGraphQL {
     testCases: TestCaseType[];
 }
 
-export class QuestionType implements BaseGraphQL {
-    __typename?: 'QuestionType';
-    id: string;
-    order: number;
-    title: string;
-    createdAt: ScalarDate;
-    updatedAt: ScalarDate;
-    quiz: QuizType;
-    options: string[];
-    isMutiple: boolean;
-    result?: Nullable<number>;
-    results?: Nullable<number[]>;
-}
-
-export class QuizType implements BaseGraphQL {
-    __typename?: 'QuizType';
-    id: string;
-    title: string;
-    createdAt: ScalarDate;
-    updatedAt: ScalarDate;
-    assignment: AssignmentType;
-    description: string;
-    questions: QuestionType[];
-}
-
 export class TestCaseType implements BaseGraphQL {
     __typename?: 'TestCaseType';
     id: string;
@@ -471,6 +446,68 @@ export class TestCaseMutation {
 export class TestCaseQuery {
     __typename?: 'TestCaseQuery';
     testCase: TestCaseType;
+}
+
+export class FileAssignmentType implements BaseGraphQL {
+    __typename?: 'FileAssignmentType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    description: string;
+    maxScore: number;
+    estimateTime: number;
+    instructions?: Nullable<string>;
+    explain?: Nullable<string>;
+    studentSubmitted?: Nullable<Nullable<StudentType>[]>;
+}
+
+export class StudentType {
+    __typename?: 'StudentType';
+    id: string;
+    score: number;
+    comments?: Nullable<Nullable<UserCommentType>[]>;
+    student: ClientUserType;
+    reApply?: Nullable<boolean>;
+    submits?: Nullable<Nullable<SubmitType>[]>;
+    fileAssignment: FileAssignmentType;
+}
+
+export class SubmitType implements BaseGraphQL {
+    __typename?: 'SubmitType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    description?: Nullable<string>;
+    order: number;
+    url: string;
+    student: StudentType;
+}
+
+export class QuestionType implements BaseGraphQL {
+    __typename?: 'QuestionType';
+    id: string;
+    order: number;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    quiz: QuizType;
+    options: string[];
+    isMutiple: boolean;
+    result?: Nullable<number>;
+    results?: Nullable<number[]>;
+}
+
+export class QuizType implements BaseGraphQL {
+    __typename?: 'QuizType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    assignment: AssignmentType;
+    description: string;
+    questions: QuestionType[];
 }
 
 export class AdminAuthMutation {
@@ -571,6 +608,7 @@ export class UserCommentType implements BaseGraphQL {
     lesson?: Nullable<LessonType>;
     assignment?: Nullable<AssignmentType>;
     article?: Nullable<ArticleType>;
+    student?: Nullable<StudentType>;
 }
 
 export class File {

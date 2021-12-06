@@ -59,4 +59,14 @@ export class UserCommentTypeResolver {
 
     return data.article;
   }
+
+  @ResolveField()
+  async student(@Parent() comment: UserComment) {
+    const data = await this.commentService.findById(comment.id, {
+      select: ['id'],
+      relations: ['student']
+    })
+
+    return data.student;
+  }
 }
