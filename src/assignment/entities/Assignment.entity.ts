@@ -13,6 +13,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { CodeChallenge } from './codeChallenge/CodeChallenge.entity';
+import { FileAssignment } from './fileAssignment/fileAssignment.entity';
 import { Quiz } from './quiz/Quiz.entity';
 
 @Entity()
@@ -34,6 +35,9 @@ export class Assignment{
 
   @OneToMany(() => CodeChallenge, codeChalenge => codeChalenge.assignment)
   codeChallenges: CodeChallenge[]
+
+  @OneToMany(() => FileAssignment, fileAssignment => fileAssignment.assignment)
+  fileAssignments: FileAssignment[]
 
   @ManyToMany(() => ClientUser)
   @JoinTable()

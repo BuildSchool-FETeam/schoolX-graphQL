@@ -1,0 +1,9 @@
+type SubmitType implements BaseGraphQL{
+    id: ID!
+    title: String!
+    createdAt: ScalarDate!
+    updatedAt: ScalarDate!
+    description: String
+    order: Int!
+    student: StudentType!
+}
