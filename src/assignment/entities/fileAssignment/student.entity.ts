@@ -1,5 +1,5 @@
 import { ClientUser } from "src/clientUser/entities/ClientUser.entity";
-import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { FileAssignment } from "./fileAssignment.entity";
 import { SubmitAssignment } from "./SubmitAssignment.entity";
 

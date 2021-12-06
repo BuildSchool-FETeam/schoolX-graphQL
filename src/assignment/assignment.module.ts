@@ -19,10 +19,23 @@ import { Quiz } from './entities/quiz/Quiz.entity';
 import { QuestionTypeResolver } from './resolvers/quiz/questionType.resolver';
 import { QuestionService } from './services/quiz/question.service';
 import { Question } from './entities/quiz/Question.entity';
+import { FileAssignment } from './entities/fileAssignment/fileAssignment.entity';
+import { FileAssignmentService } from './services/fileAssignment/fileAssignment.service';
+import { Student } from './entities/fileAssignment/student.entity';
+import { SubmitAssignment } from './entities/fileAssignment/SubmitAssignment.entity';
+import { StudentService } from './services/fileAssignment/student.service';
+import { FileAssignmentResolverType } from './resolvers/fileAssignment/fileAssignmentType.resolver';
+import { StudentResolverType } from './resolvers/fileAssignment/studentType.resolver';
+import { SubmitAssignmentService } from './services/fileAssignment/submitAssignment.service';
+import { SubmitAssignmentResolverType } from './resolvers/fileAssignment/submitAssignmentType.resolver';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Assignment, TestCase, CodeChallenge, Quiz, Question]),
+    TypeOrmModule.forFeature([
+      Assignment, TestCase, CodeChallenge, 
+      Quiz, Question, FileAssignment,
+      Student, SubmitAssignment
+    ]),
     forwardRef(() => CourseModule),
     MiniServerModule,
     CommonModule,
@@ -39,6 +52,12 @@ import { Question } from './entities/quiz/Question.entity';
     QuizTypeResolver,
     QuestionService,
     QuestionTypeResolver,
+    FileAssignmentService,
+    FileAssignmentResolverType,
+    StudentService,
+    StudentResolverType,
+    SubmitAssignmentService,
+    SubmitAssignmentResolverType
   ],
   exports: [AssignmentService],
 })

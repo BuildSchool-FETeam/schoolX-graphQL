@@ -1,21 +1,10 @@
 import { UserComment } from "src/comment/entities/UserComment.entity";
 import { BaseEntity } from "src/common/entity/base.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { Student } from "./student.entity";
 
 @Entity()
-export class SubmitAssignment implements BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: string
-
-    @Column()
-    title: string
-
-    @Column()
-    createdAt: Date
-    
-    @Column()
-    updatedAt: Date
+export class SubmitAssignment extends BaseEntity {
 
     @Column({nullable: true})
     description: string

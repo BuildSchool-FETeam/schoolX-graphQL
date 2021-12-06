@@ -11,5 +11,5 @@ type FileAssignmentType implements BaseGraphQL{
     explainContent: String
     explainVideo: String
     students: [StudentType]
-    asssignment: AssignmentType!
+    assignment: AssignmentType!
 }
