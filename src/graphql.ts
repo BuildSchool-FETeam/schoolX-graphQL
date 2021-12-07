@@ -104,16 +104,17 @@ export class FileAssignmentSetInput {
     lessonId: string;
 }
 
-export class StudentSetInput {
-    reApply?: Nullable<boolean>;
-    fileAssignmentId: string;
-    submitAssignment: SubmitAssignmentSetInput;
-}
-
-export class SubmitAssignmentSetInput {
+export class SubmitInput {
     title: string;
     description?: Nullable<string>;
     file?: Nullable<Upload>;
+    fileAssignmentId: string;
+}
+
+export class EvaluationInput {
+    reApply?: Nullable<boolean>;
+    comments?: Nullable<Nullable<CommentDataInput>[]>;
+    score?: Nullable<number>;
 }
 
 export class QuestionSetInput {
@@ -286,8 +287,6 @@ export abstract class IQuery {
 
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
-    abstract studentQuery(): StudentQuery | Promise<StudentQuery>;
-
     abstract clientUserQuery(): Nullable<ClientUserQuery> | Promise<Nullable<ClientUserQuery>>;
 
     abstract courseQuery(): Nullable<CourseQuery> | Promise<Nullable<CourseQuery>>;
@@ -317,8 +316,6 @@ export abstract class IMutation {
     abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
 
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
-
-    abstract studentMutation(): StudentMutation | Promise<StudentMutation>;
 
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
 
@@ -491,41 +488,23 @@ export class FileAssignmentType implements BaseGraphQL {
     videoInstruct?: Nullable<string>;
     explainContent?: Nullable<string>;
     explainVideo?: Nullable<string>;
-    students?: Nullable<Nullable<StudentType>[]>;
+    submitteds?: Nullable<Nullable<SubmittedAssignmentType>[]>;
     assignment: AssignmentType;
 }
 
-export class StudentType {
-    __typename?: 'StudentType';
-    id: string;
-    user: ClientUserType;
-    submitAssignments: SubmitAssignmentType[];
-    reApply: boolean;
-    fileAssignment: FileAssignmentType;
-}
-
-export class StudentMutation {
-    __typename?: 'StudentMutation';
-    setStudent: StudentType;
-    deleteStudent: boolean;
-}
-
-export class StudentQuery {
-    __typename?: 'StudentQuery';
-    student: StudentType;
-}
-
-export class SubmitAssignmentType implements BaseGraphQL {
-    __typename?: 'SubmitAssignmentType';
+export class SubmittedAssignmentType implements BaseGraphQL {
+    __typename?: 'SubmittedAssignmentType';
     id: string;
     title: string;
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     description?: Nullable<string>;
     order: number;
+    reApply?: Nullable<boolean>;
     fileUrl: string;
-    student: StudentType;
     comments?: Nullable<Nullable<UserCommentType>[]>;
+    fileAssignment: FileAssignmentType;
+    user: ClientUserType;
 }
 
 export class QuestionType implements BaseGraphQL {
@@ -653,7 +632,7 @@ export class UserCommentType implements BaseGraphQL {
     lesson?: Nullable<LessonType>;
     assignment?: Nullable<AssignmentType>;
     article?: Nullable<ArticleType>;
-    student?: Nullable<SubmitAssignmentType>;
+    submitted?: Nullable<SubmittedAssignmentType>;
 }
 
 export class File {

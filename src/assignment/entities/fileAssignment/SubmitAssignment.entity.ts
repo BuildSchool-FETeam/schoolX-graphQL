@@ -1,10 +1,11 @@
+import { ClientUser } from "src/clientUser/entities/ClientUser.entity";
 import { UserComment } from "src/comment/entities/UserComment.entity";
 import { BaseEntity } from "src/common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { Student } from "./student.entity";
+import { FileAssignment } from "./fileAssignment.entity";
 
 @Entity()
-export class SubmitAssignment extends BaseEntity {
+export class SubmittedAssignment extends BaseEntity {
 
     @Column({nullable: true})
     description: string
@@ -15,12 +16,19 @@ export class SubmitAssignment extends BaseEntity {
     @Column()
     fileUrl: string
 
-    @OneToMany(() => UserComment, (userComment) => userComment.submitAssignment)
+    @Column({nullable: true})
+    reApply?: boolean
+
+    @ManyToOne(() => ClientUser)
+    @JoinColumn()
+    user: ClientUser
+
+    @OneToMany(() => UserComment, (userComment) => userComment.submittedAssignment)
     comments: UserComment[]
 
-    @ManyToOne(() => Student, (student) => student.submitAssignments, {
+    @ManyToOne(() => FileAssignment, (fileAssignment) => fileAssignment.submitteds, {
         onDelete: 'CASCADE'
     })
     @JoinColumn()
-    student: Student[]
+    fileAssignment: FileAssignment
 }

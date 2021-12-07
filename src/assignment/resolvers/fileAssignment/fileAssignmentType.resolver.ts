@@ -9,20 +9,20 @@ export class FileAssignmentTypeResolver {
     }
 
     @ResolveField()
-    async students(@Parent() fileAssignment: FileAssignment){
-        const data = await this.fileAssignService.findById(fileAssignment.id, {
-            relations: ["students"]
-        })
-
-        return data.students;
-    }
-
-    @ResolveField()
     async assignment(@Parent() fileAssignment: FileAssignment){
         const data = await this.fileAssignService.findById(fileAssignment.id, {
             relations: ["assignment"]
         })
 
         return data.assignment;
+    }
+
+    @ResolveField()
+    async submitteds(@Parent() fileAssignment: FileAssignment){
+        const data = await this.fileAssignService.findById(fileAssignment.id, {
+            relations: ["submitteds"]
+        })
+
+        return data.submitteds;
     }
 }

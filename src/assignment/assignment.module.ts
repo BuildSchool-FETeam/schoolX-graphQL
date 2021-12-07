@@ -21,23 +21,18 @@ import { QuestionService } from './services/quiz/question.service';
 import { Question } from './entities/quiz/Question.entity';
 import { FileAssignment } from './entities/fileAssignment/fileAssignment.entity';
 import { FileAssignmentService } from './services/fileAssignment/fileAssignment.service';
-import { Student } from './entities/fileAssignment/student.entity';
-import { SubmitAssignment } from './entities/fileAssignment/SubmitAssignment.entity';
-import { StudentService } from './services/fileAssignment/student.service';
 import { FileAssignmentTypeResolver } from './resolvers/fileAssignment/fileAssignmentType.resolver';
-import { StudentTypeResolver } from './resolvers/fileAssignment/student/studentType.resolver';
-import { SubmitAssignmentService } from './services/fileAssignment/submitAssignment.service';
-import { SubmitAssignmentTypeResolver } from './resolvers/fileAssignment/submitAssignmentType.resolver';
+import { SubmittedAssignmentService } from './services/fileAssignment/submittedAssignment.service';
+import { SubmittedAssignmentTypeResolver } from './resolvers/fileAssignment/submittedAssignmentType.resolver';
 import { ClientUserModule } from 'src/clientUser/clientUser.module';
-import { StudentMutationResolver } from './resolvers/fileAssignment/student/studentMutation.resolver';
-import { StudentQueryResolver } from './resolvers/fileAssignment/student/studentQuery.resolver';
+import { SubmittedAssignment } from './entities/fileAssignment/SubmitAssignment.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Assignment, TestCase, CodeChallenge, 
       Quiz, Question, FileAssignment,
-      Student, SubmitAssignment
+      SubmittedAssignment
     ]),
     forwardRef(() => CourseModule),
     MiniServerModule,
@@ -58,12 +53,8 @@ import { StudentQueryResolver } from './resolvers/fileAssignment/student/student
     QuestionTypeResolver,
     FileAssignmentService,
     FileAssignmentTypeResolver,
-    StudentService,
-    StudentTypeResolver,
-    StudentMutationResolver,
-    StudentQueryResolver,
-    SubmitAssignmentService,
-    SubmitAssignmentTypeResolver
+    SubmittedAssignmentService,
+    SubmittedAssignmentTypeResolver
   ],
   exports: [AssignmentService],
 })

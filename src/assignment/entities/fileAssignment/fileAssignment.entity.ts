@@ -1,7 +1,7 @@
 import { BaseEntity } from "src/common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
 import { Assignment } from "../Assignment.entity";
-import { Student } from "./student.entity";
+import { SubmittedAssignment } from "./SubmitAssignment.entity";
 
 @Entity()
 export class FileAssignment extends BaseEntity {
@@ -27,8 +27,8 @@ export class FileAssignment extends BaseEntity {
     @Column({nullable: true})
     explainVideo: string
 
-    @OneToMany(() => Student, (fileAssignment) => fileAssignment.fileAssignment)
-    students: Student[]
+    @OneToMany(() => SubmittedAssignment, (submittedAssignment) => submittedAssignment.fileAssignment)
+    submitteds: SubmittedAssignment[]
 
     @ManyToOne(() => Assignment, fileAssignment => fileAssignment.fileAssignments)
     @JoinColumn()

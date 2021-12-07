@@ -1,34 +1,32 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { createReadStream } from "fs";
-import { SubmitAssignment } from "src/assignment/entities/fileAssignment/SubmitAssignment.entity";
+import { SubmittedAssignment } from "src/assignment/entities/fileAssignment/SubmitAssignment.entity";
 import { FileUploadType } from "src/common/interfaces/ImageUpload.interface";
 import { BaseService } from "src/common/services/base.service";
 import { GCStorageService, StorageFolder } from "src/common/services/GCStorage.service";
-import { SubmitAssignmentSetInput } from "src/graphql";
 import { Repository } from "typeorm";
 
 @Injectable()
-export class SubmitAssignmentService extends BaseService<SubmitAssignment> {
+export class SubmittedAssignmentService extends BaseService<SubmittedAssignment> {
     constructor(
-        @InjectRepository(SubmitAssignment)
-        private submitAssignRepo: Repository<SubmitAssignment>,
+        @InjectRepository(SubmittedAssignment)
+        private submittedAssignRepo: Repository<SubmittedAssignment>,
         private gcStorageService: GCStorageService
     ) {
-        super(submitAssignRepo)
+        super(submittedAssignRepo)
     }
 
-    async create(data: SubmitAssignmentSetInput, order: number = 1) {
-        const {publicUrl} = await this.updateFile(data.file)
+    // async create(data: SubmitAssignmentSetInput, order: number = 1) {
+    //     const {publicUrl} = await this.updateFile(data.file)
 
-        const submitAssign = await this.submitAssignRepo.create({
-            ...data,
-            fileUrl: publicUrl,
-            order
-        })
+    //     const submitAssign = await this.submittedAssignRepo.create({
+    //         ...data,
+    //         fileUrl: publicUrl,
+    //         order
+    //     })
 
-        return this.submitAssignRepo.save(submitAssign);
-    }
+    //     return this.submittedAssignRepo.save(submitAssign);
+    // }
 
     private async updateFile(file: any) {
         
