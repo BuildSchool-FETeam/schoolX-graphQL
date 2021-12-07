@@ -21,7 +21,7 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
     ) {
         super(fileAssignRepo)
     }
-
+    
     async create(data: FileAssignmentSetInput) {
         const lesson = await this.lessonService.findById(data.lessonId, {
             relations: ["assignment"]

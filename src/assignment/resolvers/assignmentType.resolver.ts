@@ -49,4 +49,15 @@ export class AssignmentTypeResolver {
 
     return assignment.quizs
   }
+
+  @ResolveField()
+  async fileAssignments(
+    @Parent() parent: Assignment
+  ) {
+    const assignment = await this.assignmentService.findById(parent.id, {
+      relations: ["fileAssignments"]
+    })
+
+    return assignment.fileAssignments
+  }
 }

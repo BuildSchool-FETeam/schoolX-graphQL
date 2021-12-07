@@ -8,7 +8,6 @@ import {
   UpdateJoinedCourse, 
   UpdateScore, 
   Upload } from 'src/graphql';
-import { ClientUser } from '../entities/ClientUser.entity';
 import { ClientUserService } from '../services/clientUser.service';
 
 @UseGuards(AuthGuard)

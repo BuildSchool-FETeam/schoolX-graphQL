@@ -3,7 +3,7 @@ import { Student } from "src/assignment/entities/fileAssignment/student.entity";
 import { StudentService } from "src/assignment/services/fileAssignment/student.service";
 
 @Resolver("StudentType")
-export class StudentResolverType {
+export class StudentTypeResolver {
     constructor(
         private studentService: StudentService
     ){}
@@ -11,7 +11,6 @@ export class StudentResolverType {
     @ResolveField()
     async user(@Parent() student: Student) {
         const data = await this.studentService.findById(student.id, {
-            select: ["id"],
             relations: ["user"]
         })
 
@@ -21,8 +20,7 @@ export class StudentResolverType {
     @ResolveField()
     async submitAssignments(@Parent() student: Student) {
         const data = await this.studentService.findById(student.id, {
-            select: ["id"],
-            relations: ["submitAssingments"]
+            relations: ["submitAssignments"]
         })
 
         return data.submitAssignments;
@@ -31,7 +29,6 @@ export class StudentResolverType {
     @ResolveField()
     async fileAssignment(@Parent() student: Student) {
         const data = await this.studentService.findById(student.id, {
-            select: ["id"],
             relations: ["fileAssignment"]
         })
 

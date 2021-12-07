@@ -3,7 +3,7 @@ import { SubmitAssignment } from "src/assignment/entities/fileAssignment/SubmitA
 import { SubmitAssignmentService } from "src/assignment/services/fileAssignment/submitAssignment.service";
 
 @Resolver("SubmitAssignmentType")
-export class SubmitAssignmentResolverType {
+export class SubmitAssignmentTypeResolver {
     constructor(
         private submitAssignService: SubmitAssignmentService
     ){}
@@ -11,7 +11,6 @@ export class SubmitAssignmentResolverType {
     @ResolveField()
     async student(@Parent() submitAssignment: SubmitAssignment) {
         const data = await this.submitAssignService.findById(submitAssignment.id, {
-            select: ["id"],
             relations: ["student"]
         })
 
@@ -21,7 +20,6 @@ export class SubmitAssignmentResolverType {
     @ResolveField()
     async comments(@Parent() submitAssignment: SubmitAssignment) {
         const data = await this.submitAssignService.findById(submitAssignment.id, {
-            select: ["id"],
             relations: ["comments"]
         })
 

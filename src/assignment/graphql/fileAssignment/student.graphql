@@ -7,7 +7,24 @@ type StudentType {
 }
 
 input StudentSetInput {
-    userId: ID!
     reApply: Boolean
-    submitAssignments: [SubmitAssignmentSetInput!]!
+    fileAssignmentId: ID!
+    submitAssignment: SubmitAssignmentSetInput!
+}
+
+type StudentMutation {
+    setStudent(id: ID, data: StudentSetInput!): StudentType!
+    deleteStudent(id: ID!): Boolean!
+}
+
+type StudentQuery {
+    student(id: ID!): StudentType!
+}
+
+type Mutation {
+    studentMutation: StudentMutation!
+}
+
+type Query {
+    studentQuery: StudentQuery!
 }

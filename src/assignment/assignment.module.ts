@@ -24,10 +24,13 @@ import { FileAssignmentService } from './services/fileAssignment/fileAssignment.
 import { Student } from './entities/fileAssignment/student.entity';
 import { SubmitAssignment } from './entities/fileAssignment/SubmitAssignment.entity';
 import { StudentService } from './services/fileAssignment/student.service';
-import { FileAssignmentResolverType } from './resolvers/fileAssignment/fileAssignmentType.resolver';
-import { StudentResolverType } from './resolvers/fileAssignment/studentType.resolver';
+import { FileAssignmentTypeResolver } from './resolvers/fileAssignment/fileAssignmentType.resolver';
+import { StudentTypeResolver } from './resolvers/fileAssignment/student/studentType.resolver';
 import { SubmitAssignmentService } from './services/fileAssignment/submitAssignment.service';
-import { SubmitAssignmentResolverType } from './resolvers/fileAssignment/submitAssignmentType.resolver';
+import { SubmitAssignmentTypeResolver } from './resolvers/fileAssignment/submitAssignmentType.resolver';
+import { ClientUserModule } from 'src/clientUser/clientUser.module';
+import { StudentMutationResolver } from './resolvers/fileAssignment/student/studentMutation.resolver';
+import { StudentQueryResolver } from './resolvers/fileAssignment/student/studentQuery.resolver';
 
 @Module({
   imports: [
@@ -39,6 +42,7 @@ import { SubmitAssignmentResolverType } from './resolvers/fileAssignment/submitA
     forwardRef(() => CourseModule),
     MiniServerModule,
     CommonModule,
+    ClientUserModule
   ],
   providers: [
     AssignmentService,
@@ -53,11 +57,13 @@ import { SubmitAssignmentResolverType } from './resolvers/fileAssignment/submitA
     QuestionService,
     QuestionTypeResolver,
     FileAssignmentService,
-    FileAssignmentResolverType,
+    FileAssignmentTypeResolver,
     StudentService,
-    StudentResolverType,
+    StudentTypeResolver,
+    StudentMutationResolver,
+    StudentQueryResolver,
     SubmitAssignmentService,
-    SubmitAssignmentResolverType
+    SubmitAssignmentTypeResolver
   ],
   exports: [AssignmentService],
 })

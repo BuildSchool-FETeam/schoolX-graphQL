@@ -105,15 +105,15 @@ export class FileAssignmentSetInput {
 }
 
 export class StudentSetInput {
-    userId: string;
     reApply?: Nullable<boolean>;
-    submitAssignments: SubmitAssignmentSetInput[];
+    fileAssignmentId: string;
+    submitAssignment: SubmitAssignmentSetInput;
 }
 
 export class SubmitAssignmentSetInput {
     title: string;
     description?: Nullable<string>;
-    files?: Nullable<Nullable<Upload>[]>;
+    file?: Nullable<Upload>;
 }
 
 export class QuestionSetInput {
@@ -286,6 +286,8 @@ export abstract class IQuery {
 
     abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
+    abstract studentQuery(): StudentQuery | Promise<StudentQuery>;
+
     abstract clientUserQuery(): Nullable<ClientUserQuery> | Promise<Nullable<ClientUserQuery>>;
 
     abstract courseQuery(): Nullable<CourseQuery> | Promise<Nullable<CourseQuery>>;
@@ -315,6 +317,8 @@ export abstract class IMutation {
     abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
 
     abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
+
+    abstract studentMutation(): StudentMutation | Promise<StudentMutation>;
 
     abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
 
@@ -407,6 +411,7 @@ export class AssignmentType {
     lesson: LessonType;
     codeChallenges: Nullable<CodeChallengeType>[];
     quizs: Nullable<QuizType>[];
+    fileAssignments: Nullable<FileAssignmentType>[];
     comments: Nullable<UserCommentType>[];
 }
 
@@ -497,6 +502,17 @@ export class StudentType {
     submitAssignments: SubmitAssignmentType[];
     reApply: boolean;
     fileAssignment: FileAssignmentType;
+}
+
+export class StudentMutation {
+    __typename?: 'StudentMutation';
+    setStudent: StudentType;
+    deleteStudent: boolean;
+}
+
+export class StudentQuery {
+    __typename?: 'StudentQuery';
+    student: StudentType;
 }
 
 export class SubmitAssignmentType implements BaseGraphQL {

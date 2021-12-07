@@ -3,6 +3,7 @@ type AssignmentType{
   lesson: LessonType!
   codeChallenges: [CodeChallengeType]!
   quizs: [QuizType]!
+  fileAssignments: [FileAssignmentType]!
   comments(pagination: PaginationInput): [UserCommentType]!
 }
 

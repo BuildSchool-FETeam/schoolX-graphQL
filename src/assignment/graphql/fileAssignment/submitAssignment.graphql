@@ -13,5 +13,5 @@ type SubmitAssignmentType implements BaseGraphQL{
 input SubmitAssignmentSetInput {
     title: String!
     description: String
-    files: [Upload]
+    file: Upload
 }

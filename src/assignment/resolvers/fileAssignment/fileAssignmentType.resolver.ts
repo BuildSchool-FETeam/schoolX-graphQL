@@ -3,7 +3,7 @@ import { FileAssignment } from "src/assignment/entities/fileAssignment/fileAssig
 import { FileAssignmentService } from "src/assignment/services/fileAssignment/fileAssignment.service";
 
 @Resolver("FileAssignmentType")
-export class FileAssignmentResolverType {
+export class FileAssignmentTypeResolver {
     constructor(private fileAssignService: FileAssignmentService) {
         
     }
@@ -11,7 +11,6 @@ export class FileAssignmentResolverType {
     @ResolveField()
     async students(@Parent() fileAssignment: FileAssignment){
         const data = await this.fileAssignService.findById(fileAssignment.id, {
-            select: ["id"],
             relations: ["students"]
         })
 
@@ -21,7 +20,6 @@ export class FileAssignmentResolverType {
     @ResolveField()
     async assignment(@Parent() fileAssignment: FileAssignment){
         const data = await this.fileAssignService.findById(fileAssignment.id, {
-            select: ["id"],
             relations: ["assignment"]
         })
 
