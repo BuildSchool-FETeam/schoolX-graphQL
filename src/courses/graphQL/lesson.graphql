@@ -37,6 +37,8 @@ type LessonMutation {
 
   setFileAssignment(id: ID, data: FileAssignmentSetInput!): FileAssignmentType!
   deleteFileAssignment(id: ID!): Boolean!
+  submitAssignment(id: ID!, data: SubmitInput!): GroupAssignmentType!
+  evaluationAssignment(id: ID!, data: EvaluationInput!): GroupAssignmentType!
 }
 
 type Mutation {

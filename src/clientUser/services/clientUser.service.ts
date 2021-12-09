@@ -18,6 +18,7 @@ import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import { AchievementService } from './achievement.service';
 import { TokenService } from 'src/common/services/token.service';
 import { CourseService } from 'src/courses/services/course.service';
+import { Course } from 'src/courses/entities/Course.entity';
 
 @Injectable()
 export class ClientUserService extends BaseService<ClientUser> {
@@ -142,5 +143,14 @@ export class ClientUserService extends BaseService<ClientUser> {
     const { id } = this.tokenService.verifyAndDecodeToken(token);
 
     return id;
+  }
+
+  async checkUserJoinedCourse(userId: string, course: Course) {
+    const user = await this.clientRepo.createQueryBuilder("clientUser")
+    .leftJoinAndSelect("clientUser.achievement", "achievement")
+    .leftJoinAndSelect("achievement.joinedCourse", "joinedCourse")
+    .where("clientUser.id = :userId", {userId: userId}).getOne();
+    
+    return this.achievementService.checkJoinedCourse(user.achievement, course)
   }
 }

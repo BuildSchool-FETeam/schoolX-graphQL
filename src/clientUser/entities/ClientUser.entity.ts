@@ -1,4 +1,5 @@
 import { Article } from 'src/article/entities/Article.entity';
+import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { UserBaseEntityUUID } from 'src/common/entity/base.entity';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
@@ -67,4 +68,7 @@ export class ClientUser extends UserBaseEntityUUID {
 
   @OneToMany(() => Article, (article) => article.createdBy)
   articles: Article[];
+
+  @OneToMany(() => GroupAssignment, (group) => group.user)
+  groupAssignments: GroupAssignment[];
 }

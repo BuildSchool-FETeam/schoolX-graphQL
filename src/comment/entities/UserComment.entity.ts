@@ -5,7 +5,7 @@ import { Course } from '../../courses/entities/Course.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Article } from 'src/article/entities/Article.entity';
-import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmitAssignment.entity';
+import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity';
 
 @Entity()
 export class UserComment extends BaseEntity {

@@ -2,7 +2,7 @@ import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/commo
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { CodeChallengeSetInput, CodeConfigInput, FileAssignmentSetInput, QuizSetInput, TypeAssign } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, EvaluationInput, FileAssignmentSetInput, QuizSetInput, SubmitInput, TypeAssign } from 'src/graphql';
 import { Repository } from 'typeorm';
 import * as _ from 'lodash';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
@@ -121,7 +121,7 @@ export class AssignmentService extends BaseService<Assignment> {
 
   async getFileAssign(id: string) {
     return this.fileAssignService.findById(id, {
-      relations: ["assignment", "students"]
+      relations: ["assignment", "groupAssignments"]
     })
   }
 
@@ -137,6 +137,20 @@ export class AssignmentService extends BaseService<Assignment> {
     return this.fileAssignService.delete(id);
   }
 
+  async submmitAssignment (id: string, data: SubmitInput, userId: string) {
+
+    if(!data.groupId) {
+      return this.fileAssignService.firstSubmit(id, data, userId);
+    }else {
+      return this.fileAssignService.submit(id, data, userId);
+    }
+  }
+
+  async evaluationAssignment(id: string, data: EvaluationInput, token: string) {
+    return this.fileAssignService.evaluation(id, data, token);
+  }
+
+  
   /**
    * ------------------------------
    * File Assignment Service end

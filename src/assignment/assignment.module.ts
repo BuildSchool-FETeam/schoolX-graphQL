@@ -25,19 +25,24 @@ import { FileAssignmentTypeResolver } from './resolvers/fileAssignment/fileAssig
 import { SubmittedAssignmentService } from './services/fileAssignment/submittedAssignment.service';
 import { SubmittedAssignmentTypeResolver } from './resolvers/fileAssignment/submittedAssignmentType.resolver';
 import { ClientUserModule } from 'src/clientUser/clientUser.module';
-import { SubmittedAssignment } from './entities/fileAssignment/SubmitAssignment.entity';
+import { SubmittedAssignment } from './entities/fileAssignment/SubmittedAssignment.entity';
+import { GroupAssignmentService } from './services/fileAssignment/groupAssignment.service';
+import { GroupAssignmentTypeResolver } from './resolvers/fileAssignment/groupAssignmentType.resolver';
+import { GroupAssignment } from './entities/fileAssignment/groupAssignment.entity';
+import { CommentModule } from 'src/comment/comment.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Assignment, TestCase, CodeChallenge, 
       Quiz, Question, FileAssignment,
-      SubmittedAssignment
+      SubmittedAssignment, GroupAssignment
     ]),
     forwardRef(() => CourseModule),
     MiniServerModule,
     CommonModule,
-    ClientUserModule
+    ClientUserModule,
+    CommentModule
   ],
   providers: [
     AssignmentService,
@@ -54,8 +59,10 @@ import { SubmittedAssignment } from './entities/fileAssignment/SubmitAssignment.
     FileAssignmentService,
     FileAssignmentTypeResolver,
     SubmittedAssignmentService,
-    SubmittedAssignmentTypeResolver
+    SubmittedAssignmentTypeResolver,
+    GroupAssignmentService,
+    GroupAssignmentTypeResolver
   ],
-  exports: [AssignmentService],
+  exports: [AssignmentService, SubmittedAssignmentService],
 })
 export class AssignmentModule {}

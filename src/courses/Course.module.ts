@@ -18,6 +18,7 @@ import { LessonMutationResolver } from './resolvers/lesson/lessonMutation.resolv
 import { LessonTypeResolver } from './resolvers/lesson/lessonType.resolver';
 import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/documentMutation.resolver';
 import { AssignmentModule } from 'src/assignment/assignment.module';
+import { ClientUserModule } from 'src/clientUser/clientUser.module';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { AssignmentModule } from 'src/assignment/assignment.module';
     forwardRef(() => InstructorModule),
     TagModule,
     AdminUserModule,
-    AssignmentModule
+    AssignmentModule,
   ],
   providers: [
     CourseMutationResolver,

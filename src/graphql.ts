@@ -108,13 +108,14 @@ export class SubmitInput {
     title: string;
     description?: Nullable<string>;
     file?: Nullable<Upload>;
-    fileAssignmentId: string;
+    groupId?: Nullable<string>;
 }
 
 export class EvaluationInput {
     reApply?: Nullable<boolean>;
-    comments?: Nullable<Nullable<CommentDataInput>[]>;
+    comment?: Nullable<CommentDataInput>;
     score?: Nullable<number>;
+    order: number;
 }
 
 export class QuestionSetInput {
@@ -488,8 +489,16 @@ export class FileAssignmentType implements BaseGraphQL {
     videoInstruct?: Nullable<string>;
     explainContent?: Nullable<string>;
     explainVideo?: Nullable<string>;
-    submitteds?: Nullable<Nullable<SubmittedAssignmentType>[]>;
     assignment: AssignmentType;
+    groupAssignments?: Nullable<Nullable<GroupAssignmentType>[]>;
+}
+
+export class GroupAssignmentType {
+    __typename?: 'GroupAssignmentType';
+    id: string;
+    user: ClientUserType;
+    submitteds: SubmittedAssignmentType[];
+    fileAssignment: FileAssignmentType;
 }
 
 export class SubmittedAssignmentType implements BaseGraphQL {
@@ -503,7 +512,6 @@ export class SubmittedAssignmentType implements BaseGraphQL {
     reApply?: Nullable<boolean>;
     fileUrl: string;
     comments?: Nullable<Nullable<UserCommentType>[]>;
-    fileAssignment: FileAssignmentType;
     user: ClientUserType;
 }
 
@@ -702,6 +710,8 @@ export class LessonMutation {
     deleteQuiz: boolean;
     setFileAssignment: FileAssignmentType;
     deleteFileAssignment: boolean;
+    submitAssignment: GroupAssignmentType;
+    evaluationAssignment: GroupAssignmentType;
 }
 
 export class LessonQuery {

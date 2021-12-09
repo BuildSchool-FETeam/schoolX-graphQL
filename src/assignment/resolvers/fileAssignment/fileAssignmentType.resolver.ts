@@ -18,11 +18,11 @@ export class FileAssignmentTypeResolver {
     }
 
     @ResolveField()
-    async submitteds(@Parent() fileAssignment: FileAssignment){
+    async groupAssignments(@Parent() fileAssignment: FileAssignment) {
         const data = await this.fileAssignService.findById(fileAssignment.id, {
-            relations: ["submitteds"]
+            relations: ["groupAssignments"]
         })
 
-        return data.submitteds;
+        return data.groupAssignments;
     }
 }
