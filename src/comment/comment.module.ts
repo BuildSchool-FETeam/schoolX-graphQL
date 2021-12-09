@@ -17,12 +17,13 @@ import { Assignment } from 'src/assignment/entities/Assignment.entity';
     forwardRef(() => ArticleModule),
     ArticleModule,
     CommonModule,
-    AssignmentModule,
+    forwardRef(() => AssignmentModule),
   ],
   providers: [
     UserCommentService,
     UserCommentMutationResolver,
     UserCommentTypeResolver,
   ],
+  exports: [UserCommentService]
 })
 export class CommentModule {}

@@ -19,13 +19,30 @@ import { Quiz } from './entities/quiz/Quiz.entity';
 import { QuestionTypeResolver } from './resolvers/quiz/questionType.resolver';
 import { QuestionService } from './services/quiz/question.service';
 import { Question } from './entities/quiz/Question.entity';
+import { FileAssignment } from './entities/fileAssignment/fileAssignment.entity';
+import { FileAssignmentService } from './services/fileAssignment/fileAssignment.service';
+import { FileAssignmentTypeResolver } from './resolvers/fileAssignment/fileAssignmentType.resolver';
+import { SubmittedAssignmentService } from './services/fileAssignment/submittedAssignment.service';
+import { SubmittedAssignmentTypeResolver } from './resolvers/fileAssignment/submittedAssignmentType.resolver';
+import { ClientUserModule } from 'src/clientUser/clientUser.module';
+import { SubmittedAssignment } from './entities/fileAssignment/SubmittedAssignment.entity';
+import { GroupAssignmentService } from './services/fileAssignment/groupAssignment.service';
+import { GroupAssignmentTypeResolver } from './resolvers/fileAssignment/groupAssignmentType.resolver';
+import { GroupAssignment } from './entities/fileAssignment/groupAssignment.entity';
+import { CommentModule } from 'src/comment/comment.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Assignment, TestCase, CodeChallenge, Quiz, Question]),
+    TypeOrmModule.forFeature([
+      Assignment, TestCase, CodeChallenge, 
+      Quiz, Question, FileAssignment,
+      SubmittedAssignment, GroupAssignment
+    ]),
     forwardRef(() => CourseModule),
     MiniServerModule,
     CommonModule,
+    ClientUserModule,
+    CommentModule
   ],
   providers: [
     AssignmentService,
@@ -39,7 +56,13 @@ import { Question } from './entities/quiz/Question.entity';
     QuizTypeResolver,
     QuestionService,
     QuestionTypeResolver,
+    FileAssignmentService,
+    FileAssignmentTypeResolver,
+    SubmittedAssignmentService,
+    SubmittedAssignmentTypeResolver,
+    GroupAssignmentService,
+    GroupAssignmentTypeResolver
   ],
-  exports: [AssignmentService],
+  exports: [AssignmentService, SubmittedAssignmentService],
 })
 export class AssignmentModule {}

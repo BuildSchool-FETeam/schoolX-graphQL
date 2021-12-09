@@ -1,0 +1,28 @@
+type SubmittedAssignmentType implements BaseGraphQL{
+    id: ID!
+    title: String!
+    createdAt: ScalarDate!
+    updatedAt: ScalarDate!
+    description: String
+    order: Int!
+    reApply: Boolean
+    fileUrl: String!
+    comments: [UserCommentType]
+    user: ClientUserType!
+}
+
+
+input SubmitInput {
+    title: String!
+    description: String
+    file: Upload
+    groupAssignmentId: ID
+    courseId: ID!
+}
+
+input EvaluationInput {
+    reApply: Boolean
+    comment: CommentDataInput
+    scoreInput: UpdateScore
+    order: Int!
+}

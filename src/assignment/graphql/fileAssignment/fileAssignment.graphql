@@ -1,0 +1,27 @@
+type FileAssignmentType implements BaseGraphQL{
+    id: ID!
+    title: String!
+    createdAt: ScalarDate!
+    updatedAt: ScalarDate!
+    description: String
+    maxScore: Int!
+    estimateTimeInMinute: Int!
+    contentInstruct: String
+    videoInstruct: String
+    explainContent: String
+    explainVideo: String
+    assignment: AssignmentType!
+    submittedGroupAssignments: [GroupAssignmentType]
+}
+
+input FileAssignmentSetInput {
+    title: String!
+    description: String
+    maxScore: Int!
+    estimateTimeInMinute: Int!
+    contentInstruct: String
+    videoInstruct: String
+    explainContent: String
+    explainVideo: String
+    lessonId: ID!
+}

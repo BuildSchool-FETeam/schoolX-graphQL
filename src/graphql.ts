@@ -15,7 +15,8 @@ export enum ArticleStatus {
 
 export enum TypeAssign {
     codeChallenge = "codeChallenge",
-    quiz = "quiz"
+    quiz = "quiz",
+    fileAssignment = "fileAssignment"
 }
 
 export enum ProgrammingLanguage {
@@ -81,6 +82,43 @@ export class CodeChallengeSetInput {
     languageSupport: Nullable<string>[];
 }
 
+export class TestCaseSetInput {
+    title: string;
+    runningTestScript: string;
+    expectResult?: Nullable<string>;
+    codeChallengeId: string;
+    generatedExpectResultScript?: Nullable<string>;
+    programingLanguage: ProgrammingLanguage;
+    timeEvaluation?: Nullable<number>;
+}
+
+export class FileAssignmentSetInput {
+    title: string;
+    description?: Nullable<string>;
+    maxScore: number;
+    estimateTimeInMinute: number;
+    contentInstruct?: Nullable<string>;
+    videoInstruct?: Nullable<string>;
+    explainContent?: Nullable<string>;
+    explainVideo?: Nullable<string>;
+    lessonId: string;
+}
+
+export class SubmitInput {
+    title: string;
+    description?: Nullable<string>;
+    file?: Nullable<Upload>;
+    groupAssignmentId?: Nullable<string>;
+    courseId: string;
+}
+
+export class EvaluationInput {
+    reApply?: Nullable<boolean>;
+    comment?: Nullable<CommentDataInput>;
+    scoreInput?: Nullable<UpdateScore>;
+    order: number;
+}
+
 export class QuestionSetInput {
     id?: Nullable<string>;
     title: string;
@@ -97,16 +135,6 @@ export class QuizSetInput {
     questions: QuestionSetInput[];
     score: number;
     timeByMinute: number;
-}
-
-export class TestCaseSetInput {
-    title: string;
-    runningTestScript: string;
-    expectResult?: Nullable<string>;
-    codeChallengeId: string;
-    generatedExpectResultScript?: Nullable<string>;
-    programingLanguage: ProgrammingLanguage;
-    timeEvaluation?: Nullable<number>;
 }
 
 export class SignUpInput {
@@ -382,6 +410,7 @@ export class AssignmentType {
     lesson: LessonType;
     codeChallenges: Nullable<CodeChallengeType>[];
     quizs: Nullable<QuizType>[];
+    fileAssignments: Nullable<FileAssignmentType>[];
     comments: Nullable<UserCommentType>[];
 }
 
@@ -423,6 +452,71 @@ export class CodeChallengeType implements BaseGraphQL {
     testCases: TestCaseType[];
 }
 
+export class TestCaseType implements BaseGraphQL {
+    __typename?: 'TestCaseType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    runningTestScript: string;
+    generatedExpectResultScript?: Nullable<string>;
+    expectResult?: Nullable<string>;
+    codeChallenge: CodeChallengeType;
+    programingLanguage: string;
+    timeEvaluation?: Nullable<number>;
+}
+
+export class TestCaseMutation {
+    __typename?: 'TestCaseMutation';
+    setTestCase: TestCaseType;
+    deleteTestCase?: Nullable<boolean>;
+}
+
+export class TestCaseQuery {
+    __typename?: 'TestCaseQuery';
+    testCase: TestCaseType;
+}
+
+export class FileAssignmentType implements BaseGraphQL {
+    __typename?: 'FileAssignmentType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    description?: Nullable<string>;
+    maxScore: number;
+    estimateTimeInMinute: number;
+    contentInstruct?: Nullable<string>;
+    videoInstruct?: Nullable<string>;
+    explainContent?: Nullable<string>;
+    explainVideo?: Nullable<string>;
+    assignment: AssignmentType;
+    submittedGroupAssignments?: Nullable<Nullable<GroupAssignmentType>[]>;
+}
+
+export class GroupAssignmentType {
+    __typename?: 'GroupAssignmentType';
+    id: string;
+    title: string;
+    user: ClientUserType;
+    submitteds: SubmittedAssignmentType[];
+    fileAssignment: FileAssignmentType;
+}
+
+export class SubmittedAssignmentType implements BaseGraphQL {
+    __typename?: 'SubmittedAssignmentType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    description?: Nullable<string>;
+    order: number;
+    reApply?: Nullable<boolean>;
+    fileUrl: string;
+    comments?: Nullable<Nullable<UserCommentType>[]>;
+    user: ClientUserType;
+}
+
 export class QuestionType implements BaseGraphQL {
     __typename?: 'QuestionType';
     id: string;
@@ -448,31 +542,6 @@ export class QuizType implements BaseGraphQL {
     questions: QuestionType[];
     score: number;
     timeByMinute: number;
-}
-
-export class TestCaseType implements BaseGraphQL {
-    __typename?: 'TestCaseType';
-    id: string;
-    title: string;
-    createdAt: ScalarDate;
-    updatedAt: ScalarDate;
-    runningTestScript: string;
-    generatedExpectResultScript?: Nullable<string>;
-    expectResult?: Nullable<string>;
-    codeChallenge: CodeChallengeType;
-    programingLanguage: string;
-    timeEvaluation?: Nullable<number>;
-}
-
-export class TestCaseMutation {
-    __typename?: 'TestCaseMutation';
-    setTestCase: TestCaseType;
-    deleteTestCase?: Nullable<boolean>;
-}
-
-export class TestCaseQuery {
-    __typename?: 'TestCaseQuery';
-    testCase: TestCaseType;
 }
 
 export class AdminAuthMutation {
@@ -573,6 +642,7 @@ export class UserCommentType implements BaseGraphQL {
     lesson?: Nullable<LessonType>;
     assignment?: Nullable<AssignmentType>;
     article?: Nullable<ArticleType>;
+    submitted?: Nullable<SubmittedAssignmentType>;
 }
 
 export class File {
@@ -639,7 +709,11 @@ export class LessonMutation {
     runCode: CodeRunResultType;
     runTestCase: SummaryEvaluationResult;
     setQuiz: QuizType;
-    deleteQuiz?: Nullable<boolean>;
+    deleteQuiz: boolean;
+    setFileAssignment: FileAssignmentType;
+    deleteFileAssignment: boolean;
+    submitAssignment: GroupAssignmentType;
+    evaluationAssignment: GroupAssignmentType;
 }
 
 export class LessonQuery {
@@ -650,6 +724,7 @@ export class LessonQuery {
     getTypeOfAssignment: TypeAssign;
     codeChallenge: CodeChallengeType;
     quiz: QuizType;
+    fileAssignment: FileAssignmentType;
 }
 
 export class DocumentType implements BaseGraphQL {

@@ -1,7 +1,8 @@
 import { BadRequestException, Res, UseGuards } from '@nestjs/common';
-import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, Context, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
 import * as _ from 'lodash';
 import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import {
@@ -12,7 +13,7 @@ import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { LessonDocument } from 'src/courses/entities/LessonDocument.entity';
 import { LessonDocumentService } from 'src/courses/services/document.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput, QuizSetInput } from 'src/graphql';
+import { CodeChallengeSetInput, CodeConfigInput, EvaluationInput, FileAssignmentSetInput, LessonSetInput, QuizSetInput, SubmitInput } from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('LessonMutation')
@@ -130,5 +131,42 @@ export class LessonMutationResolver {
     @Args('id') id: string
   ) {
     return this.lessonService.deleteQuiz(id);
+  }
+
+  @ResolveField()
+  setFileAssignment(
+    @Args("id") id: string,
+    @Args("data") data: FileAssignmentSetInput
+  ){
+    return this.lessonService.setFileAssignment(id, data);
+  }
+
+  @ResolveField()
+  deleteFileAssignment(
+    @Args("id") id: string
+  ){
+    return this.lessonService.deleteFileAssignment(id);
+  }
+
+  @ResolveField()
+  submitAssignment(
+    @Args("fileAssignmentId") fileAssignmentId: string,
+    @Args("data") data: SubmitInput,
+    @Context() { req }: any
+  ){
+    const userId = this.lessonService.getIdUserByHeader(req.headers);
+
+    return this.lessonService.submitAssignment(fileAssignmentId, data, userId);
+  }
+
+  @ResolveField()
+  evaluationAssignment(
+    @Args("groupAssignmentId") groupAssignmentId: string,
+    @Args("data") data: EvaluationInput,
+    @Context() { req }: any
+  ){
+
+    const token = this.lessonService.getTokenFromHttpHeader(req.headers)
+    return this.lessonService.evaluation(groupAssignmentId, data, token)
   }
 }

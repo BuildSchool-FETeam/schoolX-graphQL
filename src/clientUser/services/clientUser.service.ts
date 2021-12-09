@@ -18,6 +18,7 @@ import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import { AchievementService } from './achievement.service';
 import { TokenService } from 'src/common/services/token.service';
 import { CourseService } from 'src/courses/services/course.service';
+import { Course } from 'src/courses/entities/Course.entity';
 
 @Injectable()
 export class ClientUserService extends BaseService<ClientUser> {

@@ -1,13 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
-import { Assignment } from 'src/assignment/entities/Assignment.entity';
-import { CodeChallenge } from 'src/assignment/entities/codeChallenge/CodeChallenge.entity';
 import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
-import { Quiz } from 'src/assignment/entities/quiz/Quiz.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
-import { CodeChallengeSetInput, CodeConfigInput, LessonSetInput, QuizSetInput } from 'src/graphql';
+import { TokenService } from 'src/common/services/token.service';
+import { CodeChallengeSetInput, CodeConfigInput, EvaluationInput, FileAssignmentSetInput, LessonSetInput, QuizSetInput, SubmitInput } from 'src/graphql';
 import { Repository } from 'typeorm';
 import { Lesson } from '../entities/Lesson.entity';
 import { CourseService } from './course.service';
@@ -19,6 +17,7 @@ export class LessonService extends BaseService<Lesson> {
     private lessonRepo: Repository<Lesson>,
     private courseService: CourseService,
     private assignService: AssignmentService,
+    private tokenService: TokenService,
   ) {
     super(lessonRepo, 'Lesson');
   }
@@ -106,5 +105,31 @@ export class LessonService extends BaseService<Lesson> {
     id: string
   ) {
     return this.assignService.deleteQuiz(id);
+  }
+
+  async getFileAssignment(id: string){
+    return this.assignService.getFileAssign(id);
+  }
+
+  async setFileAssignment(id: string, data: FileAssignmentSetInput) {
+    return this.assignService.setFileAssign(id, data);
+  }
+
+  async deleteFileAssignment(id: string) {
+    return !!(await this.assignService.deleteFileAssign(id));
+  }
+
+  async submitAssignment(id: string, data: SubmitInput, userId: string) {
+    return this.assignService.submmitAssignment(id, data, userId);
+  }
+
+  async evaluation(id: string, data: EvaluationInput, token: string) {
+    return this.assignService.evaluationAssignment(id, data, token);
+  }
+
+  getIdUserByHeader(headers) {
+    const token = this.getTokenFromHttpHeader(headers);
+    
+    return this.tokenService.verifyAndDecodeToken(token).id;
   }
 }

@@ -3,7 +3,7 @@ import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { TokenService } from './../../common/services/token.service';
 import { CommentDataInput } from './../../graphql';
 import { CourseService } from './../../courses/services/course.service';
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import { Injectable, ForbiddenException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { Repository } from 'typeorm';
@@ -11,6 +11,7 @@ import { UserComment } from '../entities/UserComment.entity';
 import * as _ from 'lodash';
 import { ArticleService } from 'src/article/services/article.service';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
+import { SubmittedAssignmentService } from 'src/assignment/services/fileAssignment/submittedAssignment.service';
 
 interface IResourceAssign<T> {
   fieldAssign: keyof UserComment;
@@ -25,9 +26,12 @@ export class UserCommentService extends BaseService<UserComment> {
     @InjectRepository(Assignment)
     private assignmentRepo: Repository<Assignment>,
     private courseService: CourseService,
+    @Inject(forwardRef(() => LessonService))
     private lessonService: LessonService,
     private articleService: ArticleService,
     private tokenService: TokenService,
+    @Inject(forwardRef(() => SubmittedAssignmentService))
+    private submittedAssignService: SubmittedAssignmentService
   ) {
     super(commentRepo, 'Comment');
   }
@@ -104,6 +108,21 @@ export class UserCommentService extends BaseService<UserComment> {
       token,
     );
 
+    return this.commentRepo.save(newComment);
+  }
+
+  async setCommentForSubmittedAssign(
+    submittedId: string,
+    data: CommentDataInput,
+    token: string
+  ){
+    const submitted = await this.submittedAssignService.findById(submittedId);
+    const newComment = await this.setComment(
+      data,
+      { fieldAssign: 'submittedAssignment', data: submitted },
+      token
+    )
+    
     return this.commentRepo.save(newComment);
   }
 
