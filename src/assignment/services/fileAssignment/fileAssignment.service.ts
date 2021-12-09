@@ -105,7 +105,7 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
                 user.submittedGroupAssignments,
                 "id"
             );
-            if(checkGroupExits) {
+            if(checkGroupExits.length < fileAssign.submittedGroupAssignments.length) {
                 throw new BadRequestException("Group is already exits");
             }
             groupAssignments = _.cloneDeep(fileAssign.submittedGroupAssignments);
