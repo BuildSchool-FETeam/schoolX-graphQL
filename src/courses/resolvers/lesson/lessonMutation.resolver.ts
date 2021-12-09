@@ -150,23 +150,23 @@ export class LessonMutationResolver {
 
   @ResolveField()
   submitAssignment(
-    @Args("id") id: string,
+    @Args("fileAssignmentId") fileAssignmentId: string,
     @Args("data") data: SubmitInput,
     @Context() { req }: any
   ){
     const userId = this.lessonService.getIdUserByHeader(req.headers);
 
-    return this.lessonService.submitAssignment(id, data, userId);
+    return this.lessonService.submitAssignment(fileAssignmentId, data, userId);
   }
 
   @ResolveField()
   evaluationAssignment(
-    @Args("id") id: string,
+    @Args("groupAssignmentId") groupAssignmentId: string,
     @Args("data") data: EvaluationInput,
     @Context() { req }: any
   ){
 
     const token = this.lessonService.getTokenFromHttpHeader(req.headers)
-    return this.lessonService.evaluation(id, data, token)
+    return this.lessonService.evaluation(groupAssignmentId, data, token)
   }
 }

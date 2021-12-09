@@ -140,7 +140,7 @@ export class AssignmentService extends BaseService<Assignment> {
       throw new BadRequestException(`User with id ${userId} doesn't join this course`)
     }
 
-    if(!data.groupId) {
+    if(!data.groupAssignmentId) {
       return this.fileAssignService.firstSubmit(id, data, userId);
     }else {
       return this.fileAssignService.submit(id, data, userId);

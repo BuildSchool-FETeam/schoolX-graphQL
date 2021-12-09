@@ -37,12 +37,12 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
     }
 
     async update(id: string, data: SubmitInput, userId: string) {
-        const group = await this.findById(data.groupId, {
+        const group = await this.findById(data.groupAssignmentId, {
             relations: ["user", "submitteds", "fileAssignment"]
         })
 
         if(id !== group.fileAssignment.id.toString()) {
-            throw new BadRequestException(`this assignment doesn't contain submitted assignment with id ${data.groupId}`)
+            throw new BadRequestException(`this assignment doesn't contain submitted assignment with id ${data.groupAssignmentId}`)
         }
 
         if(group.user.id !== userId) {
@@ -68,13 +68,16 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
 
     async evaluation(id: string, data: EvaluationInput, token: string) {
         const group = await this.findById(id, {
-            relations: ["submitteds"]
+            relations: ["submitteds", "fileAssignment"]
         })
 
         const submitted = _.find(group.submitteds, ["order", data.order])
         if(data.score) {
-            const user = this.tokenService.verifyAndDecodeToken(token)
-            this.clientUserService.updateScore(user.id, {score: data.score, isAdd: true})
+            const user = this.tokenService.verifyAndDecodeToken(token);
+            if(data.score > group.fileAssignment.maxScore){
+                data.score = group.fileAssignment.maxScore
+            }
+            this.clientUserService.updateScore(user.id, {score: data.score, isAdd: true});
         }
 
         await this.submittedAssignService.evaluation(submitted.id, data, token);

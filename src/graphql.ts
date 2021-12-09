@@ -108,7 +108,7 @@ export class SubmitInput {
     title: string;
     description?: Nullable<string>;
     file?: Nullable<Upload>;
-    groupId?: Nullable<string>;
+    groupAssignmentId?: Nullable<string>;
     courseId: string;
 }
 

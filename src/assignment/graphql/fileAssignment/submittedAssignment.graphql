@@ -16,7 +16,7 @@ input SubmitInput {
     title: String!
     description: String
     file: Upload
-    groupId: ID
+    groupAssignmentId: ID
     courseId: ID!
 }
 

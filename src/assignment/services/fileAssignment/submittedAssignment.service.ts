@@ -63,8 +63,10 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
 
     private async uploadFile(file: any) {
         
-        const {filename, mimetype, createReadStream} = (await file) as FileUploadType;
-        if(mimetype !== "application/zip") {
+        const {filename, createReadStream} = (await file) as FileUploadType;
+        const format = filename.split(".")
+
+        if(format[format.length - 1] !== "zip") {
             throw new BadRequestException("you can only upload file .zip")
         }
         const readStream = createReadStream();
