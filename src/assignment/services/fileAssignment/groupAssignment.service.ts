@@ -72,12 +72,12 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
         })
 
         const submitted = _.find(group.submitteds, ["order", data.order])
-        if(data.score) {
+        if(data.scoreInput) {
             const user = this.tokenService.verifyAndDecodeToken(token);
-            if(data.score > group.fileAssignment.maxScore){
-                data.score = group.fileAssignment.maxScore
+            if(data.scoreInput.score > group.fileAssignment.maxScore){
+                data.scoreInput.score = group.fileAssignment.maxScore
             }
-            this.clientUserService.updateScore(user.id, {score: data.score, isAdd: true});
+            this.clientUserService.updateScore(user.id, data.scoreInput);
         }
 
         await this.submittedAssignService.evaluation(submitted.id, data, token);

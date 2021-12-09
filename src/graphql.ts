@@ -115,7 +115,7 @@ export class SubmitInput {
 export class EvaluationInput {
     reApply?: Nullable<boolean>;
     comment?: Nullable<CommentDataInput>;
-    score?: Nullable<number>;
+    scoreInput?: Nullable<UpdateScore>;
     order: number;
 }
 
