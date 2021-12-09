@@ -109,6 +109,7 @@ export class SubmitInput {
     description?: Nullable<string>;
     file?: Nullable<Upload>;
     groupId?: Nullable<string>;
+    courseId: string;
 }
 
 export class EvaluationInput {
@@ -490,12 +491,13 @@ export class FileAssignmentType implements BaseGraphQL {
     explainContent?: Nullable<string>;
     explainVideo?: Nullable<string>;
     assignment: AssignmentType;
-    groupAssignments?: Nullable<Nullable<GroupAssignmentType>[]>;
+    submittedGroupAssignments?: Nullable<Nullable<GroupAssignmentType>[]>;
 }
 
 export class GroupAssignmentType {
     __typename?: 'GroupAssignmentType';
     id: string;
+    title: string;
     user: ClientUserType;
     submitteds: SubmittedAssignmentType[];
     fileAssignment: FileAssignmentType;

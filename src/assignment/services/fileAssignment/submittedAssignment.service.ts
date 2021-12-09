@@ -22,7 +22,7 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
     }
 
     async submit(data: SubmitInput, order: number = 1) {
-        const {publicUrl} = await this.updateFile(data.file)
+        const {publicUrl} = await this.uploadFile(data.file)
 
         const submitAssign = await this.submittedAssignRepo.create({
             ...data,
@@ -61,11 +61,11 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
         return this.submittedAssignRepo.save(cloneData);
     }
 
-    private async updateFile(file: any) {
+    private async uploadFile(file: any) {
         
         const {filename, mimetype, createReadStream} = (await file) as FileUploadType;
         if(mimetype !== "application/zip") {
-            throw new BadRequestException("you can only update file .zip")
+            throw new BadRequestException("you can only upload file .zip")
         }
         const readStream = createReadStream();
 

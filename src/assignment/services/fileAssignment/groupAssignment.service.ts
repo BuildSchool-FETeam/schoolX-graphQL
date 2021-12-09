@@ -28,7 +28,7 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
         ]);
 
         const groupAssignment = await this.groupAssignRepo.create({
-            title: "",
+            title: user.name,
             user,
             submitteds: [submitted]
         })
@@ -42,26 +42,26 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
         })
 
         if(id !== group.fileAssignment.id.toString()) {
-            throw new BadRequestException(`this assignment is not contain submitteds with id ${data.groupId}`)
+            throw new BadRequestException(`this assignment doesn't contain submitted assignment with id ${data.groupId}`)
         }
 
         if(group.user.id !== userId) {
             throw new BadRequestException(`user with id ${userId} can't excute this action`)
         }
 
-        let submitted: SubmittedAssignment;
-        let submitteds: SubmittedAssignment[];
+        let submittedAssignment: SubmittedAssignment;
+        let submittedAssignments: SubmittedAssignment[];
 
         if(!group.submitteds) {
-            submitted = await this.submittedAssignService.submit(data);
-            submitteds = [];
+            submittedAssignment = await this.submittedAssignService.submit(data);
+            submittedAssignments = [];
         }else {
-            submitted = await this.submittedAssignService.submit(data, group.submitteds.length + 1);
-            submitteds = _.cloneDeep(group.submitteds);
+            submittedAssignment = await this.submittedAssignService.submit(data, group.submitteds.length + 1);
+            submittedAssignments = _.cloneDeep(group.submitteds);
         }
 
-        submitteds.push(submitted);
-        group.submitteds = submitteds;
+        submittedAssignments.push(submittedAssignment);
+        group.submitteds = submittedAssignments;
 
         return this.groupAssignRepo.save(group);
     }

@@ -7,14 +7,14 @@ import { SubmittedAssignment } from "./SubmittedAssignment.entity";
 @Entity()
 export class GroupAssignment extends BaseEntity{
 
-    @ManyToOne(() => ClientUser, (user) => user.groupAssignments)
+    @ManyToOne(() => ClientUser, (user) => user.submittedGroupAssignments)
     @JoinColumn()
     user: ClientUser
 
     @OneToMany(() => SubmittedAssignment, (submitted) => submitted.group)
     submitteds: SubmittedAssignment[]
 
-    @ManyToOne(() => FileAssignment, (fileAssignment) => fileAssignment.groupAssignments, {
+    @ManyToOne(() => FileAssignment, (fileAssignment) => fileAssignment.submittedGroupAssignments, {
         onDelete: 'CASCADE'
     })
     @JoinColumn()

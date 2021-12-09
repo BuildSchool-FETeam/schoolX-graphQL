@@ -128,10 +128,4 @@ export class AchievementService extends BaseService<Achievement> {
     await this.achiRepo.save(existedAchi);
     return true;
   }
-
-  async checkJoinedCourse(achieve: Achievement, course: Course) {
-    const newCourses: Course[] = _.cloneDeep(achieve.joinedCourse);
-    const checkAvailable = _.some(newCourses, ['id', parseInt(course.id)]);
-    return checkAvailable;
-  }
 }

@@ -70,5 +70,5 @@ export class ClientUser extends UserBaseEntityUUID {
   articles: Article[];
 
   @OneToMany(() => GroupAssignment, (group) => group.user)
-  groupAssignments: GroupAssignment[];
+  submittedGroupAssignments: GroupAssignment[];
 }

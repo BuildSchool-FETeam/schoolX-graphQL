@@ -90,56 +90,40 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
     }
 
     async firstSubmit(id: string,data: SubmitInput, userId: string) {
-        const fileAssign = await this.queryDeepById(id);
 
-        const checkJoinedCourse = await this.clientUserService.checkUserJoinedCourse(userId, fileAssign.assignment.lesson.course);
-        if(!checkJoinedCourse) {
-            throw new BadRequestException(`User with id ${userId} isn't join this course`)
-        }
-
+        const [fileAssign, user] = await Promise.all([
+            this.findById(id, {relations: ["submittedGroupAssignments"]}),
+            this.clientUserService.findById(userId, {relations: ["submittedGroupAssignments"]})
+        ])
         let groupAssignments: GroupAssignment[]; 
 
-        if(!fileAssign.groupAssignments) {
+        if(!fileAssign.submittedGroupAssignments) {
             groupAssignments = [];
         }else {
-            const checkGroupExits = _.some(fileAssign.groupAssignments, ["user.id", userId]);
+            const checkGroupExits = _.differenceBy(
+                fileAssign.submittedGroupAssignments, 
+                user.submittedGroupAssignments,
+                "id"
+            );
             if(checkGroupExits) {
                 throw new BadRequestException("Group is already exits");
             }
-            groupAssignments = _.cloneDeep(fileAssign.groupAssignments);
+            groupAssignments = _.cloneDeep(fileAssign.submittedGroupAssignments);
         }
 
         const groupAssign = await this.groupAssignService.create(data, userId);
 
         groupAssignments.push(groupAssign)
-        fileAssign.groupAssignments = groupAssignments;
+        fileAssign.submittedGroupAssignments = groupAssignments;
         this.fileAssignRepo.save(fileAssign)
         return groupAssign;
     }
 
     async submit(id: string, data: SubmitInput, userId: string) {
-        const fileAssign = await this.queryDeepById(id);
-        const checkJoinedCourse = await this.clientUserService.checkUserJoinedCourse(userId, fileAssign.assignment.lesson.course);
-        if(!checkJoinedCourse) {
-            throw new BadRequestException(`User with id ${userId} isn't join this course`)
-        }
         return await this.groupAssignService.update(id, data, userId);
     }
 
     async evaluation(id: string, data: EvaluationInput, token: string) {
         return await this.groupAssignService.evaluation(id, data, token);
-    }
-
-    async queryDeepById(id: string) {
-        const fileAssign = await this.fileAssignRepo.createQueryBuilder("fileAssignment")
-            .leftJoinAndSelect("fileAssignment.groupAssignments", "groupAssignments")
-            .leftJoinAndSelect("groupAssignments.user", "user")
-            .leftJoinAndSelect("fileAssignment.assignment", "assignment")
-            .leftJoinAndSelect("assignment.lesson", "lesson")
-            .leftJoinAndSelect("lesson.course", "course")
-            .where("fileAssignment.id = :fileAssignmentId", {
-                fileAssignmentId : id
-            }).getOne()
-        return fileAssign;
     }
 }

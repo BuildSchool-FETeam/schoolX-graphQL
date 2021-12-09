@@ -11,7 +11,7 @@ type FileAssignmentType implements BaseGraphQL{
     explainContent: String
     explainVideo: String
     assignment: AssignmentType!
-    groupAssignments: [GroupAssignmentType]
+    submittedGroupAssignments: [GroupAssignmentType]
 }
 
 input FileAssignmentSetInput {

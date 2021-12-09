@@ -1,5 +1,6 @@
 type GroupAssignmentType {
     id: ID!
+    title: String!
     user: ClientUserType!
     submitteds: [SubmittedAssignmentType!]!
     fileAssignment: FileAssignmentType!

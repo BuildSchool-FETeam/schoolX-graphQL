@@ -17,6 +17,7 @@ input SubmitInput {
     description: String
     file: Upload
     groupId: ID
+    courseId: ID!
 }
 
 input EvaluationInput {

@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { LessonService } from 'src/courses/services/lesson.service';
@@ -10,6 +10,7 @@ import { CodeChallengeService } from './codeChallenge/codeChallenge.service';
 import { QuizService } from './quiz/quiz.service';
 import { TestCaseProgrammingLanguage } from '../entities/codeChallenge/Testcase.entity';
 import { FileAssignmentService } from './fileAssignment/fileAssignment.service';
+import { CourseService } from 'src/courses/services/course.service';
 
 @Injectable()
 export class AssignmentService extends BaseService<Assignment> {
@@ -20,7 +21,8 @@ export class AssignmentService extends BaseService<Assignment> {
     private lessonService: LessonService,
     private codeChallengeService: CodeChallengeService,
     private quizService: QuizService,
-    private fileAssignService: FileAssignmentService
+    private fileAssignService: FileAssignmentService,
+    private courseService: CourseService
   ) {
     super(assignmentRepo, 'Assignment');
   }
@@ -63,9 +65,7 @@ export class AssignmentService extends BaseService<Assignment> {
   }
 
   async getCodeChallenge(id: string) {
-    return this.codeChallengeService.findById(id, {
-      relations: ["assignment", "testCases"]
-    });
+    return this.codeChallengeService.findById(id);
   }
 
   async setCodeChallenge(id: string, data: CodeChallengeSetInput) {
@@ -91,9 +91,7 @@ export class AssignmentService extends BaseService<Assignment> {
    * ---------------
   */
   async getQuiz(id: string) {
-    return this.quizService.findById(id, {
-      relations: ["assignment", "questions"]
-    })
+    return this.quizService.findById(id)
   }
 
   async setQuiz(id: string, data: QuizSetInput) {
@@ -120,9 +118,7 @@ export class AssignmentService extends BaseService<Assignment> {
   */ 
 
   async getFileAssign(id: string) {
-    return this.fileAssignService.findById(id, {
-      relations: ["assignment", "groupAssignments"]
-    })
+    return this.fileAssignService.findById(id)
   }
 
   async setFileAssign(id: string, data: FileAssignmentSetInput) {
@@ -138,6 +134,11 @@ export class AssignmentService extends BaseService<Assignment> {
   }
 
   async submmitAssignment (id: string, data: SubmitInput, userId: string) {
+    const course = await this.courseService.findById(data.courseId, {relations: ["joinedUsers"]});
+    const checkUserJoinedCourse = _.some(course.joinedUsers, ["id", userId]);
+    if(!checkUserJoinedCourse) {
+      throw new BadRequestException(`User with id ${userId} doesn't join this course`)
+    }
 
     if(!data.groupId) {
       return this.fileAssignService.firstSubmit(id, data, userId);

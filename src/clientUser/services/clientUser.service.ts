@@ -144,13 +144,4 @@ export class ClientUserService extends BaseService<ClientUser> {
 
     return id;
   }
-
-  async checkUserJoinedCourse(userId: string, course: Course) {
-    const user = await this.clientRepo.createQueryBuilder("clientUser")
-    .leftJoinAndSelect("clientUser.achievement", "achievement")
-    .leftJoinAndSelect("achievement.joinedCourse", "joinedCourse")
-    .where("clientUser.id = :userId", {userId: userId}).getOne();
-    
-    return this.achievementService.checkJoinedCourse(user.achievement, course)
-  }
 }

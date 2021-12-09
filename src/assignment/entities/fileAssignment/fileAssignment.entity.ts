@@ -32,5 +32,5 @@ export class FileAssignment extends BaseEntity {
     assignment: Assignment
 
     @OneToMany(() => GroupAssignment, (group) => group.fileAssignment)
-    groupAssignments: GroupAssignment[]
+    submittedGroupAssignments: GroupAssignment[]
 }

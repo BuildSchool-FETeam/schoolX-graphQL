@@ -4,9 +4,7 @@ import { FileAssignmentService } from "src/assignment/services/fileAssignment/fi
 
 @Resolver("FileAssignmentType")
 export class FileAssignmentTypeResolver {
-    constructor(private fileAssignService: FileAssignmentService) {
-        
-    }
+    constructor(private fileAssignService: FileAssignmentService) {}
 
     @ResolveField()
     async assignment(@Parent() fileAssignment: FileAssignment){
@@ -18,11 +16,11 @@ export class FileAssignmentTypeResolver {
     }
 
     @ResolveField()
-    async groupAssignments(@Parent() fileAssignment: FileAssignment) {
+    async submittedGroupAssignments(@Parent() fileAssignment: FileAssignment) {
         const data = await this.fileAssignService.findById(fileAssignment.id, {
-            relations: ["groupAssignments"]
+            relations: ["submittedGroupAssignments"]
         })
 
-        return data.groupAssignments;
+        return data.submittedGroupAssignments;
     }
 }
