@@ -64,7 +64,7 @@ export class LessonMutationResolver {
 
   @ResolveField()
   async deleteLesson(@Args('id') id: string) {
-    return await this.lessonService.deleteOneById(id);
+    return !!(await this.lessonService.deleteOneById(id));
   }
 
   private async uploadFileAndAddDocument(

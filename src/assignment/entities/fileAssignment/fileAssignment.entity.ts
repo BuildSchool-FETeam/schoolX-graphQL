@@ -27,7 +27,9 @@ export class FileAssignment extends BaseEntity {
     @Column({nullable: true})
     explainVideo: string
 
-    @ManyToOne(() => Assignment, fileAssignment => fileAssignment.fileAssignments)
+    @ManyToOne(() => Assignment, fileAssignment => fileAssignment.fileAssignments, {
+        onDelete: "CASCADE"
+    })
     @JoinColumn()
     assignment: Assignment
 
