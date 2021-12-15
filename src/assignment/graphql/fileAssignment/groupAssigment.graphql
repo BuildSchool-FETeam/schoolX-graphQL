@@ -3,5 +3,5 @@ type GroupAssignmentType {
     title: String!
     user: ClientUserType!
     submitteds: [SubmittedAssignmentType!]!
-    fileAssignment: FileAssignmentType!
+    fileAssignment(pagination: PaginationInput): FileAssignmentType!
 }
