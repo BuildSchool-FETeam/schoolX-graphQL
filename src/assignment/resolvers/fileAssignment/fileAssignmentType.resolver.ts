@@ -24,6 +24,6 @@ export class FileAssignmentTypeResolver {
     ) {
         const data = await this.fileAssignService.searchGroupAssign(fileAssignment.id, searchOpt);
 
-        return this.fileAssignService.manuallyPagination(data.submittedGroupAssignments, pagination);
+        return data? this.fileAssignService.manuallyPagination(data.submittedGroupAssignments, pagination): [];
     }
 }

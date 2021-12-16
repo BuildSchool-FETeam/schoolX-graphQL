@@ -61,6 +61,14 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
         return this.submittedAssignRepo.save(cloneData);
     }
 
+    async view(id: string) {
+        const submitted = await this.findById(id);
+        submitted.isSeen = true;
+        this.submittedAssignRepo.save(submitted);
+
+        return true;
+    }
+
     private async uploadFile(file: any) {
         
         const {filename, createReadStream} = (await file) as FileUploadType;

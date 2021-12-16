@@ -161,11 +161,14 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
 
         const data = await fileAssign.getOne();
 
-        if(!data) {
-            throw new NotFoundException("Not found user");
-        }
-
         return data;
-        
+    }
+
+    async viewGroupAssign(groupAssignId: string) {
+        return await this.groupAssignService.view(groupAssignId);
+    }
+
+    async viewSubmittedAssign(groupAssignId: string, order: number) {
+        return await this.groupAssignService.viewSubmitted(groupAssignId, order)
     }
 }

@@ -3,5 +3,6 @@ type GroupAssignmentType {
     title: String!
     user: ClientUserType!
     submitteds: [SubmittedAssignmentType!]!
+    isUpdated: Boolean!
     fileAssignment(pagination: PaginationInput): FileAssignmentType!
 }

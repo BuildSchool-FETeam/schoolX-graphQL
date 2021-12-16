@@ -500,6 +500,7 @@ export class GroupAssignmentType {
     title: string;
     user: ClientUserType;
     submitteds: SubmittedAssignmentType[];
+    isUpdated: boolean;
     fileAssignment: FileAssignmentType;
 }
 
@@ -515,6 +516,7 @@ export class SubmittedAssignmentType implements BaseGraphQL {
     fileUrl: string;
     comments?: Nullable<Nullable<UserCommentType>[]>;
     user: ClientUserType;
+    isSeen: boolean;
 }
 
 export class QuestionType implements BaseGraphQL {
@@ -714,6 +716,8 @@ export class LessonMutation {
     deleteFileAssignment: boolean;
     submitAssignment: GroupAssignmentType;
     evaluationAssignment: GroupAssignmentType;
+    viewGroupAssignment: boolean;
+    viewSubmittedAssignment: boolean;
 }
 
 export class LessonQuery {

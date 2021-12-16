@@ -9,6 +9,7 @@ type SubmittedAssignmentType implements BaseGraphQL{
     fileUrl: String!
     comments: [UserCommentType]
     user: ClientUserType!
+    isSeen: Boolean!
 }
 
 

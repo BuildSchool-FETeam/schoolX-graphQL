@@ -127,6 +127,14 @@ export class LessonService extends BaseService<Lesson> {
     return this.assignService.evaluationAssignment(id, data, token);
   }
 
+  async viewGroupAssign(groupAssignmentId: string) {
+    return this.assignService.viewGroupAssign(groupAssignmentId)
+  }
+
+  async viewSubmittedAssign(groupAssignmentId: string, order: number) {
+    return this.assignService.viewSubmittedAssign(groupAssignmentId, order);
+  }
+
   getIdUserByHeader(headers) {
     const token = this.getTokenFromHttpHeader(headers);
     

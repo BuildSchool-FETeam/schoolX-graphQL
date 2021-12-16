@@ -28,4 +28,7 @@ export class SubmittedAssignment extends BaseEntity {
     })
     @JoinColumn()
     group: GroupAssignment
+
+    @Column({default: false})
+    isSeen: boolean;
 }
