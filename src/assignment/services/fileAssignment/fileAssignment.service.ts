@@ -5,12 +5,13 @@ import { FileAssignment } from "src/assignment/entities/fileAssignment/fileAssig
 import { BaseService } from "src/common/services/base.service";
 import { LessonService } from "src/courses/services/lesson.service";
 import { EvaluationInput, FileAssignmentSetInput, SearchOptionInput, SubmitInput } from "src/graphql";
-import { ILike, Repository } from "typeorm";
+import { Brackets, ILike, Repository } from "typeorm";
 import { AssignmentService } from "../assignment.service";
 import * as _ from "lodash"
 import { GroupAssignmentService } from "./groupAssignment.service";
 import { GroupAssignment } from "src/assignment/entities/fileAssignment/groupAssignment.entity";
 import { ClientUserService } from "src/clientUser/services/clientUser.service";
+import { isArray } from "lodash";
 
 @Injectable()
 export class FileAssignmentService extends BaseService<FileAssignment>{
@@ -128,17 +129,43 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
     }
 
     async searchGroupAssign(fileAssignId: string, searchOpt: SearchOptionInput) {
+
         const fileAssign = await this.fileAssignRepo.createQueryBuilder("fileAssignment")
-        .leftJoinAndSelect("fileAssignment.submittedGroupAssignments", "submittedGroupAssignments")
-        .leftJoinAndSelect("submittedGroupAssignments.user", "user")
+        .innerJoinAndSelect("fileAssignment.submittedGroupAssignments", "submittedGroupAssignments")
+        .innerJoinAndSelect("submittedGroupAssignments.user", "user")
         .where("fileAssignment.id = :id", {id: fileAssignId})
-        .andWhere("user.name ilike :name", {name: `%${searchOpt? searchOpt.searchString: ""}%`})
-        .getOne();
-        
-        if(!fileAssign) {
+
+        _.each(searchOpt.searchFields, (field, index) => {
+            let queryString: string; 
+            let queryVar: string;
+            const queryField = field.split(".")
+
+            if(queryField.length > 1){
+                queryString = `${field}`
+                queryVar = queryField[0]
+            }else {
+                queryString = `submittedGroupAssignments.${field}`
+                queryVar = field
+            }
+
+            fileAssign.andWhere(
+                new Brackets(qb => {
+                    if(index === 0) {
+                        qb.where(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                    }else {
+                        qb.orWhere(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                    }
+                }
+            ))
+        })
+
+        const data = await fileAssign.getOne();
+
+        if(!data) {
             throw new NotFoundException("Not found user");
         }
-        return fileAssign;
 
+        return data;
+        
     }
 }
