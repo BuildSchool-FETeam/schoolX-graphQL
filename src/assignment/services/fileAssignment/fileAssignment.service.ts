@@ -1,11 +1,11 @@
-import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Assignment } from "src/assignment/entities/Assignment.entity";
 import { FileAssignment } from "src/assignment/entities/fileAssignment/fileAssignment.entity";
 import { BaseService } from "src/common/services/base.service";
 import { LessonService } from "src/courses/services/lesson.service";
-import { EvaluationInput, FileAssignmentSetInput, SubmitInput } from "src/graphql";
-import { Repository } from "typeorm";
+import { EvaluationInput, FileAssignmentSetInput, SearchOptionInput, SubmitInput } from "src/graphql";
+import { ILike, Repository } from "typeorm";
 import { AssignmentService } from "../assignment.service";
 import * as _ from "lodash"
 import { GroupAssignmentService } from "./groupAssignment.service";
@@ -125,5 +125,20 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
 
     async evaluation(id: string, data: EvaluationInput, token: string) {
         return await this.groupAssignService.evaluation(id, data, token);
+    }
+
+    async searchGroupAssign(fileAssignId: string, searchOpt: SearchOptionInput) {
+        const fileAssign = await this.fileAssignRepo.createQueryBuilder("fileAssignment")
+        .leftJoinAndSelect("fileAssignment.submittedGroupAssignments", "submittedGroupAssignments")
+        .leftJoinAndSelect("submittedGroupAssignments.user", "user")
+        .where("fileAssignment.id = :id", {id: fileAssignId})
+        .andWhere("user.name ilike :name", {name: `%${searchOpt? searchOpt.searchString: ""}%`})
+        .getOne();
+        
+        if(!fileAssign) {
+            throw new NotFoundException("Not found user");
+        }
+        return fileAssign;
+
     }
 }
