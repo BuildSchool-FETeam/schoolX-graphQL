@@ -63,7 +63,7 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
 
     async view(id: string) {
         const submitted = await this.findById(id);
-        submitted.isSeen = true;
+        submitted.hasSeen = true;
         this.submittedAssignRepo.save(submitted);
 
         return true;

@@ -164,10 +164,6 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
         return data;
     }
 
-    async viewGroupAssign(groupAssignId: string) {
-        return await this.groupAssignService.view(groupAssignId);
-    }
-
     async viewSubmittedAssign(groupAssignId: string, order: number) {
         return await this.groupAssignService.viewSubmitted(groupAssignId, order)
     }

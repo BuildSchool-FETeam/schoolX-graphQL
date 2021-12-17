@@ -92,25 +92,23 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
         return !!(await this.deleteOneById(id))
     }
 
-    async view(id: string) {
-        const group = await this.findById(id);
-
-        group.isUpdated = false;
-
-        this.groupAssignRepo.save(group);
-
-        return true;
-    }
-
     async viewSubmitted(id: string, order: number) {
         const group = await this.findById(id, {relations: ["submitteds"]});
 
         if(group.submitteds.length < order) { 
             throw new BadRequestException(`Submitted with order = ${order} doesn't exits`) 
         }
+        const submitteds = _.cloneDeep(group.submitteds);
 
-        const submitted = _.find(group.submitteds, ["order", order]);
+        const submitted = _.find(submitteds, ["order", order]);
+        const updateSubmitted = await this.submittedAssignService.view(submitted.id);
 
-        return await this.submittedAssignService.view(submitted.id);
+        submitted.hasSeen = true;
+        const checkUpdate = _.some(submitteds, ["hasSeen", false]);
+
+        if(!checkUpdate) { group.isUpdated = false }
+        this.groupAssignRepo.save(group)
+
+        return updateSubmitted;
     }
 }

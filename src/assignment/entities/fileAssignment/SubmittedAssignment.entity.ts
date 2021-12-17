@@ -30,5 +30,5 @@ export class SubmittedAssignment extends BaseEntity {
     group: GroupAssignment
 
     @Column({default: false})
-    isSeen: boolean;
+    hasSeen: boolean;
 }

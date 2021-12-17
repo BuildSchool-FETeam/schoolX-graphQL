@@ -171,13 +171,6 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  viewGroupAssignment(
-    @Args("groupAssignmentId") groupAssignmentId: string
-  ){
-    return this.lessonService.viewGroupAssign(groupAssignmentId);
-  }
-
-  @ResolveField()
   viewSubmittedAssignment(
     @Args("groupAssignmentId") groupAssignmentId: string,
     @Args("order") order: number

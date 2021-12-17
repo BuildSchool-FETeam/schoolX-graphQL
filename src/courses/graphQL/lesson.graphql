@@ -39,7 +39,6 @@ type LessonMutation {
   deleteFileAssignment(id: ID!): Boolean!
   submitAssignment(fileAssignmentId: ID!, data: SubmitInput!): GroupAssignmentType!
   evaluationAssignment(groupAssignmentId: ID!, data: EvaluationInput!): GroupAssignmentType!
-  viewGroupAssignment(groupAssignmentId: ID!): Boolean!
   viewSubmittedAssignment(groupAssignmentId: ID!, order: Int!): Boolean!
 }
 
