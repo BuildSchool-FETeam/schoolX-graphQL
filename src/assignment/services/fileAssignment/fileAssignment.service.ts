@@ -134,8 +134,8 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
         .innerJoinAndSelect("fileAssignment.submittedGroupAssignments", "submittedGroupAssignments")
         .innerJoinAndSelect("submittedGroupAssignments.user", "user")
         .where("fileAssignment.id = :id", {id: fileAssignId})
-
-        _.each(searchOpt.searchFields, (field, index) => {
+        
+        searchOpt && _.each(searchOpt.searchFields, (field, index) => {
             let queryString: string; 
             let queryVar: string;
             const queryField = field.split(".")

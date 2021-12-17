@@ -23,7 +23,6 @@ export class FileAssignmentTypeResolver {
         @Args("searchOpt") searchOpt?: SearchOptionInput
     ) {
         const data = await this.fileAssignService.searchGroupAssign(fileAssignment.id, searchOpt);
-        if(!data) return [];
-        return this.fileAssignService.manuallyPagination(data.submittedGroupAssignments, pagination);
+        return data ? this.fileAssignService.manuallyPagination(data.submittedGroupAssignments, pagination) : [];
     }
 }
