@@ -99,7 +99,6 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
             throw new BadRequestException(`Submitted with order = ${order} doesn't exits`) 
         }
         const submitteds = _.cloneDeep(group.submitteds);
-
         const submitted = _.find(submitteds, ["order", order]);
         const updateSubmitted = await this.submittedAssignService.view(submitted.id);
 
