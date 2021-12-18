@@ -72,7 +72,7 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
             relations: ["submitteds", "fileAssignment"]
         })
         if(group.submitteds.length < data.order) { 
-            throw new BadRequestException(`Submitted with order = ${data.order} doesn't exits`) 
+            throw new BadRequestException(`Submitted with order = ${data.order} doesn't exist`) 
         }
         const submitted = _.find(group.submitteds, ["order", data.order])
         if(data.scoreInput) {
@@ -96,7 +96,7 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
         const group = await this.findById(id, {relations: ["submitteds"]});
 
         if(group.submitteds.length < order) { 
-            throw new BadRequestException(`Submitted with order = ${order} doesn't exits`) 
+            throw new BadRequestException(`Submitted with order = ${order} doesn't exist`) 
         }
         const submitteds = _.cloneDeep(group.submitteds);
         const submitted = _.find(submitteds, ["order", order]);

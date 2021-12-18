@@ -22,7 +22,7 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
     }
 
     async submit(data: SubmitInput, order: number = 1) {
-        const {publicUrl} = await this.uploadFile(data.file)
+        const publicUrl = data.file ? (await this.uploadFile(data.file)).publicUrl : null;
 
         const submitAssign = await this.submittedAssignRepo.create({
             ...data,

@@ -12,7 +12,7 @@ export class SubmittedAssignment extends BaseEntity {
     @Column()
     order: number
     
-    @Column()
+    @Column({nullable: true})
     fileUrl: string
 
     @Column({nullable: true})
