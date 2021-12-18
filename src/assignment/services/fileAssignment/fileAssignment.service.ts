@@ -135,29 +135,29 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
         .innerJoinAndSelect("submittedGroupAssignments.user", "user")
         .where("fileAssignment.id = :id", {id: fileAssignId})
         
-        searchOpt && _.each(searchOpt.searchFields, (field, index) => {
-            let queryString: string; 
-            let queryVar: string;
-            const queryField = field.split(".")
-
-            if(queryField.length > 1){
-                queryString = `${field}`
-                queryVar = queryField[0]
-            }else {
-                queryString = `submittedGroupAssignments.${field}`
-                queryVar = field
-            }
-
-            fileAssign.andWhere(
-                new Brackets(qb => {
-                    if(index === 0) {
-                        qb.where(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+        searchOpt && fileAssign.andWhere(
+            new Brackets(qb => {
+                _.each(searchOpt.searchFields, (field, index) => {
+                    let queryString: string; 
+                    let queryVar: string;
+                    const queryField = field.split(".")
+        
+                    if(queryField.length > 1){
+                        queryString = `${field}`
+                        queryVar = queryField[0]
                     }else {
-                        qb.orWhere(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                        queryString = `submittedGroupAssignments.${field}`
+                        queryVar = field
                     }
+                
+                if(index === 0) {
+                    qb.where(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                }else {
+                    qb.orWhere(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
                 }
-            ))
-        })
+                })
+            })
+        )
 
         const data = await fileAssign.getOne();
 
