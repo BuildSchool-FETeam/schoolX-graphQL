@@ -19,4 +19,7 @@ export class GroupAssignment extends BaseEntity{
     })
     @JoinColumn()
     fileAssignment: FileAssignment
+
+    @Column({default: true})
+    isUpdated: boolean
 }

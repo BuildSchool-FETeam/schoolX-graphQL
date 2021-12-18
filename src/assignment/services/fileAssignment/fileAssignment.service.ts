@@ -1,16 +1,17 @@
-import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Assignment } from "src/assignment/entities/Assignment.entity";
 import { FileAssignment } from "src/assignment/entities/fileAssignment/fileAssignment.entity";
 import { BaseService } from "src/common/services/base.service";
 import { LessonService } from "src/courses/services/lesson.service";
-import { EvaluationInput, FileAssignmentSetInput, SubmitInput } from "src/graphql";
-import { Repository } from "typeorm";
+import { EvaluationInput, FileAssignmentSetInput, SearchOptionInput, SubmitInput } from "src/graphql";
+import { Brackets, ILike, Repository } from "typeorm";
 import { AssignmentService } from "../assignment.service";
 import * as _ from "lodash"
 import { GroupAssignmentService } from "./groupAssignment.service";
 import { GroupAssignment } from "src/assignment/entities/fileAssignment/groupAssignment.entity";
 import { ClientUserService } from "src/clientUser/services/clientUser.service";
+import { isArray } from "lodash";
 
 @Injectable()
 export class FileAssignmentService extends BaseService<FileAssignment>{
@@ -125,5 +126,45 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
 
     async evaluation(id: string, data: EvaluationInput, token: string) {
         return await this.groupAssignService.evaluation(id, data, token);
+    }
+
+    async searchGroupAssign(fileAssignId: string, searchOpt: SearchOptionInput) {
+
+        const fileAssign = await this.fileAssignRepo.createQueryBuilder("fileAssignment")
+        .innerJoinAndSelect("fileAssignment.submittedGroupAssignments", "submittedGroupAssignments")
+        .innerJoinAndSelect("submittedGroupAssignments.user", "user")
+        .where("fileAssignment.id = :id", {id: fileAssignId})
+        
+        searchOpt && fileAssign.andWhere(
+            new Brackets(qb => {
+                _.each(searchOpt.searchFields, (field, index) => {
+                    let queryString: string; 
+                    let queryVar: string;
+                    const queryField = field.split(".")
+        
+                    if(queryField.length > 1){
+                        queryString = `${field}`
+                        queryVar = queryField[0]
+                    }else {
+                        queryString = `submittedGroupAssignments.${field}`
+                        queryVar = field
+                    }
+                
+                    if(index === 0) {
+                        qb.where(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                    }else {
+                        qb.orWhere(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                    }
+                })
+            })
+        )
+
+        const data = await fileAssign.getOne();
+
+        return data;
+    }
+
+    async viewSubmittedAssign(groupAssignId: string, order: number) {
+        return await this.groupAssignService.viewSubmitted(groupAssignId, order)
     }
 }

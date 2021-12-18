@@ -151,6 +151,9 @@ export class AssignmentService extends BaseService<Assignment> {
     return this.fileAssignService.evaluation(id, data, token);
   }
 
+  async viewSubmittedAssign(groupAssignId: string, order: number) {
+    return this.fileAssignService.viewSubmittedAssign(groupAssignId, order);
+  }
   
   /**
    * ------------------------------

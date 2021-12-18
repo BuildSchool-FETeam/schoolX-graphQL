@@ -92,6 +92,11 @@ export class TestCaseSetInput {
     timeEvaluation?: Nullable<number>;
 }
 
+export class EvaluationCommentInput {
+    id?: Nullable<string>;
+    content: string;
+}
+
 export class FileAssignmentSetInput {
     title: string;
     description?: Nullable<string>;
@@ -114,7 +119,7 @@ export class SubmitInput {
 
 export class EvaluationInput {
     reApply?: Nullable<boolean>;
-    comment?: Nullable<CommentDataInput>;
+    comment?: Nullable<EvaluationCommentInput>;
     scoreInput?: Nullable<UpdateScore>;
     order: number;
 }
@@ -360,6 +365,7 @@ export class AdminUser {
     name: string;
     role: string;
     createdBy?: Nullable<AdminUser>;
+    evaluationComments?: Nullable<EvaluationCommentType>;
 }
 
 export class ArticleQuery {
@@ -477,6 +483,15 @@ export class TestCaseQuery {
     testCase: TestCaseType;
 }
 
+export class EvaluationCommentType {
+    __typename?: 'EvaluationCommentType';
+    id: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    content: string;
+    createdBy: AdminUser;
+}
+
 export class FileAssignmentType implements BaseGraphQL {
     __typename?: 'FileAssignmentType';
     id: string;
@@ -500,6 +515,7 @@ export class GroupAssignmentType {
     title: string;
     user: ClientUserType;
     submitteds: SubmittedAssignmentType[];
+    isUpdated: boolean;
     fileAssignment: FileAssignmentType;
 }
 
@@ -513,8 +529,9 @@ export class SubmittedAssignmentType implements BaseGraphQL {
     order: number;
     reApply?: Nullable<boolean>;
     fileUrl: string;
-    comments?: Nullable<Nullable<UserCommentType>[]>;
+    comments?: Nullable<Nullable<EvaluationCommentType>[]>;
     user: ClientUserType;
+    hasSeen: boolean;
 }
 
 export class QuestionType implements BaseGraphQL {
@@ -714,6 +731,7 @@ export class LessonMutation {
     deleteFileAssignment: boolean;
     submitAssignment: GroupAssignmentType;
     evaluationAssignment: GroupAssignmentType;
+    viewSubmittedAssignment: boolean;
 }
 
 export class LessonQuery {

@@ -7,8 +7,9 @@ type SubmittedAssignmentType implements BaseGraphQL{
     order: Int!
     reApply: Boolean
     fileUrl: String!
-    comments: [UserCommentType]
+    comments: [EvaluationCommentType]
     user: ClientUserType!
+    hasSeen: Boolean!
 }
 
 
@@ -22,7 +23,7 @@ input SubmitInput {
 
 input EvaluationInput {
     reApply: Boolean
-    comment: CommentDataInput
+    comment: EvaluationCommentInput
     scoreInput: UpdateScore
     order: Int!
 }

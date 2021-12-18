@@ -169,4 +169,12 @@ export class LessonMutationResolver {
     const token = this.lessonService.getTokenFromHttpHeader(req.headers)
     return this.lessonService.evaluation(groupAssignmentId, data, token)
   }
+
+  @ResolveField()
+  viewSubmittedAssignment(
+    @Args("groupAssignmentId") groupAssignmentId: string,
+    @Args("order") order: number
+  ){
+    return this.lessonService.viewSubmittedAssign(groupAssignmentId, order);
+  }
 }

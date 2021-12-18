@@ -1,0 +1,12 @@
+type EvaluationCommentType {
+    id: ID!
+    createdAt: ScalarDate!
+    updatedAt: ScalarDate!
+    content: String!
+    createdBy: AdminUser!
+}
+
+input EvaluationCommentInput{
+    id: ID
+    content: String!
+}

@@ -1,8 +1,6 @@
-import { ClientUser } from "src/clientUser/entities/ClientUser.entity";
-import { UserComment } from "src/comment/entities/UserComment.entity";
 import { BaseEntity } from "src/common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
-import { FileAssignment } from "./fileAssignment.entity";
+import { EvaluationComment } from "./evaluationComment.entity";
 import { GroupAssignment } from "./groupAssignment.entity";
 
 @Entity()
@@ -14,18 +12,21 @@ export class SubmittedAssignment extends BaseEntity {
     @Column()
     order: number
     
-    @Column()
+    @Column({nullable: true})
     fileUrl: string
 
     @Column({nullable: true})
     reApply?: boolean
 
-    @OneToMany(() => UserComment, (userComment) => userComment.submittedAssignment)
-    comments: UserComment[]
+    @OneToMany(() => EvaluationComment, (comment) => comment.submitted)
+    comments: EvaluationComment[]
 
     @ManyToOne(() => GroupAssignment, (group) => group.submitteds, {
         onDelete: 'CASCADE'
     })
     @JoinColumn()
     group: GroupAssignment
+
+    @Column({default: false})
+    hasSeen: boolean;
 }

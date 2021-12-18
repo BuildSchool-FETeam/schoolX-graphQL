@@ -62,6 +62,7 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
 
         submittedAssignments.push(submittedAssignment);
         group.submitteds = submittedAssignments;
+        group.isUpdated = true;
 
         return this.groupAssignRepo.save(group);
     }
@@ -70,7 +71,9 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
         const group = await this.findById(id, {
             relations: ["submitteds", "fileAssignment"]
         })
-
+        if(group.submitteds.length < data.order) { 
+            throw new BadRequestException(`Submitted with order = ${data.order} doesn't exist`) 
+        }
         const submitted = _.find(group.submitteds, ["order", data.order])
         if(data.scoreInput) {
             const user = this.tokenService.verifyAndDecodeToken(token);
@@ -87,5 +90,24 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
 
     async delete(id: string) {
         return !!(await this.deleteOneById(id))
+    }
+
+    async viewSubmitted(id: string, order: number) {
+        const group = await this.findById(id, {relations: ["submitteds"]});
+
+        if(group.submitteds.length < order) { 
+            throw new BadRequestException(`Submitted with order = ${order} doesn't exist`) 
+        }
+        const submitteds = _.cloneDeep(group.submitteds);
+        const submitted = _.find(submitteds, ["order", order]);
+        const updateSubmitted = await this.submittedAssignService.view(submitted.id);
+
+        submitted.hasSeen = true;
+        const checkUpdate = _.some(submitteds, ["hasSeen", false]);
+
+        if(!checkUpdate) { group.isUpdated = false }
+        this.groupAssignRepo.save(group)
+
+        return updateSubmitted;
     }
 }

@@ -30,13 +30,17 @@ import { GroupAssignmentService } from './services/fileAssignment/groupAssignmen
 import { GroupAssignmentTypeResolver } from './resolvers/fileAssignment/groupAssignmentType.resolver';
 import { GroupAssignment } from './entities/fileAssignment/groupAssignment.entity';
 import { CommentModule } from 'src/comment/comment.module';
+import { EvaluationComment } from './entities/fileAssignment/evaluationComment.entity';
+import { EvaluationCommentService } from './services/fileAssignment/evaluationComment.service';
+import { EvaluationCommentTypeResolver } from './resolvers/fileAssignment/evaluationCommentType.resolver';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       Assignment, TestCase, CodeChallenge, 
       Quiz, Question, FileAssignment,
-      SubmittedAssignment, GroupAssignment
+      SubmittedAssignment, GroupAssignment,
+      EvaluationComment
     ]),
     forwardRef(() => CourseModule),
     MiniServerModule,
@@ -61,7 +65,9 @@ import { CommentModule } from 'src/comment/comment.module';
     SubmittedAssignmentService,
     SubmittedAssignmentTypeResolver,
     GroupAssignmentService,
-    GroupAssignmentTypeResolver
+    GroupAssignmentTypeResolver,
+    EvaluationCommentService,
+    EvaluationCommentTypeResolver
   ],
   exports: [AssignmentService, SubmittedAssignmentService],
 })
