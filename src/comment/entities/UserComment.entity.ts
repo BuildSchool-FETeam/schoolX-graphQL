@@ -54,9 +54,4 @@ export class UserComment extends BaseEntity {
   @JoinColumn()
   replyTo: UserComment;
 
-  @ManyToOne(() => SubmittedAssignment, (submittedAssignment) => submittedAssignment.comments, {
-    onDelete: 'CASCADE'
-  })
-  @JoinColumn()
-  submittedAssignment: SubmittedAssignment
 }

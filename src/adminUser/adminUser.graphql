@@ -34,4 +34,5 @@ type AdminUser {
   name: String!
   role: String!
   createdBy: AdminUser
+  commentEvaluations: CommentEvaluationType
 }

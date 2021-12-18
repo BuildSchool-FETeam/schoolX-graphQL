@@ -92,6 +92,11 @@ export class TestCaseSetInput {
     timeEvaluation?: Nullable<number>;
 }
 
+export class CommentEvaluationInput {
+    id?: Nullable<string>;
+    content: string;
+}
+
 export class FileAssignmentSetInput {
     title: string;
     description?: Nullable<string>;
@@ -114,7 +119,7 @@ export class SubmitInput {
 
 export class EvaluationInput {
     reApply?: Nullable<boolean>;
-    comment?: Nullable<CommentDataInput>;
+    comment?: Nullable<CommentEvaluationInput>;
     scoreInput?: Nullable<UpdateScore>;
     order: number;
 }
@@ -360,6 +365,7 @@ export class AdminUser {
     name: string;
     role: string;
     createdBy?: Nullable<AdminUser>;
+    commentEvaluations?: Nullable<CommentEvaluationType>;
 }
 
 export class ArticleQuery {
@@ -477,6 +483,15 @@ export class TestCaseQuery {
     testCase: TestCaseType;
 }
 
+export class CommentEvaluationType {
+    __typename?: 'CommentEvaluationType';
+    id: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    content: string;
+    createdBy: AdminUser;
+}
+
 export class FileAssignmentType implements BaseGraphQL {
     __typename?: 'FileAssignmentType';
     id: string;
@@ -514,7 +529,7 @@ export class SubmittedAssignmentType implements BaseGraphQL {
     order: number;
     reApply?: Nullable<boolean>;
     fileUrl: string;
-    comments?: Nullable<Nullable<UserCommentType>[]>;
+    comments?: Nullable<Nullable<CommentEvaluationType>[]>;
     user: ClientUserType;
     hasSeen: boolean;
 }
@@ -644,7 +659,6 @@ export class UserCommentType implements BaseGraphQL {
     lesson?: Nullable<LessonType>;
     assignment?: Nullable<AssignmentType>;
     article?: Nullable<ArticleType>;
-    submitted?: Nullable<SubmittedAssignmentType>;
 }
 
 export class File {
