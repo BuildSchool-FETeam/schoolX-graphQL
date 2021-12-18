@@ -150,11 +150,11 @@ export class FileAssignmentService extends BaseService<FileAssignment>{
                         queryVar = field
                     }
                 
-                if(index === 0) {
-                    qb.where(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
-                }else {
-                    qb.orWhere(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
-                }
+                    if(index === 0) {
+                        qb.where(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                    }else {
+                        qb.orWhere(`${queryString} ilike :${queryVar}`, {[queryVar]: `%${searchOpt.searchString}%`})
+                    }
                 })
             })
         )
