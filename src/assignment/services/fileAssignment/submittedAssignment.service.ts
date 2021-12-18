@@ -1,20 +1,14 @@
 import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as _ from "lodash";
-<<<<<<< HEAD
-=======
 import { EvaluationComment } from "src/assignment/entities/fileAssignment/evaluationComment.entity";
->>>>>>> 8383a0d (resolve)
 import { SubmittedAssignment } from "src/assignment/entities/fileAssignment/SubmittedAssignment.entity";
 import { FileUploadType } from "src/common/interfaces/ImageUpload.interface";
 import { BaseService } from "src/common/services/base.service";
 import { GCStorageService, StorageFolder } from "src/common/services/GCStorage.service";
 import { EvaluationInput, SubmitInput } from "src/graphql";
 import { Repository } from "typeorm";
-<<<<<<< HEAD
-=======
 import { EvaluationCommentService } from "./evaluationComment.service";
->>>>>>> 8383a0d (resolve)
 
 @Injectable()
 export class SubmittedAssignmentService extends BaseService<SubmittedAssignment> {
@@ -22,11 +16,7 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
         @InjectRepository(SubmittedAssignment)
         private submittedAssignRepo: Repository<SubmittedAssignment>,
         private gcStorageService: GCStorageService,
-<<<<<<< HEAD
-        private userCommentService: UserCommentService
-=======
         private commentEvalService: EvaluationCommentService
->>>>>>> 8383a0d (resolve)
     ) {
         super(submittedAssignRepo)
     }
@@ -48,15 +38,9 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
             relations: ["comments"]
         })
 
-<<<<<<< HEAD
-        let comment: UserComment;
-        if(dataUpdate.comment) {
-            comment = await this.userCommentService.setCommentForSubmittedAssign(data.id, dataUpdate.comment, token)
-=======
         let comment: EvaluationComment;
         if(dataUpdate.comment) {
             comment = await this.commentEvalService.setComment(dataUpdate.comment, token)
->>>>>>> 8383a0d (resolve)
         }
 
         const cloneData = _.cloneDeep(data);

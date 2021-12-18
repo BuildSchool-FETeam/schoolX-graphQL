@@ -23,7 +23,9 @@ export class EvaluationComment {
     @JoinColumn()
     createdBy: AdminUser
 
-    @ManyToOne(() => SubmittedAssignment, (submittedAssignment) => submittedAssignment.comments)
+    @ManyToOne(() => SubmittedAssignment, (submittedAssignment) => submittedAssignment.comments, {
+        onDelete: "CASCADE"
+    })
     @JoinColumn()
     submitted: SubmittedAssignment
 }

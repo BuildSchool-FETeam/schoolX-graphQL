@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-<<<<<<< HEAD
-=======
 import { EvaluationComment } from 'src/assignment/entities/fileAssignment/evaluationComment.entity';
->>>>>>> 8383a0d (resolve)
 import { BaseEntityWithCreatedBy } from 'src/common/entity/base.entity';
 import { Role } from 'src/permission/entities/Role.entity';
 import {
@@ -10,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -34,10 +32,7 @@ export class AdminUser extends BaseEntityWithCreatedBy {
     name: 'role',
   })
   role: Role;
-<<<<<<< HEAD
-=======
 
   @OneToMany(() => EvaluationComment, (comment) => comment.createdBy)
   evaluationComments: EvaluationComment[]
->>>>>>> 8383a0d (resolve)
 }

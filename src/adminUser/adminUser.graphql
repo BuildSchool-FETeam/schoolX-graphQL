@@ -34,8 +34,5 @@ type AdminUser {
   name: String!
   role: String!
   createdBy: AdminUser
-<<<<<<< HEAD
-=======
   evaluationComments: EvaluationCommentType
->>>>>>> 8383a0d (resolve)
 }

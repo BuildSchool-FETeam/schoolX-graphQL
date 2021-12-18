@@ -23,8 +23,6 @@ export class AdminUserTypeResolver {
 
     return parentAdmin.createdBy;
   }
-<<<<<<< HEAD
-=======
 
   @ResolveField()
   async evaluationComments(@Parent() admin: AdminUser) {
@@ -34,5 +32,4 @@ export class AdminUserTypeResolver {
 
     return parentAdmin.evaluationComments;
   }
->>>>>>> 8383a0d (resolve)
 }
