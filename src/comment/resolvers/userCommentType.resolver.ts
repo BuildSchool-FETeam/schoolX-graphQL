@@ -59,14 +59,4 @@ export class UserCommentTypeResolver {
 
     return data.article;
   }
-
-  @ResolveField()
-  async submitted(@Parent() comment: UserComment) {
-    const data = await this.commentService.findById(comment.id, {
-      select: ['id'],
-      relations: ['submittedAssignment'],
-    });
-
-    return data.submittedAssignment;
-  }
 }

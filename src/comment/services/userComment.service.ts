@@ -111,21 +111,6 @@ export class UserCommentService extends BaseService<UserComment> {
     return this.commentRepo.save(newComment);
   }
 
-  async setCommentForSubmittedAssign(
-    submittedId: string,
-    data: CommentDataInput,
-    token: string
-  ){
-    const submitted = await this.submittedAssignService.findById(submittedId);
-    const newComment = await this.setComment(
-      data,
-      { fieldAssign: 'submittedAssignment', data: submitted },
-      token
-    )
-    
-    return this.commentRepo.save(newComment);
-  }
-
   async deleteComment(id: string, token: string) {
     const user = await this.tokenService.getAdminUserByToken<ClientUser>(token);
     const existedComment = await this.findById(id, {relations: ['reply', 'createdBy'], select: ['id']});

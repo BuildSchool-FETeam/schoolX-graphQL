@@ -1,6 +1,7 @@
 import { BadRequestException, forwardRef, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as _ from "lodash";
+import { CommentEvaluation } from "src/assignment/entities/fileAssignment/commentEvaluation.entity";
 import { SubmittedAssignment } from "src/assignment/entities/fileAssignment/SubmittedAssignment.entity";
 import { UserComment } from "src/comment/entities/UserComment.entity";
 import { UserCommentService } from "src/comment/services/userComment.service";
@@ -9,6 +10,7 @@ import { BaseService } from "src/common/services/base.service";
 import { GCStorageService, StorageFolder } from "src/common/services/GCStorage.service";
 import { EvaluationInput, SubmitInput } from "src/graphql";
 import { Repository } from "typeorm";
+import { CommentEvaluationService } from "./commentEvaluation.service";
 
 @Injectable()
 export class SubmittedAssignmentService extends BaseService<SubmittedAssignment> {
@@ -16,13 +18,13 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
         @InjectRepository(SubmittedAssignment)
         private submittedAssignRepo: Repository<SubmittedAssignment>,
         private gcStorageService: GCStorageService,
-        private userCommentService: UserCommentService
+        private commentEvaluaService: CommentEvaluationService
     ) {
         super(submittedAssignRepo)
     }
 
     async submit(data: SubmitInput, order: number = 1) {
-        const {publicUrl} = await this.uploadFile(data.file)
+        let publicUrl = data.file ? (await this.uploadFile(data.file)).publicUrl : null;
 
         const submitAssign = await this.submittedAssignRepo.create({
             ...data,
@@ -38,9 +40,9 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
             relations: ["comments"]
         })
 
-        let comment: UserComment;
+        let comment: CommentEvaluation;
         if(dataUpdate.comment) {
-            comment = await this.userCommentService.setCommentForSubmittedAssign(data.id, dataUpdate.comment, token)
+            comment = await this.commentEvaluaService.setComment(dataUpdate.comment, token)
         }
 
         const cloneData = _.cloneDeep(data);
