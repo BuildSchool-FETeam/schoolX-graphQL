@@ -1,8 +1,10 @@
-import { ClientUser } from "src/clientUser/entities/ClientUser.entity";
-import { UserComment } from "src/comment/entities/UserComment.entity";
 import { BaseEntity } from "src/common/entity/base.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+<<<<<<< HEAD
 import { FileAssignment } from "./fileAssignment.entity";
+=======
+import { EvaluationComment } from "./evaluationComment.entity";
+>>>>>>> 8383a0d (resolve)
 import { GroupAssignment } from "./groupAssignment.entity";
 
 @Entity()
@@ -20,8 +22,13 @@ export class SubmittedAssignment extends BaseEntity {
     @Column({nullable: true})
     reApply?: boolean
 
+<<<<<<< HEAD
     @OneToMany(() => UserComment, (userComment) => userComment.submittedAssignment)
     comments: UserComment[]
+=======
+    @OneToMany(() => EvaluationComment, (comment) => comment.submitted)
+    comments: EvaluationComment[]
+>>>>>>> 8383a0d (resolve)
 
     @ManyToOne(() => GroupAssignment, (group) => group.submitteds, {
         onDelete: 'CASCADE'
