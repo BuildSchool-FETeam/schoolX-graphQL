@@ -1,8 +1,13 @@
-import { BadRequestException, Res, UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
+import { BadRequestException, UseGuards } from '@nestjs/common';
+import {
+  Args,
+  Context,
+  Mutation,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import * as _ from 'lodash';
 import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
-import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import {
@@ -13,7 +18,15 @@ import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { LessonDocument } from 'src/courses/entities/LessonDocument.entity';
 import { LessonDocumentService } from 'src/courses/services/document.service';
 import { LessonService } from 'src/courses/services/lesson.service';
-import { CodeChallengeSetInput, CodeConfigInput, EvaluationInput, FileAssignmentSetInput, LessonSetInput, QuizSetInput, SubmitInput } from 'src/graphql';
+import {
+  CodeChallengeSetInput,
+  CodeConfigInput,
+  EvaluationInput,
+  FileAssignmentSetInput,
+  LessonSetInput,
+  QuizSetInput,
+  SubmitInput,
+} from 'src/graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('LessonMutation')
@@ -96,64 +109,55 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  deleteCodeChallenge(
-    @Args('id') id: string
-  ){
+  deleteCodeChallenge(@Args('id') id: string) {
     return this.lessonService.deleteCodeChallenge(id);
   }
 
   @ResolveField()
   runCode(
-    @Args("code") code: string,
-    @Args("language") language: TestCaseProgrammingLanguage
-  ){
+    @Args('code') code: string,
+    @Args('language') language: TestCaseProgrammingLanguage,
+  ) {
     return this.lessonService.runCode(code, language);
   }
 
   @ResolveField()
   runTestCase(
     @Args('challengeId') challengeId: string,
-    @Args('data') data: CodeConfigInput
-  ){
+    @Args('data') data: CodeConfigInput,
+  ) {
     return this.lessonService.runTestCase(challengeId, data);
   }
 
   @ResolveField()
-  setQuiz(
-    @Args('id') id: string,
-    @Args('data') data: QuizSetInput
-  ){
+  setQuiz(@Args('id') id: string, @Args('data') data: QuizSetInput) {
     return this.lessonService.setQuiz(id, data);
   }
 
   @ResolveField()
-  deleteQuiz(
-    @Args('id') id: string
-  ) {
+  deleteQuiz(@Args('id') id: string) {
     return this.lessonService.deleteQuiz(id);
   }
 
   @ResolveField()
   setFileAssignment(
-    @Args("id") id: string,
-    @Args("data") data: FileAssignmentSetInput
-  ){
+    @Args('id') id: string,
+    @Args('data') data: FileAssignmentSetInput,
+  ) {
     return this.lessonService.setFileAssignment(id, data);
   }
 
   @ResolveField()
-  deleteFileAssignment(
-    @Args("id") id: string
-  ){
+  deleteFileAssignment(@Args('id') id: string) {
     return this.lessonService.deleteFileAssignment(id);
   }
 
   @ResolveField()
   submitAssignment(
-    @Args("fileAssignmentId") fileAssignmentId: string,
-    @Args("data") data: SubmitInput,
-    @Context() { req }: any
-  ){
+    @Args('fileAssignmentId') fileAssignmentId: string,
+    @Args('data') data: SubmitInput,
+    @Context() { req }: any,
+  ) {
     const userId = this.lessonService.getIdUserByHeader(req.headers);
 
     return this.lessonService.submitAssignment(fileAssignmentId, data, userId);
@@ -161,20 +165,19 @@ export class LessonMutationResolver {
 
   @ResolveField()
   evaluationAssignment(
-    @Args("groupAssignmentId") groupAssignmentId: string,
-    @Args("data") data: EvaluationInput,
-    @Context() { req }: any
-  ){
-
-    const token = this.lessonService.getTokenFromHttpHeader(req.headers)
-    return this.lessonService.evaluation(groupAssignmentId, data, token)
+    @Args('groupAssignmentId') groupAssignmentId: string,
+    @Args('data') data: EvaluationInput,
+    @Context() { req }: any,
+  ) {
+    const token = this.lessonService.getTokenFromHttpHeader(req.headers);
+    return this.lessonService.evaluation(groupAssignmentId, data, token);
   }
 
   @ResolveField()
   viewSubmittedAssignment(
-    @Args("groupAssignmentId") groupAssignmentId: string,
-    @Args("order") order: number
-  ){
+    @Args('groupAssignmentId') groupAssignmentId: string,
+    @Args('order') order: number,
+  ) {
     return this.lessonService.viewSubmittedAssign(groupAssignmentId, order);
   }
 }

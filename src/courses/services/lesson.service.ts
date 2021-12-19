@@ -1,11 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
 import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
 import { BaseService } from 'src/common/services/base.service';
 import { TokenService } from 'src/common/services/token.service';
-import { CodeChallengeSetInput, CodeConfigInput, EvaluationInput, FileAssignmentSetInput, LessonSetInput, QuizSetInput, SubmitInput } from 'src/graphql';
+import {
+  CodeChallengeSetInput,
+  CodeConfigInput,
+  EvaluationInput,
+  FileAssignmentSetInput,
+  LessonSetInput,
+  QuizSetInput,
+  SubmitInput,
+} from 'src/graphql';
 import { Repository } from 'typeorm';
 import { Lesson } from '../entities/Lesson.entity';
 import { CourseService } from './course.service';
@@ -57,9 +65,7 @@ export class LessonService extends BaseService<Lesson> {
   }
 
   async getTypeAssignment(id: string, idAssign: string) {
-    const lesson = await this.findById(id, 
-      {relations: ["assignment"]}  
-    )
+    const lesson = await this.findById(id, { relations: ['assignment'] });
 
     return this.assignService.getTypeAssign(lesson.assignment.id, idAssign);
   }
@@ -76,17 +82,11 @@ export class LessonService extends BaseService<Lesson> {
     return this.assignService.runTestCase(challengeId, data);
   }
 
-  async setCodeChallenge(
-    id: string,
-    data: CodeChallengeSetInput,
-  ) {
-
+  async setCodeChallenge(id: string, data: CodeChallengeSetInput) {
     return this.assignService.setCodeChallenge(id, data);
   }
 
-  deleteCodeChallenge(
-    id: string
-  ){
+  deleteCodeChallenge(id: string) {
     return this.assignService.deleteCodeChallenge(id);
   }
 
@@ -94,20 +94,15 @@ export class LessonService extends BaseService<Lesson> {
     return this.assignService.getQuiz(id);
   }
 
-  async setQuiz(
-    id: string,
-    data: QuizSetInput
-  ){
+  async setQuiz(id: string, data: QuizSetInput) {
     return this.assignService.setQuiz(id, data);
   }
 
-  async deleteQuiz(
-    id: string
-  ) {
+  async deleteQuiz(id: string) {
     return this.assignService.deleteQuiz(id);
   }
 
-  async getFileAssignment(id: string){
+  async getFileAssignment(id: string) {
     return this.assignService.getFileAssign(id);
   }
 
@@ -133,7 +128,7 @@ export class LessonService extends BaseService<Lesson> {
 
   getIdUserByHeader(headers) {
     const token = this.getTokenFromHttpHeader(headers);
-    
+
     return this.tokenService.verifyAndDecodeToken(token).id;
   }
 }

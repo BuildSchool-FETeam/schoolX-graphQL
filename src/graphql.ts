@@ -514,6 +514,7 @@ export class GroupAssignmentType {
     id: string;
     title: string;
     user: ClientUserType;
+    previousScore?: Nullable<number>;
     submitteds: SubmittedAssignmentType[];
     isUpdated: boolean;
     fileAssignment: FileAssignmentType;
