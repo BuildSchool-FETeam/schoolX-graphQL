@@ -114,8 +114,8 @@ export class CourseService extends BaseService<Course> {
     return true;
   }
 
-  removeCourseFormTag(removedCourseId: string, tagIds: string[]) {
-    const promises: Array<Promise<any>> = [];
+  async removeCourseFormTag(removedCourseId: string, tagIds: string[]) {
+    const promises: Array<Promise<DynamicObject>> = [];
 
     _.each(tagIds, (tagId) => {
       promises.push(
@@ -127,7 +127,7 @@ export class CourseService extends BaseService<Course> {
   }
 
   private createTags(tags: string[]) {
-    return _.map(tags, (tag) =>
+    return _.map(tags, async (tag) =>
       this.tagService.addTag({
         title: tag,
       }),

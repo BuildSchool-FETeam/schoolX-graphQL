@@ -63,7 +63,9 @@ export class CronService {
 
         const trashFiles = _.difference(files, listFilePaths);
 
-        trashFiles.forEach((filePath) => this.gcStorage.deleteFile(filePath));
+        trashFiles.forEach(async (filePath) =>
+          this.gcStorage.deleteFile(filePath),
+        );
         this.cacheService.setValue(cacheConstant.CLEAR_FILE, false);
       });
     } catch (err) {

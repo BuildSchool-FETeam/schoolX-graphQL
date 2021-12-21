@@ -14,7 +14,7 @@ export class clientUserQueryResolver {
   }
 
   @ResolveField()
-  userDetail(@Args('id') id: string) {
+  async userDetail(@Args('id') id: string) {
     return this.clientUserService.findById(id);
   }
 }

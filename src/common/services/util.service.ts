@@ -39,6 +39,7 @@ export abstract class UtilService {
 
     limit && (options.take = limit);
     skip && (options.skip = skip);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     order && (options.order = { [order.orderBy as any]: order.direction });
 
     return options;

@@ -21,7 +21,7 @@ export class InstructorQueryResolver {
   async getAllInstructors(
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') searchOpt: SearchOptionInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.instructorService.getTokenFromHttpHeader(req.headers);
     const pgOptions = this.instructorService.buildPaginationOptions(pg);
@@ -34,7 +34,10 @@ export class InstructorQueryResolver {
   }
 
   @ResolveField('instructor')
-  getInstructorById(@Args('id') id: string, @Context() { req }: any) {
+  async getInstructorById(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject,
+  ) {
     const token = this.instructorService.getTokenFromHttpHeader(req.headers);
 
     return this.instructorService.findById(
@@ -45,7 +48,7 @@ export class InstructorQueryResolver {
   }
 
   @ResolveField()
-  totalInstructors(@Context() { req }: any) {
+  async totalInstructors(@Context() { req }: DynamicObject) {
     const token = this.instructorService.getTokenFromHttpHeader(req.headers);
 
     return this.instructorService.countingTotalItem({

@@ -151,8 +151,8 @@ export class UserCommentService extends BaseService<UserComment> {
     return this.deleteOneById(id);
   }
 
-  private deleteRepliedComments(ids: string[]) {
-    const promises = _.map(ids, (id) => this.deleteOneById(id));
+  private async deleteRepliedComments(ids: string[]) {
+    const promises = _.map(ids, async (id) => this.deleteOneById(id));
 
     return Promise.all(promises);
   }

@@ -21,7 +21,7 @@ export class NotificationTypeResolver {
     if (_.size(parentNotification.recipientByAdminIds) > 0) {
       adminPromises = _.map(
         _.split(parentNotification.recipientByAdminIds, this.SEPARATOR),
-        (id) => this.adminUserService.findById(id),
+        async (id) => this.adminUserService.findById(id),
       );
 
       const adminUsers = await Promise.all(adminPromises);

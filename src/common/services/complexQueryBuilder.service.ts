@@ -45,9 +45,9 @@ export class ComplexQueryBuilderService {
   ) {
     switch (type) {
       case 'date':
-        return this.buildTheCompareStringForDate;
+        return this.buildTheCompareStringForDate.bind(this);
       case 'string':
-        return this.buildTheCompareStringForString;
+        return this.buildTheCompareStringForString.bind(this);
     }
   }
 
@@ -88,7 +88,7 @@ export class ComplexQueryBuilderService {
 
   private buildTheCompareStringForString(
     stringBuilderConfig: { field: string; alias: string },
-    valueCompare: any,
+    valueCompare: DynamicObject,
     key: string,
   ) {
     let compareString = '';

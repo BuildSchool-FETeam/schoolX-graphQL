@@ -19,7 +19,7 @@ export class AchievementService extends BaseService<Achievement> {
     super(achiRepo, 'User achievement');
   }
 
-  createEmptyAchievement(clientUser: ClientUser) {
+  async createEmptyAchievement(clientUser: ClientUser) {
     const data = this.achiRepo.create({
       rank: 0,
       score: 0,

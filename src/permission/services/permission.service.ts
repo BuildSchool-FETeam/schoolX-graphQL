@@ -63,7 +63,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     return role;
   }
 
-  savePermissionSet(permissionSet: PermissionSet) {
+  async savePermissionSet(permissionSet: PermissionSet) {
     return this.permissionRepo.save(permissionSet);
   }
 

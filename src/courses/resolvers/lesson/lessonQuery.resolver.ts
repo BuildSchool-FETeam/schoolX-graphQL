@@ -27,7 +27,7 @@ export class LessonQueryResolver {
     @Args('courseId') courseId: string,
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') searchOpt: SearchOptionInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.lessonService.getTokenFromHttpHeader(req.headers);
     const paginationOptions =

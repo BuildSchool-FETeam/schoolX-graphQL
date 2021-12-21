@@ -77,7 +77,7 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
     return true;
   }
 
-  private async uploadFile(file: any) {
+  private async uploadFile(file: DynamicObject) {
     const { filename, createReadStream } = (await file) as FileUploadType;
     const format = filename.split('.');
 

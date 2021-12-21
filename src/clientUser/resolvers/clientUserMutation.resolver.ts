@@ -28,7 +28,7 @@ export class ClientUserMutationResolver {
   }
 
   @ResolveField()
-  updateClientUser(
+  async updateClientUser(
     @Args('data') data: ClientUserUpdateInput,
     @Args('id') id: string,
   ) {
@@ -44,7 +44,10 @@ export class ClientUserMutationResolver {
   }
 
   @ResolveField()
-  async updateScore(@Args('data') data: UpdateScore, @Context() { req }: any) {
+  async updateScore(
+    @Args('data') data: UpdateScore,
+    @Context() { req }: DynamicObject,
+  ) {
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
     await this.clientUserService.updateScore(id, data);
@@ -55,7 +58,7 @@ export class ClientUserMutationResolver {
   @ResolveField()
   async updateJoinedCourse(
     @Args('data') data: UpdateJoinedCourse,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
@@ -65,7 +68,7 @@ export class ClientUserMutationResolver {
   @ResolveField()
   async updateFollow(
     @Args('data') data: UpdateFollow,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
 
@@ -77,7 +80,7 @@ export class ClientUserMutationResolver {
   @ResolveField()
   async updateCompletedCourses(
     @Args('idCourse') idCourse: string,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const id = this.clientUserService.getIdUserByHeaders(req.headers);
 

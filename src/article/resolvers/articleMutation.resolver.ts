@@ -23,9 +23,9 @@ export class ArticleMutationResolver {
 
   @PermissionRequire({ blog: ['C', 'U'] })
   @ResolveField()
-  setArticle(
+  async setArticle(
     @Args('data') data: ArticleInputType,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('id') id?: string,
   ) {
     const token = this.articleService.getTokenFromHttpHeader(req.headers);
@@ -38,7 +38,10 @@ export class ArticleMutationResolver {
 
   @PermissionRequire({ blog: ['D'] })
   @ResolveField()
-  async deleteArticle(@Context() { req }: any, @Args('id') id: string) {
+  async deleteArticle(
+    @Context() { req }: DynamicObject,
+    @Args('id') id: string,
+  ) {
     const token = this.articleService.getTokenFromHttpHeader(req.headers);
 
     await this.articleService.deleteArticle(id, token);
@@ -49,7 +52,7 @@ export class ArticleMutationResolver {
   @PermissionRequire({ blog: ['U'] })
   @ResolveField()
   async reviewArticle(
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('id') id: string,
     @Args('data') data: ArticleReviewInput,
   ) {

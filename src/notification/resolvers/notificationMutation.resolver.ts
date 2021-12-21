@@ -32,7 +32,7 @@ export class NotificationMutationResolver {
   @ResolveField()
   async createNotification(
     @Args('data') data: NotificationInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.notificationService.getTokenFromHttpHeader(req.headers);
     const notificationData = await this.notificationService.create(data, token);
@@ -47,7 +47,10 @@ export class NotificationMutationResolver {
 
   @PermissionRequire({ notification: ['D'] })
   @ResolveField()
-  async deleteByOwner(@Args('id') id: string, @Context() { req }: any) {
+  async deleteByOwner(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject,
+  ) {
     const token = this.notificationService.getTokenFromHttpHeader(req.headers);
 
     await this.notificationService.deleteOneById(id, {
@@ -60,7 +63,10 @@ export class NotificationMutationResolver {
 
   @PermissionRequire({ notification: ['U'] })
   @ResolveField()
-  async deleteByRecipient(@Args('id') id: string, @Context() { req }: any) {
+  async deleteByRecipient(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject,
+  ) {
     const token = this.notificationService.getTokenFromHttpHeader(req.headers);
     const { id: adminId } = await this.tokenService.getAdminUserByToken(token);
 

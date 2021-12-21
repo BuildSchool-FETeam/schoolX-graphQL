@@ -35,7 +35,7 @@ export class InstructorMutationResolver {
   @ResolveField()
   async setInstructor(
     @Args('data') data: InstructorSetInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('id') id?: string,
   ) {
     const { image } = data;
@@ -98,7 +98,7 @@ export class InstructorMutationResolver {
   @ResolveField()
   async deleteInstructor(
     @Args('id') id: string,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ): Promise<boolean> {
     const token = this.instructorService.getTokenFromHttpHeader(req.headers);
     const inst = await this.instructorService.findById(

@@ -19,7 +19,7 @@ export class MailGunService implements ISendMail {
     });
   }
 
-  sendMailWithCode(config: {
+  async sendMailWithCode(config: {
     templateName: TemplateName;
     messageConfig: IMessage;
     code: string;

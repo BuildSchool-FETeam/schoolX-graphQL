@@ -25,7 +25,7 @@ export class CourseTypeResolver {
 
   @ResolveField()
   async lessons(
-    @Parent() courseParent: CourseType,
+    @Parent() courseParent,
     @Args('pagination') pg: PaginationInput,
   ) {
     const course = await this.courseService.findById(courseParent.id, {

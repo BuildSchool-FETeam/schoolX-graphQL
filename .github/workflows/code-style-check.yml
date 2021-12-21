@@ -58,5 +58,5 @@ jobs:
       - name: install dependencies
         run: yarn install
 
-      - name: prettier-check
+      - name: Eslint check
         run: yarn run lint-check

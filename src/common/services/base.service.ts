@@ -70,13 +70,13 @@ export abstract class BaseService<T> extends UtilService {
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
       ) {
-        if (_.isNil((resource as any).createdBy)) {
+        if (_.isNil((resource as DynamicObject).createdBy)) {
           throw new ForbiddenException(
             "You don't have permission to do this action on resource",
           );
         }
 
-        if ((resource as any).createdBy.id !== adminUser.id) {
+        if ((resource as DynamicObject).createdBy.id !== adminUser.id) {
           throw new ForbiddenException(
             "You don't have permission to do this action on resource",
           );

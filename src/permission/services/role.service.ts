@@ -14,7 +14,7 @@ export class RoleService extends BaseService<Role> {
     super(roleRepo, 'Role');
   }
 
-  createAdminRole(assignedPermission: PermissionSet) {
+  async createAdminRole(assignedPermission: PermissionSet) {
     const role = this.roleRepo.create({
       name: 'ultimateAdmin',
       permissionSet: assignedPermission,

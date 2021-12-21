@@ -20,7 +20,7 @@ export class PermissionQueryResolver {
   @PermissionRequire({ permission: ['R'] })
   @ResolveField('permissions')
   async getAllPermissions(
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') searchOpt: SearchOptionInput,
   ) {
@@ -53,7 +53,10 @@ export class PermissionQueryResolver {
 
   @PermissionRequire({ permission: ['R'] })
   @ResolveField('permissionWithId')
-  async getPermissionById(@Args('id') id: string, @Context() { req }: any) {
+  async getPermissionById(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject,
+  ) {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
     const permission = await this.permissionService.findById(
       id,
@@ -83,7 +86,7 @@ export class PermissionQueryResolver {
 
   @PermissionRequire({ permission: ['R'] })
   @ResolveField()
-  totalPermissions(@Context() { req }: any) {
+  async totalPermissions(@Context() { req }: DynamicObject) {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
 
     return this.permissionService.countingTotalItem({

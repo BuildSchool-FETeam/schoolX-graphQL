@@ -27,7 +27,7 @@ export class AdminUserMutationResolver {
   @ResolveField()
   async setAdminUser(
     @Args('data') data: AdminUserSetInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('id') id?: string,
   ) {
     const token = _.split(req.headers.authorization, ' ')[1];

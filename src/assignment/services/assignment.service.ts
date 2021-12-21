@@ -82,11 +82,11 @@ export class AssignmentService extends BaseService<Assignment> {
    * Code Challenge Service
    * -------------------------
    */
-  runCode(code: string, language: TestCaseProgrammingLanguage) {
+  async runCode(code: string, language: TestCaseProgrammingLanguage) {
     return this.codeChallengeService.runCode(code, language);
   }
 
-  runTestCase(challengeId: string, data: CodeConfigInput) {
+  async runTestCase(challengeId: string, data: CodeConfigInput) {
     return this.codeChallengeService.runTestCase(challengeId, data);
   }
 

@@ -27,14 +27,14 @@ export class GCStorageService {
     this.rootFolder = this.configService.get('STORAGE_FOLDER');
   }
 
-  getFiles() {
+  async getFiles() {
     return this.bucket.getFiles();
   }
 
   /**
    * @additionalPath format: path/.../path
    */
-  uploadFile(config: {
+  async uploadFile(config: {
     fileName: string;
     readStream: ReadStream;
     type: StorageFolder;

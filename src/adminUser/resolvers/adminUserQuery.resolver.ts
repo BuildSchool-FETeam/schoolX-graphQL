@@ -20,7 +20,7 @@ export class AdminUserQueryResolver {
   @ResolveField()
   @PermissionRequire({ user: ['R'] })
   async adminUsers(
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') sOpt: SearchOptionInput,
   ) {
@@ -38,7 +38,7 @@ export class AdminUserQueryResolver {
 
   @ResolveField()
   @PermissionRequire({ user: ['R'] })
-  adminUser(@Args('id') id: string, @Context() { req }: any) {
+  async adminUser(@Args('id') id: string, @Context() { req }: DynamicObject) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
 
     return this.adminUserService.findById(
@@ -50,7 +50,7 @@ export class AdminUserQueryResolver {
 
   @ResolveField()
   @PermissionRequire({ user: ['R'] })
-  totalAdminUsers(@Context() { req }: any) {
+  async totalAdminUsers(@Context() { req }: DynamicObject) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
     return this.adminUserService.countingTotalItem({
       token,
