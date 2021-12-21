@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
 import { BaseService } from 'src/common/services/base.service';
-import { LessonDocument } from './../entities/LessonDocument.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Lesson } from '../entities/Lesson.entity';
 import { GCStorageService } from 'src/common/services/GCStorage.service';
+import { LessonDocument } from '../entities/LessonDocument.entity';
+import { Lesson } from '../entities/Lesson.entity';
 
 export class LessonDocumentService extends BaseService<LessonDocument> {
   constructor(

@@ -6,7 +6,6 @@ import {
 } from 'src/common/services/GCStorage.service';
 import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import { CourseSetInput } from 'src/graphql';
-import { CourseService } from '../../services/course.service';
 import {
   Args,
   Mutation,
@@ -18,6 +17,7 @@ import * as _ from 'lodash';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { TokenService } from 'src/common/services/token.service';
+import { CourseService } from '../../services/course.service';
 
 @UseGuards(AuthGuard)
 @Resolver('CourseMutation')
@@ -41,7 +41,8 @@ export class CourseMutationResolver {
     @Args('id') id?: string,
   ) {
     const { image } = data;
-    let imageUrl: string, filePath: string;
+    let imageUrl: string;
+    let filePath: string;
     let existedCourse: Course;
 
     const token = this.courseService.getTokenFromHttpHeader(req.headers);

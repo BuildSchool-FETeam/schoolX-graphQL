@@ -11,7 +11,8 @@ import {
 @Injectable()
 export class JavaMiniServerService
   extends MiniServerBaseService
-  implements IMiniServerService {
+  implements IMiniServerService
+{
   constructor(private configService: ConfigService) {
     super(configService, 'JAVA_MINI_SERVER');
   }

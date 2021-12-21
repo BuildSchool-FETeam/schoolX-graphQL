@@ -1,8 +1,8 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { AdminUser } from 'src/adminUser/AdminUser.entity';
 import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
-import { AdminNotification } from '../Notification.entity';
 import * as _ from 'lodash';
+import { AdminNotification } from '../Notification.entity';
 import { NotificationService } from '../services/notification.service';
 
 @Resolver('NotificationType')
@@ -21,9 +21,7 @@ export class NotificationTypeResolver {
     if (_.size(parentNotification.recipientByAdminIds) > 0) {
       adminPromises = _.map(
         _.split(parentNotification.recipientByAdminIds, this.SEPARATOR),
-        (id) => {
-          return this.adminUserService.findById(id);
-        },
+        (id) => this.adminUserService.findById(id),
       );
 
       const adminUsers = await Promise.all(adminPromises);

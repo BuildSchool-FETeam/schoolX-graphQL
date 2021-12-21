@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
-import { ArticleTag } from './../entities/ArticleTag.entity';
 import { BaseService } from 'src/common/services/base.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as _ from 'lodash';
+import { ArticleTag } from '../entities/ArticleTag.entity';
 
 export class ArticleTagService extends BaseService<ArticleTag> {
   constructor(
@@ -21,12 +21,11 @@ export class ArticleTagService extends BaseService<ArticleTag> {
 
       if (existedTag) {
         return this.articleTagRepo.save(existedTag);
-      } else {
-        const newTag = this.articleTagRepo.create({
-          title: tag,
-        });
-        return this.articleTagRepo.save(newTag);
       }
+      const newTag = this.articleTagRepo.create({
+        title: tag,
+      });
+      return this.articleTagRepo.save(newTag);
     });
 
     const allTags = await Promise.all(promises);

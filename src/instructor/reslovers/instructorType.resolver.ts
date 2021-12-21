@@ -1,9 +1,8 @@
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { InstructorType, PaginationInput } from 'src/graphql';
-import { InstructorService } from '../services/instructor.service';
-import * as _ from 'lodash';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth.guard';
+import { InstructorService } from '../services/instructor.service';
 
 @UseGuards(AuthGuard)
 @Resolver('InstructorType')

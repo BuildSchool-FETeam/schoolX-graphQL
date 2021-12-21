@@ -1,6 +1,4 @@
 import { PermissionSetInput } from 'src/graphql';
-import { RoleService } from './role.service';
-import { PermissionSet } from '../entities/Permission.entity';
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,6 +7,8 @@ import * as _ from 'lodash';
 import { BaseService, IStrictConfig } from 'src/common/services/base.service';
 import { TokenService } from 'src/common/services/token.service';
 import { CacheService } from 'src/common/services/cache.service';
+import { PermissionSet } from '../entities/Permission.entity';
+import { RoleService } from './role.service';
 
 @Injectable()
 export class PermissionService extends BaseService<PermissionSet> {
@@ -115,7 +115,7 @@ export class PermissionService extends BaseService<PermissionSet> {
   }
 
   async deletePermission(id: string, token: string) {
-    const permission = await this.findById(id, {relations: ['role']});
+    const permission = await this.findById(id, { relations: ['role'] });
     await this.deleteOneById(id, {
       token,
       strictResourceName: 'permission',

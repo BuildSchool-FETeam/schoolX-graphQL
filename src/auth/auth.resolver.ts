@@ -1,9 +1,9 @@
-import { TokenService } from './../common/services/token.service';
-import { PasswordService } from './../common/services/password.service';
 import { Args, ResolveField, Resolver, Mutation } from '@nestjs/graphql';
 import { AuthPayload, SignUpInput, SignInInput } from 'src/graphql';
 import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { PasswordService } from '../common/services/password.service';
+import { TokenService } from '../common/services/token.service';
 
 @Resolver('AdminAuthMutation')
 export class AuthResolver {

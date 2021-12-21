@@ -4,6 +4,7 @@ import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
 
 export abstract class MiniServerBaseService {
   axiosInstance: AxiosInstance;
+
   host: string;
 
   constructor(

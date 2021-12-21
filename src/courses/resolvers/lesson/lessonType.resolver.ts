@@ -1,7 +1,7 @@
-import { PaginationInput } from './../../../graphql';
 import { Parent, ResolveField, Resolver, Args } from '@nestjs/graphql';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { LessonService } from 'src/courses/services/lesson.service';
+import { PaginationInput } from '../../../graphql';
 
 @Resolver('LessonType')
 export class LessonTypeResolver {
@@ -36,8 +36,8 @@ export class LessonTypeResolver {
 
   @ResolveField()
   async comments(
-    @Parent() lesson: Lesson, 
-    @Args('pagination') pg: PaginationInput
+    @Parent() lesson: Lesson,
+    @Args('pagination') pg: PaginationInput,
   ) {
     const parent = await this.lessonService.findById(lesson.id, {
       select: ['id'],

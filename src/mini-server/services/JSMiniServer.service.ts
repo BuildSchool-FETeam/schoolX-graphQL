@@ -11,7 +11,8 @@ import {
 @Injectable()
 export class JSMiniServerService
   extends MiniServerBaseService
-  implements IMiniServerService {
+  implements IMiniServerService
+{
   constructor(private configService: ConfigService<EnvVariable>) {
     super(configService, 'JS_MINI_SERVER');
   }

@@ -6,12 +6,12 @@ import {
   Context,
 } from '@nestjs/graphql';
 import { PermissionSetInput } from 'src/graphql';
-import { PermissionService } from '../services/permission.service';
-import { PermissionSet } from '../entities/Permission.entity';
 import { BadRequestException, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import * as _ from 'lodash';
+import { PermissionSet } from '../entities/Permission.entity';
+import { PermissionService } from '../services/permission.service';
 
 @UseGuards(AuthGuard)
 @Resolver('PermissionMutation')

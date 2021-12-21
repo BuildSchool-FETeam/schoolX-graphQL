@@ -15,9 +15,8 @@ export class TestCaseMutationResolver {
   setTestCase(@Args('data') data: TestCaseSetInput, @Args('id') id: string) {
     if (!id) {
       return this.tcService.createTestCase(data);
-    } else {
-      return this.tcService.updateTestCase(id, data);
     }
+    return this.tcService.updateTestCase(id, data);
   }
 
   @ResolveField()

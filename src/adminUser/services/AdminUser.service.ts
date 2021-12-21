@@ -1,7 +1,4 @@
-import { CacheService } from './../../common/services/cache.service';
-
 import { BaseService, IStrictConfig } from 'src/common/services/base.service';
-import { RoleService } from '../../permission/services/role.service';
 import {
   BadRequestException,
   Injectable,
@@ -10,11 +7,13 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { PasswordService } from 'src/common/services/password.service';
 import { Repository } from 'typeorm';
-import { AdminUser } from '../AdminUser.entity';
 import { AdminUserSetInput } from 'src/graphql';
 import * as _ from 'lodash';
 import { PermissionService } from 'src/permission/services/permission.service';
 import { TokenService } from 'src/common/services/token.service';
+import { AdminUser } from '../AdminUser.entity';
+import { RoleService } from '../../permission/services/role.service';
+import { CacheService } from '../../common/services/cache.service';
 
 @Injectable()
 export class AdminUserService extends BaseService<AdminUser> {
@@ -43,7 +42,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     const user = this.userRepo.create({
       ...data,
       password: this.passwordService.hash(data.password),
-      role: role,
+      role,
     });
 
     return this.userRepo.save(user);

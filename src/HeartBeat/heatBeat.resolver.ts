@@ -1,7 +1,7 @@
-import { AuthGuard } from './../common/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, Subscription } from '@nestjs/graphql';
 import { PubSub } from 'graphql-subscriptions';
+import { AuthGuard } from '../common/guards/auth.guard';
 
 @Resolver()
 export class HeartBeat {
@@ -21,9 +21,7 @@ export class HeartBeat {
     filter: (
       payload: { beatCount: number },
       variables: { divideNumber: number },
-    ) => {
-      return payload.beatCount % variables.divideNumber === 0;
-    },
+    ) => payload.beatCount % variables.divideNumber === 0,
   })
   beatCount() {
     const pubsub = new PubSub();

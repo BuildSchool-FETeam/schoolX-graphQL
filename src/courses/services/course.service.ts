@@ -1,5 +1,4 @@
-import { CacheService } from './../../common/services/cache.service';
-import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Course } from 'src/courses/entities/Course.entity';
@@ -10,6 +9,7 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity';
 import { ActionCourse, CourseSetInput } from 'src/graphql';
 import { InstructorService } from 'src/instructor/services/instructor.service';
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
+import { CacheService } from '../../common/services/cache.service';
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string;
@@ -31,7 +31,7 @@ export class CourseService extends BaseService<Course> {
   }
 
   async createCourse(data: CourseDataInput) {
-    const instructorId = data.instructorId;
+    const { instructorId } = data;
 
     const course = this.courseRepo.create({
       ...data,
@@ -87,49 +87,51 @@ export class CourseService extends BaseService<Course> {
   }
 
   async updateJoinedUsers(id: string, user: ClientUser, action: ActionCourse) {
-    const course = await this.findById(id, {relations: ["joinedUsers"]});
+    const course = await this.findById(id, { relations: ['joinedUsers'] });
     const users: ClientUser[] = _.cloneDeep(course.joinedUsers);
 
-    if(action === ActionCourse.JOIN) {
-      users.push(user)
-    }else{
-      _.remove(users, (oldUser) => oldUser.id === user.id)
+    if (action === ActionCourse.JOIN) {
+      users.push(user);
+    } else {
+      _.remove(users, (oldUser) => oldUser.id === user.id);
     }
 
     course.joinedUsers = users;
     this.courseRepo.save(course);
-    
+
     return true;
   }
 
   async updateCompletedUser(id: string, user: ClientUser) {
-    const course = await this.findById(id, {relations: ["completedUser"]});
+    const course = await this.findById(id, { relations: ['completedUser'] });
     const users: ClientUser[] = _.cloneDeep(course.completedUser);
 
-    users.push(user)
+    users.push(user);
 
     course.completedUser = users;
     this.courseRepo.save(course);
-    
+
     return true;
   }
 
   removeCourseFormTag(removedCourseId: string, tagIds: string[]) {
     const promises: Array<Promise<any>> = [];
 
-    _.each(tagIds, tagId => {
-      promises.push(this.tagService.removeCourseFromTag(tagId, removedCourseId));
-    })
+    _.each(tagIds, (tagId) => {
+      promises.push(
+        this.tagService.removeCourseFromTag(tagId, removedCourseId),
+      );
+    });
 
-    return Promise.all(promises)
+    return Promise.all(promises);
   }
 
   private createTags(tags: string[]) {
-    return _.map(tags, (tag) => {
-      return this.tagService.addTag({
+    return _.map(tags, (tag) =>
+      this.tagService.addTag({
         title: tag,
-      });
-    });
+      }),
+    );
   }
 
   private async updateCourseInstructor(course: Course, instId: string) {

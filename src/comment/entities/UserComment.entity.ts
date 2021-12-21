@@ -1,11 +1,11 @@
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
-import { Course } from '../../courses/entities/Course.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Article } from 'src/article/entities/Article.entity';
 import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity';
+import { Course } from '../../courses/entities/Course.entity';
 
 @Entity()
 export class UserComment extends BaseEntity {
@@ -54,9 +54,13 @@ export class UserComment extends BaseEntity {
   @JoinColumn()
   replyTo: UserComment;
 
-  @ManyToOne(() => SubmittedAssignment, (submittedAssignment) => submittedAssignment.comments, {
-    onDelete: 'CASCADE'
-  })
+  @ManyToOne(
+    () => SubmittedAssignment,
+    (submittedAssignment) => submittedAssignment.comments,
+    {
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn()
-  submittedAssignment: SubmittedAssignment
+  submittedAssignment: SubmittedAssignment;
 }

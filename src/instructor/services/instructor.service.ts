@@ -2,10 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BaseService } from 'src/common/services/base.service';
-import { Instructor } from './../entities/Instructor.entity';
 import * as _ from 'lodash';
 import { TokenService } from 'src/common/services/token.service';
 import { CacheService } from 'src/common/services/cache.service';
+import { Instructor } from '../entities/Instructor.entity';
 
 interface InstructorInput {
   name: string;

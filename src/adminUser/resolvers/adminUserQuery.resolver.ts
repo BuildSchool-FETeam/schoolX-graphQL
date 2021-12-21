@@ -1,10 +1,10 @@
-import { SearchOptionInput } from './../../graphql';
-import { AuthGuard } from './../../common/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { PaginationInput } from 'src/graphql';
+import { AuthGuard } from '../../common/guards/auth.guard';
+import { SearchOptionInput } from '../../graphql';
 
 @UseGuards(AuthGuard)
 @Resolver('AdminUserQuery')

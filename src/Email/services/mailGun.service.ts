@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
-import { IMessage, ISendMail, TemplateName } from './mail.base.service';
 import * as mailGun from 'mailgun-js';
+import { IMessage, ISendMail, TemplateName } from './mail.base.service';
 import * as emailTemplates from '../email.template';
 
 @Injectable()
 export class MailGunService implements ISendMail {
   private readonly API_KEY: string;
+
   private readonly mailGunInstance: mailGun.Mailgun;
 
   constructor(private configService: ConfigService<EnvVariable>) {

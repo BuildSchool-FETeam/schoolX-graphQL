@@ -1,9 +1,9 @@
-import { SearchOptionInput } from './../../graphql';
 import { UseGuards } from '@nestjs/common';
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { PaginationInput } from 'src/graphql';
+import { SearchOptionInput } from '../../graphql';
 import { PermissionSet } from '../entities/Permission.entity';
 import { PermissionService } from '../services/permission.service';
 
@@ -42,12 +42,10 @@ export class PermissionQueryResolver {
     }
 
     return permissions
-      .map((item) => {
-        return {
-          ...item,
-          roleName: item.role.name,
-        };
-      })
+      .map((item) => ({
+        ...item,
+        roleName: item.role.name,
+      }))
       .filter((item) =>
         filterPattern ? filterPattern.test(item.roleName) : true,
       );

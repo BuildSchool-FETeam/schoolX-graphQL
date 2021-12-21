@@ -60,7 +60,7 @@ export class CourseTypeResolver {
   @ResolveField()
   async comments(
     @Parent() courseParent: Course,
-    @Args('pagination') pg: PaginationInput
+    @Args('pagination') pg: PaginationInput,
   ) {
     const course = await this.courseService.findById(courseParent.id, {
       select: ['id'],
@@ -72,10 +72,10 @@ export class CourseTypeResolver {
   @ResolveField()
   async joinedUsers(
     @Parent() courseParent: Course,
-    @Args('pagination') pg: PaginationInput
-  ){
+    @Args('pagination') pg: PaginationInput,
+  ) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ['joinedUsers']
+      relations: ['joinedUsers'],
     });
 
     return course.joinedUsers;
@@ -84,13 +84,12 @@ export class CourseTypeResolver {
   @ResolveField()
   async completedUser(
     @Parent() courseParent: Course,
-    @Args('pagination') pg: PaginationInput
-  ){
+    @Args('pagination') pg: PaginationInput,
+  ) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ["completedUser"]
-    })
+      relations: ['completedUser'],
+    });
 
     return this.courseService.manuallyPagination(course.completedUser, pg);
   }
-
 }

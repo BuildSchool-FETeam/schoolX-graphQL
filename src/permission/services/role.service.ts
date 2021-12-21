@@ -1,8 +1,8 @@
 import { BaseService } from 'src/common/services/base.service';
-import { PermissionSet } from './../entities/Permission.entity';
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
+import { PermissionSet } from '../entities/Permission.entity';
 import { Role } from '../entities/Role.entity';
 
 @Injectable()
@@ -50,9 +50,9 @@ export class RoleService extends BaseService<Role> {
   async deleteRoleByName(removedName: string) {
     return this.roleRepo
       .createQueryBuilder('role')
-      .where('role.name = :name', {name: removedName})
+      .where('role.name = :name', { name: removedName })
       .delete()
-      .execute()
+      .execute();
   }
 
   async findRoleByName(name: string, options?: FindOneOptions<Role>) {

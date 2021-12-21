@@ -11,11 +11,11 @@ import { CourseService } from 'src/courses/services/course.service';
 import { LessonDocumentService } from 'src/courses/services/document.service';
 import { Instructor } from 'src/instructor/entities/Instructor.entity';
 import { InstructorService } from 'src/instructor/services/instructor.service';
+import { ClientUserService } from 'src/clientUser/services/clientUser.service';
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { CacheService } from './cache.service';
 import { cacheConstant } from '../constants/cache.contant';
 // import { Timeout } from '@nestjs/schedule';
-import { ClientUserService } from 'src/clientUser/services/clientUser.service';
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 
 type ArrayPromises = [
   Promise<string[]>,

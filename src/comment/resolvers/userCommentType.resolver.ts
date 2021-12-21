@@ -1,7 +1,7 @@
-import { PaginationInput } from './../../graphql';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
-import { UserCommentService } from './../services/userComment.service';
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { PaginationInput } from '../../graphql';
+import { UserCommentService } from '../services/userComment.service';
 
 @Resolver('UserCommentType')
 export class UserCommentTypeResolver {
@@ -30,7 +30,7 @@ export class UserCommentTypeResolver {
   @ResolveField()
   async replyComments(
     @Parent() comment: UserComment,
-    @Args('pagination') pg: PaginationInput
+    @Args('pagination') pg: PaginationInput,
   ) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],

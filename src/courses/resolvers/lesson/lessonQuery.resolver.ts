@@ -1,5 +1,5 @@
 import { Resolver, Query, ResolveField, Args, Context } from '@nestjs/graphql';
-import { Res, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/common/guards/auth.guard';
 import { CourseService } from 'src/courses/services/course.service';
 import { LessonService } from 'src/courses/services/lesson.service';
@@ -30,12 +30,10 @@ export class LessonQueryResolver {
     @Context() { req }: any,
   ) {
     const token = this.lessonService.getTokenFromHttpHeader(req.headers);
-    const paginationOptions = this.lessonService.buildPaginationOptions<Lesson>(
-      pg,
-    );
-    const searchOptions = this.lessonService.buildSearchOptions<Lesson>(
-      searchOpt,
-    );
+    const paginationOptions =
+      this.lessonService.buildPaginationOptions<Lesson>(pg);
+    const searchOptions =
+      this.lessonService.buildSearchOptions<Lesson>(searchOpt);
     const course = await this.courseService.findById(
       courseId,
       {},
@@ -45,12 +43,10 @@ export class LessonQueryResolver {
     let lessonWhereOpts: DynamicObject = {};
 
     if (!_.isNil(searchOpt)) {
-      lessonWhereOpts = _.map(searchOptions.where, (opt: DynamicObject) => {
-        return {
-          course,
-          ...opt,
-        };
-      });
+      lessonWhereOpts = _.map(searchOptions.where, (opt: DynamicObject) => ({
+        course,
+        ...opt,
+      }));
     } else {
       lessonWhereOpts = { course };
     }
@@ -82,13 +78,13 @@ export class LessonQueryResolver {
   @ResolveField()
   async getTypeOfAssignment(
     @Args('lessonId') lessonId: string,
-    @Args('assignmentId') assignmentId: string
+    @Args('assignmentId') assignmentId: string,
   ) {
     return await this.lessonService.getTypeAssignment(lessonId, assignmentId);
   }
 
   @ResolveField()
-  async codeChallenge(@Args('id') id: string){
+  async codeChallenge(@Args('id') id: string) {
     return await this.lessonService.getCodeChallenge(id);
   }
 
@@ -98,7 +94,7 @@ export class LessonQueryResolver {
   }
 
   @ResolveField()
-  async fileAssignment(@Args("id") id: string){
-    return await this.lessonService.getFileAssignment(id)
+  async fileAssignment(@Args('id') id: string) {
+    return await this.lessonService.getFileAssignment(id);
   }
 }

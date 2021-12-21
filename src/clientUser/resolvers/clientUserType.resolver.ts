@@ -1,8 +1,8 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import * as _ from 'lodash';
 import { ClientUser } from '../entities/ClientUser.entity';
 import { AchievementService } from '../services/achievement.service';
 import { ClientUserService } from '../services/clientUser.service';
-import * as _ from 'lodash';
 
 @Resolver('ClientUserType')
 export class clientUserTypeResolver {

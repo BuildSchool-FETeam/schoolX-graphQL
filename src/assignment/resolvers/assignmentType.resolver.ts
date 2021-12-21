@@ -1,7 +1,7 @@
-import { PaginationInput } from '../../graphql';
 import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { AssignmentService } from 'src/assignment/services/assignment.service';
+import { PaginationInput } from '../../graphql';
 
 @Resolver('AssignmentType')
 export class AssignmentTypeResolver {
@@ -15,10 +15,11 @@ export class AssignmentTypeResolver {
 
     return assignment.lesson;
   }
+
   @ResolveField()
   async comments(
     @Parent() parent: Assignment,
-    @Args('pagination') pg: PaginationInput
+    @Args('pagination') pg: PaginationInput,
   ) {
     const assignment = await this.assignmentService.findById(parent.id, {
       select: ['id'],
@@ -29,35 +30,29 @@ export class AssignmentTypeResolver {
   }
 
   @ResolveField()
-  async codeChallenges(
-    @Parent() parent: Assignment,
-  ) {
+  async codeChallenges(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ["codeChallenges"]
-    })
+      relations: ['codeChallenges'],
+    });
 
-    return assignment.codeChallenges
+    return assignment.codeChallenges;
   }
 
   @ResolveField()
-  async quizs(
-    @Parent() parent: Assignment
-  ){
+  async quizs(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ["quizs"]
-    })
+      relations: ['quizs'],
+    });
 
-    return assignment.quizs
+    return assignment.quizs;
   }
 
   @ResolveField()
-  async fileAssignments(
-    @Parent() parent: Assignment
-  ) {
+  async fileAssignments(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ["fileAssignments"]
-    })
+      relations: ['fileAssignments'],
+    });
 
-    return assignment.fileAssignments
+    return assignment.fileAssignments;
   }
 }

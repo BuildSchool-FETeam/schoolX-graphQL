@@ -1,8 +1,5 @@
 import { ReadStream } from 'typeorm/platform/PlatformTools';
-import {
-  Injectable,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Bucket, Storage } from '@google-cloud/storage';
 import { ConfigService } from '@nestjs/config';
 import { EnvVariable } from '../interfaces/EnvVariable.interface';
@@ -18,6 +15,7 @@ export enum StorageFolder {
 @Injectable()
 export class GCStorageService {
   private bucket: Bucket;
+
   private rootFolder: string;
 
   constructor(
@@ -122,9 +120,8 @@ export class GCStorageService {
     stream: ReadStream,
   ) {
     if (processConfig) {
-      const transformer = this.imageProcessService.createResizeTransformer(
-        processConfig,
-      );
+      const transformer =
+        this.imageProcessService.createResizeTransformer(processConfig);
 
       return stream.pipe(transformer);
     }

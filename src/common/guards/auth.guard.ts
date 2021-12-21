@@ -1,6 +1,3 @@
-import { cacheConstant } from './../constants/cache.contant';
-import { CacheService } from './../services/cache.service';
-import { TokenService } from './../services/token.service';
 import {
   CanActivate,
   ExecutionContext,
@@ -8,6 +5,9 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { cacheConstant } from '../constants/cache.contant';
+import { CacheService } from '../services/cache.service';
+import { TokenService } from '../services/token.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -38,7 +38,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const user = this.tokenService.verifyAndDecodeToken(token);
-      await this.cacheService.setValue(cacheConstant.ADMIN_USER + '-' + token, {
+      await this.cacheService.setValue(`${cacheConstant.ADMIN_USER}-${token}`, {
         ...user,
       });
 

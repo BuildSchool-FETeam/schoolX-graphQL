@@ -27,8 +27,8 @@ export class AdminUserTypeResolver {
   @ResolveField()
   async evaluationComments(@Parent() admin: AdminUser) {
     const parentAdmin = await this.adminUserService.findById(admin.id, {
-      relations: ["commentEvaluations"]
-    })
+      relations: ['commentEvaluations'],
+    });
 
     return parentAdmin.evaluationComments;
   }

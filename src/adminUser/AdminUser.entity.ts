@@ -34,5 +34,5 @@ export class AdminUser extends BaseEntityWithCreatedBy {
   role: Role;
 
   @OneToMany(() => EvaluationComment, (comment) => comment.createdBy)
-  evaluationComments: EvaluationComment[]
+  evaluationComments: EvaluationComment[];
 }

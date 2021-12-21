@@ -1,7 +1,14 @@
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { Course } from './Course.entity';
 import { LessonDocument } from './LessonDocument.entity';
 

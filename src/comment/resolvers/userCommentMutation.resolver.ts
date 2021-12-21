@@ -1,6 +1,4 @@
-import { AuthGuard } from './../../common/guards/auth.guard';
 import { UseGuards } from '@nestjs/common';
-import { UserCommentService } from './../services/userComment.service';
 import {
   Mutation,
   ResolveField,
@@ -10,6 +8,8 @@ import {
 } from '@nestjs/graphql';
 import { CommentDataInput } from 'src/graphql';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
+import { UserCommentService } from '../services/userComment.service';
+import { AuthGuard } from '../../common/guards/auth.guard';
 
 @UseGuards(AuthGuard)
 @Resolver('UserCommentMutation')

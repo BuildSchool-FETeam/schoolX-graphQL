@@ -16,11 +16,11 @@ import {
   SubmitInput,
 } from 'src/graphql';
 import { Brackets, Repository } from 'typeorm';
-import { AssignmentService } from '../assignment.service';
 import * as _ from 'lodash';
-import { GroupAssignmentService } from './groupAssignment.service';
 import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity';
 import { ClientUserService } from 'src/clientUser/services/clientUser.service';
+import { GroupAssignmentService } from './groupAssignment.service';
+import { AssignmentService } from '../assignment.service';
 
 @Injectable()
 export class FileAssignmentService extends BaseService<FileAssignment> {

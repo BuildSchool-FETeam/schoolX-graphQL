@@ -1,17 +1,22 @@
-import { LessonService } from './../../courses/services/lesson.service';
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
-import { TokenService } from './../../common/services/token.service';
-import { CommentDataInput } from './../../graphql';
-import { CourseService } from './../../courses/services/course.service';
-import { Injectable, ForbiddenException, Inject, forwardRef } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BaseService } from 'src/common/services/base.service';
 import { Repository } from 'typeorm';
-import { UserComment } from '../entities/UserComment.entity';
 import * as _ from 'lodash';
 import { ArticleService } from 'src/article/services/article.service';
 import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { SubmittedAssignmentService } from 'src/assignment/services/fileAssignment/submittedAssignment.service';
+import { UserComment } from '../entities/UserComment.entity';
+import { CourseService } from '../../courses/services/course.service';
+import { CommentDataInput } from '../../graphql';
+import { TokenService } from '../../common/services/token.service';
+import { LessonService } from '../../courses/services/lesson.service';
 
 interface IResourceAssign<T> {
   fieldAssign: keyof UserComment;
@@ -31,7 +36,7 @@ export class UserCommentService extends BaseService<UserComment> {
     private articleService: ArticleService,
     private tokenService: TokenService,
     @Inject(forwardRef(() => SubmittedAssignmentService))
-    private submittedAssignService: SubmittedAssignmentService
+    private submittedAssignService: SubmittedAssignmentService,
   ) {
     super(commentRepo, 'Comment');
   }
@@ -114,37 +119,40 @@ export class UserCommentService extends BaseService<UserComment> {
   async setCommentForSubmittedAssign(
     submittedId: string,
     data: CommentDataInput,
-    token: string
-  ){
+    token: string,
+  ) {
     const submitted = await this.submittedAssignService.findById(submittedId);
     const newComment = await this.setComment(
       data,
       { fieldAssign: 'submittedAssignment', data: submitted },
-      token
-    )
-    
+      token,
+    );
+
     return this.commentRepo.save(newComment);
   }
 
   async deleteComment(id: string, token: string) {
     const user = await this.tokenService.getAdminUserByToken<ClientUser>(token);
-    const existedComment = await this.findById(id, {relations: ['reply', 'createdBy'], select: ['id']});
+    const existedComment = await this.findById(id, {
+      relations: ['reply', 'createdBy'],
+      select: ['id'],
+    });
 
     if (user.id !== existedComment.createdBy.id) {
-      throw new ForbiddenException("You don't have permission to perform this action")
+      throw new ForbiddenException(
+        "You don't have permission to perform this action",
+      );
     }
 
     if (_.size(existedComment.reply) > 0) {
-      await this.deleteRepliedComments(_.map(existedComment.reply, 'id'))
+      await this.deleteRepliedComments(_.map(existedComment.reply, 'id'));
     }
 
     return this.deleteOneById(id);
   }
 
   private deleteRepliedComments(ids: string[]) {
-    const promises = _.map(ids, id => {
-      return this.deleteOneById(id);
-    })
+    const promises = _.map(ids, (id) => this.deleteOneById(id));
 
     return Promise.all(promises);
   }
@@ -157,10 +165,14 @@ export class UserCommentService extends BaseService<UserComment> {
     const user = await this.tokenService.getAdminUserByToken<ClientUser>(token);
 
     if (data.id) {
-      const oldComment = await this.findById(data.id, {relations: ['createdBy']});
+      const oldComment = await this.findById(data.id, {
+        relations: ['createdBy'],
+      });
 
       if (user.id !== oldComment.createdBy.id) {
-        throw new ForbiddenException("You don't have permission to perform this action")
+        throw new ForbiddenException(
+          "You don't have permission to perform this action",
+        );
       }
       _.forOwn(data, (value, key) => {
         if (key !== 'id') {

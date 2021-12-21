@@ -9,10 +9,10 @@ import { CacheService } from 'src/common/services/cache.service';
 import { TokenService } from 'src/common/services/token.service';
 import { NotificationInput, PaginationInput } from 'src/graphql';
 import { FindManyOptions, FindOneOptions, Repository } from 'typeorm';
-import { AdminNotification } from '../Notification.entity';
 import * as _ from 'lodash';
 import { RoleService } from 'src/permission/services/role.service';
 import { Role } from 'src/permission/entities/Role.entity';
+import { AdminNotification } from '../Notification.entity';
 
 @Injectable()
 export class NotificationService extends BaseService<AdminNotification> {
@@ -78,12 +78,9 @@ export class NotificationService extends BaseService<AdminNotification> {
     const adminUser = await this.tokenService.getAdminUserByToken(adminToken);
     const notifications = await this.findWithOptions(searchOptions);
 
-    const notificationAdminReceived = _.filter(notifications, (item) => {
-      return _.includes(
-        item.recipientByAdminIds.split(this.SEPARATOR),
-        adminUser.id,
-      );
-    });
+    const notificationAdminReceived = _.filter(notifications, (item) =>
+      _.includes(item.recipientByAdminIds.split(this.SEPARATOR), adminUser.id),
+    );
     return notificationAdminReceived;
   }
 

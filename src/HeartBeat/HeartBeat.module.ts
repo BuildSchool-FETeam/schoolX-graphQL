@@ -6,4 +6,4 @@ import { HeartBeat as HeartBeatResolver } from './heatBeat.resolver';
   imports: [CommonModule],
   providers: [HeartBeatResolver],
 })
-export class HeartBeat { }
+export class HeartBeat {}

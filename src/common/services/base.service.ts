@@ -1,8 +1,8 @@
-import { PermissionSet } from './../../permission/entities/Permission.entity';
-import { CacheService } from './cache.service';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import * as _ from 'lodash';
 import { Repository, FindManyOptions, FindOneOptions } from 'typeorm';
+import { CacheService } from './cache.service';
+import { PermissionSet } from '../../permission/entities/Permission.entity';
 import { ICachedPermissionSet } from '../guards/permission.guard';
 import { cacheConstant } from '../constants/cache.contant';
 import { UtilService } from './util.service';
@@ -13,7 +13,9 @@ export interface IStrictConfig {
 }
 export abstract class BaseService<T> extends UtilService {
   protected repository: Repository<T>;
+
   protected resourceName: string;
+
   protected cachingService: CacheService;
 
   /**
@@ -62,10 +64,8 @@ export abstract class BaseService<T> extends UtilService {
     }
 
     if (strictConfig) {
-      const {
-        user: adminUser,
-        permissionSet,
-      } = await this.getAdminUserCredential(strictConfig.token);
+      const { user: adminUser, permissionSet } =
+        await this.getAdminUserCredential(strictConfig.token);
 
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
@@ -103,10 +103,8 @@ export abstract class BaseService<T> extends UtilService {
     strictConfig?: IStrictConfig,
   ) {
     if (strictConfig) {
-      const {
-        user: adminUser,
-        permissionSet,
-      } = await this.getAdminUserCredential(strictConfig.token);
+      const { user: adminUser, permissionSet } =
+        await this.getAdminUserCredential(strictConfig.token);
 
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
@@ -172,10 +170,8 @@ export abstract class BaseService<T> extends UtilService {
    * @returns number of items
    */
   async countingTotalItem(strict?: IStrictConfig) {
-    const {
-      user: adminUser,
-      permissionSet,
-    } = await this.getAdminUserCredential(strict.token);
+    const { user: adminUser, permissionSet } =
+      await this.getAdminUserCredential(strict.token);
     const builder = this.repository.createQueryBuilder('entity');
 
     if (this.isStrictPermission(permissionSet[strict.strictResourceName])) {

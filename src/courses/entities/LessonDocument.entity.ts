@@ -12,7 +12,7 @@ export class LessonDocument extends BaseEntity {
 
   @ManyToOne(() => Lesson, (lesson) => lesson.documents, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    onUpdate: 'CASCADE',
   })
   @JoinColumn()
   lesson: Lesson;

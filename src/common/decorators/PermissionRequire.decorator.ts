@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { SetMetadata } from '@nestjs/common';
 import { Resource } from '../enums/resource.enum';
 
@@ -6,6 +7,5 @@ export type PermissionRequire = {
 };
 
 export const PERMISSION_REQUIRE_KEY = 'PermissionRequire';
-export const PermissionRequire = (permission: PermissionRequire) => {
-  return SetMetadata(PERMISSION_REQUIRE_KEY, permission);
-};
+export const PermissionRequire = (permission: PermissionRequire) =>
+  SetMetadata(PERMISSION_REQUIRE_KEY, permission);

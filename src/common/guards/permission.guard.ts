@@ -6,18 +6,18 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import * as _ from 'lodash';
+import { GqlExecutionContext } from '@nestjs/graphql';
+import { PermissionService } from 'src/permission/services/permission.service';
+import { PermissionSet } from 'src/permission/entities/Permission.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity';
+import { TokenService } from '../services/token.service';
+import { CacheService } from '../services/cache.service';
+import { cacheConstant } from '../constants/cache.contant';
 import {
   PermissionRequire,
   PERMISSION_REQUIRE_KEY,
 } from '../decorators/PermissionRequire.decorator';
-import * as _ from 'lodash';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import { TokenService } from '../services/token.service';
-import { PermissionService } from 'src/permission/services/permission.service';
-import { CacheService } from '../services/cache.service';
-import { cacheConstant } from '../constants/cache.contant';
-import { PermissionSet } from 'src/permission/entities/Permission.entity';
-import { AdminUser } from 'src/adminUser/AdminUser.entity';
 
 export interface ICachedPermissionSet {
   user: AdminUser | ClientUser;
@@ -35,10 +35,11 @@ export class PermissionGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const graphQLContext = GqlExecutionContext.create(context);
-    const requirePermission = this.reflector.getAllAndOverride<PermissionRequire>(
-      PERMISSION_REQUIRE_KEY,
-      [graphQLContext.getHandler()],
-    );
+    const requirePermission =
+      this.reflector.getAllAndOverride<PermissionRequire>(
+        PERMISSION_REQUIRE_KEY,
+        [graphQLContext.getHandler()],
+      );
 
     if (!this.isResolve(graphQLContext)) {
       return true;
@@ -61,7 +62,7 @@ export class PermissionGuard implements CanActivate {
       `${cacheConstant.PERMISSION}-${token}`,
       {
         permissionSet: userPermissions,
-        user: user,
+        user,
       },
     );
 

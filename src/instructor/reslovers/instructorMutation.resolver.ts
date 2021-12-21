@@ -11,12 +11,12 @@ import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
 import * as _ from 'lodash';
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
 import { AuthGuard } from 'src/common/guards/auth.guard';
-import { InstructorService } from '../services/instructor.service';
 import {
   GCStorageService,
   StorageFolder,
 } from 'src/common/services/GCStorage.service';
 import { InstructorSetInput } from 'src/graphql';
+import { InstructorService } from '../services/instructor.service';
 
 @UseGuards(AuthGuard)
 @Resolver('InstructorMutation')

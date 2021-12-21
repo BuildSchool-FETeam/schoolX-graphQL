@@ -6,7 +6,7 @@ import * as fs from 'fs';
 export class FileService {
   async writeFileLocal(fileName: string, readStream: ReadStream) {
     return new Promise((resolve) => {
-      const writable = fs.createWriteStream('./upload/' + fileName);
+      const writable = fs.createWriteStream(`./upload/${fileName}`);
 
       readStream.pipe(writable).on('finish', () => {
         resolve(`/upload/${fileName}`);

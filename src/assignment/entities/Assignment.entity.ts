@@ -17,10 +17,10 @@ import { FileAssignment } from './fileAssignment/fileAssignment.entity';
 import { Quiz } from './quiz/Quiz.entity';
 
 @Entity()
-export class Assignment{
+export class Assignment {
   @PrimaryGeneratedColumn()
-  id: string
-  
+  id: string;
+
   @ManyToOne(() => Lesson, (lesson) => lesson, {
     onDelete: 'CASCADE',
   })
@@ -30,14 +30,17 @@ export class Assignment{
   @OneToMany(() => UserComment, (cmt) => cmt.assignment)
   comments: UserComment[];
 
-  @OneToMany(() => Quiz, quiz => quiz.assignment)
+  @OneToMany(() => Quiz, (quiz) => quiz.assignment)
   quizs: Quiz[];
 
-  @OneToMany(() => CodeChallenge, codeChalenge => codeChalenge.assignment)
-  codeChallenges: CodeChallenge[]
+  @OneToMany(() => CodeChallenge, (codeChalenge) => codeChalenge.assignment)
+  codeChallenges: CodeChallenge[];
 
-  @OneToMany(() => FileAssignment, fileAssignment => fileAssignment.assignment)
-  fileAssignments: FileAssignment[]
+  @OneToMany(
+    () => FileAssignment,
+    (fileAssignment) => fileAssignment.assignment,
+  )
+  fileAssignments: FileAssignment[];
 
   @ManyToMany(() => ClientUser)
   @JoinTable()

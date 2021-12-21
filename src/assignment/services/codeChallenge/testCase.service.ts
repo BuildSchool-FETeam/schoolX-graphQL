@@ -17,7 +17,9 @@ export class TestCaseService extends BaseService<TestCase> {
   }
 
   async createTestCase(data: TestCaseSetInput) {
-    const codeChallenge = await this.codeChallengeService.findById(data.codeChallengeId);
+    const codeChallenge = await this.codeChallengeService.findById(
+      data.codeChallengeId,
+    );
 
     if (
       _.isNil(data.generatedExpectResultScript) &&
@@ -35,7 +37,7 @@ export class TestCaseService extends BaseService<TestCase> {
       runningTestScript: data.runningTestScript,
       programingLanguage: data.programingLanguage,
       timeEvaluation: data.timeEvaluation,
-      codeChallenge
+      codeChallenge,
     });
 
     return this.testCaseRepo.save(tc);
@@ -43,7 +45,9 @@ export class TestCaseService extends BaseService<TestCase> {
 
   async updateTestCase(id: string, data: TestCaseSetInput) {
     const existedTc = await this.findById(id);
-    const codeChallenge = await this.codeChallengeService.findById(data.codeChallengeId);
+    const codeChallenge = await this.codeChallengeService.findById(
+      data.codeChallengeId,
+    );
 
     _.forOwn(data, (value, key) => {
       if (key === 'codeChallengeId') {
