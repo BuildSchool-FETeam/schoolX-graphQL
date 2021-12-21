@@ -12,10 +12,14 @@ export class TestCaseMutationResolver {
   }
 
   @ResolveField()
-  setTestCase(@Args('data') data: TestCaseSetInput, @Args('id') id: string) {
+  async setTestCase(
+    @Args('data') data: TestCaseSetInput,
+    @Args('id') id: string,
+  ) {
     if (!id) {
       return this.tcService.createTestCase(data);
     }
+
     return this.tcService.updateTestCase(id, data);
   }
 

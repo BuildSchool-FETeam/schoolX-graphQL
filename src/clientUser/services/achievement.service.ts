@@ -19,12 +19,13 @@ export class AchievementService extends BaseService<Achievement> {
     super(achiRepo, 'User achievement');
   }
 
-  createEmptyAchievement(clientUser: ClientUser) {
+  async createEmptyAchievement(clientUser: ClientUser) {
     const data = this.achiRepo.create({
       rank: 0,
       score: 0,
       clientUser,
     });
+
     return this.achiRepo.save(data);
   }
 
@@ -125,6 +126,7 @@ export class AchievementService extends BaseService<Achievement> {
     existedAchi.completedCourses = completedCourse;
 
     await this.achiRepo.save(existedAchi);
+
     return true;
   }
 }

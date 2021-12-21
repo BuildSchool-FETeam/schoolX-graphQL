@@ -55,7 +55,7 @@ export class LessonMutationResolver {
       lesson = await this.lessonService.createLesson(data);
 
       if (_.size(allDocs) > 0) {
-        promises = _.map(allDocs, (doc) =>
+        promises = _.map(allDocs, async (doc) =>
           this.uploadFileAndAddDocument(doc, lesson),
         );
       }
@@ -101,7 +101,7 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  setCodeChallenge(
+  async setCodeChallenge(
     @Args('id') id: string,
     @Args('data') data: CodeChallengeSetInput,
   ) {
@@ -109,12 +109,12 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  deleteCodeChallenge(@Args('id') id: string) {
+  async deleteCodeChallenge(@Args('id') id: string) {
     return this.lessonService.deleteCodeChallenge(id);
   }
 
   @ResolveField()
-  runCode(
+  async runCode(
     @Args('code') code: string,
     @Args('language') language: TestCaseProgrammingLanguage,
   ) {
@@ -122,7 +122,7 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  runTestCase(
+  async runTestCase(
     @Args('challengeId') challengeId: string,
     @Args('data') data: CodeConfigInput,
   ) {
@@ -130,17 +130,17 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  setQuiz(@Args('id') id: string, @Args('data') data: QuizSetInput) {
+  async setQuiz(@Args('id') id: string, @Args('data') data: QuizSetInput) {
     return this.lessonService.setQuiz(id, data);
   }
 
   @ResolveField()
-  deleteQuiz(@Args('id') id: string) {
+  async deleteQuiz(@Args('id') id: string) {
     return this.lessonService.deleteQuiz(id);
   }
 
   @ResolveField()
-  setFileAssignment(
+  async setFileAssignment(
     @Args('id') id: string,
     @Args('data') data: FileAssignmentSetInput,
   ) {
@@ -148,15 +148,15 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  deleteFileAssignment(@Args('id') id: string) {
+  async deleteFileAssignment(@Args('id') id: string) {
     return this.lessonService.deleteFileAssignment(id);
   }
 
   @ResolveField()
-  submitAssignment(
+  async submitAssignment(
     @Args('fileAssignmentId') fileAssignmentId: string,
     @Args('data') data: SubmitInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const userId = this.lessonService.getIdUserByHeader(req.headers);
 
@@ -164,17 +164,18 @@ export class LessonMutationResolver {
   }
 
   @ResolveField()
-  evaluationAssignment(
+  async evaluationAssignment(
     @Args('groupAssignmentId') groupAssignmentId: string,
     @Args('data') data: EvaluationInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.lessonService.getTokenFromHttpHeader(req.headers);
+
     return this.lessonService.evaluation(groupAssignmentId, data, token);
   }
 
   @ResolveField()
-  viewSubmittedAssignment(
+  async viewSubmittedAssignment(
     @Args('groupAssignmentId') groupAssignmentId: string,
     @Args('order') order: number,
   ) {

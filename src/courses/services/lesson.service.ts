@@ -39,6 +39,7 @@ export class LessonService extends BaseService<Lesson> {
       course,
       votes: 0,
     });
+
     return this.lessonRepo.save(lesson);
   }
 
@@ -57,7 +58,7 @@ export class LessonService extends BaseService<Lesson> {
     return this.lessonRepo.save(lesson);
   }
 
-  countingLessonWithCourseId(courseId: string) {
+  async countingLessonWithCourseId(courseId: string) {
     return this.lessonRepo
       .createQueryBuilder('lesson')
       .where('lesson.courseId = :courseId', { courseId })
@@ -78,7 +79,7 @@ export class LessonService extends BaseService<Lesson> {
     return this.assignService.runCode(code, language);
   }
 
-  runTestCase(challengeId: string, data: CodeConfigInput) {
+  async runTestCase(challengeId: string, data: CodeConfigInput) {
     return this.assignService.runTestCase(challengeId, data);
   }
 
@@ -86,7 +87,7 @@ export class LessonService extends BaseService<Lesson> {
     return this.assignService.setCodeChallenge(id, data);
   }
 
-  deleteCodeChallenge(id: string) {
+  async deleteCodeChallenge(id: string) {
     return this.assignService.deleteCodeChallenge(id);
   }
 

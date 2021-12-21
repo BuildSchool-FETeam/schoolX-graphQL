@@ -60,10 +60,11 @@ export class PermissionService extends BaseService<PermissionSet> {
 
     permissionSet.role = role;
     await this.permissionRepo.save(permissionSet);
+
     return role;
   }
 
-  savePermissionSet(permissionSet: PermissionSet) {
+  async savePermissionSet(permissionSet: PermissionSet) {
     return this.permissionRepo.save(permissionSet);
   }
 
@@ -108,6 +109,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     });
 
     const savedData = await this.permissionRepo.save(permissionSet);
+
     return {
       name: input.roleName,
       permissionSet: savedData,

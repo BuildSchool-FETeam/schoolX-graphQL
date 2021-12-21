@@ -6,7 +6,7 @@ import { Cache } from 'cache-manager';
 export class CacheService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
-  setValue<T>(key: string, value: T) {
+  async setValue<T>(key: string, value: T) {
     return this.cacheManager.set(key, value);
   }
 

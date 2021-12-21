@@ -26,6 +26,7 @@ export class FileAssignmentTypeResolver {
       fileAssignment.id,
       searchOpt,
     );
+
     return data
       ? this.fileAssignService.manuallyPagination(
           data.submittedGroupAssignments,

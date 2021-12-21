@@ -13,5 +13,5 @@ export interface ISendMail {
     templateName: TemplateName;
     messageConfig: IMessage;
     code: string;
-  }): any;
+  }): DynamicObject;
 }

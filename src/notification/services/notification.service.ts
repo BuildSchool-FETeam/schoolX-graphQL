@@ -81,6 +81,7 @@ export class NotificationService extends BaseService<AdminNotification> {
     const notificationAdminReceived = _.filter(notifications, (item) =>
       _.includes(item.recipientByAdminIds.split(this.SEPARATOR), adminUser.id),
     );
+
     return notificationAdminReceived;
   }
 
@@ -128,7 +129,7 @@ export class NotificationService extends BaseService<AdminNotification> {
     let rolePromises: Array<Promise<Role>> = [];
 
     if (_.size(roleNames) > 0) {
-      rolePromises = _.map(roleNames, (roleName) =>
+      rolePromises = _.map(roleNames, async (roleName) =>
         this.roleService.findRoleByName(roleName, {
           relations: ['adminUsers'],
         }),

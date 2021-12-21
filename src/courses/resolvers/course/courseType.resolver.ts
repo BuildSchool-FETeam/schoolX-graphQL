@@ -12,6 +12,7 @@ export class CourseTypeResolver {
     const course = await this.courseService.findById(courseParent.id, {
       relations: ['instructor'],
     });
+
     return course.instructor;
   }
 
@@ -20,17 +21,19 @@ export class CourseTypeResolver {
     const course = await this.courseService.findById(courseParent.id, {
       relations: ['tags'],
     });
+
     return course.tags;
   }
 
   @ResolveField()
   async lessons(
-    @Parent() courseParent: CourseType,
+    @Parent() courseParent,
     @Args('pagination') pg: PaginationInput,
   ) {
     const course = await this.courseService.findById(courseParent.id, {
       relations: ['lessons'],
     });
+
     return this.courseService.manuallyPagination(course.lessons, pg);
   }
 
@@ -39,6 +42,7 @@ export class CourseTypeResolver {
     const course = await this.courseService.findById(courseParent.id, {
       relations: ['createdBy'],
     });
+
     return course.createdBy;
   }
 
@@ -66,6 +70,7 @@ export class CourseTypeResolver {
       select: ['id'],
       relations: ['comments'],
     });
+
     return this.courseService.manuallyPagination(course.comments, pg);
   }
 

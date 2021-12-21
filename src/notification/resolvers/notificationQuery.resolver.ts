@@ -17,8 +17,8 @@ export class NotificationQueryResolver {
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField('notificationsReceived')
-  getNotificationReceived(
-    @Context() { req }: any,
+  async getNotificationReceived(
+    @Context() { req }: DynamicObject,
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') sOpt: SearchOptionInput,
   ) {
@@ -30,8 +30,8 @@ export class NotificationQueryResolver {
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField('notificationsSent')
-  getNotificationsSent(
-    @Context() { req }: any,
+  async getNotificationsSent(
+    @Context() { req }: DynamicObject,
     @Args('pagination') pg: PaginationInput,
     @Args('searchOption') sOpt: SearchOptionInput,
   ) {
@@ -50,7 +50,10 @@ export class NotificationQueryResolver {
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField('notification')
-  getNotification(@Context() { req }: any, @Args('id') id: string) {
+  async getNotification(
+    @Context() { req }: DynamicObject,
+    @Args('id') id: string,
+  ) {
     const token = this.noticService.getTokenFromHttpHeader(req.headers);
 
     return this.noticService.getNotificationById(token, id);
@@ -58,7 +61,7 @@ export class NotificationQueryResolver {
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField()
-  totalNotificationReceived(@Context() { req }: any) {
+  async totalNotificationReceived(@Context() { req }: DynamicObject) {
     const token = this.noticService.getTokenFromHttpHeader(req.headers);
 
     return this.noticService.countNotificationReceived(token);
@@ -66,7 +69,7 @@ export class NotificationQueryResolver {
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField()
-  totalNotificationSent(@Context() { req }: any) {
+  async totalNotificationSent(@Context() { req }: DynamicObject) {
     const token = this.noticService.getTokenFromHttpHeader(req.headers);
 
     return this.noticService.countNotificationSent(token);

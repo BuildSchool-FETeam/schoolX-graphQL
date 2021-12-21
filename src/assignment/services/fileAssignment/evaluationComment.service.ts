@@ -20,6 +20,7 @@ export class EvaluationCommentService extends BaseService<EvaluationComment> {
     if (!data.id) {
       return this.create(data, token);
     }
+
     return await this.update(data, token);
   }
 
@@ -29,6 +30,7 @@ export class EvaluationCommentService extends BaseService<EvaluationComment> {
       content: data.content,
       createdBy: admin,
     });
+
     return this.commentEvaluaRepo.save(comment);
   }
 

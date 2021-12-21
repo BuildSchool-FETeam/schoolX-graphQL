@@ -139,10 +139,12 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
       (tc) => tc.programingLanguage === data.language,
     );
 
-    const runningTestResultPromises = _.map(testCaseWillBeEvaluated, (tc) =>
-      miniServerService.runCodeWithTestCase(data.code, {
-        runningTestScript: tc.runningTestScript,
-      }),
+    const runningTestResultPromises = _.map(
+      testCaseWillBeEvaluated,
+      async (tc) =>
+        miniServerService.runCodeWithTestCase(data.code, {
+          runningTestScript: tc.runningTestScript,
+        }),
     );
 
     const runningExpectScriptPromises = this.mappingExpectResultPromises(
@@ -175,7 +177,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
     testCaseWillBeEvaluated: TestCase[],
     miniServerService: IMiniServerService,
   ) {
-    return _.map(testCaseWillBeEvaluated, (tc) => {
+    return _.map(testCaseWillBeEvaluated, async (tc) => {
       const { expectResult, generatedExpectResultScript } = tc;
 
       if (expectResult) {
@@ -250,6 +252,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
       if (result !== expectedResult[i]) {
         error = [result, expectedResult[i]];
       }
+
       return result === expectedResult[i];
     });
 
@@ -259,7 +262,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
     };
   }
 
-  private createExpectResultPromise(expectResult: string) {
+  private async createExpectResultPromise(expectResult: string) {
     return new Promise<TestResponse>((resolve) => {
       resolve({
         executeTime: 0,

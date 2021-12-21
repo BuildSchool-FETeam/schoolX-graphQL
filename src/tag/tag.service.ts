@@ -25,6 +25,7 @@ export class TagService extends BaseService<Tag> {
     } else {
       tag = existedTags[0];
     }
+
     return this.tagRepo.save(tag);
   }
 

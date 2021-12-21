@@ -33,6 +33,7 @@ export class LessonDocumentService extends BaseService<LessonDocument> {
     const doc = await this.findById(docId);
 
     this.storageService.deleteFile(doc.filePath);
+
     return this.docRepo.delete(docId);
   }
 }

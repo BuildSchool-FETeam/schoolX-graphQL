@@ -23,10 +23,10 @@ export class UserCommentMutationResolver {
 
   @PermissionRequire({ course: ['R'] })
   @ResolveField()
-  setCommentToCourse(
+  async setCommentToCourse(
     @Args('courseId') courseId: string,
     @Args('data') data: CommentDataInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.commentService.getTokenFromHttpHeader(req.headers);
 
@@ -35,10 +35,10 @@ export class UserCommentMutationResolver {
 
   @PermissionRequire({ course: ['R'] })
   @ResolveField()
-  setCommentToLesson(
+  async setCommentToLesson(
     @Args('lessonId') lessonId: string,
     @Args('data') data: CommentDataInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.commentService.getTokenFromHttpHeader(req.headers);
 
@@ -47,10 +47,10 @@ export class UserCommentMutationResolver {
 
   @PermissionRequire({ course: ['R'] })
   @ResolveField()
-  setCommentToAssignment(
+  async setCommentToAssignment(
     @Args('assignmentId') assignmentId: string,
     @Args('data') data: CommentDataInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.commentService.getTokenFromHttpHeader(req.headers);
 
@@ -63,10 +63,10 @@ export class UserCommentMutationResolver {
 
   @PermissionRequire({ course: ['R'] })
   @ResolveField()
-  setCommentToArticle(
+  async setCommentToArticle(
     @Args('articleId') articleId: string,
     @Args('data') data: CommentDataInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.commentService.getTokenFromHttpHeader(req.headers);
 
@@ -76,19 +76,20 @@ export class UserCommentMutationResolver {
   @ResolveField()
   async deleteComment(
     @Args('commentId') commentId: string,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.commentService.getTokenFromHttpHeader(req.headers);
 
     await this.commentService.deleteComment(commentId, token);
+
     return true;
   }
 
   @ResolveField()
-  setReplyComment(
+  async setReplyComment(
     @Args('commentId') commentId: string,
     @Args('data') data: CommentDataInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
   ) {
     const token = this.commentService.getTokenFromHttpHeader(req.headers);
 

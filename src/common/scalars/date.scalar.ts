@@ -22,6 +22,7 @@ export class DateScalar implements CustomScalar<string, string> {
     if (typeof value === 'number') {
       return new Date(value).toISOString();
     }
+
     return value; // value sent to the client
   }
 

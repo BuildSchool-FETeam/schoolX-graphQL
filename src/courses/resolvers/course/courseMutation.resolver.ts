@@ -37,7 +37,7 @@ export class CourseMutationResolver {
   @ResolveField()
   async setCourse(
     @Args('data') data: CourseSetInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('id') id?: string,
   ) {
     const { image } = data;
@@ -82,7 +82,10 @@ export class CourseMutationResolver {
 
   @PermissionRequire({ course: ['D'] })
   @ResolveField()
-  async deleteCourse(@Args('id') id: string, @Context() { req }: any) {
+  async deleteCourse(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject,
+  ) {
     const token = this.courseService.getTokenFromHttpHeader(req.headers);
     const course = await this.courseService.findById(
       id,
@@ -97,10 +100,11 @@ export class CourseMutationResolver {
     await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'));
 
     await this.courseService.deleteOneById(id);
+
     return true;
   }
 
-  private async processImage(existedCourse: Course, image: any) {
+  private async processImage(existedCourse: Course, image: DynamicObject) {
     if (existedCourse?.filePath) {
       this.gcStorageService.deleteFile(existedCourse.filePath);
     }
@@ -119,6 +123,7 @@ export class CourseMutationResolver {
         changeFormat: 'jpeg',
       },
     });
+
     return result;
   }
 }

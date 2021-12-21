@@ -11,6 +11,7 @@ export class QuizTypeResolver {
     const quiz = await this.quizService.findById(parent.id, {
       relations: ['assignment'],
     });
+
     return quiz.assignment;
   }
 

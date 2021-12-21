@@ -19,7 +19,7 @@ export class CourseQueryResolver {
 
   @ResolveField('courses')
   async getAllCourses(
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('pagination') pg?: PaginationInput,
     @Args('searchOption') searchOpt?: SearchOptionInput,
   ) {
@@ -38,7 +38,10 @@ export class CourseQueryResolver {
   }
 
   @ResolveField('course')
-  async getCourseById(@Args('id') id: string, @Context() { req }: any) {
+  async getCourseById(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject,
+  ) {
     const token = this.courseService.getTokenFromHttpHeader(req.headers);
     const course = await this.courseService.findById(
       id,
@@ -52,7 +55,7 @@ export class CourseQueryResolver {
   }
 
   @ResolveField('totalCourses')
-  totalCourses(@Context() { req }: any) {
+  async totalCourses(@Context() { req }: DynamicObject) {
     const token = this.courseService.getTokenFromHttpHeader(req.headers);
 
     return this.courseService.countingTotalItem({

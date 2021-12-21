@@ -27,7 +27,7 @@ export class PermissionMutationResolver {
   @ResolveField()
   async setPermission(
     @Args('data') data: PermissionSetInput,
-    @Context() { req }: any,
+    @Context() { req }: DynamicObject,
     @Args('id') id: string,
   ) {
     let result: {
@@ -58,8 +58,12 @@ export class PermissionMutationResolver {
 
   @PermissionRequire({ permission: ['D'] })
   @ResolveField()
-  async deletePermission(@Args('id') id: string, @Context() { req }: any) {
+  async deletePermission(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject,
+  ) {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
+
     return this.permissionService.deletePermission(id, token);
   }
 

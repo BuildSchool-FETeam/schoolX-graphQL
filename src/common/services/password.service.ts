@@ -9,6 +9,7 @@ export class PasswordService {
     if (!password) {
       throw new BadRequestException('Password not found');
     }
+
     return bcrypt.hashSync(password, this.salt);
   }
 

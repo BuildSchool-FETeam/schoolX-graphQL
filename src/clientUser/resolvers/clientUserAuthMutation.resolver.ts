@@ -12,12 +12,12 @@ export class ClientUserAuthMutationResolver {
   }
 
   @ResolveField()
-  signUp(@Args('data') data: ClientUserSignupInput) {
+  async signUp(@Args('data') data: ClientUserSignupInput) {
     return this.clientAuthService.createClientUser(data);
   }
 
   @ResolveField()
-  signIn(@Args('data') data: ClientUserSigninInput) {
+  async signIn(@Args('data') data: ClientUserSigninInput) {
     return this.clientAuthService.loginWithEmailAndPassword(data);
   }
 
