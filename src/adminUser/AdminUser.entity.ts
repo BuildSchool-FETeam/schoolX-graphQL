@@ -12,18 +12,18 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class AdminUser extends BaseEntityWithCreatedBy {
+export class AdminUser {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  email: string;
+  email: string
 
   @Column()
-  password: string;
+  password: string
 
   @ManyToOne(() => Role, (role) => role.adminUsers, {
     onDelete: 'CASCADE',
@@ -31,8 +31,11 @@ export class AdminUser extends BaseEntityWithCreatedBy {
   @JoinColumn({
     name: 'role',
   })
-  role: Role;
+  role: Role
 
   @OneToMany(() => EvaluationComment, (comment) => comment.createdBy)
-  evaluationComments: EvaluationComment[];
+  evaluationComments: EvaluationComment[]
+
+  @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
+  createdBy: AdminUser
 }

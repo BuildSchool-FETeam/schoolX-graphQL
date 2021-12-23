@@ -4,40 +4,55 @@ import { BaseEntity } from 'src/common/entity/base.entity';
 import { Course } from 'src/courses/entities/Course.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
-} from 'typeorm';
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity()
-export class Instructor extends BaseEntity {
-  @Column()
-  name: string;
+export class Instructor {
+  @PrimaryGeneratedColumn()
+  id: string
 
   @Column()
-  email: string;
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @Column()
-  description: string;
+  name: string
+
+  @Column()
+  email: string
+
+  @Column()
+  description: string
 
   @OneToOne(() => ClientUser, (clientUser) => clientUser.instructor)
   @JoinColumn()
-  user?: ClientUser;
+  user?: ClientUser
 
   @OneToMany(() => Course, (course) => course.instructor)
-  courses: Course[];
+  courses: Course[]
 
   @Column()
-  imageUrl: string;
+  imageUrl: string
 
   @Column()
-  filePath: string;
+  filePath: string
 
   @Column()
-  phone: string;
+  phone: string
 
   @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
-  createdBy: AdminUser;
+  createdBy: AdminUser
 }

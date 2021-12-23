@@ -1,30 +1,50 @@
 import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Quiz } from './Quiz.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Quiz } from './Quiz.entity'
 
 @Entity()
-export class Question extends BaseEntity {
+export class Question {
+  @PrimaryGeneratedColumn()
+  id: string
+
+  @Column()
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
   @Column({ nullable: true })
-  order: number;
+  order: number
 
   @ManyToOne(() => Quiz, (quiz) => quiz.questions, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  quiz: Quiz;
+  quiz: Quiz
 
   @Column('text', { array: true, nullable: true })
-  options: string[];
+  options: string[]
 
   @Column({ nullable: true })
-  isMultiple: boolean;
+  isMultiple: boolean
 
   @Column({ nullable: true })
-  result?: number;
+  result?: number
 
   @Column('int', {
     nullable: true,
     array: true,
   })
-  results?: number[];
+  results?: number[]
 }

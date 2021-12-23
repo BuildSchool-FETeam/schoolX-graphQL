@@ -2,65 +2,86 @@ import { Assignment } from 'src/assignment/entities/Assignment.entity';
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Article } from 'src/article/entities/Article.entity';
-import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity';
-import { Course } from '../../courses/entities/Course.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Article } from 'src/article/entities/Article.entity'
+import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity'
+import { Course } from '../../courses/entities/Course.entity'
 
 @Entity()
-export class UserComment extends BaseEntity {
+export class UserComment {
+  @PrimaryGeneratedColumn()
+  id: string
+
+  @Column()
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
   @ManyToOne(() => ClientUser, (clientUser) => clientUser.comments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  createdBy: ClientUser;
+  createdBy: ClientUser
 
   @Column()
-  content: string;
+  content: string
 
   @Column('int2', { default: 0 })
-  votes: number;
+  votes: number
 
   @OneToMany(() => UserComment, (userComment) => userComment.replyTo)
-  reply: UserComment[];
+  reply: UserComment[]
 
   @ManyToOne(() => Course, (course) => course.comments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  course: Course;
+  course: Course
 
   @ManyToOne(() => Lesson, (lesson) => lesson.comments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  lesson: Lesson;
+  lesson: Lesson
 
   @ManyToOne(() => Assignment, (assign) => assign.comments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  assignment: Assignment;
+  assignment: Assignment
 
   @ManyToOne(() => Article, (article) => article.comments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  article: Article;
+  article: Article
 
   @ManyToOne(() => UserComment, (userComment) => userComment.reply, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  replyTo: UserComment;
+  replyTo: UserComment
 
   @ManyToOne(
     () => SubmittedAssignment,
     (submittedAssignment) => submittedAssignment.comments,
     {
       onDelete: 'CASCADE',
-    },
+    }
   )
   @JoinColumn()
-  submittedAssignment: SubmittedAssignment;
+  submittedAssignment: SubmittedAssignment
 }

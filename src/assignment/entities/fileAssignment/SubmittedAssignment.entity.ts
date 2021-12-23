@@ -1,31 +1,52 @@
 import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { EvaluationComment } from './evaluationComment.entity';
-import { GroupAssignment } from './groupAssignment.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { EvaluationComment } from './evaluationComment.entity'
+import { GroupAssignment } from './groupAssignment.entity'
 
 @Entity()
-export class SubmittedAssignment extends BaseEntity {
-  @Column({ nullable: true })
-  description: string;
+export class SubmittedAssignment {
+  @PrimaryGeneratedColumn()
+  id: string
 
   @Column()
-  order: number;
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @Column({ nullable: true })
-  fileUrl: string;
+  description: string
+
+  @Column()
+  order: number
 
   @Column({ nullable: true })
-  reApply?: boolean;
+  fileUrl: string
+
+  @Column({ nullable: true })
+  reApply?: boolean
 
   @OneToMany(() => EvaluationComment, (comment) => comment.submitted)
-  comments: EvaluationComment[];
+  comments: EvaluationComment[]
 
   @ManyToOne(() => GroupAssignment, (group) => group.submitteds, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  group: GroupAssignment;
+  group: GroupAssignment
 
   @Column({ default: false })
-  hasSeen: boolean;
+  hasSeen: boolean
 }

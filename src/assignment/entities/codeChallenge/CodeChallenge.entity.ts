@@ -1,34 +1,54 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Assignment } from '../Assignment.entity';
-import { TestCase } from './Testcase.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Assignment } from '../Assignment.entity'
+import { TestCase } from './Testcase.entity'
 
 @Entity()
-export class CodeChallenge extends BaseEntity {
-  @Column()
-  description: string;
+export class CodeChallenge {
+  @PrimaryGeneratedColumn()
+  id: string
 
   @Column()
-  hints: string;
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
+  @Column()
+  description: string
+
+  @Column()
+  hints: string
 
   @Column('int4', { default: 10, nullable: true })
-  score: number;
+  score: number
 
   @ManyToOne(() => Assignment, (assignment) => assignment.codeChallenges, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  assignment: Assignment;
+  assignment: Assignment
 
   @Column()
-  input: string;
+  input: string
 
   @Column()
-  output: string;
+  output: string
 
   @Column()
-  languageSupport: string;
+  languageSupport: string
 
   @OneToMany(() => TestCase, (testCase) => testCase.codeChallenge)
-  testCases: TestCase[];
+  testCases: TestCase[]
 }

@@ -1,41 +1,62 @@
 import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
-import { Assignment } from '../Assignment.entity';
-import { GroupAssignment } from './groupAssignment.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Assignment } from '../Assignment.entity'
+import { GroupAssignment } from './groupAssignment.entity'
 
 @Entity()
-export class FileAssignment extends BaseEntity {
-  @Column({ nullable: true })
-  description: string;
+export class FileAssignment {
+  @PrimaryGeneratedColumn()
+  id: string
 
   @Column()
-  maxScore: number;
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
+  @Column({ nullable: true })
+  description: string
 
   @Column()
-  estimateTimeInMinute: number;
+  maxScore: number
+
+  @Column()
+  estimateTimeInMinute: number
 
   @Column({ nullable: true })
-  contentInstruct: string;
+  contentInstruct: string
 
   @Column({ nullable: true })
-  videoInstruct: string;
+  videoInstruct: string
 
   @Column({ nullable: true })
-  explainContent: string;
+  explainContent: string
 
   @Column({ nullable: true })
-  explainVideo: string;
+  explainVideo: string
 
   @ManyToOne(
     () => Assignment,
     (fileAssignment) => fileAssignment.fileAssignments,
     {
       onDelete: 'CASCADE',
-    },
+    }
   )
   @JoinColumn()
-  assignment: Assignment;
+  assignment: Assignment
 
   @OneToMany(() => GroupAssignment, (group) => group.fileAssignment)
-  submittedGroupAssignments: GroupAssignment[];
+  submittedGroupAssignments: GroupAssignment[]
 }

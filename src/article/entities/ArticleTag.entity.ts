@@ -1,10 +1,29 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { Entity, JoinTable, ManyToMany } from 'typeorm';
-import { Article } from './Article.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Article } from './Article.entity'
 
 @Entity()
-export class ArticleTag extends BaseEntity {
+export class ArticleTag {
+  @PrimaryGeneratedColumn()
+  id: string
+
+  @Column()
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
   @ManyToMany(() => Article, (art) => art.tags)
   @JoinTable()
-  articles: Article[];
+  articles: Article[]
 }

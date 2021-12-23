@@ -1,10 +1,30 @@
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Course } from 'src/courses/entities/Course.entity';
-import { Entity, JoinTable, ManyToMany } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity()
-export class Tag extends BaseEntity {
+export class Tag {
+  @PrimaryGeneratedColumn()
+  id: string
+
+  @Column()
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
   @ManyToMany(() => Course, (course) => course.tags)
   @JoinTable()
-  courses: Course[];
+  courses: Course[]
 }
