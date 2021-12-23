@@ -6,6 +6,10 @@ import { Test } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { MockType, repositoryMockFactory } from 'src/common/mock/repositoryMock'
 import { CommonModule } from 'src/common/Common.module'
+import { CacheService } from 'src/common/services/cache.service'
+import { PasswordService } from 'src/common/services/password.service'
+import { TokenService } from 'src/common/services/token.service'
+import { RoleService } from 'src/permission/services/role.service'
 
 describe('AdminUserService', () => {
   let userRepo: MockType<Repository<AdminUser>>
@@ -15,7 +19,6 @@ describe('AdminUserService', () => {
     console.log(`Admin Repo`, getRepositoryToken(AdminUser))
     const testModule = await Test.createTestingModule({
       providers: [
-        // PermissionService,
         AdminUserService,
         {
           provide: getRepositoryToken(AdminUser),

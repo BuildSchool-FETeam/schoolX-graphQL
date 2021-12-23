@@ -1461,7 +1461,7 @@
   dependencies:
     "path-to-regexp" "0.1.7"
 
-"@nestjs/testing@7.6.18":
+"@nestjs/testing@^7.6.18":
   "integrity" "sha512-1AVk9vWZlPpx4CmzY6z9z0DHFgGCadfr01QdisGFAN740JwKqZWEqz12cVd+nsXDlYQPFRkp2ICBIS/6k1qZGQ=="
   "resolved" "https://registry.npmjs.org/@nestjs/testing/-/testing-7.6.18.tgz"
   "version" "7.6.18"
