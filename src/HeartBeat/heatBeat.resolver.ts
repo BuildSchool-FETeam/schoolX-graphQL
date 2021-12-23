@@ -29,6 +29,7 @@ export class HeartBeat {
     setInterval(() => {
       pubsub.publish('BEAT_COUNT', { beatCount: i++ });
     }, 1000);
+
     return pubsub.asyncIterator('BEAT_COUNT');
   }
 }

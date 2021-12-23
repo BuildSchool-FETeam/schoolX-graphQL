@@ -33,6 +33,7 @@ export class ArticleMutationResolver {
     if (!id) {
       return this.articleService.createArticle(data, token);
     }
+
     return this.articleService.updateArticle(data, token, id);
   }
 

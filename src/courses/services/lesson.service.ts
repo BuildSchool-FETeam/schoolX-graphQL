@@ -39,6 +39,7 @@ export class LessonService extends BaseService<Lesson> {
       course,
       votes: 0,
     });
+
     return this.lessonRepo.save(lesson);
   }
 

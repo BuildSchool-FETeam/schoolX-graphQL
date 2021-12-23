@@ -41,3 +41,4 @@ data
 servers/*/node_modules
 
 storage-service-account.json
+lint

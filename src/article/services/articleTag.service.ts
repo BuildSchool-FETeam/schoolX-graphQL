@@ -25,10 +25,12 @@ export class ArticleTagService extends BaseService<ArticleTag> {
       const newTag = this.articleTagRepo.create({
         title: tag,
       });
+
       return this.articleTagRepo.save(newTag);
     });
 
     const allTags = await Promise.all(promises);
+
     return allTags;
   }
 }

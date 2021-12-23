@@ -100,6 +100,7 @@ export class CourseMutationResolver {
     await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'));
 
     await this.courseService.deleteOneById(id);
+
     return true;
   }
 
@@ -122,6 +123,7 @@ export class CourseMutationResolver {
         changeFormat: 'jpeg',
       },
     });
+
     return result;
   }
 }

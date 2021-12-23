@@ -81,6 +81,7 @@ export class NotificationService extends BaseService<AdminNotification> {
     const notificationAdminReceived = _.filter(notifications, (item) =>
       _.includes(item.recipientByAdminIds.split(this.SEPARATOR), adminUser.id),
     );
+
     return notificationAdminReceived;
   }
 

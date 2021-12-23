@@ -25,6 +25,7 @@ export class AchievementService extends BaseService<Achievement> {
       score: 0,
       clientUser,
     });
+
     return this.achiRepo.save(data);
   }
 
@@ -125,6 +126,7 @@ export class AchievementService extends BaseService<Achievement> {
     existedAchi.completedCourses = completedCourse;
 
     await this.achiRepo.save(existedAchi);
+
     return true;
   }
 }

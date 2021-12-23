@@ -60,6 +60,7 @@ export class PermissionService extends BaseService<PermissionSet> {
 
     permissionSet.role = role;
     await this.permissionRepo.save(permissionSet);
+
     return role;
   }
 
@@ -108,6 +109,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     });
 
     const savedData = await this.permissionRepo.save(permissionSet);
+
     return {
       name: input.roleName,
       permissionSet: savedData,

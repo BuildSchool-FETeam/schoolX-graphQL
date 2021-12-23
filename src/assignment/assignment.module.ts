@@ -49,8 +49,8 @@ import { EvaluationCommentTypeResolver } from './resolvers/fileAssignment/evalua
     ]),
     forwardRef(() => CourseModule),
     MiniServerModule,
-    CommonModule,
-    ClientUserModule,
+    forwardRef(() => CommonModule),
+    forwardRef(() => ClientUserModule),
     CommentModule,
   ],
   providers: [

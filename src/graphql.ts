@@ -1,3 +1,4 @@
+
 /*
  * -------------------------------------------------------
  * THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
@@ -7,876 +8,851 @@
 /* tslint:disable */
 /* eslint-disable */
 export enum ArticleStatus {
-  pending = 'pending',
-  accept = 'accept',
-  reject = 'reject',
+    pending = "pending",
+    accept = "accept",
+    reject = "reject"
 }
 
 export enum TypeAssign {
-  codeChallenge = 'codeChallenge',
-  quiz = 'quiz',
-  fileAssignment = 'fileAssignment',
+    codeChallenge = "codeChallenge",
+    quiz = "quiz",
+    fileAssignment = "fileAssignment"
 }
 
 export enum ProgrammingLanguage {
-  javascript = 'javascript',
-  python = 'python',
-  CPlus = 'CPlus',
-  java = 'java',
+    javascript = "javascript",
+    python = "python",
+    CPlus = "CPlus",
+    java = "java"
 }
 
 export enum ActionCourse {
-  JOIN = 'JOIN',
-  LEAVE = 'LEAVE',
+    JOIN = "JOIN",
+    LEAVE = "LEAVE"
 }
 
 export enum ActionFollow {
-  UNFOLLOW = 'UNFOLLOW',
-  FOLLOW = 'FOLLOW',
+    UNFOLLOW = "UNFOLLOW",
+    FOLLOW = "FOLLOW"
 }
 
 export enum OrderDirection {
-  ASC = 'ASC',
-  DESC = 'DESC',
+    ASC = "ASC",
+    DESC = "DESC"
 }
 
 export class AdminUserSetInput {
-  email: string;
-  name: string;
-  role: string;
-  password?: Nullable<string>;
+    email: string;
+    name: string;
+    role: string;
+    password?: Nullable<string>;
 }
 
 export class ArticleReviewInput {
-  comment?: Nullable<string>;
-  status?: Nullable<ArticleStatus>;
+    comment?: Nullable<string>;
+    status?: Nullable<ArticleStatus>;
 }
 
 export class FilterArticleInput {
-  byTag?: Nullable<Nullable<string>[]>;
-  byDate?: Nullable<CompareInputDate>;
-  byStatus?: Nullable<CompareInputString>;
+    byTag?: Nullable<Nullable<string>[]>;
+    byDate?: Nullable<CompareInputDate>;
+    byStatus?: Nullable<CompareInputString>;
 }
 
 export class ArticleInputType {
-  title: string;
-  shortDescription: string;
-  content: string;
-  tags: string[];
+    title: string;
+    shortDescription: string;
+    content: string;
+    tags: string[];
 }
 
 export class CodeConfigInput {
-  code: string;
-  language: ProgrammingLanguage;
+    code: string;
+    language: ProgrammingLanguage;
 }
 
 export class CodeChallengeSetInput {
-  title: string;
-  description: string;
-  lessonId: string;
-  input: string;
-  output: string;
-  hints: Nullable<string>[];
-  score: number;
-  languageSupport: Nullable<string>[];
+    title: string;
+    description: string;
+    lessonId: string;
+    input: string;
+    output: string;
+    hints: Nullable<string>[];
+    score: number;
+    languageSupport: Nullable<string>[];
 }
 
 export class TestCaseSetInput {
-  title: string;
-  runningTestScript: string;
-  expectResult?: Nullable<string>;
-  codeChallengeId: string;
-  generatedExpectResultScript?: Nullable<string>;
-  programingLanguage: ProgrammingLanguage;
-  timeEvaluation?: Nullable<number>;
+    title: string;
+    runningTestScript: string;
+    expectResult?: Nullable<string>;
+    codeChallengeId: string;
+    generatedExpectResultScript?: Nullable<string>;
+    programingLanguage: ProgrammingLanguage;
+    timeEvaluation?: Nullable<number>;
 }
 
 export class EvaluationCommentInput {
-  id?: Nullable<string>;
-  content: string;
+    id?: Nullable<string>;
+    content: string;
 }
 
 export class FileAssignmentSetInput {
-  title: string;
-  description?: Nullable<string>;
-  maxScore: number;
-  estimateTimeInMinute: number;
-  contentInstruct?: Nullable<string>;
-  videoInstruct?: Nullable<string>;
-  explainContent?: Nullable<string>;
-  explainVideo?: Nullable<string>;
-  lessonId: string;
+    title: string;
+    description?: Nullable<string>;
+    maxScore: number;
+    estimateTimeInMinute: number;
+    contentInstruct?: Nullable<string>;
+    videoInstruct?: Nullable<string>;
+    explainContent?: Nullable<string>;
+    explainVideo?: Nullable<string>;
+    lessonId: string;
 }
 
 export class SubmitInput {
-  title: string;
-  description?: Nullable<string>;
-  file?: Nullable<Upload>;
-  groupAssignmentId?: Nullable<string>;
-  courseId: string;
+    title: string;
+    description?: Nullable<string>;
+    file?: Nullable<Upload>;
+    groupAssignmentId?: Nullable<string>;
+    courseId: string;
 }
 
 export class EvaluationInput {
-  reApply?: Nullable<boolean>;
-  comment?: Nullable<EvaluationCommentInput>;
-  scoreInput?: Nullable<UpdateScore>;
-  order: number;
+    reApply?: Nullable<boolean>;
+    comment?: Nullable<EvaluationCommentInput>;
+    scoreInput?: Nullable<UpdateScore>;
+    order: number;
 }
 
 export class QuestionSetInput {
-  id?: Nullable<string>;
-  title: string;
-  options: string[];
-  isMultiple: boolean;
-  result?: Nullable<number>;
-  results?: Nullable<number[]>;
+    id?: Nullable<string>;
+    title: string;
+    options: string[];
+    order: number;
+    isMultiple: boolean;
+    result?: Nullable<number>;
+    results?: Nullable<number[]>;
 }
 
 export class QuizSetInput {
-  title: string;
-  lessonId: string;
-  description: string;
-  questions: QuestionSetInput[];
-  score: number;
-  timeByMinute: number;
+    title: string;
+    lessonId: string;
+    description: string;
+    questions: QuestionSetInput[];
+    score: number;
+    timeByMinute: number;
 }
 
 export class SignUpInput {
-  email: string;
-  name: string;
-  password: string;
+    email: string;
+    name: string;
+    password: string;
 }
 
 export class SignInInput {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 }
 
 export class ClientUserSignupInput {
-  name: string;
-  email: string;
-  password: string;
+    name: string;
+    email: string;
+    password: string;
 }
 
 export class ClientUserSigninInput {
-  email: string;
-  password: string;
+    email: string;
+    password: string;
 }
 
 export class UpdateScore {
-  score: number;
-  isAdd: boolean;
+    score: number;
+    isAdd: boolean;
 }
 
 export class UpdateJoinedCourse {
-  idCourse: string;
-  action: ActionCourse;
+    idCourse: string;
+    action: ActionCourse;
 }
 
 export class UpdateFollow {
-  idFollow: string;
-  action: ActionFollow;
+    idFollow: string;
+    action: ActionFollow;
 }
 
 export class ClientUserUpdateInput {
-  name?: Nullable<string>;
-  githubUrl?: Nullable<string>;
-  dayOfBirth?: Nullable<ScalarDate>;
-  homeTown?: Nullable<string>;
-  bio?: Nullable<string>;
-  phone?: Nullable<string>;
+    name?: Nullable<string>;
+    githubUrl?: Nullable<string>;
+    dayOfBirth?: Nullable<ScalarDate>;
+    homeTown?: Nullable<string>;
+    bio?: Nullable<string>;
+    phone?: Nullable<string>;
 }
 
 export class CommentDataInput {
-  id?: Nullable<string>;
-  title: string;
-  content: string;
+    id?: Nullable<string>;
+    title: string;
+    content: string;
 }
 
 export class OrderType {
-  orderBy: string;
-  direction: OrderDirection;
+    orderBy: string;
+    direction: OrderDirection;
 }
 
 export class PaginationInput {
-  order?: Nullable<OrderType>;
-  skip?: Nullable<number>;
-  limit?: Nullable<number>;
+    order?: Nullable<OrderType>;
+    skip?: Nullable<number>;
+    limit?: Nullable<number>;
 }
 
 export class SearchOptionInput {
-  searchString: string;
-  searchFields: string[];
+    searchString: string;
+    searchFields: string[];
 }
 
 export class CompareInputDate {
-  lt?: Nullable<ScalarDate>;
-  gt?: Nullable<ScalarDate>;
-  eq?: Nullable<ScalarDate>;
-  ne?: Nullable<ScalarDate>;
+    lt?: Nullable<ScalarDate>;
+    gt?: Nullable<ScalarDate>;
+    eq?: Nullable<ScalarDate>;
+    ne?: Nullable<ScalarDate>;
 }
 
 export class CompareInputString {
-  ct?: Nullable<string>;
-  eq?: Nullable<string>;
-  nc?: Nullable<string>;
-  ne?: Nullable<string>;
+    ct?: Nullable<string>;
+    eq?: Nullable<string>;
+    nc?: Nullable<string>;
+    ne?: Nullable<string>;
 }
 
 export class CourseSetInput {
-  title: string;
-  description: string;
-  instructorId: string;
-  benefits: string[];
-  requirements: string[];
-  image?: Nullable<Upload>;
-  tags: string[];
-  levels: Nullable<string>[];
+    title: string;
+    description: string;
+    instructorId: string;
+    benefits: string[];
+    requirements: string[];
+    image?: Nullable<Upload>;
+    tags: string[];
+    levels: Nullable<string>[];
 }
 
 export class LessonSetInput {
-  title: string;
-  videoUrl: string;
-  courseId: string;
-  content: string;
-  documents?: Nullable<Nullable<Upload>[]>;
+    title: string;
+    videoUrl: string;
+    courseId: string;
+    content: string;
+    documents?: Nullable<Nullable<Upload>[]>;
 }
 
 export class AddDocumentInput {
-  file: Upload;
+    file: Upload;
 }
 
 export class InstructorSetInput {
-  name: string;
-  title: string;
-  description: string;
-  email: string;
-  ClientUserId?: Nullable<string>;
-  image?: Nullable<Upload>;
-  phone: string;
+    name: string;
+    title: string;
+    description: string;
+    email: string;
+    ClientUserId?: Nullable<string>;
+    image?: Nullable<Upload>;
+    phone: string;
 }
 
 export class NotificationInput {
-  title: string;
-  content: string;
-  recipientByRoles?: Nullable<Nullable<string>[]>;
-  recipientByAdminIds?: Nullable<Nullable<string>[]>;
+    title: string;
+    content: string;
+    recipientByRoles?: Nullable<Nullable<string>[]>;
+    recipientByAdminIds?: Nullable<Nullable<string>[]>;
 }
 
 export class PermissionSetInput {
-  roleName: string;
-  course: string;
-  permission: string;
-  user: string;
-  blog: string;
-  notification: string;
-  instructor: string;
+    roleName: string;
+    course: string;
+    permission: string;
+    user: string;
+    blog: string;
+    notification: string;
+    instructor: string;
 }
 
 export interface BaseGraphQL {
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
 }
 
 export abstract class IQuery {
-  __typename?: 'IQuery';
+    __typename?: 'IQuery';
 
-  abstract heartBeat(): string | Promise<string>;
+    abstract heartBeat(): string | Promise<string>;
 
-  abstract heartBeatWithAuth(): string | Promise<string>;
+    abstract heartBeatWithAuth(): string | Promise<string>;
 
-  abstract adminUserQuery():
-    | Nullable<AdminUserQuery>
-    | Promise<Nullable<AdminUserQuery>>;
+    abstract adminUserQuery(): Nullable<AdminUserQuery> | Promise<Nullable<AdminUserQuery>>;
 
-  abstract articleQuery(): ArticleQuery | Promise<ArticleQuery>;
+    abstract articleQuery(): ArticleQuery | Promise<ArticleQuery>;
 
-  abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
+    abstract testCaseQuery(): TestCaseQuery | Promise<TestCaseQuery>;
 
-  abstract clientUserQuery():
-    | Nullable<ClientUserQuery>
-    | Promise<Nullable<ClientUserQuery>>;
+    abstract clientUserQuery(): Nullable<ClientUserQuery> | Promise<Nullable<ClientUserQuery>>;
 
-  abstract courseQuery():
-    | Nullable<CourseQuery>
-    | Promise<Nullable<CourseQuery>>;
+    abstract courseQuery(): Nullable<CourseQuery> | Promise<Nullable<CourseQuery>>;
 
-  abstract lessonQuery():
-    | Nullable<LessonQuery>
-    | Promise<Nullable<LessonQuery>>;
+    abstract lessonQuery(): Nullable<LessonQuery> | Promise<Nullable<LessonQuery>>;
 
-  abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
+    abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
 
-  abstract notificationQuery(): NotificationQuery | Promise<NotificationQuery>;
+    abstract notificationQuery(): NotificationQuery | Promise<NotificationQuery>;
 
-  abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
+    abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
 }
 
 export abstract class ISubscription {
-  __typename?: 'ISubscription';
+    __typename?: 'ISubscription';
 
-  abstract beatCount(divideNumber: number): number | Promise<number>;
+    abstract beatCount(divideNumber: number): number | Promise<number>;
 
-  abstract notificationCreated(
-    adminUserId: string,
-  ): NotificationType | Promise<NotificationType>;
+    abstract notificationCreated(adminUserId: string): NotificationType | Promise<NotificationType>;
 }
 
 export abstract class IMutation {
-  __typename?: 'IMutation';
+    __typename?: 'IMutation';
 
-  abstract adminUserMutation():
-    | Nullable<AdminUserMutation>
-    | Promise<Nullable<AdminUserMutation>>;
+    abstract adminUserMutation(): Nullable<AdminUserMutation> | Promise<Nullable<AdminUserMutation>>;
 
-  abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
+    abstract articleMutation(): ArticleMutation | Promise<ArticleMutation>;
 
-  abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
+    abstract testCaseMutation(): TestCaseMutation | Promise<TestCaseMutation>;
 
-  abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
+    abstract adminAuthMutation(): AdminAuthMutation | Promise<AdminAuthMutation>;
 
-  abstract clientUserAuthMutation():
-    | ClientUserAuthMutation
-    | Promise<ClientUserAuthMutation>;
+    abstract clientUserAuthMutation(): ClientUserAuthMutation | Promise<ClientUserAuthMutation>;
 
-  abstract clientUserMutation():
-    | ClientUserMutation
-    | Promise<ClientUserMutation>;
+    abstract clientUserMutation(): ClientUserMutation | Promise<ClientUserMutation>;
 
-  abstract userCommentMutation():
-    | UserCommentMutation
-    | Promise<UserCommentMutation>;
+    abstract userCommentMutation(): UserCommentMutation | Promise<UserCommentMutation>;
 
-  abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
+    abstract courseMutation(): CourseMutation | Promise<CourseMutation>;
 
-  abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
+    abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
 
-  abstract documentMutation():
-    | Nullable<DocumentMutation>
-    | Promise<Nullable<DocumentMutation>>;
+    abstract documentMutation(): Nullable<DocumentMutation> | Promise<Nullable<DocumentMutation>>;
 
-  abstract instructorMutation():
-    | InstructorMutation
-    | Promise<InstructorMutation>;
+    abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
-  abstract notificationMutation():
-    | NotificationMutation
-    | Promise<NotificationMutation>;
+    abstract notificationMutation(): NotificationMutation | Promise<NotificationMutation>;
 
-  abstract permissionMutation():
-    | Nullable<PermissionMutation>
-    | Promise<Nullable<PermissionMutation>>;
+    abstract permissionMutation(): Nullable<PermissionMutation> | Promise<Nullable<PermissionMutation>>;
 }
 
 export class AdminUserQuery {
-  __typename?: 'AdminUserQuery';
-  adminUsers: Nullable<AdminUser>[];
-  adminUser: AdminUser;
-  totalAdminUsers: number;
+    __typename?: 'AdminUserQuery';
+    adminUsers: Nullable<AdminUser>[];
+    adminUser: AdminUser;
+    totalAdminUsers: number;
 }
 
 export class AdminUserMutation {
-  __typename?: 'AdminUserMutation';
-  setAdminUser: AdminUser;
-  deleteAdminUser?: Nullable<boolean>;
+    __typename?: 'AdminUserMutation';
+    setAdminUser: AdminUser;
+    deleteAdminUser?: Nullable<boolean>;
 }
 
 export class AdminUser {
-  __typename?: 'AdminUser';
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-  createdBy?: Nullable<AdminUser>;
-  evaluationComments?: Nullable<EvaluationCommentType>;
+    __typename?: 'AdminUser';
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    createdBy?: Nullable<AdminUser>;
+    evaluationComments?: Nullable<EvaluationCommentType>;
 }
 
 export class ArticleQuery {
-  __typename?: 'ArticleQuery';
-  articles: Nullable<ArticleType>[];
-  filteredArticles: Nullable<ArticleType>[];
-  articleDetail?: Nullable<ArticleType>;
-  tags: Nullable<ArticleTagType>[];
+    __typename?: 'ArticleQuery';
+    articles: Nullable<ArticleType>[];
+    filteredArticles: Nullable<ArticleType>[];
+    articleDetail?: Nullable<ArticleType>;
+    tags: Nullable<ArticleTagType>[];
 }
 
 export class ArticleMutation {
-  __typename?: 'ArticleMutation';
-  setArticle: ArticleType;
-  deleteArticle: boolean;
-  reviewArticle: ArticleType;
+    __typename?: 'ArticleMutation';
+    setArticle: ArticleType;
+    deleteArticle: boolean;
+    reviewArticle: ArticleType;
 }
 
 export class ArticleType implements BaseGraphQL {
-  __typename?: 'ArticleType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  shortDescription?: Nullable<string>;
-  content?: Nullable<string>;
-  votes: number;
-  status: ArticleStatus;
-  createdBy?: Nullable<ClientUserType>;
-  views: number;
-  shares: number;
-  tags?: Nullable<Nullable<ArticleTagType>[]>;
-  reviewComment?: Nullable<string>;
-  comments: Nullable<UserCommentType>[];
+    __typename?: 'ArticleType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    shortDescription?: Nullable<string>;
+    content?: Nullable<string>;
+    votes: number;
+    status: ArticleStatus;
+    createdBy?: Nullable<ClientUserType>;
+    views: number;
+    shares: number;
+    tags?: Nullable<Nullable<ArticleTagType>[]>;
+    reviewComment?: Nullable<string>;
+    comments: Nullable<UserCommentType>[];
 }
 
 export class ArticleTagType implements BaseGraphQL {
-  __typename?: 'ArticleTagType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  articles?: Nullable<Nullable<ArticleType>[]>;
+    __typename?: 'ArticleTagType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    articles?: Nullable<Nullable<ArticleType>[]>;
 }
 
 export class AssignmentType {
-  __typename?: 'AssignmentType';
-  id: string;
-  lesson: LessonType;
-  codeChallenges: Nullable<CodeChallengeType>[];
-  quizs: Nullable<QuizType>[];
-  fileAssignments: Nullable<FileAssignmentType>[];
-  comments: Nullable<UserCommentType>[];
+    __typename?: 'AssignmentType';
+    id: string;
+    lesson: LessonType;
+    codeChallenges: Nullable<CodeChallengeType>[];
+    quizs: Nullable<QuizType>[];
+    fileAssignments: Nullable<FileAssignmentType>[];
+    comments: Nullable<UserCommentType>[];
 }
 
 export class SummaryEvaluationResult {
-  __typename?: 'SummaryEvaluationResult';
-  summaryEvaluation: boolean;
-  testCaseEvaluations: Nullable<EvaluationResult>[];
+    __typename?: 'SummaryEvaluationResult';
+    summaryEvaluation: boolean;
+    testCaseEvaluations: Nullable<EvaluationResult>[];
 }
 
 export class EvaluationResult {
-  __typename?: 'EvaluationResult';
-  testResult: boolean;
-  testCaseId: string;
-  title: string;
-  executeTime?: Nullable<number>;
-  message?: Nullable<Nullable<string>[]>;
+    __typename?: 'EvaluationResult';
+    testResult: boolean;
+    testCaseId: string;
+    title: string;
+    executeTime?: Nullable<number>;
+    message?: Nullable<Nullable<string>[]>;
 }
 
 export class CodeRunResultType {
-  __typename?: 'CodeRunResultType';
-  executeTime?: Nullable<number>;
-  result?: Nullable<Nullable<string>[]>;
-  status?: Nullable<string>;
+    __typename?: 'CodeRunResultType';
+    executeTime?: Nullable<number>;
+    result?: Nullable<Nullable<string>[]>;
+    status?: Nullable<string>;
 }
 
 export class CodeChallengeType implements BaseGraphQL {
-  __typename?: 'CodeChallengeType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  assignment: AssignmentType;
-  description: string;
-  input: string;
-  output: string;
-  hints: Nullable<string>[];
-  score: number;
-  languageSupport: Nullable<string>[];
-  testCases: TestCaseType[];
+    __typename?: 'CodeChallengeType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    assignment: AssignmentType;
+    description: string;
+    input: string;
+    output: string;
+    hints: Nullable<string>[];
+    score: number;
+    languageSupport: Nullable<string>[];
+    testCases: TestCaseType[];
 }
 
 export class TestCaseType implements BaseGraphQL {
-  __typename?: 'TestCaseType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  runningTestScript: string;
-  generatedExpectResultScript?: Nullable<string>;
-  expectResult?: Nullable<string>;
-  codeChallenge: CodeChallengeType;
-  programingLanguage: string;
-  timeEvaluation?: Nullable<number>;
+    __typename?: 'TestCaseType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    runningTestScript: string;
+    generatedExpectResultScript?: Nullable<string>;
+    expectResult?: Nullable<string>;
+    codeChallenge: CodeChallengeType;
+    programingLanguage: string;
+    timeEvaluation?: Nullable<number>;
 }
 
 export class TestCaseMutation {
-  __typename?: 'TestCaseMutation';
-  setTestCase: TestCaseType;
-  deleteTestCase?: Nullable<boolean>;
+    __typename?: 'TestCaseMutation';
+    setTestCase: TestCaseType;
+    deleteTestCase?: Nullable<boolean>;
 }
 
 export class TestCaseQuery {
-  __typename?: 'TestCaseQuery';
-  testCase: TestCaseType;
+    __typename?: 'TestCaseQuery';
+    testCase: TestCaseType;
 }
 
 export class EvaluationCommentType {
-  __typename?: 'EvaluationCommentType';
-  id: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  content: string;
-  createdBy: AdminUser;
+    __typename?: 'EvaluationCommentType';
+    id: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    content: string;
+    createdBy: AdminUser;
 }
 
 export class FileAssignmentType implements BaseGraphQL {
-  __typename?: 'FileAssignmentType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  description?: Nullable<string>;
-  maxScore: number;
-  estimateTimeInMinute: number;
-  contentInstruct?: Nullable<string>;
-  videoInstruct?: Nullable<string>;
-  explainContent?: Nullable<string>;
-  explainVideo?: Nullable<string>;
-  assignment: AssignmentType;
-  submittedGroupAssignments?: Nullable<Nullable<GroupAssignmentType>[]>;
+    __typename?: 'FileAssignmentType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    description?: Nullable<string>;
+    maxScore: number;
+    estimateTimeInMinute: number;
+    contentInstruct?: Nullable<string>;
+    videoInstruct?: Nullable<string>;
+    explainContent?: Nullable<string>;
+    explainVideo?: Nullable<string>;
+    assignment: AssignmentType;
+    submittedGroupAssignments?: Nullable<Nullable<GroupAssignmentType>[]>;
 }
 
 export class GroupAssignmentType {
-  __typename?: 'GroupAssignmentType';
-  id: string;
-  title: string;
-  user: ClientUserType;
-  previousScore?: Nullable<number>;
-  submitteds: SubmittedAssignmentType[];
-  isUpdated: boolean;
-  fileAssignment: FileAssignmentType;
+    __typename?: 'GroupAssignmentType';
+    id: string;
+    title: string;
+    user: ClientUserType;
+    previousScore?: Nullable<number>;
+    submitteds: SubmittedAssignmentType[];
+    isUpdated: boolean;
+    fileAssignment: FileAssignmentType;
 }
 
 export class SubmittedAssignmentType implements BaseGraphQL {
-  __typename?: 'SubmittedAssignmentType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  description?: Nullable<string>;
-  order: number;
-  reApply?: Nullable<boolean>;
-  fileUrl: string;
-  comments?: Nullable<Nullable<EvaluationCommentType>[]>;
-  user: ClientUserType;
-  hasSeen: boolean;
+    __typename?: 'SubmittedAssignmentType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    description?: Nullable<string>;
+    order: number;
+    reApply?: Nullable<boolean>;
+    fileUrl: string;
+    comments?: Nullable<Nullable<EvaluationCommentType>[]>;
+    user: ClientUserType;
+    hasSeen: boolean;
 }
 
 export class QuestionType implements BaseGraphQL {
-  __typename?: 'QuestionType';
-  id: string;
-  order: number;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  quiz: QuizType;
-  options: string[];
-  isMultiple: boolean;
-  result?: Nullable<number>;
-  results?: Nullable<number[]>;
+    __typename?: 'QuestionType';
+    id: string;
+    order: number;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    quiz: QuizType;
+    options: string[];
+    isMultiple: boolean;
+    result?: Nullable<number>;
+    results?: Nullable<number[]>;
 }
 
 export class QuizType implements BaseGraphQL {
-  __typename?: 'QuizType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  assignment: AssignmentType;
-  description: string;
-  questions: QuestionType[];
-  score: number;
-  timeByMinute: number;
+    __typename?: 'QuizType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    assignment: AssignmentType;
+    description: string;
+    questions: QuestionType[];
+    score: number;
+    timeByMinute: number;
 }
 
 export class AdminAuthMutation {
-  __typename?: 'AdminAuthMutation';
-  signUp: AuthPayload;
-  signIn: AuthPayload;
+    __typename?: 'AdminAuthMutation';
+    signUp: AuthPayload;
+    signIn: AuthPayload;
 }
 
 export class AuthPayload {
-  __typename?: 'AuthPayload';
-  token: string;
-  userName: string;
-  role: string;
+    __typename?: 'AuthPayload';
+    token: string;
+    userName: string;
+    role: string;
 }
 
 export class ClientUserAuthMutation {
-  __typename?: 'ClientUserAuthMutation';
-  signUp: ClientUserAuthResponse;
-  signIn: ClientUserAuthResponse;
-  activateAccount: boolean;
-  sendRestorePassword: boolean;
-  resetPassword: boolean;
+    __typename?: 'ClientUserAuthMutation';
+    signUp: ClientUserAuthResponse;
+    signIn: ClientUserAuthResponse;
+    activateAccount: boolean;
+    sendRestorePassword: boolean;
+    resetPassword: boolean;
 }
 
 export class ClientUserAuthResponse {
-  __typename?: 'ClientUserAuthResponse';
-  id: string;
-  email: string;
-  token?: Nullable<string>;
+    __typename?: 'ClientUserAuthResponse';
+    id: string;
+    email: string;
+    token?: Nullable<string>;
 }
 
 export class ClientUserMutation {
-  __typename?: 'ClientUserMutation';
-  updateClientUser: ClientUserType;
-  updateClientUserAvatar: ClientUserType;
-  updateScore: boolean;
-  updateJoinedCourse: boolean;
-  updateFollow: boolean;
-  updateCompletedCourses: boolean;
+    __typename?: 'ClientUserMutation';
+    updateClientUser: ClientUserType;
+    updateClientUserAvatar: ClientUserType;
+    updateScore: boolean;
+    updateJoinedCourse: boolean;
+    updateFollow: boolean;
+    updateCompletedCourses: boolean;
 }
 
 export class ClientUserQuery {
-  __typename?: 'ClientUserQuery';
-  userDetail: ClientUserType;
+    __typename?: 'ClientUserQuery';
+    userDetail: ClientUserType;
 }
 
 export class ClientUserType {
-  __typename?: 'ClientUserType';
-  id: string;
-  email?: Nullable<string>;
-  password?: Nullable<string>;
-  githubUrl?: Nullable<string>;
-  dayOfBirth?: Nullable<ScalarDate>;
-  homeTown?: Nullable<string>;
-  bio?: Nullable<string>;
-  phone?: Nullable<string>;
-  imageUrl?: Nullable<string>;
-  filePath?: Nullable<string>;
-  instructor?: Nullable<InstructorType>;
-  achievement: AchievementType;
-  name: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  comments: Nullable<UserCommentType>[];
+    __typename?: 'ClientUserType';
+    id: string;
+    email?: Nullable<string>;
+    password?: Nullable<string>;
+    githubUrl?: Nullable<string>;
+    dayOfBirth?: Nullable<ScalarDate>;
+    homeTown?: Nullable<string>;
+    bio?: Nullable<string>;
+    phone?: Nullable<string>;
+    imageUrl?: Nullable<string>;
+    filePath?: Nullable<string>;
+    instructor?: Nullable<InstructorType>;
+    achievement: AchievementType;
+    name: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    comments: Nullable<UserCommentType>[];
 }
 
 export class AchievementType {
-  __typename?: 'AchievementType';
-  id: string;
-  rank?: Nullable<number>;
-  score?: Nullable<number>;
-  joinedCourse: Nullable<CourseType>[];
-  follow: Nullable<ClientUserType>[];
-  followedBy: Nullable<ClientUserType>[];
-  completedCourses: Nullable<CourseType>[];
+    __typename?: 'AchievementType';
+    id: string;
+    rank?: Nullable<number>;
+    score?: Nullable<number>;
+    joinedCourse: Nullable<CourseType>[];
+    follow: Nullable<ClientUserType>[];
+    followedBy: Nullable<ClientUserType>[];
+    completedCourses: Nullable<CourseType>[];
 }
 
 export class UserCommentMutation {
-  __typename?: 'UserCommentMutation';
-  setCommentToCourse: UserCommentType;
-  setCommentToLesson: UserCommentType;
-  setCommentToAssignment: UserCommentType;
-  setCommentToArticle: UserCommentType;
-  setReplyComment: UserCommentType;
-  deleteComment: boolean;
+    __typename?: 'UserCommentMutation';
+    setCommentToCourse: UserCommentType;
+    setCommentToLesson: UserCommentType;
+    setCommentToAssignment: UserCommentType;
+    setCommentToArticle: UserCommentType;
+    setReplyComment: UserCommentType;
+    deleteComment: boolean;
 }
 
 export class UserCommentType implements BaseGraphQL {
-  __typename?: 'UserCommentType';
-  id: string;
-  title: string;
-  content: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  createdBy: ClientUserType;
-  replyComments: Nullable<UserCommentType>[];
-  course?: Nullable<CourseType>;
-  lesson?: Nullable<LessonType>;
-  assignment?: Nullable<AssignmentType>;
-  article?: Nullable<ArticleType>;
-  submitted?: Nullable<SubmittedAssignmentType>;
+    __typename?: 'UserCommentType';
+    id: string;
+    title: string;
+    content: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    createdBy: ClientUserType;
+    replyComments: Nullable<UserCommentType>[];
+    course?: Nullable<CourseType>;
+    lesson?: Nullable<LessonType>;
+    assignment?: Nullable<AssignmentType>;
+    article?: Nullable<ArticleType>;
+    submitted?: Nullable<SubmittedAssignmentType>;
 }
 
 export class File {
-  __typename?: 'File';
-  filename: string;
-  mimetype: string;
-  encoding: string;
+    __typename?: 'File';
+    filename: string;
+    mimetype: string;
+    encoding: string;
 }
 
 export class CourseQuery {
-  __typename?: 'CourseQuery';
-  courses: Nullable<CourseType>[];
-  course: CourseType;
-  totalCourses: number;
+    __typename?: 'CourseQuery';
+    courses: Nullable<CourseType>[];
+    course: CourseType;
+    totalCourses: number;
 }
 
 export class CourseMutation {
-  __typename?: 'CourseMutation';
-  setCourse: CourseType;
-  deleteCourse: boolean;
+    __typename?: 'CourseMutation';
+    setCourse: CourseType;
+    deleteCourse: boolean;
 }
 
 export class CourseType implements BaseGraphQL {
-  __typename?: 'CourseType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  description: string;
-  instructor: InstructorType;
-  benefits: string[];
-  requirements: string[];
-  imageUrl?: Nullable<string>;
-  tags: TagType[];
-  lessons: Nullable<LessonType>[];
-  createdBy?: Nullable<AdminUser>;
-  levels: Nullable<string>[];
-  joinedUsers: Nullable<ClientUserType>[];
-  completedUser: Nullable<ClientUserType>[];
-  comments: Nullable<UserCommentType>[];
+    __typename?: 'CourseType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    description: string;
+    instructor: InstructorType;
+    benefits: string[];
+    requirements: string[];
+    imageUrl?: Nullable<string>;
+    tags: TagType[];
+    lessons: Nullable<LessonType>[];
+    createdBy?: Nullable<AdminUser>;
+    levels: Nullable<string>[];
+    joinedUsers: Nullable<ClientUserType>[];
+    completedUser: Nullable<ClientUserType>[];
+    comments: Nullable<UserCommentType>[];
 }
 
 export class LessonType implements BaseGraphQL {
-  __typename?: 'LessonType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  videoUrl: string;
-  votes: number;
-  course: CourseType;
-  content: string;
-  documents: Nullable<DocumentType>[];
-  assignment?: Nullable<AssignmentType>;
-  comments: Nullable<UserCommentType>[];
+    __typename?: 'LessonType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    videoUrl: string;
+    votes: number;
+    course: CourseType;
+    content: string;
+    documents: Nullable<DocumentType>[];
+    assignment?: Nullable<AssignmentType>;
+    comments: Nullable<UserCommentType>[];
 }
 
 export class LessonMutation {
-  __typename?: 'LessonMutation';
-  setLesson: LessonType;
-  deleteLesson: boolean;
-  setCodeChallenge: CodeChallengeType;
-  deleteCodeChallenge: boolean;
-  runCode: CodeRunResultType;
-  runTestCase: SummaryEvaluationResult;
-  setQuiz: QuizType;
-  deleteQuiz: boolean;
-  setFileAssignment: FileAssignmentType;
-  deleteFileAssignment: boolean;
-  submitAssignment: GroupAssignmentType;
-  evaluationAssignment: GroupAssignmentType;
-  viewSubmittedAssignment: boolean;
+    __typename?: 'LessonMutation';
+    setLesson: LessonType;
+    deleteLesson: boolean;
+    setCodeChallenge: CodeChallengeType;
+    deleteCodeChallenge: boolean;
+    runCode: CodeRunResultType;
+    runTestCase: SummaryEvaluationResult;
+    setQuiz: QuizType;
+    deleteQuiz: boolean;
+    setFileAssignment: FileAssignmentType;
+    deleteFileAssignment: boolean;
+    submitAssignment: GroupAssignmentType;
+    evaluationAssignment: GroupAssignmentType;
+    viewSubmittedAssignment: boolean;
 }
 
 export class LessonQuery {
-  __typename?: 'LessonQuery';
-  lesson: LessonType;
-  lessonsWithCourseId: Nullable<LessonType>[];
-  totalLessons: number;
-  getTypeOfAssignment: TypeAssign;
-  codeChallenge: CodeChallengeType;
-  quiz: QuizType;
-  fileAssignment: FileAssignmentType;
+    __typename?: 'LessonQuery';
+    lesson: LessonType;
+    lessonsWithCourseId: Nullable<LessonType>[];
+    totalLessons: number;
+    getTypeOfAssignment: TypeAssign;
+    codeChallenge: CodeChallengeType;
+    quiz: QuizType;
+    fileAssignment: FileAssignmentType;
 }
 
 export class DocumentType implements BaseGraphQL {
-  __typename?: 'DocumentType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  url: string;
-  lesson: LessonType;
+    __typename?: 'DocumentType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    url: string;
+    lesson: LessonType;
 }
 
 export class DocumentMutation {
-  __typename?: 'DocumentMutation';
-  addDocumentToLesson: DocumentType;
-  removeDocumentFromLesson: boolean;
+    __typename?: 'DocumentMutation';
+    addDocumentToLesson: DocumentType;
+    removeDocumentFromLesson: boolean;
 }
 
 export class InstructorQuery {
-  __typename?: 'InstructorQuery';
-  instructors: InstructorType[];
-  instructor: InstructorType;
-  totalInstructors: number;
+    __typename?: 'InstructorQuery';
+    instructors: InstructorType[];
+    instructor: InstructorType;
+    totalInstructors: number;
 }
 
 export class InstructorMutation {
-  __typename?: 'InstructorMutation';
-  setInstructor: InstructorType;
-  deleteInstructor?: Nullable<boolean>;
+    __typename?: 'InstructorMutation';
+    setInstructor: InstructorType;
+    deleteInstructor?: Nullable<boolean>;
 }
 
 export class InstructorType implements BaseGraphQL {
-  __typename?: 'InstructorType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  name: string;
-  description: string;
-  email: string;
-  clientUser?: Nullable<ClientUserType>;
-  imageUrl: string;
-  phone: string;
-  courses: Nullable<CourseType>[];
-  createdBy?: Nullable<AdminUser>;
+    __typename?: 'InstructorType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    name: string;
+    description: string;
+    email: string;
+    clientUser?: Nullable<ClientUserType>;
+    imageUrl: string;
+    phone: string;
+    courses: Nullable<CourseType>[];
+    createdBy?: Nullable<AdminUser>;
 }
 
 export class NotificationMutation {
-  __typename?: 'NotificationMutation';
-  createNotification?: Nullable<NotificationType>;
-  deleteByOwner: boolean;
-  deleteByRecipient: boolean;
+    __typename?: 'NotificationMutation';
+    createNotification?: Nullable<NotificationType>;
+    deleteByOwner: boolean;
+    deleteByRecipient: boolean;
 }
 
 export class NotificationQuery {
-  __typename?: 'NotificationQuery';
-  notificationsReceived: Nullable<NotificationType>[];
-  notificationsSent: Nullable<NotificationType>[];
-  notification: NotificationType;
-  totalNotificationReceived: number;
-  totalNotificationSent: number;
+    __typename?: 'NotificationQuery';
+    notificationsReceived: Nullable<NotificationType>[];
+    notificationsSent: Nullable<NotificationType>[];
+    notification: NotificationType;
+    totalNotificationReceived: number;
+    totalNotificationSent: number;
 }
 
 export class NotificationType implements BaseGraphQL {
-  __typename?: 'NotificationType';
-  id: string;
-  title: string;
-  content: string;
-  createdAt: ScalarDate;
-  createdBy?: Nullable<AdminUser>;
-  updatedAt: ScalarDate;
-  recipientByAdmins?: Nullable<Nullable<AdminUser>[]>;
+    __typename?: 'NotificationType';
+    id: string;
+    title: string;
+    content: string;
+    createdAt: ScalarDate;
+    createdBy?: Nullable<AdminUser>;
+    updatedAt: ScalarDate;
+    recipientByAdmins?: Nullable<Nullable<AdminUser>[]>;
 }
 
 export class PermissionMutation {
-  __typename?: 'PermissionMutation';
-  setPermission: Permission;
-  deletePermission: boolean;
+    __typename?: 'PermissionMutation';
+    setPermission: Permission;
+    deletePermission: boolean;
 }
 
 export class PermissionQuery {
-  __typename?: 'PermissionQuery';
-  permissions?: Nullable<Nullable<Permission>[]>;
-  permissionWithId?: Nullable<Permission>;
-  permissionWithRole?: Nullable<Permission>;
-  totalPermissions: number;
+    __typename?: 'PermissionQuery';
+    permissions?: Nullable<Nullable<Permission>[]>;
+    permissionWithId?: Nullable<Permission>;
+    permissionWithRole?: Nullable<Permission>;
+    totalPermissions: number;
 }
 
 export class Permission {
-  __typename?: 'Permission';
-  roleName: string;
-  id: string;
-  course: string;
-  permission: string;
-  user: string;
-  blog: string;
-  notification: string;
-  instructor: string;
-  createdBy?: Nullable<AdminUser>;
+    __typename?: 'Permission';
+    roleName: string;
+    id: string;
+    course: string;
+    permission: string;
+    user: string;
+    blog: string;
+    notification: string;
+    instructor: string;
+    createdBy?: Nullable<AdminUser>;
 }
 
 export class TagType implements BaseGraphQL {
-  __typename?: 'TagType';
-  id: string;
-  title: string;
-  createdAt: ScalarDate;
-  updatedAt: ScalarDate;
-  courses: Nullable<CourseType>[];
+    __typename?: 'TagType';
+    id: string;
+    title: string;
+    createdAt: ScalarDate;
+    updatedAt: ScalarDate;
+    courses: Nullable<CourseType>[];
 }
 
 export type Upload = any;

@@ -81,6 +81,7 @@ export class UserCommentMutationResolver {
     const token = this.commentService.getTokenFromHttpHeader(req.headers);
 
     await this.commentService.deleteComment(commentId, token);
+
     return true;
   }
 

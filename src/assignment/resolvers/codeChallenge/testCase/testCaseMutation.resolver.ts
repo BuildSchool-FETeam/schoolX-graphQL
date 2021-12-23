@@ -19,6 +19,7 @@ export class TestCaseMutationResolver {
     if (!id) {
       return this.tcService.createTestCase(data);
     }
+
     return this.tcService.updateTestCase(id, data);
   }
 

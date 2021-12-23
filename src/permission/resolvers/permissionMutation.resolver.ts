@@ -63,6 +63,7 @@ export class PermissionMutationResolver {
     @Context() { req }: DynamicObject,
   ) {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers);
+
     return this.permissionService.deletePermission(id, token);
   }
 

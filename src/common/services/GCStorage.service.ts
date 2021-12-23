@@ -90,6 +90,7 @@ export class GCStorageService {
 
     try {
       await cloudFile.delete();
+
       return true;
     } catch (err) {
       console.log(err);
@@ -106,6 +107,7 @@ export class GCStorageService {
         (err, files) => {
           if (err) {
             reject(err);
+
             return;
           }
 

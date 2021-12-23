@@ -25,6 +25,7 @@ export class NotificationTypeResolver {
       );
 
       const adminUsers = await Promise.all(adminPromises);
+
       return adminUsers;
     }
 

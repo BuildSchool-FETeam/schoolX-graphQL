@@ -252,6 +252,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
       if (result !== expectedResult[i]) {
         error = [result, expectedResult[i]];
       }
+
       return result === expectedResult[i];
     });
 

@@ -78,6 +78,7 @@ export class PermissionQueryResolver {
     const permissionSet = await this.permissionService.getPermissionByRole(
       roleName,
     );
+
     return {
       ...permissionSet,
       roleName: permissionSet.role.name,

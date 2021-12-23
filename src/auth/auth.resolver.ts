@@ -21,6 +21,7 @@ export class AuthResolver {
   @ResolveField()
   async signUp(@Args('data') data: SignUpInput): Promise<AuthPayload> {
     const user = await this.adminUserService.createUserBySignup({ ...data });
+
     return {
       token: this.tokenService.createToken({ ...user }),
       userName: user.name,

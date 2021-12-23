@@ -33,6 +33,7 @@ export class AdminUserQueryResolver {
       { ...pgOptions, ...searchOpt },
       { token, strictResourceName: 'user' },
     );
+
     return data;
   }
 
@@ -52,6 +53,7 @@ export class AdminUserQueryResolver {
   @PermissionRequire({ user: ['R'] })
   async totalAdminUsers(@Context() { req }: DynamicObject) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers);
+
     return this.adminUserService.countingTotalItem({
       token,
       strictResourceName: 'user',

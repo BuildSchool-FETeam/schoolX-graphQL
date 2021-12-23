@@ -112,6 +112,7 @@ export class InstructorMutationResolver {
     }
 
     await this.instructorService.deleteOneById(id);
+
     return true;
   }
 }

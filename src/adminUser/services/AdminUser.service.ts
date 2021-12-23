@@ -7,13 +7,13 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { PasswordService } from 'src/common/services/password.service';
 import { Repository } from 'typeorm';
-import { AdminUserSetInput } from 'src/graphql';
-import * as _ from 'lodash';
-import { PermissionService } from 'src/permission/services/permission.service';
-import { TokenService } from 'src/common/services/token.service';
-import { AdminUser } from '../AdminUser.entity';
-import { RoleService } from '../../permission/services/role.service';
-import { CacheService } from '../../common/services/cache.service';
+import { AdminUserSetInput } from 'src/graphql'
+import * as _ from 'lodash'
+import { PermissionService } from 'src/permission/services/permission.service'
+import { TokenService } from 'src/common/services/token.service'
+import { CacheService } from 'src/common/services/cache.service'
+import { RoleService } from 'src/permission/services/role.service'
+import { AdminUser } from '../AdminUser.entity'
 
 @Injectable()
 export class AdminUserService extends BaseService<AdminUser> {

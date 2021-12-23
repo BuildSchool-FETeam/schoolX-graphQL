@@ -88,7 +88,7 @@ export class ComplexQueryBuilderService {
 
   private buildTheCompareStringForString(
     stringBuilderConfig: { field: string; alias: string },
-    valueCompare: DynamicObject,
+    valueCompare: string,
     key: string,
   ) {
     let compareString = '';
@@ -97,6 +97,7 @@ export class ComplexQueryBuilderService {
 
     function _getQueryString(operator: string, opName: string) {
       const valueCompare = `:value${opName}`;
+
       return `${alias}.${field} ${operator} ${valueCompare}`;
     }
 

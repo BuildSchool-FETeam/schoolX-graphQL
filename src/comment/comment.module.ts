@@ -15,8 +15,8 @@ import { UserCommentService } from './services/userComment.service';
     TypeOrmModule.forFeature([UserComment, Assignment]),
     forwardRef(() => CourseModule),
     forwardRef(() => ArticleModule),
-    ArticleModule,
-    CommonModule,
+    forwardRef(() => ArticleModule),
+    forwardRef(() => CommonModule),
     forwardRef(() => AssignmentModule),
   ],
   providers: [

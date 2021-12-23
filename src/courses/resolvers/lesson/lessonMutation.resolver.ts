@@ -170,6 +170,7 @@ export class LessonMutationResolver {
     @Context() { req }: DynamicObject,
   ) {
     const token = this.lessonService.getTokenFromHttpHeader(req.headers);
+
     return this.lessonService.evaluation(groupAssignmentId, data, token);
   }
 

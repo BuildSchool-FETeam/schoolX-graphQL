@@ -11,6 +11,7 @@ export class SubscriptionService {
     if (!id) {
       return channelName;
     }
+
     return `${channelName}_${id}`;
   }
 
@@ -18,6 +19,8 @@ export class SubscriptionService {
     if (this._pubSub) {
       return this._pubSub;
     }
+
+    return null;
   }
 }
 

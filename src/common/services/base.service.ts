@@ -89,6 +89,7 @@ export abstract class BaseService<T> extends UtilService {
         `Resource ${this.resourceName || ''} with id: ${id} not found`,
       );
     }
+
     return resource;
   }
 
@@ -141,6 +142,7 @@ export abstract class BaseService<T> extends UtilService {
         `Resources ${this.resourceName || ''} not found`,
       );
     }
+
     return resource;
   }
 
@@ -161,6 +163,7 @@ export abstract class BaseService<T> extends UtilService {
         `Resource ${this.resourceName || ''} with id: ${id} not found`,
       );
     }
+
     return this.repository.delete(id);
   }
 
@@ -194,6 +197,7 @@ export abstract class BaseService<T> extends UtilService {
     if (!this.cachingService) {
       throw new Error('You should inject caching service before using it!!');
     }
+
     return await this.cachingService.getValue<ICachedPermissionSet>(
       `${cacheConstant.PERMISSION}-${token}`,
     );

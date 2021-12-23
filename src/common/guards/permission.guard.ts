@@ -74,6 +74,7 @@ export class PermissionGuard implements CanActivate {
 
     const validPermission = _.every(requirePermission, (value, key) => {
       const diff = _.difference(value, _.split(userPermissions[key], '|'));
+
       return diff.length === 0;
     });
 
@@ -95,6 +96,7 @@ export class PermissionGuard implements CanActivate {
     try {
       const headers = context.getContext().req.headers as DynamicObject;
       const token = headers.authorization?.split(' ')[1] as string;
+
       return {
         user: this.tokenService.verifyAndDecodeToken(token),
         token,

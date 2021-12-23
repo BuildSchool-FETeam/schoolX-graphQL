@@ -99,6 +99,7 @@ export abstract class UtilService {
         [field]: ILike(`%${search.searchString}%`),
       });
     });
+
     return {
       where: [...findArray],
     };

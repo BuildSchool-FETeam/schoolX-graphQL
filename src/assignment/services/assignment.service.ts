@@ -98,6 +98,7 @@ export class AssignmentService extends BaseService<Assignment> {
     if (!id) {
       return this.codeChallengeService.create(data);
     }
+
     return this.codeChallengeService.update(id, data);
   }
 
@@ -123,6 +124,7 @@ export class AssignmentService extends BaseService<Assignment> {
     if (!id) {
       return this.quizService.create(data);
     }
+
     return this.quizService.update(id, data);
   }
 
@@ -149,6 +151,7 @@ export class AssignmentService extends BaseService<Assignment> {
     if (!id) {
       return this.fileAssignService.create(data);
     }
+
     return this.fileAssignService.update(id, data);
   }
 
@@ -170,6 +173,7 @@ export class AssignmentService extends BaseService<Assignment> {
     if (!data.groupAssignmentId) {
       return this.fileAssignService.firstSubmit(id, data, userId);
     }
+
     return this.fileAssignService.submit(id, data, userId);
   }
 

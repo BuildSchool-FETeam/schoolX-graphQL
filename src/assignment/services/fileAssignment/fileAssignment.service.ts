@@ -137,6 +137,7 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
     groupAssignments.push(groupAssign);
     fileAssign.submittedGroupAssignments = groupAssignments;
     this.fileAssignRepo.save(fileAssign);
+
     return groupAssign;
   }
 

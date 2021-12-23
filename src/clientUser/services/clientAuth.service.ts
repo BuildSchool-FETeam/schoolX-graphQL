@@ -164,6 +164,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
 
   private checkActivationCodeValid(clientUser: ClientUser) {
     const now = Date.now();
+
     return clientUser.activationCodeExpire > now;
   }
 
