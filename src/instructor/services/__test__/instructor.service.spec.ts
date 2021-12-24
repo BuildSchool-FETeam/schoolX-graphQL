@@ -33,8 +33,8 @@ describe('InstructorService', () => {
   let instructorService: InstructorService
   let instructorRepo: Repository<Instructor>
 
-  beforeEach(async () => {
-    let testModule = Test.createTestingModule({
+  beforeAll(async () => {
+    const testModule = Test.createTestingModule({
       providers: [
         InstructorService,
         TokenService,
@@ -46,12 +46,8 @@ describe('InstructorService', () => {
       ],
     })
 
-    testModule = testModule
-      .overrideProvider(TokenService)
-      .useValue(mockTokenService)
-    testModule = testModule
-      .overrideProvider(CacheService)
-      .useValue(mockCacheService)
+    testModule.overrideProvider(TokenService).useValue(mockTokenService)
+    testModule.overrideProvider(CacheService).useValue(mockCacheService)
 
     const compiledModule = await testModule.compile()
 

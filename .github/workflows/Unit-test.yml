@@ -1,4 +1,4 @@
-name: testing
+name: Unit testing
 on:
   pull_request_review:
     types: [submitted]
@@ -34,3 +34,5 @@ jobs:
 
       - name: Unit test and coverage report
         run: yarn run test:cov
+
+
