@@ -85,8 +85,10 @@ export class AdminUserService extends BaseService<AdminUser> {
     data: AdminUserSetInput,
     strictConfig: IStrictConfig,
   ) {
-    const user = await this.findById(id, {}, strictConfig);
-    const role = await this.roleService.findRoleByName(data.role);
+    const [user, role] = await Promise.all([
+      this.findById(id, {}, strictConfig),
+      this.roleService.findRoleByName(data.role),
+    ])
 
     if (!role) {
       throw new NotFoundException('Role not found');

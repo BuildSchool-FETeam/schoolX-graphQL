@@ -14,7 +14,7 @@ lerna-debug.log*
 .DS_Store
 
 # Tests
-/coverage
+coverage
 /.nyc_output
 
 # IDEs and editors
@@ -42,3 +42,4 @@ servers/*/node_modules
 
 storage-service-account.json
 lint
+compute-service-account.json
