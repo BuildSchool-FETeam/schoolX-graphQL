@@ -3,32 +3,17 @@ import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm'
 import { Course } from './Course.entity'
 import { LessonDocument } from './LessonDocument.entity'
 
 @Entity()
-export class Lesson {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class Lesson extends BaseEntity {
   @Column()
   videoUrl: string
 

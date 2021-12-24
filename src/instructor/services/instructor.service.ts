@@ -7,15 +7,15 @@ import { TokenService } from 'src/common/services/token.service';
 import { CacheService } from 'src/common/services/cache.service';
 import { Instructor } from '../entities/Instructor.entity';
 
-interface InstructorInput {
-  name: string;
-  email: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  filePath: string;
-  phone: string;
-  clientUserId?: string;
+export interface InstructorInput {
+  name: string
+  email: string
+  title: string
+  description: string
+  imageUrl: string
+  filePath: string
+  phone: string
+  clientUserId?: string
 }
 
 @Injectable()

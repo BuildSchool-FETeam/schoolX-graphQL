@@ -3,7 +3,6 @@ import { UserComment } from 'src/comment/entities/UserComment.entity';
 import { BaseEntity } from 'src/common/entity/base.entity';
 import { Lesson } from 'src/courses/entities/Lesson.entity';
 import {
-  Column,
   Entity,
   JoinColumn,
   JoinTable,
@@ -11,38 +10,38 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { CodeChallenge } from './codeChallenge/CodeChallenge.entity';
-import { FileAssignment } from './fileAssignment/fileAssignment.entity';
-import { Quiz } from './quiz/Quiz.entity';
+} from 'typeorm'
+import { CodeChallenge } from './codeChallenge/CodeChallenge.entity'
+import { FileAssignment } from './fileAssignment/fileAssignment.entity'
+import { Quiz } from './quiz/Quiz.entity'
 
 @Entity()
-export class Assignment {
+export class Assignment extends BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: string
 
   @ManyToOne(() => Lesson, (lesson) => lesson, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  lesson: Lesson;
+  lesson: Lesson
 
   @OneToMany(() => UserComment, (cmt) => cmt.assignment)
-  comments: UserComment[];
+  comments: UserComment[]
 
   @OneToMany(() => Quiz, (quiz) => quiz.assignment)
-  quizs: Quiz[];
+  quizs: Quiz[]
 
   @OneToMany(() => CodeChallenge, (codeChalenge) => codeChalenge.assignment)
-  codeChallenges: CodeChallenge[];
+  codeChallenges: CodeChallenge[]
 
   @OneToMany(
     () => FileAssignment,
-    (fileAssignment) => fileAssignment.assignment,
+    (fileAssignment) => fileAssignment.assignment
   )
-  fileAssignments: FileAssignment[];
+  fileAssignments: FileAssignment[]
 
   @ManyToMany(() => ClientUser)
   @JoinTable()
-  usersComplete: ClientUser[];
+  usersComplete: ClientUser[]
 }

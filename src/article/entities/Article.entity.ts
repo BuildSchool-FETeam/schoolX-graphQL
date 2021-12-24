@@ -1,15 +1,7 @@
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
 import { UserComment } from 'src/comment/entities/UserComment.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { ArticleTag } from './ArticleTag.entity'
 
 enum ArticleStatus {
@@ -18,19 +10,7 @@ enum ArticleStatus {
   accept = 'accept',
 }
 @Entity()
-export class Article {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class Article extends BaseEntity {
   @Column()
   shortDescription: string
 

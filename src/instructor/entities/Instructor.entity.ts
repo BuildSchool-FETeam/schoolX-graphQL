@@ -4,30 +4,15 @@ import { BaseEntity } from 'src/common/entity/base.entity';
 import { Course } from 'src/courses/entities/Course.entity';
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm'
 
 @Entity()
-export class Instructor {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class Instructor extends BaseEntity {
   @Column()
   name: string
 

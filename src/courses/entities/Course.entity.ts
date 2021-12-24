@@ -7,32 +7,17 @@ import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Tag } from 'src/tag/entities/tag.entity'
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm'
 import { Lesson } from './Lesson.entity'
 
 @Entity()
-export class Course {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class Course extends BaseEntity {
   @Column()
   description: string
 

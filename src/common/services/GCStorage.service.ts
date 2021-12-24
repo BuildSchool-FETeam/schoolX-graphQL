@@ -138,7 +138,8 @@ export class GCStorageService {
         'File name should be like "image.jpg")',
       );
     }
-    const randomNumber = Math.random().toString(24).slice(2, 15);
+    const randomNumber = Math.random().toString(24)
+.slice(2, 15);
 
     return `${fileNameArr[0]}-${randomNumber}.${fileNameArr[1]}`;
   }
