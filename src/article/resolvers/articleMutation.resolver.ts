@@ -1,15 +1,15 @@
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/common/guards/auth.guard'
+import { UseGuards } from '@nestjs/common'
 import {
   Args,
   Context,
   Mutation,
   ResolveField,
   Resolver,
-} from '@nestjs/graphql';
-import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
-import { ArticleService } from '../services/article.service';
-import { ArticleInputType, ArticleReviewInput } from '../../graphql';
+} from '@nestjs/graphql'
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator'
+import { ArticleService } from '../services/article.service'
+import { ArticleInputType, ArticleReviewInput } from '../../graphql'
 
 @UseGuards(AuthGuard)
 @Resolver('ArticleMutation')
@@ -18,7 +18,7 @@ export class ArticleMutationResolver {
 
   @Mutation()
   articleMutation() {
-    return {};
+    return {}
   }
 
   @PermissionRequire({ blog: ['C', 'U'] })
@@ -26,28 +26,28 @@ export class ArticleMutationResolver {
   async setArticle(
     @Args('data') data: ArticleInputType,
     @Context() { req }: DynamicObject,
-    @Args('id') id?: string,
+    @Args('id') id?: string
   ) {
-    const token = this.articleService.getTokenFromHttpHeader(req.headers);
+    const token = this.articleService.getTokenFromHttpHeader(req.headers)
 
     if (!id) {
-      return this.articleService.createArticle(data, token);
+      return this.articleService.createArticle(data, token)
     }
 
-    return this.articleService.updateArticle(data, token, id);
+    return this.articleService.updateArticle(data, token, id)
   }
 
   @PermissionRequire({ blog: ['D'] })
   @ResolveField()
   async deleteArticle(
     @Context() { req }: DynamicObject,
-    @Args('id') id: string,
+    @Args('id') id: string
   ) {
-    const token = this.articleService.getTokenFromHttpHeader(req.headers);
+    const token = this.articleService.getTokenFromHttpHeader(req.headers)
 
-    await this.articleService.deleteArticle(id, token);
+    await this.articleService.deleteArticle(id, token)
 
-    return true;
+    return true
   }
 
   @PermissionRequire({ blog: ['U'] })
@@ -55,10 +55,10 @@ export class ArticleMutationResolver {
   async reviewArticle(
     @Context() { req }: DynamicObject,
     @Args('id') id: string,
-    @Args('data') data: ArticleReviewInput,
+    @Args('data') data: ArticleReviewInput
   ) {
-    const token = this.articleService.getTokenFromHttpHeader(req.headers);
+    const token = this.articleService.getTokenFromHttpHeader(req.headers)
 
-    return this.articleService.reviewArticle(id, data, token);
+    return this.articleService.reviewArticle(id, data, token)
   }
 }

@@ -1,6 +1,6 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity';
-import { SubmittedAssignmentService } from 'src/assignment/services/fileAssignment/submittedAssignment.service';
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql'
+import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity'
+import { SubmittedAssignmentService } from 'src/assignment/services/fileAssignment/submittedAssignment.service'
 
 @Resolver('SubmittedAssignmentType')
 export class SubmittedAssignmentTypeResolver {
@@ -12,9 +12,9 @@ export class SubmittedAssignmentTypeResolver {
       submittedAssignment.id,
       {
         relations: ['comments'],
-      },
-    );
+      }
+    )
 
-    return data.comments;
+    return data.comments
   }
 }

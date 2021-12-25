@@ -1,8 +1,8 @@
 name: deploy-dev
-on: [pull_request]
-  # push:
-  #   branches: 
-  #     - dev
+on:
+  push:
+    branches: 
+      - dev
   
 jobs:
   build-and-deploy:
@@ -30,8 +30,8 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
         run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
 
-      # - name: build and push Docker image
-      #   run: chmod 700 ./.github/scripts/build-image.sh && ./.github/scripts/build-image.sh
+      - name: build and push Docker image
+        run: chmod 700 ./.github/scripts/build-image.sh && ./.github/scripts/build-image.sh
 
       - name: setup gcloud env
         uses: google-github-actions/setup-gcloud@v0

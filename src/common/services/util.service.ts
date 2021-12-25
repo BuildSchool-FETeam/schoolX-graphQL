@@ -1,14 +1,10 @@
-import { InternalServerErrorException } from '@nestjs/common';
-import * as _ from 'lodash';
-import {
-  OrderDirection,
-  PaginationInput,
-  SearchOptionInput,
-} from 'src/graphql';
-import { FindManyOptions, ILike, SelectQueryBuilder } from 'typeorm';
+import { InternalServerErrorException } from '@nestjs/common'
+import * as _ from 'lodash'
+import { OrderDirection, PaginationInput, SearchOptionInput } from 'src/graphql'
+import { FindManyOptions, ILike, SelectQueryBuilder } from 'typeorm'
 
 export abstract class UtilService {
-  private readonly MAXIMUM_LIMIT = 1000;
+  private readonly MAXIMUM_LIMIT = 1000
 
   /**
    * The util function helping you get the token that send back via headers https/http protocol
@@ -16,13 +12,13 @@ export abstract class UtilService {
    * @returns current user token
    */
   getTokenFromHttpHeader(headers: DynamicObject) {
-    const token = _.split(headers.authorization, ' ')[1];
+    const token = _.split(headers.authorization, ' ')[1]
 
     if (!token) {
-      throw new InternalServerErrorException('Token not found');
+      throw new InternalServerErrorException('Token not found')
     }
 
-    return token;
+    return token
   }
 
   /**
@@ -31,18 +27,18 @@ export abstract class UtilService {
    * @returns proper the many-options for typeORM work with
    */
   buildPaginationOptions<T>(pg: PaginationInput) {
-    const options: FindManyOptions<T> = {};
+    const options: FindManyOptions<T> = {}
     if (!pg) {
-      return options;
+      return options
     }
-    const { limit, skip, order } = pg;
+    const { limit, skip, order } = pg
 
-    limit && (options.take = limit);
-    skip && (options.skip = skip);
+    limit && (options.take = limit)
+    skip && (options.skip = skip)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    order && (options.order = { [order.orderBy as any]: order.direction });
+    order && (options.order = { [order.orderBy as any]: order.direction })
 
-    return options;
+    return options
   }
 
   /**
@@ -54,20 +50,19 @@ export abstract class UtilService {
    */
   manuallyPagination<T>(listItems: T[], pg: PaginationInput) {
     if (!pg) {
-      return listItems;
+      return listItems
     }
-    let { limit, skip, order } = pg;
-    _.isNil(limit) && (limit = this.MAXIMUM_LIMIT);
-    _.isNil(skip) && (skip = 0);
-    _.isNil(order) &&
-      (order = { orderBy: 'id', direction: OrderDirection.ASC });
+    let { limit, skip, order } = pg
+    _.isNil(limit) && (limit = this.MAXIMUM_LIMIT)
+    _.isNil(skip) && (skip = 0)
+    _.isNil(order) && (order = { orderBy: 'id', direction: OrderDirection.ASC })
 
     const items = _.chain(listItems)
       .slice(skip, limit + skip)
       .sortBy(order.orderBy)
-      .value();
+      .value()
 
-    return order.direction === OrderDirection.ASC ? items : _.reverse(items);
+    return order.direction === OrderDirection.ASC ? items : _.reverse(items)
   }
 
   /**
@@ -77,42 +72,41 @@ export abstract class UtilService {
    */
   queryBuilderPagination<T>(
     query: SelectQueryBuilder<T>,
-    pagination: PaginationInput,
+    pagination: PaginationInput
   ) {
     if (pagination) {
-      const { limit, skip, order } = pagination;
+      const { limit, skip, order } = pagination
 
-      limit && query.take(limit);
-      skip && query.skip(skip);
-      order && query.orderBy(order.orderBy, order.direction);
+      limit && query.take(limit)
+      skip && query.skip(skip)
+      order && query.orderBy(order.orderBy, order.direction)
     }
   }
 
   buildSearchOptions<T>(search: SearchOptionInput): FindManyOptions<T> {
-    const findArray: DynamicObject[] = [];
+    const findArray: DynamicObject[] = []
 
     if (!search) {
-      return {};
+      return {}
     }
     _.each(search.searchFields, (field) => {
       findArray.push({
         [field]: ILike(`%${search.searchString}%`),
-      });
-    });
+      })
+    })
 
     return {
       where: [...findArray],
-    };
+    }
   }
 
   generateActivationCode(hours: number) {
-    const code = Math.random().toString(24)
-.slice(3, 10);
-    const expiredTime = Date.now() + 1000 * 3600 * hours;
+    const code = Math.random().toString(24).slice(3, 10)
+    const expiredTime = Date.now() + 1000 * 3600 * hours
 
     return {
       code: code.toUpperCase(),
       expiredTime,
-    };
+    }
   }
 }

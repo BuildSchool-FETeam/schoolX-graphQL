@@ -1,31 +1,10 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 import { Assignment } from '../Assignment.entity'
 import { GroupAssignment } from './groupAssignment.entity'
 
 @Entity()
-export class FileAssignment {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class FileAssignment extends BaseEntity {
   @Column({ nullable: true })
   description: string
 

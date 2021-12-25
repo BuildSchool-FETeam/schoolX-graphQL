@@ -40,7 +40,7 @@ describe('InstructorService', () => {
         TokenService,
         CacheService,
         {
-          provide: getRepositoryToken(Instructor),
+          provide: getRepositoryToken(Instructor), // InstructorReporisory
           useFactory: repositoryMockFactory,
         },
       ],

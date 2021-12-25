@@ -1,7 +1,7 @@
-import { AdminUser } from 'src/adminUser/AdminUser.entity';
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { Course } from 'src/courses/entities/Course.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity'
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Course } from 'src/courses/entities/Course.entity'
 import {
   Column,
   Entity,

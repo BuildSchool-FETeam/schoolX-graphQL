@@ -1,40 +1,42 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { BaseService } from 'src/common/services/base.service';
-import { Repository } from 'typeorm';
-import * as _ from 'lodash';
-import { Tag } from './entities/tag.entity';
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { BaseService } from 'src/common/services/base.service'
+import { Repository } from 'typeorm'
+import * as _ from 'lodash'
+import { Tag } from './entities/tag.entity'
 
 @Injectable()
 export class TagService extends BaseService<Tag> {
   constructor(
     @InjectRepository(Tag)
-    private tagRepo: Repository<Tag>,
+    private tagRepo: Repository<Tag>
   ) {
-    super(tagRepo, 'Tag');
+    super(tagRepo, 'Tag')
   }
 
   async addTag(data: { title: string }) {
     const existedTags = await this.tagRepo.find({
       where: { title: data.title },
-    });
+    })
 
-    let tag: Tag;
+    let tag: Tag
     if (existedTags.length === 0) {
-      tag = this.tagRepo.create({ title: data.title, courses: [] });
+      tag = this.tagRepo.create({ title: data.title, courses: [] })
     } else {
-      tag = existedTags[0];
+      tag = existedTags[0]
     }
 
-    return this.tagRepo.save(tag);
+    return this.tagRepo.save(tag)
   }
 
   async removeCourseFromTag(tagId: string, rmCourseId: string) {
-    const tag = await this.findById(tagId, { relations: ['courses'] });
-    const cloneTagCourses = _.cloneDeep(tag.courses);
+    const tag = await this.findById(tagId, { relations: ['courses'] })
+    const cloneTagCourses = _.cloneDeep(tag.courses)
 
-    tag.courses = cloneTagCourses.filter((course) => course.id != rmCourseId);
+    tag.courses = cloneTagCourses.filter(
+      (course) => String(course.id) !== String(rmCourseId)
+    )
 
-    return this.tagRepo.save(tag);
+    return this.tagRepo.save(tag)
   }
 }

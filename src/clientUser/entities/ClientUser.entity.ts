@@ -1,9 +1,9 @@
-import { Article } from 'src/article/entities/Article.entity';
-import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity';
-import { UserComment } from 'src/comment/entities/UserComment.entity';
-import { UserBaseEntityUUID } from 'src/common/entity/base.entity';
-import { Instructor } from 'src/instructor/entities/Instructor.entity';
-import { Role } from 'src/permission/entities/Role.entity';
+import { Article } from 'src/article/entities/Article.entity'
+import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity'
+import { UserComment } from 'src/comment/entities/UserComment.entity'
+import { UserBaseEntityUUID } from 'src/common/entity/base.entity'
+import { Instructor } from 'src/instructor/entities/Instructor.entity'
+import { Role } from 'src/permission/entities/Role.entity'
 import {
   Column,
   Entity,
@@ -11,64 +11,64 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
-} from 'typeorm';
-import { Achievement } from './Achivement.entity';
+} from 'typeorm'
+import { Achievement } from './Achivement.entity'
 
 // FOR testing purpose
 @Entity()
 export class ClientUser extends UserBaseEntityUUID {
   @Column()
-  email: string;
+  email: string
 
   @Column()
-  password: string;
+  password: string
 
   @Column({ nullable: true })
-  githubUrl: string;
+  githubUrl: string
 
   @Column({ nullable: true })
-  dayOfBirth: string;
+  dayOfBirth: string
 
   @Column({ nullable: true })
-  homeTown: string;
+  homeTown: string
 
   @Column({ nullable: true })
-  bio: string;
+  bio: string
 
   @Column({ nullable: true })
-  phone: string;
+  phone: string
 
   @Column({ nullable: true })
-  imageUrl: string;
+  imageUrl: string
 
   @Column({ nullable: true })
-  filePath: string;
+  filePath: string
 
   @Column({ nullable: true, default: 0 })
-  isActive: 0 | 1;
+  isActive: 0 | 1
 
   @Column({ nullable: true })
-  activationCode: string;
+  activationCode: string
 
   @Column({ nullable: true, type: 'bigint' })
-  activationCodeExpire: number;
+  activationCodeExpire: number
 
   @OneToMany(() => UserComment, (cmt) => cmt.createdBy)
-  comments: UserComment[];
+  comments: UserComment[]
 
   @OneToOne(() => Instructor, (instructor) => instructor.user)
   @JoinColumn()
-  instructor: Instructor;
+  instructor: Instructor
 
   @OneToOne(() => Achievement, (ach) => ach.clientUser)
-  achievement: Achievement;
+  achievement: Achievement
 
   @ManyToOne(() => Role)
-  role: Role;
+  role: Role
 
   @OneToMany(() => Article, (article) => article.createdBy)
-  articles: Article[];
+  articles: Article[]
 
   @OneToMany(() => GroupAssignment, (group) => group.user)
-  submittedGroupAssignments: GroupAssignment[];
+  submittedGroupAssignments: GroupAssignment[]
 }

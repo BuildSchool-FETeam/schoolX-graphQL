@@ -1,6 +1,6 @@
-import { CommonModule } from 'src/common/Common.module';
-import { Article } from 'src/article/entities/Article.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { CommonModule } from 'src/common/Common.module'
+import { Article } from 'src/article/entities/Article.entity'
+import { TypeOrmModule } from '@nestjs/typeorm'
 import { forwardRef, Module } from '@nestjs/common'
 import { ArticleTag } from './entities/ArticleTag.entity'
 import { ArticleTagService } from './services/articleTag.service'

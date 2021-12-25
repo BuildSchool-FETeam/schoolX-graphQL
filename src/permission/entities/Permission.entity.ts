@@ -1,5 +1,4 @@
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
-import { BaseEntityWithCreatedBy } from 'src/common/entity/base.entity'
 import {
   Column,
   Entity,

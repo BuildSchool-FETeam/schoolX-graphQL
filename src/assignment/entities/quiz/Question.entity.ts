@@ -1,29 +1,9 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { Quiz } from './Quiz.entity'
 
 @Entity()
-export class Question {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class Question extends BaseEntity {
   @Column({ nullable: true })
   order: number
 

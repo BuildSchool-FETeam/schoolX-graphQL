@@ -1,13 +1,13 @@
-import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
-import { ConfigService } from '@nestjs/config';
-import { Injectable } from '@nestjs/common';
+import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface'
+import { ConfigService } from '@nestjs/config'
+import { Injectable } from '@nestjs/common'
 import {
   IMiniServerService,
   ITestCaseConfig,
   TestResponse,
   MiniServerDTO,
-} from './base/miniServer.interface';
-import { MiniServerBaseService } from './base/MiniServer.base.service';
+} from './base/miniServer.interface'
+import { MiniServerBaseService } from './base/MiniServer.base.service'
 
 @Injectable()
 export class PythonMiniServerService
@@ -15,27 +15,27 @@ export class PythonMiniServerService
   implements IMiniServerService
 {
   constructor(private configService: ConfigService<EnvVariable>) {
-    super(configService, 'PYTHON_MINI_SERVER');
+    super(configService, 'PYTHON_MINI_SERVER')
   }
 
   async runCode(code: string): Promise<TestResponse> {
     const result = await this.axiosInstance.post<MiniServerDTO>(
       '/python/playground',
-      { code },
-    );
+      { code }
+    )
 
-    return { ...result.data };
+    return { ...result.data }
   }
 
   async runCodeWithTestCase(
     code: string,
-    testCase: ITestCaseConfig,
+    testCase: ITestCaseConfig
   ): Promise<TestResponse> {
     const result = await this.axiosInstance.post<MiniServerDTO>(
       '/python/test',
-      { code, command: testCase.runningTestScript },
-    );
+      { code, command: testCase.runningTestScript }
+    )
 
-    return { ...result.data };
+    return { ...result.data }
   }
 }

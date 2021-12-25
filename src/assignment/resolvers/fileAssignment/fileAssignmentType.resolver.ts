@@ -1,7 +1,7 @@
-import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { FileAssignment } from 'src/assignment/entities/fileAssignment/fileAssignment.entity';
-import { FileAssignmentService } from 'src/assignment/services/fileAssignment/fileAssignment.service';
-import { PaginationInput, SearchOptionInput } from 'src/graphql';
+import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql'
+import { FileAssignment } from 'src/assignment/entities/fileAssignment/fileAssignment.entity'
+import { FileAssignmentService } from 'src/assignment/services/fileAssignment/fileAssignment.service'
+import { PaginationInput, SearchOptionInput } from 'src/graphql'
 
 @Resolver('FileAssignmentType')
 export class FileAssignmentTypeResolver {
@@ -11,27 +11,27 @@ export class FileAssignmentTypeResolver {
   async assignment(@Parent() fileAssignment: FileAssignment) {
     const data = await this.fileAssignService.findById(fileAssignment.id, {
       relations: ['assignment'],
-    });
+    })
 
-    return data.assignment;
+    return data.assignment
   }
 
   @ResolveField()
   async submittedGroupAssignments(
     @Parent() fileAssignment: FileAssignment,
     @Args('pagination') pagination?: PaginationInput,
-    @Args('searchOpt') searchOpt?: SearchOptionInput,
+    @Args('searchOpt') searchOpt?: SearchOptionInput
   ) {
     const data = await this.fileAssignService.searchGroupAssign(
       fileAssignment.id,
-      searchOpt,
-    );
+      searchOpt
+    )
 
     return data
       ? this.fileAssignService.manuallyPagination(
           data.submittedGroupAssignments,
-          pagination,
+          pagination
         )
-      : [];
+      : []
   }
 }

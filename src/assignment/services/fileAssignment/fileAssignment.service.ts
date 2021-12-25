@@ -3,24 +3,24 @@ import {
   forwardRef,
   Inject,
   Injectable,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Assignment } from 'src/assignment/entities/Assignment.entity';
-import { FileAssignment } from 'src/assignment/entities/fileAssignment/fileAssignment.entity';
-import { BaseService } from 'src/common/services/base.service';
-import { LessonService } from 'src/courses/services/lesson.service';
+} from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { Assignment } from 'src/assignment/entities/Assignment.entity'
+import { FileAssignment } from 'src/assignment/entities/fileAssignment/fileAssignment.entity'
+import { BaseService } from 'src/common/services/base.service'
+import { LessonService } from 'src/courses/services/lesson.service'
 import {
   EvaluationInput,
   FileAssignmentSetInput,
   SearchOptionInput,
   SubmitInput,
-} from 'src/graphql';
-import { Brackets, Repository } from 'typeorm';
-import * as _ from 'lodash';
-import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity';
-import { ClientUserService } from 'src/clientUser/services/clientUser.service';
-import { GroupAssignmentService } from './groupAssignment.service';
-import { AssignmentService } from '../assignment.service';
+} from 'src/graphql'
+import { Brackets, Repository } from 'typeorm'
+import * as _ from 'lodash'
+import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity'
+import { ClientUserService } from 'src/clientUser/services/clientUser.service'
+import { GroupAssignmentService } from './groupAssignment.service'
+import { AssignmentService } from '../assignment.service'
 
 @Injectable()
 export class FileAssignmentService extends BaseService<FileAssignment> {
@@ -32,79 +32,79 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
     @Inject(forwardRef(() => AssignmentService))
     private assignService: AssignmentService,
     private groupAssignService: GroupAssignmentService,
-    private clientUserService: ClientUserService,
+    private clientUserService: ClientUserService
   ) {
-    super(fileAssignRepo);
+    super(fileAssignRepo)
   }
 
   async create(data: FileAssignmentSetInput) {
     const lesson = await this.lessonService.findById(data.lessonId, {
       relations: ['assignment'],
-    });
+    })
 
-    let assignment: Assignment;
+    let assignment: Assignment
 
     if (!lesson.assignment) {
-      assignment = await this.assignService.createAssignment(data.lessonId);
+      assignment = await this.assignService.createAssignment(data.lessonId)
     } else {
-      assignment = await this.assignService.findById(lesson.assignment.id);
+      assignment = await this.assignService.findById(lesson.assignment.id)
     }
 
-    const fileAssignment = await this.fileAssignRepo.create({
+    const fileAssignment = this.fileAssignRepo.create({
       ...data,
       assignment,
-    });
+    })
 
-    return this.fileAssignRepo.save(fileAssignment);
+    return this.fileAssignRepo.save(fileAssignment)
   }
 
   async update(id: string, data: FileAssignmentSetInput) {
     const [lesson, fileAssignment] = await Promise.all([
       this.lessonService.findById(data.lessonId, { relations: ['assignment'] }),
       this.findById(id, { relations: ['assignment'] }),
-    ]);
+    ])
 
     if (lesson.assignment.id !== fileAssignment.assignment.id) {
       throw new BadRequestException(
-        `Lesson with id ${lesson.id} is not contain this file assignment`,
-      );
+        `Lesson with id ${lesson.id} is not contain this file assignment`
+      )
     }
 
     _.forOwn(data, (value, key) => {
       if (key === 'lessonId') {
-        fileAssignment.assignment = lesson.assignment;
+        fileAssignment.assignment = lesson.assignment
       } else {
-        value && (fileAssignment[key] = value);
+        value && (fileAssignment[key] = value)
       }
-    });
+    })
 
-    return this.fileAssignRepo.save(fileAssignment);
+    return this.fileAssignRepo.save(fileAssignment)
   }
 
   async delete(id: string) {
     const fileAssignment = await this.findById(id, {
       relations: ['assignment'],
-    });
+    })
     const assignment = await this.assignService.findById(
       fileAssignment.assignment.id,
       {
         relations: ['fileAssignments'],
-      },
-    );
+      }
+    )
 
     const checkAvailable = _.some(assignment.fileAssignments, [
       'id',
       parseInt(id),
-    ]);
+    ])
 
     if (!checkAvailable) {
-      return false;
+      return false
     }
 
-    const deleted = await this.deleteOneById(id);
-    this.assignService.deleteAssgin(assignment.id);
+    const deleted = await this.deleteOneById(id)
+    this.assignService.deleteAssgin(assignment.id)
 
-    return !!deleted;
+    return !!deleted
   }
 
   async firstSubmit(id: string, data: SubmitInput, userId: string) {
@@ -113,87 +113,87 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
       this.clientUserService.findById(userId, {
         relations: ['submittedGroupAssignments'],
       }),
-    ]);
-    let groupAssignments: GroupAssignment[];
+    ])
+    let groupAssignments: GroupAssignment[]
 
     if (!fileAssign.submittedGroupAssignments) {
-      groupAssignments = [];
+      groupAssignments = []
     } else {
       const checkGroupExits = _.differenceBy(
         fileAssign.submittedGroupAssignments,
         user.submittedGroupAssignments,
-        'id',
-      );
+        'id'
+      )
       if (
         checkGroupExits.length < fileAssign.submittedGroupAssignments.length
       ) {
-        throw new BadRequestException('Group is already exits');
+        throw new BadRequestException('Group is already exits')
       }
-      groupAssignments = _.cloneDeep(fileAssign.submittedGroupAssignments);
+      groupAssignments = _.cloneDeep(fileAssign.submittedGroupAssignments)
     }
 
-    const groupAssign = await this.groupAssignService.create(data, userId);
+    const groupAssign = await this.groupAssignService.create(data, userId)
 
-    groupAssignments.push(groupAssign);
-    fileAssign.submittedGroupAssignments = groupAssignments;
-    this.fileAssignRepo.save(fileAssign);
+    groupAssignments.push(groupAssign)
+    fileAssign.submittedGroupAssignments = groupAssignments
+    this.fileAssignRepo.save(fileAssign)
 
-    return groupAssign;
+    return groupAssign
   }
 
   async submit(id: string, data: SubmitInput, userId: string) {
-    return await this.groupAssignService.update(id, data, userId);
+    return await this.groupAssignService.update(id, data, userId)
   }
 
   async evaluation(id: string, data: EvaluationInput, token: string) {
-    return await this.groupAssignService.evaluation(id, data, token);
+    return await this.groupAssignService.evaluation(id, data, token)
   }
 
   async searchGroupAssign(fileAssignId: string, searchOpt: SearchOptionInput) {
-    const fileAssign = await this.fileAssignRepo
+    const fileAssign = this.fileAssignRepo
       .createQueryBuilder('fileAssignment')
       .innerJoinAndSelect(
         'fileAssignment.submittedGroupAssignments',
-        'submittedGroupAssignments',
+        'submittedGroupAssignments'
       )
       .innerJoinAndSelect('submittedGroupAssignments.user', 'user')
-      .where('fileAssignment.id = :id', { id: fileAssignId });
+      .where('fileAssignment.id = :id', { id: fileAssignId })
 
     searchOpt &&
       fileAssign.andWhere(
         new Brackets((qb) => {
           _.each(searchOpt.searchFields, (field, index) => {
-            let queryString: string;
-            let queryVar: string;
-            const queryField = field.split('.');
+            let queryString: string
+            let queryVar: string
+            const queryField = field.split('.')
 
             if (queryField.length > 1) {
-              queryString = `${field}`;
-              queryVar = queryField[0];
+              queryString = `${field}`
+              queryVar = queryField[0]
             } else {
-              queryString = `submittedGroupAssignments.${field}`;
-              queryVar = field;
+              queryString = `submittedGroupAssignments.${field}`
+              queryVar = field
             }
 
             if (index === 0) {
               qb.where(`${queryString} ilike :${queryVar}`, {
                 [queryVar]: `%${searchOpt.searchString}%`,
-              });
+              })
             } else {
               qb.orWhere(`${queryString} ilike :${queryVar}`, {
                 [queryVar]: `%${searchOpt.searchString}%`,
-              });
+              })
             }
-          });
-        }),
-      );
+          })
+        })
+      )
 
-    const data = await fileAssign.getOne();
+    const data = await fileAssign.getOne()
 
-    return data;
+    return data
   }
 
   async viewSubmittedAssign(groupAssignId: string, order: number) {
-    return await this.groupAssignService.viewSubmitted(groupAssignId, order);
+    return await this.groupAssignService.viewSubmitted(groupAssignId, order)
   }
 }

@@ -36,7 +36,6 @@ module.exports = {
     eqeqeq: 'error',
     'no-useless-call': 'error',
     'newline-before-return': 'error',
-    'newline-per-chained-call': 'error',
     'no-nested-ternary': 'error',
   },
 }

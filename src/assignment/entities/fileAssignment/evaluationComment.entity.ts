@@ -1,4 +1,4 @@
-import { AdminUser } from 'src/adminUser/AdminUser.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import {
   Column,
   CreateDateColumn,
@@ -6,36 +6,36 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { SubmittedAssignment } from './SubmittedAssignment.entity';
+} from 'typeorm'
+import { SubmittedAssignment } from './SubmittedAssignment.entity'
 
 @Entity()
 export class EvaluationComment {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: string
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @CreateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 
   @Column()
-  content: string;
+  content: string
 
   @ManyToOne(() => AdminUser, (adminUser) => adminUser.evaluationComments, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  createdBy: AdminUser;
+  createdBy: AdminUser
 
   @ManyToOne(
     () => SubmittedAssignment,
     (submittedAssignment) => submittedAssignment.comments,
     {
       onDelete: 'CASCADE',
-    },
+    }
   )
   @JoinColumn()
-  submitted: SubmittedAssignment;
+  submitted: SubmittedAssignment
 }

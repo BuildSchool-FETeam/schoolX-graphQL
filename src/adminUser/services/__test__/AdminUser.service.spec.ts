@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { assign } from 'lodash'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
+import { assertThrowError } from 'src/common/mock/customAssertion'
 import { repositoryMockFactory } from 'src/common/mock/repositoryMock'
 import { CacheService } from 'src/common/services/cache.service'
 import { PasswordService } from 'src/common/services/password.service'
@@ -133,17 +134,14 @@ describe('AdminUserService', () => {
   })
 
   describe('createUserBySignup', () => {
-    it('should throw error when exist at least one admin in DB', async () => {
+    it('should throw error when exist at least one admin in DB', async function () {
       jest.spyOn(adminRepo, 'count').mockResolvedValue(1)
       const adminUser = createAdminUser()
 
-      try {
-        await adminUserService.createUserBySignup(adminUser)
-      } catch (e) {
-        expect(e).toEqual(
-          new BadRequestException('Only have one admin created by this way')
-        )
-      }
+      await assertThrowError(
+        adminUserService.createUserBySignup.bind(adminUserService, adminUser),
+        new BadRequestException('Only have one admin created by this way')
+      )
     })
 
     it('should create and save an adminUser if there is no admin user in DB', async () => {
@@ -176,11 +174,14 @@ describe('AdminUserService', () => {
     it('should throw NotFound error when cannot find any existed role with role name', async () => {
       jest.spyOn(roleServiceMock, 'findRoleByName').mockResolvedValue(undefined)
 
-      try {
-        await adminUserService.createUser(adminSetInput, 'token')
-      } catch (e) {
-        expect(e).toEqual(new NotFoundException('This role is not existed'))
-      }
+      await assertThrowError(
+        adminUserService.createUser.bind(
+          adminUserService,
+          adminSetInput,
+          'token'
+        ),
+        new NotFoundException('This role is not existed')
+      )
     })
 
     it('should throw NotFound error when the email has been registered', async () => {
@@ -189,13 +190,14 @@ describe('AdminUserService', () => {
         .mockResolvedValue(new Role())
       jest.spyOn(adminRepo, 'find').mockResolvedValue([createAdminUser()])
 
-      try {
-        await adminUserService.createUser(adminSetInput, 'token')
-      } catch (e) {
-        expect(e).toEqual(
-          new NotFoundException('This user email has been taken!')
-        )
-      }
+      await assertThrowError(
+        adminUserService.createUser.bind(
+          adminUserService,
+          adminSetInput,
+          'token'
+        ),
+        new NotFoundException('This user email has been taken!')
+      )
     })
 
     it("should throw BadRequest error user don't provide password", async () => {
@@ -203,13 +205,14 @@ describe('AdminUserService', () => {
       jest.spyOn(adminRepo, 'find').mockResolvedValue([])
       adminSetInput.password = null
 
-      try {
-        await adminUserService.createUser(adminSetInput, 'token')
-      } catch (e) {
-        expect(e).toEqual(
-          new BadRequestException('Cannot create an adminUser without password')
-        )
-      }
+      await assertThrowError(
+        adminUserService.createUser.bind(
+          adminUserService,
+          adminSetInput,
+          'token'
+        ),
+        new BadRequestException('Cannot create an adminUser without password')
+      )
     })
 
     it('should create an adminUser', async () => {
@@ -259,11 +262,15 @@ describe('AdminUserService', () => {
       jest.spyOn(adminUserService, 'findById').mockResolvedValue(undefined)
       jest.spyOn(roleServiceMock, 'findRoleByName').mockResolvedValue(undefined)
 
-      try {
-        await adminUserService.updateUser('id', adminSetInput, strictConfig)
-      } catch (e) {
-        expect(e).toEqual(new NotFoundException('Role not found'))
-      }
+      await assertThrowError(
+        adminUserService.updateUser.bind(
+          adminUserService,
+          'id',
+          adminSetInput,
+          strictConfig
+        ),
+        new NotFoundException('Role not found')
+      )
     })
 
     it('should throw NotFound error if cannot find any user', async () => {
@@ -272,11 +279,15 @@ describe('AdminUserService', () => {
         .spyOn(roleServiceMock, 'findRoleByName')
         .mockResolvedValue(createNewRole({ name: 'admin' }))
 
-      try {
-        await adminUserService.updateUser('id', adminSetInput, strictConfig)
-      } catch (e) {
-        expect(e).toEqual(new NotFoundException('User not found'))
-      }
+      await assertThrowError(
+        adminUserService.updateUser.bind(
+          adminUserService,
+          'id',
+          adminSetInput,
+          strictConfig
+        ),
+        new NotFoundException('User not found')
+      )
     })
 
     it('should update adminUser successfully', async () => {

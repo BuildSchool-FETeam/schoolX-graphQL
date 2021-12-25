@@ -1,5 +1,5 @@
-import { Assignment } from 'src/assignment/entities/Assignment.entity';
-import { Course } from 'src/courses/entities/Course.entity';
+import { Assignment } from 'src/assignment/entities/Assignment.entity'
+import { Course } from 'src/courses/entities/Course.entity'
 import {
   Column,
   Entity,
@@ -8,43 +8,43 @@ import {
   ManyToMany,
   OneToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm';
-import { ClientUser } from './ClientUser.entity';
+} from 'typeorm'
+import { ClientUser } from './ClientUser.entity'
 
 @Entity()
 export class Achievement {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @OneToOne(() => ClientUser, (clientUser) => clientUser.achievement, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  clientUser: ClientUser;
+  clientUser: ClientUser
 
   @Column()
-  rank: number;
+  rank: number
 
   @ManyToMany(() => Course)
   @JoinTable()
-  joinedCourse: Course[];
+  joinedCourse: Course[]
 
   @ManyToMany(() => ClientUser)
   @JoinTable()
-  follow: ClientUser[];
+  follow: ClientUser[]
 
   @ManyToMany(() => ClientUser)
   @JoinTable()
-  followedBy: ClientUser[];
+  followedBy: ClientUser[]
 
   @Column()
-  score: number;
+  score: number
 
   @ManyToMany(() => Course)
   @JoinTable()
-  completedCourses: Course[];
+  completedCourses: Course[]
 
   @ManyToMany(() => Assignment)
   @JoinTable()
-  completedAssignment: Assignment[];
+  completedAssignment: Assignment[]
 }

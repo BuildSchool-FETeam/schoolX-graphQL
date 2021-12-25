@@ -1,12 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { MiniServerBaseService } from './base/MiniServer.base.service';
+import { Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { MiniServerBaseService } from './base/MiniServer.base.service'
 import {
   IMiniServerService,
   ITestCaseConfig,
   MiniServerDTO,
   TestResponse,
-} from './base/miniServer.interface';
+} from './base/miniServer.interface'
 
 @Injectable()
 export class JavaMiniServerService
@@ -14,7 +14,7 @@ export class JavaMiniServerService
   implements IMiniServerService
 {
   constructor(private configService: ConfigService) {
-    super(configService, 'JAVA_MINI_SERVER');
+    super(configService, 'JAVA_MINI_SERVER')
   }
 
   async runCode(code: string): Promise<TestResponse> {
@@ -22,24 +22,24 @@ export class JavaMiniServerService
       '/java/playground',
       {
         code,
-      },
-    );
+      }
+    )
 
-    return response.data;
+    return response.data
   }
 
   async runCodeWithTestCase(
     code: string,
-    testCase: ITestCaseConfig,
+    testCase: ITestCaseConfig
   ): Promise<TestResponse> {
     const response = await this.axiosInstance.post<MiniServerDTO>(
       '/java/test',
       {
         code,
         command: testCase.runningTestScript,
-      },
-    );
+      }
+    )
 
-    return response.data;
+    return response.data
   }
 }

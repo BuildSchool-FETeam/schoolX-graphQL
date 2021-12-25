@@ -1,11 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { graphqlUploadExpress } from 'graphql-upload';
-import { AppModule } from './app.module';
+import { NestFactory } from '@nestjs/core'
+import { graphqlUploadExpress } from 'graphql-upload'
+import { AppModule } from './app.module'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule)
 
-  app.use(graphqlUploadExpress());
-  await app.listen(3001);
+  app.use(graphqlUploadExpress())
+  await app.listen(3001)
 }
-bootstrap();
+bootstrap()

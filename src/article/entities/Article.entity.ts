@@ -1,5 +1,5 @@
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
-import { UserComment } from 'src/comment/entities/UserComment.entity';
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
+import { UserComment } from 'src/comment/entities/UserComment.entity'
 import { BaseEntity } from 'src/common/entity/base.entity'
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { ArticleTag } from './ArticleTag.entity'

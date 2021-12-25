@@ -1,7 +1,7 @@
-import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { Assignment } from 'src/assignment/entities/Assignment.entity';
-import { AssignmentService } from 'src/assignment/services/assignment.service';
-import { PaginationInput } from '../../graphql';
+import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql'
+import { Assignment } from 'src/assignment/entities/Assignment.entity'
+import { AssignmentService } from 'src/assignment/services/assignment.service'
+import { PaginationInput } from '../../graphql'
 
 @Resolver('AssignmentType')
 export class AssignmentTypeResolver {
@@ -11,48 +11,48 @@ export class AssignmentTypeResolver {
   async lesson(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
       relations: ['lesson'],
-    });
+    })
 
-    return assignment.lesson;
+    return assignment.lesson
   }
 
   @ResolveField()
   async comments(
     @Parent() parent: Assignment,
-    @Args('pagination') pg: PaginationInput,
+    @Args('pagination') pg: PaginationInput
   ) {
     const assignment = await this.assignmentService.findById(parent.id, {
       select: ['id'],
       relations: ['comments'],
-    });
+    })
 
-    return this.assignmentService.manuallyPagination(assignment.comments, pg);
+    return this.assignmentService.manuallyPagination(assignment.comments, pg)
   }
 
   @ResolveField()
   async codeChallenges(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
       relations: ['codeChallenges'],
-    });
+    })
 
-    return assignment.codeChallenges;
+    return assignment.codeChallenges
   }
 
   @ResolveField()
   async quizs(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
       relations: ['quizs'],
-    });
+    })
 
-    return assignment.quizs;
+    return assignment.quizs
   }
 
   @ResolveField()
   async fileAssignments(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
       relations: ['fileAssignments'],
-    });
+    })
 
-    return assignment.fileAssignments;
+    return assignment.fileAssignments
   }
 }

@@ -21,6 +21,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:ci": "jest --ci --testResultsProcessor=jest-junit",
+    "test:change": "jest --coverage --changeSince=origin/dev",
     "migrate:create": "typeorm migration:create -n",
     "migrate:gen": "typeorm migration:generate -n",
     "migrate:up": "typeorm migration:run",
@@ -83,6 +85,7 @@
     "eslint-plugin-import": "2.25.2",
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^27.4.5",
+    "jest-junit": "^13.0.0",
     "madge": "^5.0.1",
     "prettier": "^2.1.2",
     "supertest": "^6.0.0",
@@ -119,10 +122,22 @@
     "moduleNameMapper": {
       "src/(.*)": "<rootDir>/src/$1"
     },
-    "collectCoverage": true,
     "coverageReporters": [
+      "text",
       "json",
-      "html"
+      "html",
+      "json-summary",
+      "lcov"
     ]
+  },
+  "jest-junit": {
+    "suiteName": "jest tests",
+    "outputDirectory": ".",
+    "outputName": "report.xml",
+    "uniqueOutputName": "false",
+    "classNameTemplate": "{classname}-{title}",
+    "titleTemplate": "{classname}-{title}",
+    "ancestorSeparator": " › ",
+    "usePathForSuiteName": "true"
   }
 }

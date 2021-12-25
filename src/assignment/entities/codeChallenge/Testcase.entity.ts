@@ -1,13 +1,5 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 import { CodeChallenge } from './CodeChallenge.entity'
 
 export enum TestCaseProgrammingLanguage {
@@ -18,19 +10,7 @@ export enum TestCaseProgrammingLanguage {
 }
 
 @Entity()
-export class TestCase {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class TestCase extends BaseEntity {
   @Column()
   generatedExpectResultScript?: string
 

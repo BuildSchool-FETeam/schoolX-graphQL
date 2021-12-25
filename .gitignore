@@ -43,3 +43,4 @@ servers/*/node_modules
 storage-service-account.json
 lint
 compute-service-account.json
+report.xml

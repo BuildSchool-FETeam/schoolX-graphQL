@@ -1,14 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import * as _ from 'lodash';
-import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity';
-import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity';
-import { ClientUserService } from 'src/clientUser/services/clientUser.service';
-import { BaseService } from 'src/common/services/base.service';
-import { TokenService } from 'src/common/services/token.service';
-import { EvaluationInput, SubmitInput } from 'src/graphql';
-import { Repository } from 'typeorm';
-import { SubmittedAssignmentService } from './submittedAssignment.service';
+import { BadRequestException, Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import * as _ from 'lodash'
+import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity'
+import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity'
+import { ClientUserService } from 'src/clientUser/services/clientUser.service'
+import { BaseService } from 'src/common/services/base.service'
+import { TokenService } from 'src/common/services/token.service'
+import { EvaluationInput, SubmitInput } from 'src/graphql'
+import { Repository } from 'typeorm'
+import { SubmittedAssignmentService } from './submittedAssignment.service'
 
 @Injectable()
 export class GroupAssignmentService extends BaseService<GroupAssignment> {
@@ -17,120 +17,118 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
     private groupAssignRepo: Repository<GroupAssignment>,
     private clientUserService: ClientUserService,
     private submittedAssignService: SubmittedAssignmentService,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {
-    super(groupAssignRepo);
+    super(groupAssignRepo)
   }
 
   async create(data: SubmitInput, userID: string) {
     const [user, submitted] = await Promise.all([
       this.clientUserService.findById(userID),
       this.submittedAssignService.submit(data),
-    ]);
+    ])
 
-    const groupAssignment = await this.groupAssignRepo.create({
+    const groupAssignment = this.groupAssignRepo.create({
       title: user.name,
       user,
       submitteds: [submitted],
-    });
+    })
 
-    return this.groupAssignRepo.save(groupAssignment);
+    return this.groupAssignRepo.save(groupAssignment)
   }
 
   async update(id: string, data: SubmitInput, userId: string) {
     const group = await this.findById(data.groupAssignmentId, {
       relations: ['user', 'submitteds', 'fileAssignment'],
-    });
+    })
 
     if (id !== group.fileAssignment.id.toString()) {
       throw new BadRequestException(
-        `this assignment doesn't contain submitted assignment with id ${data.groupAssignmentId}`,
-      );
+        `this assignment doesn't contain submitted assignment with id ${data.groupAssignmentId}`
+      )
     }
 
     if (group.user.id !== userId) {
       throw new BadRequestException(
-        `user with id ${userId} can't excute this action`,
-      );
+        `user with id ${userId} can't excute this action`
+      )
     }
 
-    let submittedAssignment: SubmittedAssignment;
-    let submittedAssignments: SubmittedAssignment[];
+    let submittedAssignment: SubmittedAssignment
+    let submittedAssignments: SubmittedAssignment[]
 
     if (!group.submitteds) {
-      submittedAssignment = await this.submittedAssignService.submit(data);
-      submittedAssignments = [];
+      submittedAssignment = await this.submittedAssignService.submit(data)
+      submittedAssignments = []
     } else {
       submittedAssignment = await this.submittedAssignService.submit(
         data,
-        group.submitteds.length + 1,
-      );
-      submittedAssignments = _.cloneDeep(group.submitteds);
+        group.submitteds.length + 1
+      )
+      submittedAssignments = _.cloneDeep(group.submitteds)
     }
 
-    submittedAssignments.push(submittedAssignment);
-    group.submitteds = submittedAssignments;
-    group.isUpdated = true;
+    submittedAssignments.push(submittedAssignment)
+    group.submitteds = submittedAssignments
+    group.isUpdated = true
 
-    return this.groupAssignRepo.save(group);
+    return this.groupAssignRepo.save(group)
   }
 
   async evaluation(id: string, data: EvaluationInput, token: string) {
     const group = await this.findById(id, {
       relations: ['submitteds', 'fileAssignment'],
-    });
+    })
     if (group.submitteds.length < data.order) {
       throw new BadRequestException(
-        `Submitted with order = ${data.order} doesn't exist`,
-      );
+        `Submitted with order = ${data.order} doesn't exist`
+      )
     }
 
-    const submitted = _.find(group.submitteds, ['order', data.order]);
+    const submitted = _.find(group.submitteds, ['order', data.order])
 
     if (data.scoreInput) {
-      const user = this.tokenService.verifyAndDecodeToken(token);
+      const user = this.tokenService.verifyAndDecodeToken(token)
       if (data.scoreInput.score > group.fileAssignment.maxScore) {
-        data.scoreInput.score = group.fileAssignment.maxScore;
+        data.scoreInput.score = group.fileAssignment.maxScore
       }
-      this.clientUserService.updateScore(user.id, data.scoreInput);
+      this.clientUserService.updateScore(user.id, data.scoreInput)
     }
 
-    group.previousScore = data.scoreInput.score;
+    group.previousScore = data.scoreInput.score
 
     await Promise.all([
       this.groupAssignRepo.save(group),
       this.submittedAssignService.evaluation(submitted.id, data, token),
-    ]);
+    ])
 
-    return group;
+    return group
   }
 
   async delete(id: string) {
-    return !!(await this.deleteOneById(id));
+    return !!(await this.deleteOneById(id))
   }
 
   async viewSubmitted(id: string, order: number) {
-    const group = await this.findById(id, { relations: ['submitteds'] });
+    const group = await this.findById(id, { relations: ['submitteds'] })
 
     if (group.submitteds.length < order) {
       throw new BadRequestException(
-        `Submitted with order = ${order} doesn't exist`,
-      );
+        `Submitted with order = ${order} doesn't exist`
+      )
     }
-    const submitteds = _.cloneDeep(group.submitteds);
-    const submitted = _.find(submitteds, ['order', order]);
-    const updateSubmitted = await this.submittedAssignService.view(
-      submitted.id,
-    );
+    const submitteds = _.cloneDeep(group.submitteds)
+    const submitted = _.find(submitteds, ['order', order])
+    const updateSubmitted = await this.submittedAssignService.view(submitted.id)
 
-    submitted.hasSeen = true;
-    const checkUpdate = _.some(submitteds, ['hasSeen', false]);
+    submitted.hasSeen = true
+    const checkUpdate = _.some(submitteds, ['hasSeen', false])
 
     if (!checkUpdate) {
-      group.isUpdated = false;
+      group.isUpdated = false
     }
-    this.groupAssignRepo.save(group);
+    this.groupAssignRepo.save(group)
 
-    return updateSubmitted;
+    return updateSubmitted
   }
 }

@@ -1,28 +1,9 @@
-import { AdminUser } from 'src/adminUser/AdminUser.entity';
-import { BaseEntity } from 'src/common/entity/base.entity';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm'
+import { AdminUser } from 'src/adminUser/AdminUser.entity'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Column, Entity, ManyToOne } from 'typeorm'
 
 @Entity()
-export class AdminNotification {
-  @PrimaryGeneratedColumn()
-  id: string
-
-  @Column()
-  title: string
-
-  @CreateDateColumn()
-  createdAt: Date
-
-  @UpdateDateColumn()
-  updatedAt: Date
-
+export class AdminNotification extends BaseEntity {
   @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
   createdBy: AdminUser
 
