@@ -30,9 +30,9 @@ export class AdminUserService extends BaseService<AdminUser> {
   }
 
   async createUserBySignup(data: Partial<AdminUser>) {
-    const userCount = await this.userRepo.count()
+    const countUser = await this.userRepo.count()
 
-    if (userCount > 0) {
+    if (countUser > 0) {
       throw new BadRequestException('Only have one admin created by this way')
     }
     const permissionSet = this.permissionService.createAdminPermission()
