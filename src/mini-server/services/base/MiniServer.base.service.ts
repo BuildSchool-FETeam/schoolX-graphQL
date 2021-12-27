@@ -1,19 +1,20 @@
-import { ConfigService } from '@nestjs/config';
-import axios, { AxiosInstance } from 'axios';
-import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface';
+import { ConfigService } from '@nestjs/config'
+import axios, { AxiosInstance } from 'axios'
+import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface'
 
 export abstract class MiniServerBaseService {
-  axiosInstance: AxiosInstance;
-  host: string;
+  axiosInstance: AxiosInstance
+
+  host: string
 
   constructor(
     configService: ConfigService<EnvVariable>,
-    envName: keyof EnvVariable,
+    envName: keyof EnvVariable
   ) {
-    this.host = configService.get(envName);
+    this.host = configService.get(envName)
     this.axiosInstance = axios.create({
       baseURL: this.host,
       timeout: 10000,
-    });
+    })
   }
 }

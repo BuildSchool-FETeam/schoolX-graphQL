@@ -15,6 +15,7 @@ input QuestionSetInput {
     id: ID
     title: String!
     options: [String!]!
+    order: Int!
     isMultiple: Boolean!
     result: Int
     results: [Int!]

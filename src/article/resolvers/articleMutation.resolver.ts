@@ -1,15 +1,15 @@
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { ArticleInputType, ArticleReviewInput } from './../../graphql';
-import { ArticleService } from './../services/article.service';
-import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/common/guards/auth.guard'
+import { UseGuards } from '@nestjs/common'
 import {
   Args,
   Context,
   Mutation,
   ResolveField,
   Resolver,
-} from '@nestjs/graphql';
-import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
+} from '@nestjs/graphql'
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator'
+import { ArticleService } from '../services/article.service'
+import { ArticleInputType, ArticleReviewInput } from '../../graphql'
 
 @UseGuards(AuthGuard)
 @Resolver('ArticleMutation')
@@ -18,44 +18,47 @@ export class ArticleMutationResolver {
 
   @Mutation()
   articleMutation() {
-    return {};
+    return {}
   }
 
   @PermissionRequire({ blog: ['C', 'U'] })
   @ResolveField()
-  setArticle(
+  async setArticle(
     @Args('data') data: ArticleInputType,
-    @Context() { req }: any,
-    @Args('id') id?: string,
+    @Context() { req }: DynamicObject,
+    @Args('id') id?: string
   ) {
-    const token = this.articleService.getTokenFromHttpHeader(req.headers);
+    const token = this.articleService.getTokenFromHttpHeader(req.headers)
 
     if (!id) {
-      return this.articleService.createArticle(data, token);
-    } else {
-      return this.articleService.updateArticle(data, token, id);
+      return this.articleService.createArticle(data, token)
     }
+
+    return this.articleService.updateArticle(data, token, id)
   }
 
   @PermissionRequire({ blog: ['D'] })
   @ResolveField()
-  async deleteArticle(@Context() { req }: any, @Args('id') id: string) {
-    const token = this.articleService.getTokenFromHttpHeader(req.headers);
+  async deleteArticle(
+    @Context() { req }: DynamicObject,
+    @Args('id') id: string
+  ) {
+    const token = this.articleService.getTokenFromHttpHeader(req.headers)
 
-    await this.articleService.deleteArticle(id, token);
-    
-    return true;
+    await this.articleService.deleteArticle(id, token)
+
+    return true
   }
 
   @PermissionRequire({ blog: ['U'] })
   @ResolveField()
   async reviewArticle(
-    @Context() { req }: any, 
-    @Args('id') id: string, 
+    @Context() { req }: DynamicObject,
+    @Args('id') id: string,
     @Args('data') data: ArticleReviewInput
   ) {
-    const token = this.articleService.getTokenFromHttpHeader(req.headers);
+    const token = this.articleService.getTokenFromHttpHeader(req.headers)
 
-    return this.articleService.reviewArticle(id, data, token)    
+    return this.articleService.reviewArticle(id, data, token)
   }
 }

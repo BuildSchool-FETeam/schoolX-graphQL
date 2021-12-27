@@ -1,6 +1,6 @@
-import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
-import { ClientUserSigninInput, ClientUserSignupInput } from 'src/graphql';
-import { ClientAuthService } from '../services/clientAuth.service';
+import { Args, Mutation, ResolveField, Resolver } from '@nestjs/graphql'
+import { ClientUserSigninInput, ClientUserSignupInput } from 'src/graphql'
+import { ClientAuthService } from '../services/clientAuth.service'
 
 @Resolver('ClientUserAuthMutation')
 export class ClientUserAuthMutationResolver {
@@ -8,44 +8,44 @@ export class ClientUserAuthMutationResolver {
 
   @Mutation()
   clientUserAuthMutation() {
-    return {};
+    return {}
   }
 
   @ResolveField()
-  signUp(@Args('data') data: ClientUserSignupInput) {
-    return this.clientAuthService.createClientUser(data);
+  async signUp(@Args('data') data: ClientUserSignupInput) {
+    return this.clientAuthService.createClientUser(data)
   }
 
   @ResolveField()
-  signIn(@Args('data') data: ClientUserSigninInput) {
-    return this.clientAuthService.loginWithEmailAndPassword(data);
+  async signIn(@Args('data') data: ClientUserSigninInput) {
+    return this.clientAuthService.loginWithEmailAndPassword(data)
   }
 
   @ResolveField()
   async activateAccount(
     @Args('email') email: string,
-    @Args('activationCode') activationCode: string,
+    @Args('activationCode') activationCode: string
   ) {
-    await this.clientAuthService.activateAccount(email, activationCode);
+    await this.clientAuthService.activateAccount(email, activationCode)
 
-    return true;
+    return true
   }
 
   @ResolveField()
   async sendRestorePassword(@Args('email') email: string) {
-    await this.clientAuthService.sendRestorePassword(email);
+    await this.clientAuthService.sendRestorePassword(email)
 
-    return true;
+    return true
   }
 
   @ResolveField()
   async resetPassword(
     @Args('resetCode') resetCode: string,
     @Args('password') password: string,
-    @Args('email') email: string,
+    @Args('email') email: string
   ) {
-    await this.clientAuthService.resetPassword(resetCode, password, email);
+    await this.clientAuthService.resetPassword(resetCode, password, email)
 
-    return true;
+    return true
   }
 }

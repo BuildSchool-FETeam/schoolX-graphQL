@@ -1,23 +1,23 @@
-import { UseGuards } from '@nestjs/common';
-import { Course } from 'src/courses/entities/Course.entity';
+import { UseGuards } from '@nestjs/common'
+import { Course } from 'src/courses/entities/Course.entity'
 import {
   GCStorageService,
   StorageFolder,
-} from 'src/common/services/GCStorage.service';
-import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface';
-import { CourseSetInput } from 'src/graphql';
-import { CourseService } from '../../services/course.service';
+} from 'src/common/services/GCStorage.service'
+import { FileUploadType } from 'src/common/interfaces/ImageUpload.interface'
+import { CourseSetInput } from 'src/graphql'
 import {
   Args,
   Mutation,
   ResolveField,
   Resolver,
   Context,
-} from '@nestjs/graphql';
-import * as _ from 'lodash';
-import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { TokenService } from 'src/common/services/token.service';
+} from '@nestjs/graphql'
+import * as _ from 'lodash'
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator'
+import { AuthGuard } from 'src/common/guards/auth.guard'
+import { TokenService } from 'src/common/services/token.service'
+import { CourseService } from '../../services/course.service'
 
 @UseGuards(AuthGuard)
 @Resolver('CourseMutation')
@@ -25,86 +25,91 @@ export class CourseMutationResolver {
   constructor(
     private courseService: CourseService,
     private gcStorageService: GCStorageService,
-    private tokenService: TokenService,
+    private tokenService: TokenService
   ) {}
 
   @Mutation()
   courseMutation() {
-    return {};
+    return {}
   }
 
   @PermissionRequire({ course: ['C', 'U'] })
   @ResolveField()
   async setCourse(
     @Args('data') data: CourseSetInput,
-    @Context() { req }: any,
-    @Args('id') id?: string,
+    @Context() { req }: DynamicObject,
+    @Args('id') id?: string
   ) {
-    const { image } = data;
-    let imageUrl: string, filePath: string;
-    let existedCourse: Course;
+    const { image } = data
+    let imageUrl: string
+    let filePath: string
+    let existedCourse: Course
 
-    const token = this.courseService.getTokenFromHttpHeader(req.headers);
-    const adminUser = await this.tokenService.getAdminUserByToken(token);
+    const token = this.courseService.getTokenFromHttpHeader(req.headers)
+    const adminUser = await this.tokenService.getAdminUserByToken(token)
 
     if (id) {
-      existedCourse = await this.courseService.findById(id);
+      existedCourse = await this.courseService.findById(id)
     }
 
     if (image) {
-      const result = await this.processImage(existedCourse, image);
-      imageUrl = result.publicUrl;
-      filePath = result.filePath;
+      const result = await this.processImage(existedCourse, image)
+      imageUrl = result.publicUrl
+      filePath = result.filePath
     }
 
-    let course: Course;
+    let course: Course
     const savedObj = {
       ..._.omit(data, 'image'),
       imageUrl,
       filePath,
       createdBy: adminUser,
-    };
+    }
 
     if (id) {
       course = await this.courseService.updateCourse(id, savedObj, {
         token,
         strictResourceName: 'course',
-      });
+      })
     } else {
-      course = await this.courseService.createCourse(savedObj);
+      course = await this.courseService.createCourse(savedObj)
     }
 
     return {
       ...course,
-    };
+    }
   }
 
   @PermissionRequire({ course: ['D'] })
   @ResolveField()
-  async deleteCourse(@Args('id') id: string, @Context() { req }: any) {
-    const token = this.courseService.getTokenFromHttpHeader(req.headers);
+  async deleteCourse(
+    @Args('id') id: string,
+    @Context() { req }: DynamicObject
+  ) {
+    const token = this.courseService.getTokenFromHttpHeader(req.headers)
     const course = await this.courseService.findById(
       id,
       { relations: ['tags'] },
-      { token, strictResourceName: 'course' },
-    );
+      { token, strictResourceName: 'course' }
+    )
 
     if (course.filePath) {
-      this.gcStorageService.deleteFile(course.filePath);
+      this.gcStorageService.deleteFile(course.filePath)
     }
 
-    await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'));
+    await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'))
 
-    await this.courseService.deleteOneById(id);
-    return true;
+    await this.courseService.deleteOneById(id)
+
+    return true
   }
 
-  private async processImage(existedCourse: Course, image: any) {
+  private async processImage(existedCourse: Course, image: FileUploadType) {
     if (existedCourse?.filePath) {
-      this.gcStorageService.deleteFile(existedCourse.filePath);
+      this.gcStorageService.deleteFile(existedCourse.filePath)
     }
-    const { filename, createReadStream } = (await image) as FileUploadType;
-    const readStream = createReadStream();
+    const { filename, createReadStream } = image
+    const readStream = createReadStream()
 
     const result = await this.gcStorageService.uploadFile({
       fileName: filename,
@@ -117,7 +122,8 @@ export class CourseMutationResolver {
         },
         changeFormat: 'jpeg',
       },
-    });
-    return result;
+    })
+
+    return result
   }
 }

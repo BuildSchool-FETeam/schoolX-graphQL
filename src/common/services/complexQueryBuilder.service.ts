@@ -1,126 +1,134 @@
-import { CompareInputDate, CompareInputString } from './../../graphql';
-import { Injectable } from "@nestjs/common";
-import { Brackets, SelectQueryBuilder } from "typeorm";
-import * as _ from 'lodash';
+import { Injectable } from '@nestjs/common'
+import { Brackets, SelectQueryBuilder } from 'typeorm'
+import * as _ from 'lodash'
+import { CompareInputDate, CompareInputString } from '../../graphql'
 
 interface ICompareQueryBuilderConfig {
-  fieldCompare: string;
+  fieldCompare: string
   tableAlias: string
   compareType: 'date' | 'string'
 }
 
-@Injectable() 
+@Injectable()
 export class ComplexQueryBuilderService {
-
   addAndWhereCompareToQueryBuilder<T>(
-    query: SelectQueryBuilder<T>, 
+    query: SelectQueryBuilder<T>,
     config: ICompareQueryBuilderConfig,
     data: CompareInputDate | CompareInputString
   ) {
-    const stringCompareBuilderFnc = this.getCompareStringGeneratorFunc(config.compareType);
+    const stringCompareBuilderFnc = this.getCompareStringGeneratorFunc(
+      config.compareType
+    )
 
     query.andWhere(
       new Brackets((qb) => {
-        const beginningWhere = qb.where(`${config.tableAlias}.id IS NOT NULL`);
+        const beginningWhere = qb.where(`${config.tableAlias}.id IS NOT NULL`)
 
         _.forOwn(data, (value, key) => {
-          const {
-            compareString,
-            compareObj,
-          } = stringCompareBuilderFnc(
+          const { compareString, compareObj } = stringCompareBuilderFnc(
             {
               field: config.fieldCompare,
               alias: config.tableAlias,
             },
             value,
-            key,
-          );
+            key
+          )
 
-          beginningWhere.andWhere(compareString, compareObj);
-        });
-      }),
-
-    );
+          beginningWhere.andWhere(compareString, compareObj)
+        })
+      })
+    )
   }
 
-  private getCompareStringGeneratorFunc(type: ICompareQueryBuilderConfig['compareType']) {
+  private getCompareStringGeneratorFunc(
+    type: ICompareQueryBuilderConfig['compareType']
+  ) {
     switch (type) {
       case 'date':
-        return this.buildTheCompareStringForDate
+        return this.buildTheCompareStringForDate.bind(this)
       case 'string':
-        return this.buildTheCompareStringForString
+        return this.buildTheCompareStringForString.bind(this)
+      default:
+        return null
     }
   }
 
   private buildTheCompareStringForDate(
     stringBuilderConfig: { field: string; alias: string },
     valueCompare: number,
-    key: string,
+    key: string
   ) {
-    let compareString = '';
-    let compareVal = {};
-    const { field, alias } = stringBuilderConfig;
+    let compareString = ''
+    let compareVal = {}
+    const { field, alias } = stringBuilderConfig
 
     function _getQueryString(operator: string, opName: string) {
-      return `${alias}.${field} ${operator} :value${opName}::date`;
+      return `${alias}.${field} ${operator} :value${opName}::date`
     }
 
     switch (key) {
       case 'eq':
-        compareString = _getQueryString('=', key);
-        break;
+        compareString = _getQueryString('=', key)
+        break
       case 'gt':
-        compareString = _getQueryString('>', key);
-        break;
+        compareString = _getQueryString('>', key)
+        break
       case 'lt':
-        compareString = _getQueryString('<', key);
-        break;
+        compareString = _getQueryString('<', key)
+        break
       case 'ne':
-        compareString = _getQueryString('!=', key);
-        break;
+        compareString = _getQueryString('!=', key)
+        break
+      default:
+        return null
     }
-    compareVal = { [`value${key}`]: valueCompare };
+    compareVal = { [`value${key}`]: valueCompare }
 
     return {
       compareString,
       compareObj: compareVal,
-    };
+    }
   }
 
   private buildTheCompareStringForString(
     stringBuilderConfig: { field: string; alias: string },
-    valueCompare: any,
-    key: string,
+    valueCompare: string,
+    key: string
   ) {
-    let compareString = '';
-    let compareVal = {};
-    const { field, alias } = stringBuilderConfig;
+    let compareString = ''
+    let compareVal = {}
+    const { field, alias } = stringBuilderConfig
 
     function _getQueryString(operator: string, opName: string) {
       const valueCompare = `:value${opName}`
-      return `${alias}.${field} ${operator} ${valueCompare}`;
+
+      return `${alias}.${field} ${operator} ${valueCompare}`
     }
 
     switch (key) {
       case 'eq':
-        compareString = _getQueryString('=', key);
-        break;
+        compareString = _getQueryString('=', key)
+        break
       case 'ne':
-        compareString = _getQueryString('!=', key);
-        break;
+        compareString = _getQueryString('!=', key)
+        break
       case 'ct':
-        compareString = _getQueryString('ILIKE', key);
-        break;
+        compareString = _getQueryString('ILIKE', key)
+        break
       case 'nc':
-        compareString = _getQueryString('NOT ILIKE', key);
-        break;
+        compareString = _getQueryString('NOT ILIKE', key)
+        break
+      default:
+        return null
     }
-    valueCompare = ['ct', 'nc'].includes(key) ? `%${valueCompare}%` : valueCompare
-    compareVal = { [`value${key}`]: valueCompare };
+    valueCompare = ['ct', 'nc'].includes(key)
+      ? `%${valueCompare}%`
+      : valueCompare
+    compareVal = { [`value${key}`]: valueCompare }
 
     return {
       compareString,
       compareObj: compareVal,
-    };
+    }
   }
 }

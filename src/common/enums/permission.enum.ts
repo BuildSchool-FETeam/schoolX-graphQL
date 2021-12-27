@@ -1,3 +1,3 @@
 export enum PermissionEnum {
-  CLIENT_PERMISSION = 'client_permission'
+  CLIENT_PERMISSION = 'client_permission',
 }

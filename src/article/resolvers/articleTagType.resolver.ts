@@ -1,6 +1,6 @@
-import { Parent, ResolveField, Resolver } from '@nestjs/graphql';
-import { ArticleTag } from '../entities/ArticleTag.entity';
-import { ArticleTagService } from '../services/articleTag.service';
+import { Parent, ResolveField, Resolver } from '@nestjs/graphql'
+import { ArticleTag } from '../entities/ArticleTag.entity'
+import { ArticleTagService } from '../services/articleTag.service'
 
 @Resolver('ArticleTagType')
 export class ArticleTagTypeResolver {
@@ -12,9 +12,9 @@ export class ArticleTagTypeResolver {
       articleTag.id,
       {
         relations: ['articles'],
-      },
-    );
+      }
+    )
 
-    return tagWithArticles.articles;
+    return tagWithArticles.articles
   }
 }

@@ -1,19 +1,19 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { Lesson } from './Lesson.entity';
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Lesson } from './Lesson.entity'
 
 @Entity()
 export class LessonDocument extends BaseEntity {
   @Column()
-  url: string;
+  url: string
 
   @Column()
-  filePath: string;
+  filePath: string
 
   @ManyToOne(() => Lesson, (lesson) => lesson.documents, {
     onDelete: 'CASCADE',
-    onUpdate: 'CASCADE'
+    onUpdate: 'CASCADE',
   })
   @JoinColumn()
-  lesson: Lesson;
+  lesson: Lesson
 }

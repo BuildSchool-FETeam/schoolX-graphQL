@@ -1,0 +1,41 @@
+name: deploy-dev
+on:
+  push:
+    branches: 
+      - dev
+  
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: Assign file permission
+        run: chmod 700 ./.github/scripts/decrypt-secret.sh
+
+      - name: Decrypt compute service file
+        env: 
+          COMPUTE_SERVICE_PASS: ${{ secrets.COMPUTE_SERVICE_PASS }}
+        run: ./.github/scripts/decrypt-secret.sh "$COMPUTE_SERVICE_PASS" "compute-service-account.json"
+      
+      - name: Decrypt storage service file
+        env: 
+          STORAGE_SERVICE_PASS: ${{ secrets.STORAGE_SERVICE_PASS }}
+        run: ./.github/scripts/decrypt-secret.sh "$STORAGE_SERVICE_PASS" "storage-service-account.json"
+
+      - name: login to docker
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
+        run: echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+
+      - name: build and push Docker image
+        run: chmod 700 ./.github/scripts/build-image.sh && ./.github/scripts/build-image.sh
+
+      - name: setup gcloud env
+        uses: google-github-actions/setup-gcloud@v0
+
+      - name: gcloud auth
+        run: chmod 700 ./.github/scripts/deploy-dev.sh && ./.github/scripts/deploy-dev.sh
+      

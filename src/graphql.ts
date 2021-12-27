@@ -128,6 +128,7 @@ export class QuestionSetInput {
     id?: Nullable<string>;
     title: string;
     options: string[];
+    order: number;
     isMultiple: boolean;
     result?: Nullable<number>;
     results?: Nullable<number[]>;

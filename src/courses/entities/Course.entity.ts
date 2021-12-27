@@ -1,11 +1,10 @@
-import { AdminUser } from 'src/adminUser/AdminUser.entity';
-import { Achievement } from 'src/clientUser/entities/Achivement.entity';
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity'
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 
-import { UserComment } from 'src/comment/entities/UserComment.entity';
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { Instructor } from 'src/instructor/entities/Instructor.entity';
-import { Tag } from 'src/tag/entities/tag.entity';
+import { UserComment } from 'src/comment/entities/UserComment.entity'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Instructor } from 'src/instructor/entities/Instructor.entity'
+import { Tag } from 'src/tag/entities/tag.entity'
 import {
   Column,
   Entity,
@@ -14,61 +13,61 @@ import {
   ManyToMany,
   ManyToOne,
   OneToMany,
-} from 'typeorm';
-import { Lesson } from './Lesson.entity';
+} from 'typeorm'
+import { Lesson } from './Lesson.entity'
 
 @Entity()
 export class Course extends BaseEntity {
   @Column()
-  description: string;
+  description: string
 
   @Column({ nullable: true, type: 'int' })
-  votes: number;
+  votes: number
 
   @Column()
-  imageUrl: string;
+  imageUrl: string
 
   @Column()
-  filePath: string;
+  filePath: string
 
   @Column({ nullable: true, type: 'int2' })
-  timeByHour: number;
+  timeByHour: number
 
   @OneToMany(() => Lesson, (lesson) => lesson.course)
-  lessons: Lesson[];
+  lessons: Lesson[]
 
   @ManyToOne(() => Instructor, (instructor) => instructor.courses, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  instructor: Instructor;
+  instructor: Instructor
 
   @Column({ nullable: true })
-  isCompleted: boolean;
+  isCompleted: boolean
 
   @Column()
-  benefits: string;
+  benefits: string
 
   @Column()
-  requirements: string;
+  requirements: string
 
   @ManyToMany(() => ClientUser)
   @JoinTable()
-  joinedUsers?: ClientUser[];
+  joinedUsers?: ClientUser[]
 
   @ManyToMany(() => ClientUser)
   @JoinTable()
-  completedUser?: ClientUser[];
+  completedUser?: ClientUser[]
 
   @ManyToMany(() => Tag, (tag) => tag.courses)
-  tags: Tag[];
+  tags: Tag[]
 
   @Column({ nullable: true, default: 'Beginner' })
-  levels: string;
+  levels: string
 
   @OneToMany(() => UserComment, (userComment) => userComment.course)
-  comments: UserComment[];
+  comments: UserComment[]
 
   @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
-  createdBy: AdminUser;
+  createdBy: AdminUser
 }

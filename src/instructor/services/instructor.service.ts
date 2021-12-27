@@ -1,21 +1,21 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { BaseService } from 'src/common/services/base.service';
-import { Instructor } from './../entities/Instructor.entity';
-import * as _ from 'lodash';
-import { TokenService } from 'src/common/services/token.service';
-import { CacheService } from 'src/common/services/cache.service';
+import { InjectRepository } from '@nestjs/typeorm'
+import { Repository } from 'typeorm'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { BaseService } from 'src/common/services/base.service'
+import * as _ from 'lodash'
+import { TokenService } from 'src/common/services/token.service'
+import { CacheService } from 'src/common/services/cache.service'
+import { Instructor } from '../entities/Instructor.entity'
 
-interface InstructorInput {
-  name: string;
-  email: string;
-  title: string;
-  description: string;
-  imageUrl: string;
-  filePath: string;
-  phone: string;
-  clientUserId?: string;
+export interface InstructorInput {
+  name: string
+  email: string
+  title: string
+  description: string
+  imageUrl: string
+  filePath: string
+  phone: string
+  clientUserId?: string
 }
 
 @Injectable()
@@ -24,32 +24,32 @@ export class InstructorService extends BaseService<Instructor> {
     @InjectRepository(Instructor)
     private instructorRepo: Repository<Instructor>,
     private tokenService: TokenService,
-    public cachingService: CacheService,
+    public cachingService: CacheService
   ) {
-    super(instructorRepo, 'Instructor', cachingService);
+    super(instructorRepo, 'Instructor', cachingService)
   }
 
   async createInstructor(data: InstructorInput, token: string) {
-    const adminUser = await this.tokenService.getAdminUserByToken(token);
+    const adminUser = await this.tokenService.getAdminUserByToken(token)
     const instructor = this.instructorRepo.create({
       ...data,
       createdBy: adminUser,
-    });
+    })
 
-    return this.instructorRepo.save(instructor);
+    return this.instructorRepo.save(instructor)
   }
 
   async updateInstructor(id: string, data: InstructorInput) {
-    const inst = await this.findById(id, {});
+    const inst = await this.findById(id, {})
 
     if (!inst) {
-      throw new NotFoundException('Cannot found this instructor');
+      throw new NotFoundException('Cannot found this instructor')
     }
 
     _.forOwn(data, (value, key: keyof InstructorInput) => {
-      value && (inst[key] = value);
-    });
+      value && (inst[key] = value)
+    })
 
-    return this.instructorRepo.save(inst);
+    return this.instructorRepo.save(inst)
   }
 }

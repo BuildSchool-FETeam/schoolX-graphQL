@@ -1,31 +1,33 @@
-import { BaseService } from 'src/common/services/base.service';
-import { TestCase } from 'src/assignment/entities/codeChallenge/Testcase.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
-import { TestCaseSetInput } from 'src/graphql';
-import * as _ from 'lodash';
-import { BadRequestException } from '@nestjs/common';
-import { CodeChallengeService } from './codeChallenge.service';
+import { BaseService } from 'src/common/services/base.service'
+import { TestCase } from 'src/assignment/entities/codeChallenge/Testcase.entity'
+import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
+import { TestCaseSetInput } from 'src/graphql'
+import * as _ from 'lodash'
+import { BadRequestException } from '@nestjs/common'
+import { CodeChallengeService } from './codeChallenge.service'
 
 export class TestCaseService extends BaseService<TestCase> {
   constructor(
     @InjectRepository(TestCase)
     private testCaseRepo: Repository<TestCase>,
-    private codeChallengeService: CodeChallengeService,
+    private codeChallengeService: CodeChallengeService
   ) {
-    super(testCaseRepo, 'TestCase');
+    super(testCaseRepo, 'TestCase')
   }
 
   async createTestCase(data: TestCaseSetInput) {
-    const codeChallenge = await this.codeChallengeService.findById(data.codeChallengeId);
+    const codeChallenge = await this.codeChallengeService.findById(
+      data.codeChallengeId
+    )
 
     if (
       _.isNil(data.generatedExpectResultScript) &&
       _.isNil(data.expectResult)
     ) {
       throw new BadRequestException(
-        "You should provide either 'generatedExpectResultScript' OR 'expectResult'",
-      );
+        "You should provide either 'generatedExpectResultScript' OR 'expectResult'"
+      )
     }
 
     const tc = this.testCaseRepo.create({
@@ -35,24 +37,26 @@ export class TestCaseService extends BaseService<TestCase> {
       runningTestScript: data.runningTestScript,
       programingLanguage: data.programingLanguage,
       timeEvaluation: data.timeEvaluation,
-      codeChallenge
-    });
+      codeChallenge,
+    })
 
-    return this.testCaseRepo.save(tc);
+    return this.testCaseRepo.save(tc)
   }
 
   async updateTestCase(id: string, data: TestCaseSetInput) {
-    const existedTc = await this.findById(id);
-    const codeChallenge = await this.codeChallengeService.findById(data.codeChallengeId);
+    const existedTc = await this.findById(id)
+    const codeChallenge = await this.codeChallengeService.findById(
+      data.codeChallengeId
+    )
 
     _.forOwn(data, (value, key) => {
       if (key === 'codeChallengeId') {
-        existedTc.codeChallenge = codeChallenge;
+        existedTc.codeChallenge = codeChallenge
       } else {
-        value && (existedTc[key] = value);
+        value && (existedTc[key] = value)
       }
-    });
+    })
 
-    return this.testCaseRepo.save(existedTc);
+    return this.testCaseRepo.save(existedTc)
   }
 }

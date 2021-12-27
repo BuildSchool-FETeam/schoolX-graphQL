@@ -1,54 +1,54 @@
-import { AdminUser } from 'src/adminUser/AdminUser.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import {
   Column,
   CreateDateColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from 'typeorm'
 
 export abstract class BaseEntity {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: string
 
-  @Column()
-  title: string;
+  @Column({ nullable: true })
+  title: string
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 export abstract class BaseEntityUUID {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column()
-  title: string;
+  title: string
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 }
 
 export abstract class UserBaseEntityUUID {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id: string
 
   @Column()
-  name: string;
+  name: string
 
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt: Date
 
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt: Date
 }
 export abstract class BaseEntityWithCreatedBy {
   @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
-  createdBy: AdminUser;
+  createdBy: AdminUser
 }

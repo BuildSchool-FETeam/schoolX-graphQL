@@ -1,20 +1,22 @@
-import { PermissionSet } from './../../permission/entities/Permission.entity';
-import { CacheService } from './cache.service';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import * as _ from 'lodash';
-import { Repository, FindManyOptions, FindOneOptions } from 'typeorm';
-import { ICachedPermissionSet } from '../guards/permission.guard';
-import { cacheConstant } from '../constants/cache.contant';
-import { UtilService } from './util.service';
+import { ForbiddenException, NotFoundException } from '@nestjs/common'
+import * as _ from 'lodash'
+import { Repository, FindManyOptions, FindOneOptions } from 'typeorm'
+import { CacheService } from './cache.service'
+import { PermissionSet } from '../../permission/entities/Permission.entity'
+import { ICachedPermissionSet } from '../guards/permission.guard'
+import { cacheConstant } from '../constants/cache.contant'
+import { UtilService } from './util.service'
 
 export interface IStrictConfig {
-  token: string;
-  strictResourceName: keyof Omit<PermissionSet, 'id' | 'role' | 'createdBy'>;
+  token: string
+  strictResourceName: keyof Omit<PermissionSet, 'id' | 'role' | 'createdBy'>
 }
 export abstract class BaseService<T> extends UtilService {
-  protected repository: Repository<T>;
-  protected resourceName: string;
-  protected cachingService: CacheService;
+  protected repository: Repository<T>
+
+  protected resourceName: string
+
+  protected cachingService: CacheService
 
   /**
    * BaseService help us solving the DRY problem or working with DB
@@ -25,12 +27,12 @@ export abstract class BaseService<T> extends UtilService {
   constructor(
     repo: Repository<T>,
     resourceName?: string,
-    cachingService?: CacheService,
+    cachingService?: CacheService
   ) {
-    super();
-    this.repository = repo;
-    this.resourceName = resourceName;
-    this.cachingService = cachingService;
+    super()
+    this.repository = repo
+    this.resourceName = resourceName
+    this.cachingService = cachingService
   }
 
   /**
@@ -43,53 +45,52 @@ export abstract class BaseService<T> extends UtilService {
   async findById(
     id: string,
     options: FindOneOptions<T> = {},
-    strictConfig?: IStrictConfig,
+    strictConfig?: IStrictConfig
   ) {
     if (strictConfig) {
       if (_.size(options.relations) === 0) {
-        options.relations = ['createdBy'];
+        options.relations = ['createdBy']
       } else if (!options.relations.includes('createdBy')) {
-        options.relations.push('createdBy');
+        options.relations.push('createdBy')
       }
     }
 
-    const resource = await this.repository.findOne(id, options);
+    const resource = await this.repository.findOne(id, options)
 
     if (!resource) {
       throw new NotFoundException(
-        `${this.resourceName} with id=${id} not found!!`,
-      );
+        `${this.resourceName} with id=${id} not found!!`
+      )
     }
 
     if (strictConfig) {
-      const {
-        user: adminUser,
-        permissionSet,
-      } = await this.getAdminUserCredential(strictConfig.token);
+      const { user: adminUser, permissionSet } =
+        await this.getAdminUserCredential(strictConfig.token)
 
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
       ) {
-        if (_.isNil((resource as any).createdBy)) {
+        if (_.isNil((resource as DynamicObject).createdBy)) {
           throw new ForbiddenException(
-            "You don't have permission to do this action on resource",
-          );
+            "You don't have permission to do this action on resource"
+          )
         }
 
-        if ((resource as any).createdBy.id !== adminUser.id) {
+        if ((resource as DynamicObject).createdBy.id !== adminUser.id) {
           throw new ForbiddenException(
-            "You don't have permission to do this action on resource",
-          );
+            "You don't have permission to do this action on resource"
+          )
         }
       }
     }
 
     if (!resource) {
       throw new NotFoundException(
-        `Resource ${this.resourceName || ''} with id: ${id} not found`,
-      );
+        `Resource ${this.resourceName || ''} with id: ${id} not found`
+      )
     }
-    return resource;
+
+    return resource
   }
 
   /**
@@ -100,13 +101,11 @@ export abstract class BaseService<T> extends UtilService {
    */
   async findWithOptions(
     options?: FindManyOptions<T>,
-    strictConfig?: IStrictConfig,
+    strictConfig?: IStrictConfig
   ) {
     if (strictConfig) {
-      const {
-        user: adminUser,
-        permissionSet,
-      } = await this.getAdminUserCredential(strictConfig.token);
+      const { user: adminUser, permissionSet } =
+        await this.getAdminUserCredential(strictConfig.token)
 
       if (
         this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
@@ -115,35 +114,36 @@ export abstract class BaseService<T> extends UtilService {
           const strictWhereOptions = _.map(options.where, (whereOpt) => {
             const whereOptions = _.assign(whereOpt, {
               createdBy: adminUser,
-            }) as FindManyOptions<T>;
+            }) as FindManyOptions<T>
 
-            return whereOptions;
-          });
+            return whereOptions
+          })
           options = {
             ...options,
             where: strictWhereOptions,
-          };
+          }
         } else {
           const whereOptions = _.assign(options.where, {
             createdBy: adminUser,
-          }) as FindManyOptions<T>;
+          }) as FindManyOptions<T>
 
           options = {
             ...options,
             where: whereOptions,
             cache: true,
-          };
+          }
         }
       }
     }
 
-    const resource = await this.repository.find(options);
+    const resource = await this.repository.find(options)
     if (!resource) {
       throw new NotFoundException(
-        `Resources ${this.resourceName || ''} not found`,
-      );
+        `Resources ${this.resourceName || ''} not found`
+      )
     }
-    return resource;
+
+    return resource
   }
 
   /**
@@ -154,16 +154,17 @@ export abstract class BaseService<T> extends UtilService {
    */
   async deleteOneById(id: string, strictConfig?: IStrictConfig) {
     if (strictConfig) {
-      await this.findById(id, {}, strictConfig);
+      await this.findById(id, {}, strictConfig)
     }
 
-    const existedItem = await this.repository.findOne(id);
+    const existedItem = await this.repository.findOne(id)
     if (!existedItem) {
       throw new NotFoundException(
-        `Resource ${this.resourceName || ''} with id: ${id} not found`,
-      );
+        `Resource ${this.resourceName || ''} with id: ${id} not found`
+      )
     }
-    return this.repository.delete(id);
+
+    return this.repository.delete(id)
   }
 
   /**
@@ -172,21 +173,19 @@ export abstract class BaseService<T> extends UtilService {
    * @returns number of items
    */
   async countingTotalItem(strict?: IStrictConfig) {
-    const {
-      user: adminUser,
-      permissionSet,
-    } = await this.getAdminUserCredential(strict.token);
-    const builder = this.repository.createQueryBuilder('entity');
+    const { user: adminUser, permissionSet } =
+      await this.getAdminUserCredential(strict.token)
+    const builder = this.repository.createQueryBuilder('entity')
 
     if (this.isStrictPermission(permissionSet[strict.strictResourceName])) {
-      builder.where('entity.createdById = :id', { id: adminUser.id });
+      builder.where('entity.createdById = :id', { id: adminUser.id })
     }
 
-    return builder.getCount();
+    return builder.getCount()
   }
 
   private isStrictPermission(permissionAsString: string) {
-    return _.includes(permissionAsString.split('|'), 'S');
+    return _.includes(permissionAsString.split('|'), 'S')
   }
 
   /**
@@ -196,10 +195,11 @@ export abstract class BaseService<T> extends UtilService {
    */
   protected async getAdminUserCredential(token: string) {
     if (!this.cachingService) {
-      throw new Error('You should inject caching service before using it!!');
+      throw new Error('You should inject caching service before using it!!')
     }
+
     return await this.cachingService.getValue<ICachedPermissionSet>(
-      `${cacheConstant.PERMISSION}-${token}`,
-    );
+      `${cacheConstant.PERMISSION}-${token}`
+    )
   }
 }

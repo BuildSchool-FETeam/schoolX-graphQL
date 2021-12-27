@@ -51,25 +51,25 @@ services:
       - /home/app/node_modules
       - ./servers/js:/home/app
 
-  java-server:
-    build:
-      context: ./servers/java
-      dockerfile: Dockerfile.dev
-    ports:
-      - 6002:6002
-    volumes:
-      - /home/app/node_modules
-      - ./servers/java:/home/app
+  # java-server:
+  #   build:
+  #     context: ./servers/java
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 6002:6002
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/java:/home/app
 
-  python-server:
-    build:
-      context: ./servers/python
-      dockerfile: Dockerfile.dev
-    ports:
-      - 6003:6003
-    volumes:
-      - /home/app/node_modules
-      - ./servers/python:/home/app
+  # python-server:
+  #   build:
+  #     context: ./servers/python
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 6003:6003
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/python:/home/app
 
   postgres-db:
     image: postgres:13.4

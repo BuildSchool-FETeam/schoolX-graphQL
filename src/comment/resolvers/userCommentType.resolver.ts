@@ -1,7 +1,7 @@
-import { PaginationInput } from './../../graphql';
-import { UserComment } from 'src/comment/entities/UserComment.entity';
-import { UserCommentService } from './../services/userComment.service';
-import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql';
+import { UserComment } from 'src/comment/entities/UserComment.entity'
+import { Args, Parent, ResolveField, Resolver } from '@nestjs/graphql'
+import { PaginationInput } from '../../graphql'
+import { UserCommentService } from '../services/userComment.service'
 
 @Resolver('UserCommentType')
 export class UserCommentTypeResolver {
@@ -12,9 +12,9 @@ export class UserCommentTypeResolver {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
       relations: ['createdBy'],
-    });
+    })
 
-    return data.createdBy;
+    return data.createdBy
   }
 
   @ResolveField()
@@ -22,9 +22,9 @@ export class UserCommentTypeResolver {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
       relations: ['course'],
-    });
+    })
 
-    return data.course;
+    return data.course
   }
 
   @ResolveField()
@@ -35,9 +35,9 @@ export class UserCommentTypeResolver {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
       relations: ['reply'],
-    });
+    })
 
-    return this.commentService.manuallyPagination(data.reply, pg);
+    return this.commentService.manuallyPagination(data.reply, pg)
   }
 
   @ResolveField()
@@ -45,9 +45,9 @@ export class UserCommentTypeResolver {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
       relations: ['assignment'],
-    });
+    })
 
-    return data.assignment;
+    return data.assignment
   }
 
   @ResolveField()
@@ -55,9 +55,9 @@ export class UserCommentTypeResolver {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
       relations: ['article'],
-    });
+    })
 
-    return data.article;
+    return data.article
   }
 
   @ResolveField()
@@ -65,8 +65,8 @@ export class UserCommentTypeResolver {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
       relations: ['submittedAssignment'],
-    });
+    })
 
-    return data.submittedAssignment;
+    return data.submittedAssignment
   }
 }

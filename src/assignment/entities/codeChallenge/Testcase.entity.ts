@@ -1,6 +1,6 @@
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { CodeChallenge } from './CodeChallenge.entity';
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { CodeChallenge } from './CodeChallenge.entity'
 
 export enum TestCaseProgrammingLanguage {
   javascript = 'javascript',
@@ -12,23 +12,23 @@ export enum TestCaseProgrammingLanguage {
 @Entity()
 export class TestCase extends BaseEntity {
   @Column()
-  generatedExpectResultScript?: string;
+  generatedExpectResultScript?: string
 
   @Column({ nullable: true })
-  timeEvaluation?: number;
+  timeEvaluation?: number
 
   @Column()
-  expectResult?: string;
+  expectResult?: string
 
   @Column()
-  runningTestScript: string;
+  runningTestScript: string
 
   @Column({ enum: TestCaseProgrammingLanguage })
-  programingLanguage: string;
+  programingLanguage: string
 
   @ManyToOne(() => CodeChallenge, (assign) => assign.testCases, {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  codeChallenge: CodeChallenge;
+  codeChallenge: CodeChallenge
 }

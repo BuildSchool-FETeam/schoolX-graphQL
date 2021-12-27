@@ -1,70 +1,70 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
-import { AuthGuard } from 'src/common/guards/auth.guard';
+import { UseGuards } from '@nestjs/common'
+import { Args, Query, ResolveField, Resolver } from '@nestjs/graphql'
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator'
+import { AuthGuard } from 'src/common/guards/auth.guard'
 import {
   FilterArticleInput,
   PaginationInput,
   SearchOptionInput,
-} from 'src/graphql';
-import { ArticleService } from '../services/article.service';
-import { ArticleTagService } from '../services/articleTag.service';
+} from 'src/graphql'
+import { ArticleService } from '../services/article.service'
+import { ArticleTagService } from '../services/articleTag.service'
 
 @UseGuards(AuthGuard)
 @Resolver('ArticleQuery')
 export class ArticleQueryResolver {
   constructor(
     private articleService: ArticleService,
-    private articleTagService: ArticleTagService,
+    private articleTagService: ArticleTagService
   ) {}
 
   @Query()
   articleQuery() {
-    return {};
+    return {}
   }
 
   @PermissionRequire({ blog: ['R'] })
   @ResolveField('articles')
-  getAllArticles(
+  async getAllArticles(
     @Args('pagination') pg?: PaginationInput,
-    @Args('searchOption') sOpt?: SearchOptionInput,
+    @Args('searchOption') sOpt?: SearchOptionInput
   ) {
-    const paginationOption = this.articleService.buildPaginationOptions(pg);
-    const searchOption = this.articleService.buildSearchOptions(sOpt);
+    const paginationOption = this.articleService.buildPaginationOptions(pg)
+    const searchOption = this.articleService.buildSearchOptions(sOpt)
 
     return this.articleService.findWithOptions({
       ...paginationOption,
       ...searchOption,
-    });
+    })
   }
 
   @PermissionRequire({ blog: ['R'] })
   @ResolveField('filteredArticles')
-  getArticleByFilter(
+  async getArticleByFilter(
     @Args('filterOptions') filterOption: FilterArticleInput,
-    @Args('pagination') pg: PaginationInput,
+    @Args('pagination') pg: PaginationInput
   ) {
-    return this.articleService.filterArticle(filterOption, pg);
+    return this.articleService.filterArticle(filterOption, pg)
   }
 
   @PermissionRequire({ blog: ['R'] })
   @ResolveField('articleDetail')
-  getArticleById(@Args('id') id: string) {
-    return this.articleService.findById(id);
+  async getArticleById(@Args('id') id: string) {
+    return this.articleService.findById(id)
   }
 
   @ResolveField('tags')
   @PermissionRequire({ blog: ['R'] })
-  getAllTags(
+  async getAllTags(
     @Args('pagination') pg?: PaginationInput,
-    @Args('searchOption') sOpt?: SearchOptionInput,
+    @Args('searchOption') sOpt?: SearchOptionInput
   ) {
-    const paginationOption = this.articleService.buildPaginationOptions(pg);
-    const searchOption = this.articleService.buildSearchOptions(sOpt);
+    const paginationOption = this.articleService.buildPaginationOptions(pg)
+    const searchOption = this.articleService.buildSearchOptions(sOpt)
 
     return this.articleTagService.findWithOptions({
       ...paginationOption,
       ...searchOption,
-    });
+    })
   }
 }

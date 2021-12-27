@@ -1,12 +1,14 @@
-import { ReadStream } from 'typeorm/platform/PlatformTools';
+/* eslint-disable newline-per-chained-call */
+import { ReadStream } from 'typeorm/platform/PlatformTools'
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
-} from '@nestjs/common';
-import { Bucket, Storage } from '@google-cloud/storage';
-import { ConfigService } from '@nestjs/config';
-import { EnvVariable } from '../interfaces/EnvVariable.interface';
-import { ImageProcessService, IProcessConfig } from './imageProcess.service';
+} from '@nestjs/common'
+import { Bucket, Storage } from '@google-cloud/storage'
+import { ConfigService } from '@nestjs/config'
+import { EnvVariable } from '../interfaces/EnvVariable.interface'
+import { ImageProcessService, IProcessConfig } from './imageProcess.service'
 
 export enum StorageFolder {
   instructor = 'Instructors',
@@ -17,32 +19,33 @@ export enum StorageFolder {
 
 @Injectable()
 export class GCStorageService {
-  private bucket: Bucket;
-  private rootFolder: string;
+  private bucket: Bucket
+
+  private rootFolder: string
 
   constructor(
     private configService: ConfigService<EnvVariable>,
-    private imageProcessService: ImageProcessService,
+    private imageProcessService: ImageProcessService
   ) {
-    const storage = new Storage();
-    this.bucket = storage.bucket('schoolx-dev-storage');
-    this.rootFolder = this.configService.get('STORAGE_FOLDER');
+    const storage = new Storage()
+    this.bucket = storage.bucket('schoolx-dev-storage')
+    this.rootFolder = this.configService.get('STORAGE_FOLDER')
   }
 
-  getFiles() {
-    return this.bucket.getFiles();
+  async getFiles() {
+    return this.bucket.getFiles()
   }
 
   /**
    * @additionalPath format: path/.../path
    */
-  uploadFile(config: {
-    fileName: string;
-    readStream: ReadStream;
-    type: StorageFolder;
-    makePublic: boolean;
-    additionalPath?: string;
-    imageProcessConfig?: IProcessConfig;
+  async uploadFile(config: {
+    fileName: string
+    readStream: ReadStream
+    type: StorageFolder
+    makePublic: boolean
+    additionalPath?: string
+    imageProcessConfig?: IProcessConfig
   }): Promise<{ publicUrl: string; filePath: string }> {
     const {
       fileName,
@@ -51,51 +54,51 @@ export class GCStorageService {
       makePublic,
       additionalPath,
       imageProcessConfig,
-    } = config;
+    } = config
 
     return new Promise((resolve) => {
       const filePath = additionalPath
         ? `${
             this.rootFolder
           }/${type}/${additionalPath}/${this.makeFileNameUnique(fileName)}`
-        : `${this.rootFolder}/${type}/${this.makeFileNameUnique(fileName)}`;
+        : `${this.rootFolder}/${type}/${this.makeFileNameUnique(fileName)}`
 
-      const cloudFile = this.bucket.file(filePath);
+      const cloudFile = this.bucket.file(filePath)
       const transformedStream = this.addProcessImageToStream(
         imageProcessConfig,
-        readStream,
-      );
+        readStream
+      )
 
       transformedStream
         .pipe(cloudFile.createWriteStream())
         .on('error', (err) => {
-          throw new InternalServerErrorException(err);
+          throw new InternalServerErrorException(err)
         })
         .on('finish', async () => {
           if (makePublic) {
             try {
-              await cloudFile.makePublic();
+              await cloudFile.makePublic()
             } catch (err) {
-              throw new InternalServerErrorException(err);
+              throw new InternalServerErrorException(err)
             }
           }
           resolve({
             publicUrl: cloudFile.publicUrl(),
             filePath,
-          });
-        });
-    });
+          })
+        })
+    })
   }
 
   async deleteFile(filePath: string) {
-    const cloudFile = this.bucket.file(filePath);
+    const cloudFile = this.bucket.file(filePath)
 
     try {
-      await cloudFile.delete();
-      return true;
+      await cloudFile.delete()
+
+      return true
     } catch (err) {
-      console.log(err);
-      // throw new BadRequestException(err);
+      throw new BadRequestException(err)
     }
   }
 
@@ -107,40 +110,40 @@ export class GCStorageService {
         },
         (err, files) => {
           if (err) {
-            reject(err);
-            return;
+            reject(err)
+
+            return
           }
 
-          resolve(files.map((item) => item.metadata.name));
-        },
-      );
-    });
+          resolve(files.map((item) => item.metadata.name))
+        }
+      )
+    })
   }
 
   private addProcessImageToStream(
     processConfig: IProcessConfig,
-    stream: ReadStream,
+    stream: ReadStream
   ) {
     if (processConfig) {
-      const transformer = this.imageProcessService.createResizeTransformer(
-        processConfig,
-      );
+      const transformer =
+        this.imageProcessService.createResizeTransformer(processConfig)
 
-      return stream.pipe(transformer);
+      return stream.pipe(transformer)
     }
 
-    return stream;
+    return stream
   }
 
   private makeFileNameUnique(fileName: string) {
-    const fileNameArr = fileName.split('.');
+    const fileNameArr = fileName.split('.')
     if (fileNameArr.length !== 2) {
       throw new InternalServerErrorException(
-        'File name should be like "image.jpg")',
-      );
+        'File name should be like "image.jpg")'
+      )
     }
-    const randomNumber = Math.random().toString(24).slice(2, 15);
+    const randomNumber = Math.random().toString(24).slice(2, 15)
 
-    return `${fileNameArr[0]}-${randomNumber}.${fileNameArr[1]}`;
+    return `${fileNameArr[0]}-${randomNumber}.${fileNameArr[1]}`
   }
 }

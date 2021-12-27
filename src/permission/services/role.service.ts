@@ -1,41 +1,41 @@
-import { BaseService } from 'src/common/services/base.service';
-import { PermissionSet } from './../entities/Permission.entity';
-import { Injectable, BadRequestException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository } from 'typeorm';
-import { Role } from '../entities/Role.entity';
+import { BaseService } from 'src/common/services/base.service'
+import { Injectable, BadRequestException } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
+import { FindOneOptions, Repository } from 'typeorm'
+import { PermissionSet } from '../entities/Permission.entity'
+import { Role } from '../entities/Role.entity'
 
 @Injectable()
 export class RoleService extends BaseService<Role> {
   constructor(
     @InjectRepository(Role)
-    private roleRepo: Repository<Role>,
+    private roleRepo: Repository<Role>
   ) {
-    super(roleRepo, 'Role');
+    super(roleRepo, 'Role')
   }
 
-  createAdminRole(assignedPermission: PermissionSet) {
+  async createAdminRole(assignedPermission: PermissionSet) {
     const role = this.roleRepo.create({
       name: 'ultimateAdmin',
       permissionSet: assignedPermission,
-    });
+    })
 
-    return this.roleRepo.save(role);
+    return this.roleRepo.save(role)
   }
 
   async createRole(name: string) {
-    const existedRole = await this.roleRepo.findOne({ name });
+    const existedRole = await this.roleRepo.findOne({ name })
 
     if (existedRole) {
       throw new BadRequestException(
-        'This name has been taken please choose another one',
-      );
+        'This name has been taken please choose another one'
+      )
     }
     const newRole = this.roleRepo.create({
       name,
-    });
+    })
 
-    return this.roleRepo.save(newRole);
+    return this.roleRepo.save(newRole)
   }
 
   async updateRole(name: string, newName: string) {
@@ -43,19 +43,19 @@ export class RoleService extends BaseService<Role> {
       { name },
       {
         name: newName,
-      },
-    );
+      }
+    )
   }
 
   async deleteRoleByName(removedName: string) {
     return this.roleRepo
       .createQueryBuilder('role')
-      .where('role.name = :name', {name: removedName})
+      .where('role.name = :name', { name: removedName })
       .delete()
       .execute()
   }
 
   async findRoleByName(name: string, options?: FindOneOptions<Role>) {
-    return this.roleRepo.findOne({ name }, options);
+    return this.roleRepo.findOne({ name }, options)
   }
 }

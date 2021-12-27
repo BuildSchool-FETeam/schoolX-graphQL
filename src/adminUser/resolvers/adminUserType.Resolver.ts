@@ -1,6 +1,6 @@
-import { AdminUserService } from 'src/adminUser/services/AdminUser.service';
-import { Resolver, ResolveField, Parent } from '@nestjs/graphql';
-import { AdminUser } from '../AdminUser.entity';
+import { AdminUserService } from 'src/adminUser/services/AdminUser.service'
+import { Resolver, ResolveField, Parent } from '@nestjs/graphql'
+import { AdminUser } from '../AdminUser.entity'
 
 @Resolver('AdminUser')
 export class AdminUserTypeResolver {
@@ -10,26 +10,26 @@ export class AdminUserTypeResolver {
   async role(@Parent() admin: AdminUser) {
     const parentAdmin = await this.adminUserService.findById(admin.id, {
       relations: ['role'],
-    });
+    })
 
-    return parentAdmin.role.name;
+    return parentAdmin.role.name
   }
 
   @ResolveField()
   async createdBy(@Parent() admin: AdminUser) {
     const parentAdmin = await this.adminUserService.findById(admin.id, {
       relations: ['createdBy'],
-    });
+    })
 
-    return parentAdmin.createdBy;
+    return parentAdmin.createdBy
   }
 
   @ResolveField()
   async evaluationComments(@Parent() admin: AdminUser) {
     const parentAdmin = await this.adminUserService.findById(admin.id, {
-      relations: ["commentEvaluations"]
+      relations: ['commentEvaluations'],
     })
 
-    return parentAdmin.evaluationComments;
+    return parentAdmin.evaluationComments
   }
 }

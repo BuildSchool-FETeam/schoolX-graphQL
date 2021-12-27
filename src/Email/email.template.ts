@@ -6,4 +6,4 @@ export const TEMP_RESET_PASSWORD = `
       <h1>%CODE%</h1>
     <div style="height: 2rem; width: 100%; background: #0a96f3"></div>
   </div>
-`;
+`

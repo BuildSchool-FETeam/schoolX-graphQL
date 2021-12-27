@@ -1,6 +1,6 @@
-import { Resolver, Subscription } from '@nestjs/graphql';
-import { SubscriptionService } from 'src/common/services/subscription.service';
-import { AdminNotification } from '../Notification.entity';
+import { Resolver, Subscription } from '@nestjs/graphql'
+import { SubscriptionService } from 'src/common/services/subscription.service'
+import { AdminNotification } from '../Notification.entity'
 
 @Resolver('NotificationSubscription')
 export class NotificationSubscriptionResolver {
@@ -9,16 +9,16 @@ export class NotificationSubscriptionResolver {
   @Subscription('notificationCreated', {
     async filter(
       { notificationCreated }: { notificationCreated: AdminNotification },
-      variable: { adminUserId: string },
+      variable: { adminUserId: string }
     ) {
       return notificationCreated.recipientByAdminIds.includes(
-        variable.adminUserId,
-      );
+        variable.adminUserId
+      )
     },
   })
   async notificationCreated() {
-    return this.subService.pubsub.asyncIterator(NOTIFICATION_CREATED);
+    return this.subService.pubsub.asyncIterator(NOTIFICATION_CREATED)
   }
 }
 
-export const NOTIFICATION_CREATED = 'NOTIFICATION_CREATED';
+export const NOTIFICATION_CREATED = 'NOTIFICATION_CREATED'

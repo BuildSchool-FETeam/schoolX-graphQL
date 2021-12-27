@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { MailGunService } from './services/mailGun.service';
+import { Module } from '@nestjs/common'
+import { MailGunService } from './services/mailGun.service'
 
 @Module({
   providers: [MailGunService],

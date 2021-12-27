@@ -1,7 +1,7 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, ResolveField, Resolver, Query } from '@nestjs/graphql';
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { ClientUserService } from '../services/clientUser.service';
+import { UseGuards } from '@nestjs/common'
+import { Args, ResolveField, Resolver, Query } from '@nestjs/graphql'
+import { AuthGuard } from 'src/common/guards/auth.guard'
+import { ClientUserService } from '../services/clientUser.service'
 
 @UseGuards(AuthGuard)
 @Resolver('ClientUserQuery')
@@ -10,11 +10,11 @@ export class clientUserQueryResolver {
 
   @Query()
   clientUserQuery() {
-    return {};
+    return {}
   }
 
   @ResolveField()
-  userDetail(@Args('id') id: string) {
-    return this.clientUserService.findById(id);
+  async userDetail(@Args('id') id: string) {
+    return this.clientUserService.findById(id)
   }
 }

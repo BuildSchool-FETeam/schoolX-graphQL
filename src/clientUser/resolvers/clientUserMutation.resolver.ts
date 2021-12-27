@@ -1,84 +1,88 @@
-import { UseGuards } from '@nestjs/common';
-import { Args, Context, Mutation, ResolveField, Resolver } from '@nestjs/graphql';
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { TokenService } from 'src/common/services/token.service';
-import { 
-  UpdateFollow, 
+import { UseGuards } from '@nestjs/common'
+import {
+  Args,
+  Context,
+  Mutation,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql'
+import { AuthGuard } from 'src/common/guards/auth.guard'
+import {
+  UpdateFollow,
   ClientUserUpdateInput,
-  UpdateJoinedCourse, 
-  UpdateScore, 
-  Upload } from 'src/graphql';
-import { ClientUserService } from '../services/clientUser.service';
+  UpdateJoinedCourse,
+  UpdateScore,
+  Upload,
+} from 'src/graphql'
+import { ClientUserService } from '../services/clientUser.service'
 
 @UseGuards(AuthGuard)
 @Resolver('ClientUserMutation')
 export class ClientUserMutationResolver {
-  constructor(
-    private clientUserService: ClientUserService,
-  ) {}
+  constructor(private clientUserService: ClientUserService) {}
 
   @Mutation()
   clientUserMutation() {
-    return {};
+    return {}
   }
 
   @ResolveField()
-  updateClientUser(
+  async updateClientUser(
     @Args('data') data: ClientUserUpdateInput,
-    @Args('id') id: string,
+    @Args('id') id: string
   ) {
-    return this.clientUserService.updateClientUserInfo(data, id);
+    return this.clientUserService.updateClientUserInfo(data, id)
   }
 
   @ResolveField()
   async updateClientUserAvatar(
     @Args('id') id: string,
-    @Args('image') image: Upload,
+    @Args('image') image: Upload
   ) {
-    return this.clientUserService.updateUserAvatar(id, image);
+    return this.clientUserService.updateUserAvatar(id, image)
   }
 
   @ResolveField()
   async updateScore(
     @Args('data') data: UpdateScore,
-    @Context() { req }: any
+    @Context() { req }: DynamicObject
   ) {
-    const id = this.clientUserService.getIdUserByHeaders(req.headers);
-    
-    await this.clientUserService.updateScore(id, data);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers)
 
-    return true;
+    await this.clientUserService.updateScore(id, data)
+
+    return true
   }
-  
+
   @ResolveField()
   async updateJoinedCourse(
     @Args('data') data: UpdateJoinedCourse,
-    @Context() { req }: any
+    @Context() { req }: DynamicObject
   ) {
-    const id = this.clientUserService.getIdUserByHeaders(req.headers);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers)
 
-    return this.clientUserService.updateJoinedCourse(id, data);
+    return this.clientUserService.updateJoinedCourse(id, data)
   }
-  
+
   @ResolveField()
   async updateFollow(
     @Args('data') data: UpdateFollow,
-    @Context() { req }: any
-  ){
-    const id = this.clientUserService.getIdUserByHeaders(req.headers);
+    @Context() { req }: DynamicObject
+  ) {
+    const id = this.clientUserService.getIdUserByHeaders(req.headers)
 
-    if(id === data.idFollow) return false;
+    if (id === data.idFollow) return false
 
-    return this.clientUserService.updateFollow(id, data);;
+    return this.clientUserService.updateFollow(id, data)
   }
 
   @ResolveField()
   async updateCompletedCourses(
     @Args('idCourse') idCourse: string,
-    @Context() { req }: any
+    @Context() { req }: DynamicObject
   ) {
-    const id = this.clientUserService.getIdUserByHeaders(req.headers);
+    const id = this.clientUserService.getIdUserByHeaders(req.headers)
 
-    return this.clientUserService.updateCompletedCourses(id, idCourse);
+    return this.clientUserService.updateCompletedCourses(id, idCourse)
   }
 }

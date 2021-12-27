@@ -1,9 +1,9 @@
-import { UseGuards } from '@nestjs/common';
-import { Resolver, Query, ResolveField, Context, Args } from '@nestjs/graphql';
-import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator';
-import { AuthGuard } from 'src/common/guards/auth.guard';
-import { PaginationInput, SearchOptionInput } from 'src/graphql';
-import { NotificationService } from '../services/notification.service';
+import { UseGuards } from '@nestjs/common'
+import { Resolver, Query, ResolveField, Context, Args } from '@nestjs/graphql'
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator'
+import { AuthGuard } from 'src/common/guards/auth.guard'
+import { PaginationInput, SearchOptionInput } from 'src/graphql'
+import { NotificationService } from '../services/notification.service'
 
 @UseGuards(AuthGuard)
 @Resolver('NotificationQuery')
@@ -12,63 +12,66 @@ export class NotificationQueryResolver {
 
   @Query()
   notificationQuery() {
-    return {};
+    return {}
   }
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField('notificationsReceived')
-  getNotificationReceived(
-    @Context() { req }: any,
+  async getNotificationReceived(
+    @Context() { req }: DynamicObject,
     @Args('pagination') pg: PaginationInput,
-    @Args('searchOption') sOpt: SearchOptionInput,
+    @Args('searchOption') sOpt: SearchOptionInput
   ) {
-    const token = this.noticService.getTokenFromHttpHeader(req.headers);
-    const searchOpt = this.noticService.buildSearchOptions(sOpt);
+    const token = this.noticService.getTokenFromHttpHeader(req.headers)
+    const searchOpt = this.noticService.buildSearchOptions(sOpt)
 
-    return this.noticService.getNotificationsReceived(token, searchOpt, pg);
+    return this.noticService.getNotificationsReceived(token, searchOpt, pg)
   }
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField('notificationsSent')
-  getNotificationsSent(
-    @Context() { req }: any,
+  async getNotificationsSent(
+    @Context() { req }: DynamicObject,
     @Args('pagination') pg: PaginationInput,
-    @Args('searchOption') sOpt: SearchOptionInput,
+    @Args('searchOption') sOpt: SearchOptionInput
   ) {
-    const token = this.noticService.getTokenFromHttpHeader(req.headers);
-    const paginationOpt = this.noticService.buildPaginationOptions(pg);
-    const searchOpt = this.noticService.buildSearchOptions(sOpt);
+    const token = this.noticService.getTokenFromHttpHeader(req.headers)
+    const paginationOpt = this.noticService.buildPaginationOptions(pg)
+    const searchOpt = this.noticService.buildSearchOptions(sOpt)
 
     return this.noticService.findWithOptions(
       {
         ...paginationOpt,
         ...searchOpt,
       },
-      { token, strictResourceName: 'notification' },
-    );
+      { token, strictResourceName: 'notification' }
+    )
   }
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField('notification')
-  getNotification(@Context() { req }: any, @Args('id') id: string) {
-    const token = this.noticService.getTokenFromHttpHeader(req.headers);
+  async getNotification(
+    @Context() { req }: DynamicObject,
+    @Args('id') id: string
+  ) {
+    const token = this.noticService.getTokenFromHttpHeader(req.headers)
 
-    return this.noticService.getNotificationById(token, id);
+    return this.noticService.getNotificationById(token, id)
   }
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField()
-  totalNotificationReceived(@Context() { req }: any) {
-    const token = this.noticService.getTokenFromHttpHeader(req.headers);
+  async totalNotificationReceived(@Context() { req }: DynamicObject) {
+    const token = this.noticService.getTokenFromHttpHeader(req.headers)
 
-    return this.noticService.countNotificationReceived(token);
+    return this.noticService.countNotificationReceived(token)
   }
 
   @PermissionRequire({ notification: ['R'] })
   @ResolveField()
-  totalNotificationSent(@Context() { req }: any) {
-    const token = this.noticService.getTokenFromHttpHeader(req.headers);
+  async totalNotificationSent(@Context() { req }: DynamicObject) {
+    const token = this.noticService.getTokenFromHttpHeader(req.headers)
 
-    return this.noticService.countNotificationSent(token);
+    return this.noticService.countNotificationSent(token)
   }
 }

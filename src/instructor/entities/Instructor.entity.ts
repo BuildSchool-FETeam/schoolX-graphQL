@@ -1,7 +1,7 @@
-import { AdminUser } from 'src/adminUser/AdminUser.entity';
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity';
-import { BaseEntity } from 'src/common/entity/base.entity';
-import { Course } from 'src/courses/entities/Course.entity';
+import { AdminUser } from 'src/adminUser/AdminUser.entity'
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
+import { BaseEntity } from 'src/common/entity/base.entity'
+import { Course } from 'src/courses/entities/Course.entity'
 import {
   Column,
   Entity,
@@ -9,35 +9,35 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
-} from 'typeorm';
+} from 'typeorm'
 
 @Entity()
 export class Instructor extends BaseEntity {
   @Column()
-  name: string;
+  name: string
 
   @Column()
-  email: string;
+  email: string
 
   @Column()
-  description: string;
+  description: string
 
   @OneToOne(() => ClientUser, (clientUser) => clientUser.instructor)
   @JoinColumn()
-  user?: ClientUser;
+  user?: ClientUser
 
   @OneToMany(() => Course, (course) => course.instructor)
-  courses: Course[];
+  courses: Course[]
 
   @Column()
-  imageUrl: string;
+  imageUrl: string
 
   @Column()
-  filePath: string;
+  filePath: string
 
   @Column()
-  phone: string;
+  phone: string
 
   @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
-  createdBy: AdminUser;
+  createdBy: AdminUser
 }
