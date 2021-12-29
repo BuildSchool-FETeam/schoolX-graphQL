@@ -104,11 +104,15 @@ export class CourseMutationResolver {
     return true
   }
 
-  private async processImage(existedCourse: Course, image: FileUploadType) {
+  private async processImage(
+    existedCourse: Course,
+    image: Promise<FileUploadType>
+  ) {
     if (existedCourse?.filePath) {
       this.gcStorageService.deleteFile(existedCourse.filePath)
     }
-    const { filename, createReadStream } = image
+
+    const { filename, createReadStream } = await image
     const readStream = createReadStream()
 
     const result = await this.gcStorageService.uploadFile({

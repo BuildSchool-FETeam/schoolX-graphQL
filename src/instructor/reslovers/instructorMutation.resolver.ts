@@ -52,7 +52,6 @@ export class InstructorMutationResolver {
         { token, strictResourceName: 'instructor' }
       )
     }
-
     if (image) {
       if (existedInstructor?.filePath) {
         await this.gcStorageService.deleteFile(existedInstructor.filePath)

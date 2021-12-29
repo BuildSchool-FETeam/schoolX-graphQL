@@ -77,8 +77,8 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
     return true
   }
 
-  private async uploadFile(file: FileUploadType) {
-    const { filename, createReadStream } = file
+  private async uploadFile(file: Promise<FileUploadType>) {
+    const { filename, createReadStream } = await file
     const format = filename.split('.')
 
     if (format[format.length - 1] !== 'zip') {
