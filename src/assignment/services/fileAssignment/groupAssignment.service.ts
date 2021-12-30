@@ -93,18 +93,11 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
       if (data.score > group.fileAssignment.maxScore) {
         data.score = group.fileAssignment.maxScore
       }
-      let scoreInput: UpdateScore
-      if (data.score > group.previousScore) {
-        scoreInput = {
-          score: data.score - group.previousScore,
-          isAdd: true,
-        }
-      } else {
-        scoreInput = {
-          score: group.previousScore - data.score,
-          isAdd: false,
-        }
+      const scoreInput: UpdateScore = {
+        score: Math.abs(data.score - group.previousScore),
+        isAdd: data.score > group.previousScore,
       }
+
       this.clientUserService.updateScore(group.user.id, scoreInput)
       group.previousScore = data.score
     }

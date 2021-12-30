@@ -74,8 +74,8 @@ export class ClientUserService extends BaseService<ClientUser> {
   }
 
   async updateScore(id: string, data: UpdateScore) {
-    if(data.score < 0) {
-      throw new BadRequestException("A score should be a positive number");
+    if (data.score < 0) {
+      throw new BadRequestException('A score should be a positive number')
     }
 
     const existedUser = await this.findById(id, { relations: ['achievement'] })
@@ -85,7 +85,7 @@ export class ClientUserService extends BaseService<ClientUser> {
         existedUser.achievement.id,
         0 - data.score
       )
-    } else  {
+    } else {
       this.achievementService.updateScore(
         existedUser.achievement.id,
         data.score
