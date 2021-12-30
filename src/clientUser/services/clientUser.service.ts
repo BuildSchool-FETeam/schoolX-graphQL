@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BaseService } from 'src/common/services/base.service'
 import {
@@ -74,6 +74,10 @@ export class ClientUserService extends BaseService<ClientUser> {
   }
 
   async updateScore(id: string, data: UpdateScore) {
+    if (data.score < 0) {
+      throw new BadRequestException('A score should be a positive number')
+    }
+
     const existedUser = await this.findById(id, { relations: ['achievement'] })
 
     if (!data.isAdd) {
@@ -81,11 +85,12 @@ export class ClientUserService extends BaseService<ClientUser> {
         existedUser.achievement.id,
         0 - data.score
       )
-    } else
+    } else {
       this.achievementService.updateScore(
         existedUser.achievement.id,
         data.score
       )
+    }
   }
 
   async updateJoinedCourse(id: string, data: UpdateJoinedCourse) {
