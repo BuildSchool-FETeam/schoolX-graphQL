@@ -24,6 +24,6 @@ input SubmitInput {
 input EvaluationInput {
     reApply: Boolean
     comment: EvaluationCommentInput
-    scoreInput: UpdateScore
+    score: Int
     order: Int!
 }

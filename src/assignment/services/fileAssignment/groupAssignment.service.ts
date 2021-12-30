@@ -6,7 +6,7 @@ import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/Subm
 import { ClientUserService } from 'src/clientUser/services/clientUser.service'
 import { BaseService } from 'src/common/services/base.service'
 import { TokenService } from 'src/common/services/token.service'
-import { EvaluationInput, SubmitInput } from 'src/graphql'
+import { EvaluationInput, SubmitInput, UpdateScore } from 'src/graphql'
 import { Repository } from 'typeorm'
 import { SubmittedAssignmentService } from './submittedAssignment.service'
 
@@ -77,7 +77,7 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
 
   async evaluation(id: string, data: EvaluationInput, token: string) {
     const group = await this.findById(id, {
-      relations: ['submitteds', 'fileAssignment'],
+      relations: ['submitteds', 'fileAssignment', "user"],
     })
     if (group.submitteds.length < data.order) {
       throw new BadRequestException(
@@ -87,22 +87,36 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
 
     const submitted = _.find(group.submitteds, ['order', data.order])
 
-    if (data.scoreInput) {
-      const user = this.tokenService.verifyAndDecodeToken(token)
-      if (data.scoreInput.score > group.fileAssignment.maxScore) {
-        data.scoreInput.score = group.fileAssignment.maxScore
+    if (data.score || data.score === 0) {
+      if (data.score < 0) {
+        throw new BadRequestException('A score should be a positive number')
       }
-      this.clientUserService.updateScore(user.id, data.scoreInput)
-    }
 
-    group.previousScore = data.scoreInput.score
+      if (data.score > group.fileAssignment.maxScore) {
+        data.score = group.fileAssignment.maxScore
+      }
+      let scoreInput: UpdateScore;
+      if (data.score > group.previousScore) {
+        scoreInput = {
+          score: data.score - group.previousScore,
+          isAdd: true
+        }
+      } else {
+        scoreInput = {
+          score: group.previousScore - data.score,
+          isAdd: false
+        }
+      }
+      this.clientUserService.updateScore(group.user.id, scoreInput);
+      group.previousScore = data.score;
+    }
 
     await Promise.all([
       this.groupAssignRepo.save(group),
       this.submittedAssignService.evaluation(submitted.id, data, token),
     ])
 
-    return group
+    return group;
   }
 
   async delete(id: string) {
