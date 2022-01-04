@@ -1,9 +1,12 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
-import { assign } from 'lodash'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { assertThrowError } from 'src/common/mock/customAssertion'
+import {
+  createAdminUserEntityMock,
+  createRoleEntityMock,
+} from 'src/common/mock/mockEntity'
 import { repositoryMockFactory } from 'src/common/mock/repositoryMock'
 import { CacheService } from 'src/common/services/cache.service'
 import { PasswordService } from 'src/common/services/password.service'
@@ -44,31 +47,15 @@ const roleServiceMock = {
 
 const tokenServiceMock = {
   async getAdminUserByToken() {
-    return Promise.resolve(createAdminUser({ id: '2', name: 'yasuo' }))
+    return Promise.resolve(
+      createAdminUserEntityMock({ id: '2', name: 'yasuo' })
+    )
   },
 }
 const cacheServiceMock = {
   getValue() {
     return 'value'
   },
-}
-
-const createAdminUser = (data?: Partial<AdminUser>) => {
-  const defaultData = {
-    id: '1',
-    name: 'leesin',
-    email: 'test@test.com',
-    password: 'Leesin123',
-    role: new Role(),
-    evaluationComments: [],
-    createdBy: new AdminUser(),
-  }
-
-  return assign(new AdminUser(), { ...defaultData, ...data })
-}
-
-const createNewRole = (role: Partial<Role>) => {
-  return assign(new Role(), { ...role })
 }
 
 describe('AdminUserService', () => {
@@ -123,7 +110,7 @@ describe('AdminUserService', () => {
   })
 
   describe('findUserByEmail', () => {
-    const adminUser: AdminUser = createAdminUser()
+    const adminUser: AdminUser = createAdminUserEntityMock()
 
     it('should find a user by email', async () => {
       jest.spyOn(adminRepo, 'findOne').mockResolvedValue(adminUser)
@@ -136,7 +123,7 @@ describe('AdminUserService', () => {
   describe('createUserBySignup', () => {
     it('should throw error when exist at least one admin in DB', async function () {
       jest.spyOn(adminRepo, 'count').mockResolvedValue(1)
-      const adminUser = createAdminUser()
+      const adminUser = createAdminUserEntityMock()
 
       await assertThrowError(
         adminUserService.createUserBySignup.bind(adminUserService, adminUser),
@@ -145,7 +132,7 @@ describe('AdminUserService', () => {
     })
 
     it('should create and save an adminUser if there is no admin user in DB', async () => {
-      const adminUser = createAdminUser()
+      const adminUser = createAdminUserEntityMock()
 
       jest.spyOn(adminRepo, 'count').mockResolvedValue(0)
       jest
@@ -188,7 +175,9 @@ describe('AdminUserService', () => {
       jest
         .spyOn(roleServiceMock, 'findRoleByName')
         .mockResolvedValue(new Role())
-      jest.spyOn(adminRepo, 'find').mockResolvedValue([createAdminUser()])
+      jest
+        .spyOn(adminRepo, 'find')
+        .mockResolvedValue([createAdminUserEntityMock()])
 
       await assertThrowError(
         adminUserService.createUser.bind(
@@ -216,8 +205,11 @@ describe('AdminUserService', () => {
     })
 
     it('should create an adminUser', async () => {
-      const role = createNewRole({ name: 'admin' })
-      const createdByAdmin = createAdminUser({ id: '2', name: 'yasuo' })
+      const role = createRoleEntityMock({ name: 'admin' })
+      const createdByAdmin = createAdminUserEntityMock({
+        id: '2',
+        name: 'yasuo',
+      })
 
       jest.spyOn(roleServiceMock, 'findRoleByName').mockResolvedValue(role)
       jest.spyOn(adminRepo, 'find').mockResolvedValue([])
@@ -228,14 +220,14 @@ describe('AdminUserService', () => {
       jest
         .spyOn(adminRepo, 'save')
         .mockImplementation(async (data) =>
-          createAdminUser({ ...data, id: '3' } as AdminUser)
+          createAdminUserEntityMock({ ...data, id: '3' } as AdminUser)
         )
 
-      const resultAdminUser = createAdminUser({
+      const resultAdminUser = createAdminUserEntityMock({
         id: '3',
         name: adminSetInput.name,
         email: adminSetInput.email,
-        role: createNewRole({ name: adminSetInput.role }),
+        role: createRoleEntityMock({ name: adminSetInput.role }),
         password: `hash_12345`,
         createdBy: createdByAdmin,
       })
@@ -277,7 +269,7 @@ describe('AdminUserService', () => {
       jest.spyOn(adminUserService, 'findById').mockResolvedValue(undefined)
       jest
         .spyOn(roleServiceMock, 'findRoleByName')
-        .mockResolvedValue(createNewRole({ name: 'admin' }))
+        .mockResolvedValue(createRoleEntityMock({ name: 'admin' }))
 
       await assertThrowError(
         adminUserService.updateUser.bind(
@@ -291,8 +283,8 @@ describe('AdminUserService', () => {
     })
 
     it('should update adminUser successfully', async () => {
-      const foundAdmin = createAdminUser({ id: '1', name: 'yasuo' })
-      const existedRole = createNewRole({ name: adminSetInput.role })
+      const foundAdmin = createAdminUserEntityMock({ id: '1', name: 'yasuo' })
+      const existedRole = createRoleEntityMock({ name: adminSetInput.role })
 
       jest.spyOn(adminUserService, 'findById').mockResolvedValue(foundAdmin)
       jest
