@@ -4,7 +4,7 @@ import { BaseEntity } from 'src/common/entity/base.entity'
 import { Column, Entity, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { ArticleTag } from './ArticleTag.entity'
 
-enum ArticleStatus {
+export enum ArticleStatus {
   pending = 'pending',
   reject = 'reject',
   accept = 'accept',

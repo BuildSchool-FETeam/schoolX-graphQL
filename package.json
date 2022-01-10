@@ -115,7 +115,10 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "**/*.(t|j)s",
+      "!src/common/mock/*.ts",
+      "!src/migrations/*.ts",
+      "!**/*.module.ts"
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
@@ -128,6 +131,10 @@
       "html",
       "json-summary",
       "lcov"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/node_modules/",
+      "<rootDir>/src/common/mock/"
     ]
   },
   "jest-junit": {

@@ -23,6 +23,7 @@ export class ArticleService extends BaseService<Article> {
   constructor(
     @InjectRepository(Article)
     private articleRepo: Repository<Article>,
+
     private articleTagService: ArticleTagService,
     private tokenService: TokenService,
     protected cachingService: CacheService,
@@ -64,7 +65,6 @@ export class ArticleService extends BaseService<Article> {
     })
     if (_.size(data.tags) > 0) {
       const tags = await this.articleTagService.createArticleTag(data.tags)
-
       existedArticle.tags = tags
     }
 
