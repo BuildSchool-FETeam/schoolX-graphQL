@@ -1,10 +1,10 @@
-import { BaseEntity } from 'src/common/entity/base.entity'
+import { BaseEntityUUID } from 'src/common/entity/base.entity'
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 import { Assignment } from '../Assignment.entity'
 import { TestCase } from './Testcase.entity'
 
 @Entity()
-export class CodeChallenge extends BaseEntity {
+export class CodeChallenge extends BaseEntityUUID {
   @Column()
   description: string
 
