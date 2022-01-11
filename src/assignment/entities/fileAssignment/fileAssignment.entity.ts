@@ -1,10 +1,10 @@
-import { BaseEntity } from 'src/common/entity/base.entity'
+import { BaseEntityUUID } from 'src/common/entity/base.entity'
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 import { Assignment } from '../Assignment.entity'
 import { GroupAssignment } from './groupAssignment.entity'
 
 @Entity()
-export class FileAssignment extends BaseEntity {
+export class FileAssignment extends BaseEntityUUID {
   @Column({ nullable: true })
   description: string
 

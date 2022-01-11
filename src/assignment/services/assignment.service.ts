@@ -47,20 +47,24 @@ export class AssignmentService extends BaseService<Assignment> {
     })
     const codeChallenges = _.some(assignment.codeChallenges, [
       'id',
-      parseInt(idAssign),
-    ])
-    const quizs = _.some(assignment.quizs, ['id', parseInt(idAssign)])
-    const fileAssignment = _.some(assignment.fileAssignments, [
-      'id',
-      parseInt(idAssign),
+      idAssign,
     ])
 
     if (codeChallenges) {
       return TypeAssign.codeChallenge
     }
+
+    const quizs = _.some(assignment.quizs, ['id', idAssign])
+
     if (quizs) {
       return TypeAssign.quiz
     }
+
+    const fileAssignment = _.some(assignment.fileAssignments, [
+      'id',
+      idAssign,
+    ])
+    
     if (fileAssignment) {
       return TypeAssign.fileAssignment
     }
