@@ -58,9 +58,7 @@ const codeChallengeServiceMock = {
 
   async update() {
     return Promise.resolve({})
-  },
-
-  async delete() {},
+  }
 }
 const quizServiceMock = {
   async findById() {
@@ -73,9 +71,7 @@ const quizServiceMock = {
 
   async update() {
     return Promise.resolve({})
-  },
-
-  async delete() {},
+  }
 }
 const fileAssignServiceMock = {
   async findById() {
@@ -89,8 +85,6 @@ const fileAssignServiceMock = {
   async update() {
     return Promise.resolve({})
   },
-
-  async delete() {},
 
   async firstSubmit() {
     return Promise.resolve({})

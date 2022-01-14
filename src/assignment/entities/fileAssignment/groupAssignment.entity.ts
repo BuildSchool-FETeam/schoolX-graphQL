@@ -1,5 +1,4 @@
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
-import { BaseEntity } from 'src/common/entity/base.entity'
 import {
   Column,
   CreateDateColumn,

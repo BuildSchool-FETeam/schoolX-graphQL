@@ -1,4 +1,3 @@
-import { BaseEntityUUID } from 'src/common/entity/base.entity'
 import {
   Column,
   CreateDateColumn,

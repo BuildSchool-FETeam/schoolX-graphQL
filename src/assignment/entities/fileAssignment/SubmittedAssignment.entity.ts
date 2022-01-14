@@ -1,4 +1,3 @@
-import { BaseEntity } from 'src/common/entity/base.entity'
 import {
   Column,
   CreateDateColumn,
