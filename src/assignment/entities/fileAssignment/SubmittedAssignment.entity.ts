@@ -1,5 +1,14 @@
 import { BaseEntity } from 'src/common/entity/base.entity'
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { EvaluationComment } from './evaluationComment.entity'
 import { GroupAssignment } from './groupAssignment.entity'
 
@@ -16,7 +25,7 @@ export class SubmittedAssignment {
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @Column({ nullable: true })
   description: string
 

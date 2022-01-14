@@ -157,7 +157,7 @@ export class AssignmentService extends BaseService<Assignment> {
     return this.fileAssignService.delete(id)
   }
 
-  async submmitAssignment(id: string, data: SubmitInput, userId: string) {
+  async submitAssignment(id: string, data: SubmitInput, userId: string) {
     const course = await this.courseService.findById(data.courseId, {
       relations: ['joinedUsers'],
     })

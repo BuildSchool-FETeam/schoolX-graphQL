@@ -1,11 +1,20 @@
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { BaseEntity } from 'src/common/entity/base.entity'
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { FileAssignment } from './fileAssignment.entity'
 import { SubmittedAssignment } from './SubmittedAssignment.entity'
 
 @Entity()
-export class GroupAssignment{
+export class GroupAssignment {
   @PrimaryGeneratedColumn()
   id: string
 
@@ -17,7 +26,7 @@ export class GroupAssignment{
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @ManyToOne(() => ClientUser, (user) => user.submittedGroupAssignments)
   @JoinColumn()
   user: ClientUser
