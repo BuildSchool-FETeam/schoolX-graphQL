@@ -11,7 +11,12 @@ import { repositoryMockFactory } from 'src/common/mock/repositoryMock'
 import { CacheService } from 'src/common/services/cache.service'
 import { ComplexQueryBuilderService } from 'src/common/services/complexQueryBuilder.service'
 import { TokenService } from 'src/common/services/token.service'
-import { ArticleInputType, ArticleStatus } from 'src/graphql'
+import {
+  ArticleInputType,
+  ArticleReviewInput,
+  ArticleStatus,
+  FilterArticleInput,
+} from 'src/graphql'
 import { DeleteResult, Repository } from 'typeorm'
 import { ArticleService } from '../article.service'
 import { ArticleTagService } from '../articleTag.service'
@@ -31,7 +36,11 @@ const tokenServiceMock = {
   },
 }
 const cacheServiceMock = {}
-const complexQueryServiceMock = {}
+const complexQueryServiceMock = {
+  addAndWhereCompareToQueryBuilder() {
+    return
+  },
+}
 
 describe('ArticleService', () => {
   let articleService: ArticleService
@@ -196,5 +205,42 @@ describe('ArticleService', () => {
     })
   })
 
-  describe('filterArticle', () => {})
+  describe('filterArticle', () => {
+    it('should filter article by filter input', async () => {
+      const inputData: FilterArticleInput = {
+        byDate: { gt: new Date().toISOString() },
+        byTag: ['some tag'],
+        byStatus: { eq: 'pending' },
+      }
+
+      const spyAddQuery = jest.spyOn(
+        complexQueryServiceMock,
+        'addAndWhereCompareToQueryBuilder'
+      )
+
+      const result = await articleService.filterArticle(inputData)
+
+      expect(spyAddQuery).toHaveBeenCalledTimes(2)
+      expect(result).toEqual([])
+    })
+  })
+
+  describe('reviewArticle', () => {
+    it('should update article after review', async () => {
+      const articleMock = createArticleEntityMock()
+
+      const reviewInput: ArticleReviewInput = {
+        comment: 'look ok',
+        status: ArticleStatus.accept,
+      }
+
+      const result = await articleService.reviewArticle('id', reviewInput)
+
+      const expectedResult = _.cloneDeep(articleMock)
+      expectedResult.reviewComment = 'look ok'
+      expectedResult.status = ArticleStatus.accept
+
+      expect(result).toEqual(expectedResult)
+    })
+  })
 })

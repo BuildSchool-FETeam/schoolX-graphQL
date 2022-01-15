@@ -53,12 +53,9 @@ export class ArticleMutationResolver {
   @PermissionRequire({ blog: ['U'] })
   @ResolveField()
   async reviewArticle(
-    @Context() { req }: DynamicObject,
     @Args('id') id: string,
     @Args('data') data: ArticleReviewInput
   ) {
-    const token = this.articleService.getTokenFromHttpHeader(req.headers)
-
-    return this.articleService.reviewArticle(id, data, token)
+    return this.articleService.reviewArticle(id, data)
   }
 }

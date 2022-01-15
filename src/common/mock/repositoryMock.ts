@@ -14,8 +14,8 @@ export class QueryBuilderMock {
     return this
   }
 
-  where(queryStr: string) {
-    this.mockMethodCalleds.push(`where(${queryStr})`)
+  where() {
+    this.mockMethodCalleds.push(`where`)
 
     return this
   }

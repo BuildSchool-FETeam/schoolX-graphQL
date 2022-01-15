@@ -2,10 +2,14 @@ import { assign } from 'lodash'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { Article, ArticleStatus } from 'src/article/entities/Article.entity'
 import { ArticleTag } from 'src/article/entities/ArticleTag.entity'
+import { Assignment } from 'src/assignment/entities/Assignment.entity'
 import { EvaluationComment } from 'src/assignment/entities/fileAssignment/evaluationComment.entity'
 import { SubmittedAssignment } from 'src/assignment/entities/fileAssignment/SubmittedAssignment.entity'
 import { Achievement } from 'src/clientUser/entities/Achivement.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
+import { UserComment } from 'src/comment/entities/UserComment.entity'
+import { Course } from 'src/courses/entities/Course.entity'
+import { Lesson } from 'src/courses/entities/Lesson.entity'
 import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Role } from 'src/permission/entities/Role.entity'
 
@@ -47,7 +51,7 @@ export const createClientUserEntityMock = (data?: Partial<ClientUser>) => {
     email: 'test@test.com',
     password: '123456',
     githubUrl: '',
-    dayOfBirth: new Date().toISOString(),
+    dayOfBirth: new Date('1-6-1990').toISOString(),
     homeTown: 'Dalat',
     bio: 'none',
     phone: '0123 123 432',
@@ -102,4 +106,25 @@ export const createArticleEntityMock = (data?: Partial<Article>) => {
   }
 
   return assign(new Article(), { ...defaultData, ...data })
+}
+
+export const createCommentEntityMock = (data?: Partial<UserComment>) => {
+  const defaultData: UserComment = {
+    createdBy: new ClientUser(),
+    content: '',
+    votes: 0,
+    reply: [],
+    course: new Course(),
+    lesson: new Lesson(),
+    assignment: new Assignment(),
+    article: new Article(),
+    replyTo: new UserComment(),
+    submittedAssignment: new SubmittedAssignment(),
+    id: '1',
+    title: 'a comment',
+    createdAt: new Date('1-6-2022'),
+    updatedAt: new Date('1-6-2022'),
+  }
+
+  return assign(new UserComment(), { ...defaultData, ...data })
 }
