@@ -1,13 +1,12 @@
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { TokenService } from 'src/common/services/token.service'
 import { Repository } from 'typeorm'
-import { Injectable, ForbiddenException } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { Article } from 'src/article/entities/Article.entity'
 import { BaseService } from 'src/common/services/base.service'
 import { InjectRepository } from '@nestjs/typeorm'
 import * as _ from 'lodash'
 import { CacheService } from 'src/common/services/cache.service'
-import { PermissionEnum } from 'src/common/enums/permission.enum'
 import {
   ArticleInputType,
   FilterArticleInput,
@@ -23,6 +22,7 @@ export class ArticleService extends BaseService<Article> {
   constructor(
     @InjectRepository(Article)
     private articleRepo: Repository<Article>,
+
     private articleTagService: ArticleTagService,
     private tokenService: TokenService,
     protected cachingService: CacheService,
@@ -64,7 +64,6 @@ export class ArticleService extends BaseService<Article> {
     })
     if (_.size(data.tags) > 0) {
       const tags = await this.articleTagService.createArticleTag(data.tags)
-
       existedArticle.tags = tags
     }
 
@@ -130,15 +129,7 @@ export class ArticleService extends BaseService<Article> {
     return queryData
   }
 
-  async reviewArticle(id: string, data: ArticleReviewInput, token: string) {
-    const user = await this.tokenService.getAdminUserByToken(token)
-
-    if (user?.role?.name === PermissionEnum.CLIENT_PERMISSION) {
-      throw new ForbiddenException(
-        "You don't have permission to do this action"
-      )
-    }
-
+  async reviewArticle(id: string, data: ArticleReviewInput) {
     const article = await this.findById(id)
 
     article.reviewComment = data.comment

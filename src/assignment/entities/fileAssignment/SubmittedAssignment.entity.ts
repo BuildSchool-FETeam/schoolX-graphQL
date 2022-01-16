@@ -1,10 +1,30 @@
-import { BaseEntity } from 'src/common/entity/base.entity'
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { EvaluationComment } from './evaluationComment.entity'
 import { GroupAssignment } from './groupAssignment.entity'
 
 @Entity()
-export class SubmittedAssignment extends BaseEntity {
+export class SubmittedAssignment {
+  @PrimaryGeneratedColumn()
+  id: string
+
+  @Column({ nullable: true })
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
   @Column({ nullable: true })
   description: string
 

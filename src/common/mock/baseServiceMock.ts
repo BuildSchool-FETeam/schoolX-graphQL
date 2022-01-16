@@ -1,5 +1,6 @@
+import * as _ from 'lodash'
 import { each } from 'lodash'
-import { PaginationInput, SearchOptionInput } from 'src/graphql'
+import { OrderDirection, PaginationInput, SearchOptionInput } from 'src/graphql'
 import { FindManyOptions, ILike } from 'typeorm'
 
 export const baseServiceMock = {
@@ -33,5 +34,30 @@ export const baseServiceMock = {
     return {
       where: [...findArray],
     }
+  },
+
+  manuallyPagination<T>(listItems: T[], pg?: PaginationInput) {
+    if (!pg) {
+      return listItems
+    }
+    let { limit, skip, order } = pg
+    _.isNil(limit) && (limit = 10)
+    _.isNil(skip) && (skip = 0)
+    _.isNil(order) && (order = { orderBy: 'id', direction: OrderDirection.ASC })
+
+    const items = _.chain(listItems)
+      .slice(skip, limit + skip)
+      .sortBy(order.orderBy)
+      .value()
+
+    return order.direction === OrderDirection.ASC ? items : _.reverse(items)
+  },
+
+  async findById() {
+    return Promise.resolve({})
+  },
+
+  async findWithOptions() {
+    return Promise.resolve([])
   },
 }

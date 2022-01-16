@@ -20,8 +20,9 @@ export class ArticleTagService extends BaseService<ArticleTag> {
       })
 
       if (existedTag) {
-        return this.articleTagRepo.save(existedTag)
+        return existedTag
       }
+
       const newTag = this.articleTagRepo.create({
         title: tag,
       })
