@@ -44,6 +44,7 @@ export class PermissionGuard implements CanActivate {
     if (!this.isResolve(graphQLContext)) {
       return true
     }
+
     if (_.isNil(requirePermission)) {
       return true
     }
