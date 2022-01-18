@@ -6,17 +6,32 @@ import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Role } from 'src/permission/entities/Role.entity'
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { Achievement } from './Achivement.entity'
 
 // FOR testing purpose
 @Entity()
-export class ClientUser extends UserBaseEntityUUID {
+export class ClientUser{
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @Column()
+  name: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
   @Column()
   email: string
 

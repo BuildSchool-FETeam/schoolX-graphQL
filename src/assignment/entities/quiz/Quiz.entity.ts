@@ -1,10 +1,22 @@
 import { BaseEntityUUID } from 'src/common/entity/base.entity'
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { Assignment } from '../Assignment.entity'
 import { Question } from './Question.entity'
 
 @Entity()
-export class Quiz extends BaseEntityUUID {
+export class Quiz {
+  @PrimaryGeneratedColumn('uuid')
+  id: string
+
+  @Column()
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+  
   @Column()
   description: string
 

@@ -3,6 +3,7 @@ import { Test } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Assignment } from 'src/assignment/entities/Assignment.entity'
 import { TestCaseProgrammingLanguage } from 'src/assignment/entities/codeChallenge/Testcase.entity'
+import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import { assertThrowError } from 'src/common/mock/customAssertion'
 import {
   createAssignmentEntityMock,
@@ -34,10 +35,22 @@ import { CodeChallengeService } from '../codeChallenge/codeChallenge.service'
 import { FileAssignmentService } from '../fileAssignment/fileAssignment.service'
 import { QuizService } from '../quiz/quiz.service'
 
-const lessonServiceMock = {
-  async findById() {
+const CUDServiceMock = {
+  async create() {
     return Promise.resolve({})
   },
+
+  async update() {
+    return Promise.resolve({})
+  },
+
+  async delete() {
+    return Promise.resolve({})
+  }
+}
+
+const lessonServiceMock = {
+  ...baseServiceMock,
 }
 const codeChallengeServiceMock = {
   async runCode() {
@@ -48,55 +61,16 @@ const codeChallengeServiceMock = {
     return Promise.resolve({})
   },
 
-  async findById() {
-    return Promise.resolve({})
-  },
-
-  async create() {
-    return Promise.resolve({})
-  },
-
-  async update() {
-    return Promise.resolve({})
-  },
-
-  async delete() {
-    return Promise.resolve({})
-  }
+  ...baseServiceMock,
+  ...CUDServiceMock
 }
 const quizServiceMock = {
-  async findById() {
-    return Promise.resolve({})
-  },
-
-  async create() {
-    return Promise.resolve({})
-  },
-
-  async update() {
-    return Promise.resolve({})
-  },
-
-  async delete() {
-    return Promise.resolve({})
-  }
+  ...baseServiceMock,
+  ...CUDServiceMock
 }
 const fileAssignServiceMock = {
-  async findById() {
-    return Promise.resolve({})
-  },
-
-  async create() {
-    return Promise.resolve({})
-  },
-
-  async update() {
-    return Promise.resolve({})
-  },
-
-  async delete() {
-    return Promise.resolve({})
-  },
+  ...baseServiceMock,
+  ...CUDServiceMock,
 
   async firstSubmit() {
     return Promise.resolve({})
@@ -115,9 +89,7 @@ const fileAssignServiceMock = {
   },
 }
 const courseServiceMock = {
-  async findById() {
-    return Promise.resolve({})
-  },
+  ...baseServiceMock,
 }
 
 describe('AssignmentService', () => {
@@ -272,12 +244,27 @@ describe('AssignmentService', () => {
   })
 
   describe('runTestCase', () => {
+    const expectResult = {
+      summaryEvaluation: null,
+      testCaseEvaluations: [
+        {
+          testResult: true,
+          testCaseId: "23",
+          title: "Test case 1",
+          executeTime: 830,
+          message: []
+        },
+      ]
+    }
     it('should show a summaryEvaluation: true if all test cases are true', async () => {
-      const expectResult = {
-        summaryEvaluation: true,
-        testCaseEvaluations: [],
-      }
-
+      expectResult.summaryEvaluation = true;
+      expectResult.testCaseEvaluations.push({
+        testResult: true,
+        testCaseId: "24",
+        title: "Test case 2",
+        executeTime: 62,
+        message: []
+      })
       jest
         .spyOn(codeChallengeServiceMock, 'runTestCase')
         .mockResolvedValue(expectResult)
@@ -291,11 +278,16 @@ describe('AssignmentService', () => {
     })
 
     it('should show a summaryEvaluation: false if all test cases are false', async () => {
-      const expectResult = {
-        summaryEvaluation: false,
-        testCaseEvaluations: [],
-      }
-
+      expectResult.summaryEvaluation = false;
+      expectResult.testCaseEvaluations.push({
+        testResult: false,
+        testCaseId: "24",
+        title: "Test case 2",
+        executeTime: 62,
+        message: [
+          "Expect '200' but got '400'"
+        ]
+      })
       jest
         .spyOn(codeChallengeServiceMock, 'runTestCase')
         .mockResolvedValue(expectResult)
@@ -653,11 +645,15 @@ describe('AssignmentService', () => {
   })
 
   describe('deleteAssign', () => {
+    let assignment: Assignment;
     beforeEach(() => {
-      jest.resetAllMocks();
+      assignment = createAssignmentEntityMock();
+    })
+
+    afterEach(() => {
+      jest.resetAllMocks()
     })
     it('assignment is deleted.', async () => {
-      const assignment = createAssignmentEntityMock()
 
       jest.spyOn(assignmentService, 'findById').mockResolvedValue(assignment)
 
@@ -670,9 +666,7 @@ describe('AssignmentService', () => {
     })
 
     it("assignment isn't deleted.", async () => {
-      const assignment = createAssignmentEntityMock({
-        codeChallenges: [createCodeChallengeEntityMock()],
-      })
+      assignment.codeChallenges.push(createCodeChallengeEntityMock())
 
       jest.spyOn(assignmentService, 'findById').mockResolvedValue(assignment)
 
