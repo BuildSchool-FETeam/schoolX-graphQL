@@ -1,5 +1,12 @@
-import { BaseEntity } from 'src/common/entity/base.entity'
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { Quiz } from './Quiz.entity'
 
 @Entity()
@@ -15,7 +22,7 @@ export class Question {
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @Column({ nullable: true })
   order: number
 

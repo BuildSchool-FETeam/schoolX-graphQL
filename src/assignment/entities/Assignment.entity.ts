@@ -1,6 +1,5 @@
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { BaseEntity } from 'src/common/entity/base.entity'
 import { Lesson } from 'src/courses/entities/Lesson.entity'
 import {
   Column,

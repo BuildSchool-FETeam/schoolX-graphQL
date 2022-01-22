@@ -1,7 +1,15 @@
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { BaseEntity } from 'src/common/entity/base.entity'
-import { Column, CreateDateColumn, Entity, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { ArticleTag } from './ArticleTag.entity'
 
 export enum ArticleStatus {
@@ -22,7 +30,7 @@ export class Article {
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @Column()
   shortDescription: string
 

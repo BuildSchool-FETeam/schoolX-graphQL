@@ -1,7 +1,6 @@
 import { Article } from 'src/article/entities/Article.entity'
 import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity'
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { UserBaseEntityUUID } from 'src/common/entity/base.entity'
 import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Role } from 'src/permission/entities/Role.entity'
 import {
@@ -19,7 +18,7 @@ import { Achievement } from './Achivement.entity'
 
 // FOR testing purpose
 @Entity()
-export class ClientUser{
+export class ClientUser {
   @PrimaryGeneratedColumn('uuid')
   id: string
 

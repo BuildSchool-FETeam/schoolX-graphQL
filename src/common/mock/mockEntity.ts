@@ -16,6 +16,27 @@ import { Lesson } from 'src/courses/entities/Lesson.entity'
 import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Role } from 'src/permission/entities/Role.entity'
 import { CodeChallenge } from 'src/assignment/entities/codeChallenge/CodeChallenge.entity'
+import {
+  TestCase,
+  TestCaseProgrammingLanguage,
+} from 'src/assignment/entities/codeChallenge/Testcase.entity'
+
+export const createTestCaseEntityMock = (data?: Partial<TestCase>) => {
+  const defaultData = {
+    id: '1',
+    title: 'TestCase',
+    updatedAt: new Date('1-19-2022'),
+    createdAt: new Date('1-19-2022'),
+    generatedExpectResultScript: '',
+    timeEvaluation: 30,
+    expectResult: '',
+    runningTestScript: '',
+    programingLanguage: TestCaseProgrammingLanguage.javascript,
+    codeChallenge: new CodeChallenge(),
+  }
+
+  return assign(new TestCase(), { ...defaultData, ...data })
+}
 
 export const createSubmittedEntityMock = (
   data?: Partial<SubmittedAssignment>
@@ -126,15 +147,15 @@ export const createCodeChallengeEntityMock = (
   const defaultData = {
     id: '2f8bdfa5-464a-4713-be3b-2937a3bb78d3',
     title: 'Code Challenge 1',
-    updatedAt: new Date().toLocaleDateString(),
-    createdAt: new Date().toLocaleDateString(),
+    updatedAt: new Date('1-18-2022'),
+    createdAt: new Date('1-18-2022'),
     description: 'code challenge 1',
-    hints: [],
+    hints: '',
     score: 100,
     assignment: new Assignment(),
     input: '10',
     output: '100',
-    languageSupport: 'Javascript',
+    languageSupport: '',
     testCases: [],
   }
 

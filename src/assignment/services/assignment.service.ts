@@ -189,7 +189,7 @@ export class AssignmentService extends BaseService<Assignment> {
    * ------------------------------
    */
 
-  async deleteAssgin(id: string) {
+  async deleteAssign(id: string) {
     const { codeChallenges, quizs, fileAssignments } = await this.findById(id, {
       relations: ['codeChallenges', 'quizs', 'fileAssignments'],
     })

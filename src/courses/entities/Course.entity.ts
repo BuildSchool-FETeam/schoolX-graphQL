@@ -2,7 +2,6 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { BaseEntity } from 'src/common/entity/base.entity'
 import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Tag } from 'src/tag/entities/tag.entity'
 import {
@@ -20,7 +19,7 @@ import {
 import { Lesson } from './Lesson.entity'
 
 @Entity()
-export class Course{
+export class Course {
   @PrimaryGeneratedColumn()
   id: string
 
@@ -32,7 +31,7 @@ export class Course{
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @Column()
   description: string
 

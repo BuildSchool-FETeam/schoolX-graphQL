@@ -1,8 +1,16 @@
 import { Course } from 'src/courses/entities/Course.entity'
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 
 @Entity()
-export class Tag{
+export class Tag {
   @PrimaryGeneratedColumn()
   id: string
 
@@ -14,7 +22,7 @@ export class Tag{
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @ManyToMany(() => Course, (course) => course.tags)
   @JoinTable()
   courses: Course[]

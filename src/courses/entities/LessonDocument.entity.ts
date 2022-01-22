@@ -1,10 +1,16 @@
-import { BaseEntity } from 'src/common/entity/base.entity'
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { Lesson } from './Lesson.entity'
 
 @Entity()
 export class LessonDocument {
-
   @PrimaryGeneratedColumn()
   id: string
 
@@ -16,7 +22,7 @@ export class LessonDocument {
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @Column()
   url: string
 

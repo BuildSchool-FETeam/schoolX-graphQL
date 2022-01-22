@@ -1,5 +1,13 @@
-import { BaseEntityUUID } from 'src/common/entity/base.entity'
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
 import { Assignment } from '../Assignment.entity'
 import { Question } from './Question.entity'
 
@@ -16,7 +24,7 @@ export class Quiz {
 
   @UpdateDateColumn()
   updatedAt: Date
-  
+
   @Column()
   description: string
 
