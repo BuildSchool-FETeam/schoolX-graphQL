@@ -88,18 +88,9 @@ export class QuizService extends BaseService<Quiz> {
     const quiz = await this.findById(id, {
       relations: ['assignment'],
     })
-    const assignment = await this.assignService.findById(quiz.assignment.id, {
-      relations: ['quizs'],
-    })
-
-    const checkAvailable = _.some(assignment.quizs, ['id', parseInt(id)])
-
-    if (!checkAvailable) {
-      return false
-    }
 
     const deleted = await this.deleteOneById(id)
-    this.assignService.deleteAssgin(assignment.id)
+    this.assignService.deleteAssign(quiz.assignment.id)
 
     return !!deleted
   }

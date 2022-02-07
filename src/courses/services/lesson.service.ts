@@ -116,7 +116,7 @@ export class LessonService extends BaseService<Lesson> {
   }
 
   async submitAssignment(id: string, data: SubmitInput, userId: string) {
-    return this.assignService.submmitAssignment(id, data, userId)
+    return this.assignService.submitAssignment(id, data, userId)
   }
 
   async evaluation(id: string, data: EvaluationInput, token: string) {

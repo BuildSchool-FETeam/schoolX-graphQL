@@ -1,8 +1,9 @@
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { BaseEntity } from 'src/common/entity/base.entity'
 import { Lesson } from 'src/courses/entities/Lesson.entity'
 import {
+  Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -10,15 +11,25 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { CodeChallenge } from './codeChallenge/CodeChallenge.entity'
 import { FileAssignment } from './fileAssignment/fileAssignment.entity'
 import { Quiz } from './quiz/Quiz.entity'
 
 @Entity()
-export class Assignment extends BaseEntity {
+export class Assignment {
   @PrimaryGeneratedColumn()
   id: string
+
+  @Column({ nullable: true })
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
 
   @ManyToOne(() => Lesson, (lesson) => lesson, {
     onDelete: 'CASCADE',

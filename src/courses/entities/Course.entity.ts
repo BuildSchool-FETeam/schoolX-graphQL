@@ -2,22 +2,36 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { BaseEntity } from 'src/common/entity/base.entity'
 import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Tag } from 'src/tag/entities/tag.entity'
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm'
 import { Lesson } from './Lesson.entity'
 
 @Entity()
-export class Course extends BaseEntity {
+export class Course {
+  @PrimaryGeneratedColumn()
+  id: string
+
+  @Column({ nullable: true })
+  title: string
+
+  @CreateDateColumn()
+  createdAt: Date
+
+  @UpdateDateColumn()
+  updatedAt: Date
+
   @Column()
   description: string
 

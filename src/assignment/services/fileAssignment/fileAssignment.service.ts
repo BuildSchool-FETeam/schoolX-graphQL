@@ -85,24 +85,9 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
     const fileAssignment = await this.findById(id, {
       relations: ['assignment'],
     })
-    const assignment = await this.assignService.findById(
-      fileAssignment.assignment.id,
-      {
-        relations: ['fileAssignments'],
-      }
-    )
-
-    const checkAvailable = _.some(assignment.fileAssignments, [
-      'id',
-      parseInt(id),
-    ])
-
-    if (!checkAvailable) {
-      return false
-    }
 
     const deleted = await this.deleteOneById(id)
-    this.assignService.deleteAssgin(assignment.id)
+    this.assignService.deleteAssign(fileAssignment.assignment.id)
 
     return !!deleted
   }
@@ -127,7 +112,7 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
       if (
         checkGroupExits.length < fileAssign.submittedGroupAssignments.length
       ) {
-        throw new BadRequestException('Group is already exits')
+        throw new BadRequestException('Group is already exist')
       }
       groupAssignments = _.cloneDeep(fileAssign.submittedGroupAssignments)
     }

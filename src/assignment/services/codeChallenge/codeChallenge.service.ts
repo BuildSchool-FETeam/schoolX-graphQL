@@ -93,24 +93,8 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
     const codeChallenge = await this.findById(id, {
       relations: ['assignment'],
     })
-    const assignment = await this.assignService.findById(
-      codeChallenge.assignment.id,
-      {
-        relations: ['codeChallenges'],
-      }
-    )
-
-    const checkAvailable = _.some(assignment.codeChallenges, [
-      'id',
-      parseInt(id),
-    ])
-
-    if (!checkAvailable) {
-      return false
-    }
-
     const deleted = await this.deleteOneById(id)
-    this.assignService.deleteAssgin(assignment.id)
+    this.assignService.deleteAssign(codeChallenge.assignment.id)
 
     return !!deleted
   }
@@ -131,9 +115,13 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
       relations: ['testCases'],
       select: ['id'],
     })
+
     const miniServerService = this.getServiceByLanguage(
       TestCaseProgrammingLanguage[data.language]
     )
+    if (!miniServerService) {
+      throw new BadRequestException('"data.language" doesn\'t exist')
+    }
     const testCaseWillBeEvaluated = _.filter(
       existedChallenge.testCases,
       (tc) => tc.programingLanguage === data.language
@@ -207,6 +195,18 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
           title: evaluatingTestCases[i].title,
           executeTime: resultTest.executeTime,
           message: resultTest.result,
+        })
+
+        return
+      }
+
+      if (!expectResult[i]) {
+        listEvaluation.push({
+          testResult: false,
+          testCaseId: evaluatingTestCases[i].id,
+          title: evaluatingTestCases[i].title,
+          executeTime: resultTest.executeTime,
+          message: ["this test case doesn't exist expected result"],
         })
 
         return
