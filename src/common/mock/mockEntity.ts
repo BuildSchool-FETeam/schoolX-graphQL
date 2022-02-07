@@ -218,10 +218,10 @@ export const createRoleEntityMock = (role: Partial<Role>) => {
 export const createEvaluationCommentEntityMock = (
   data?: Partial<EvaluationComment>
 ) => {
-  const defaultData: EvaluationComment = {
+  const defaultData = {
     id: '1',
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toLocaleDateString(),
+    updatedAt: new Date().toLocaleDateString(),
     content: 'content',
     createdBy: new AdminUser(),
     submitted: new SubmittedAssignment(),

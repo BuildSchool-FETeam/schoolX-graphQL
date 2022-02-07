@@ -1,12 +1,24 @@
 import { Repository } from 'typeorm'
-import {} from 'ts-jest'
-
 export type MockType<T> = {
   [P in keyof T]?: jest.Mock<DynamicObject>
 }
 
+export class FakeBrackets {
+  public callback: (qb: QueryBuilderMock) => void
+
+  constructor(cb: (qb: QueryBuilderMock) => void) {
+    this.callback = cb
+  }
+}
+
+jest.mock('typeorm', () => {
+  return {
+    Brackets: FakeBrackets,
+  }
+})
+
 export class QueryBuilderMock {
-  private mockMethodCalleds: string[] = []
+  public mockMethodCalleds: string[] = []
 
   select() {
     this.mockMethodCalleds.push('select')
@@ -26,8 +38,38 @@ export class QueryBuilderMock {
     return this
   }
 
+  innerJoinAndSelect() {
+    this.mockMethodCalleds.push(`innerJoinAndSelect`)
+
+    return this
+  }
+
+  andWhere(fakeBrackets?: FakeBrackets) {
+    this.mockMethodCalleds.push(`andWhere`)
+
+    if (fakeBrackets) {
+      fakeBrackets.callback(this)
+    }
+
+    return this
+  }
+
+  orWhere() {
+    this.mockMethodCalleds.push(`orWhere`)
+
+    return this
+  }
+
   async getMany() {
     return Promise.resolve([])
+  }
+
+  async getOne() {
+    return Promise.resolve({})
+  }
+
+  public static countMethodCalleds(array: string[], countString: string) {
+    return array.filter((str) => str === countString).length
   }
 }
 

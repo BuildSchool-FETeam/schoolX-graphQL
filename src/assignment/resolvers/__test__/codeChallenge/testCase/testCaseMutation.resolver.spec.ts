@@ -3,7 +3,6 @@ import { TestCase } from 'src/assignment/entities/codeChallenge/Testcase.entity'
 import { TestCaseMutationResolver } from 'src/assignment/resolvers/codeChallenge/testCase/testCaseMutation.resolver'
 import { TestCaseService } from 'src/assignment/services/codeChallenge/testCase.service'
 import { AuthGuard } from 'src/common/guards/auth.guard'
-import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import { guardMock } from 'src/common/mock/guardMock'
 import { createTestCaseEntityMock } from 'src/common/mock/mockEntity'
 import { ProgrammingLanguage, TestCaseSetInput } from 'src/graphql'
@@ -93,7 +92,7 @@ describe('TestCaseMutationResolver', () => {
         .spyOn(testCaseServiceMock, 'deleteOneById')
         .mockImplementation(async () => true)
 
-      const result = await resolver.deleteTestCase('id')
+      const result = resolver.deleteTestCase('id')
 
       expect(result).toEqual(true)
     })
