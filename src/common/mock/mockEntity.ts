@@ -20,6 +20,24 @@ import {
   TestCase,
   TestCaseProgrammingLanguage,
 } from 'src/assignment/entities/codeChallenge/Testcase.entity'
+import { Question } from 'src/assignment/entities/quiz/Question.entity'
+
+export const createQuestionEntityMock = (data?: Partial<Question>) => {
+  const defaultData = {
+    id: '1',
+    title: 'question 1',
+    updatedAt: new Date().toLocaleDateString(),
+    createdAt: new Date().toLocaleDateString(),
+    order: 1,
+    quiz: new Quiz(),
+    options: ['1', '2', '3'],
+    isMultiple: false,
+    results: [],
+    result: 1,
+  }
+
+  return assign(new Question(), { ...defaultData, ...data })
+}
 
 export const createTestCaseEntityMock = (data?: Partial<TestCase>) => {
   const defaultData = {
