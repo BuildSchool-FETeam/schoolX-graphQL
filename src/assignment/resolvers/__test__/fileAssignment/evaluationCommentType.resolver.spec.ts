@@ -5,7 +5,6 @@ import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import {
   createAdminUserEntityMock,
   createEvaluationCommentEntityMock,
-  createSubmittedEntityMock,
 } from 'src/common/mock/mockEntity'
 import { EvaluationCommentTypeResolver } from '../../fileAssignment/evaluationCommentType.resolver'
 
