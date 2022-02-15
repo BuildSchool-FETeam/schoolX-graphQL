@@ -11,9 +11,16 @@ export class FakeBrackets {
   }
 }
 
+export class OperatorMock {
+  static ILike(str: string) {
+    return `ILike-${str}`
+  }
+}
+
 jest.mock('typeorm', () => {
   return {
     Brackets: FakeBrackets,
+    ILike: OperatorMock.ILike.bind(OperatorMock),
   }
 })
 
@@ -40,6 +47,10 @@ export class QueryBuilderMock {
 
   innerJoinAndSelect() {
     this.mockMethodCalleds.push(`innerJoinAndSelect`)
+  }
+
+  take() {
+    this.mockMethodCalleds.push(`take`)
 
     return this
   }
@@ -50,12 +61,20 @@ export class QueryBuilderMock {
     if (fakeBrackets) {
       fakeBrackets.callback(this)
     }
+  }
+
+  skip() {
+    this.mockMethodCalleds.push(`skip`)
 
     return this
   }
 
   orWhere() {
     this.mockMethodCalleds.push(`orWhere`)
+  }
+
+  orderBy() {
+    this.mockMethodCalleds.push(`orderBy`)
 
     return this
   }
