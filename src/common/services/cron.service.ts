@@ -52,7 +52,7 @@ export class CronService {
       this.logger.debug('[WARNING]: Running cleaning up')
       this.cacheService.setValue(cacheConstant.CLEAR_FILE, true)
 
-      Promise.all(promises).then((result) => {
+      await Promise.all(promises).then((result) => {
         const [files, instructors, courses, lessonDocs, clientUser] = result
         const listFilePaths = [
           ..._.map(instructors, 'filePath'),
