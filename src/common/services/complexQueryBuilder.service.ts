@@ -3,7 +3,7 @@ import { Brackets, SelectQueryBuilder } from 'typeorm'
 import * as _ from 'lodash'
 import { CompareInputDate, CompareInputString } from '../../graphql'
 
-interface ICompareQueryBuilderConfig {
+export interface ICompareQueryBuilderConfig {
   fieldCompare: string
   tableAlias: string
   compareType: 'date' | 'string'
@@ -14,7 +14,7 @@ export class ComplexQueryBuilderService {
   addAndWhereCompareToQueryBuilder<T>(
     query: SelectQueryBuilder<T>,
     config: ICompareQueryBuilderConfig,
-    data: CompareInputDate | CompareInputString
+    compareData: CompareInputDate | CompareInputString
   ) {
     const stringCompareBuilderFnc = this.getCompareStringGeneratorFunc(
       config.compareType
@@ -24,7 +24,7 @@ export class ComplexQueryBuilderService {
       new Brackets((qb) => {
         const beginningWhere = qb.where(`${config.tableAlias}.id IS NOT NULL`)
 
-        _.forOwn(data, (value, key) => {
+        _.forOwn(compareData, (value, key) => {
           const { compareString, compareObj } = stringCompareBuilderFnc(
             {
               field: config.fieldCompare,
@@ -112,10 +112,10 @@ export class ComplexQueryBuilderService {
       case 'ne':
         compareString = _getQueryString('!=', key)
         break
-      case 'ct':
+      case 'ct': // contain
         compareString = _getQueryString('ILIKE', key)
         break
-      case 'nc':
+      case 'nc': // not contain
         compareString = _getQueryString('NOT ILIKE', key)
         break
       default:

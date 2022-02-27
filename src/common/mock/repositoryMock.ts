@@ -11,14 +11,23 @@ export class FakeBrackets {
   }
 }
 
+export class OperatorMock {
+  static ILike(str: string) {
+    return `ILike-${str}`
+  }
+}
+
 jest.mock('typeorm', () => {
   return {
     Brackets: FakeBrackets,
+    ILike: OperatorMock.ILike.bind(OperatorMock),
   }
 })
 
 export class QueryBuilderMock {
   public mockMethodCalleds: string[] = []
+  public whereArr: { queryStr: string; params: DynamicObject }[] = []
+  public andWhereArr: { queryStr: string; params: DynamicObject }[] = []
 
   select() {
     this.mockMethodCalleds.push('select')
@@ -26,8 +35,19 @@ export class QueryBuilderMock {
     return this
   }
 
-  where() {
+  where(
+    queryStr: string | FakeBrackets | DynamicObject,
+    params: DynamicObject
+  ) {
     this.mockMethodCalleds.push(`where`)
+
+    if (typeof queryStr === 'string') {
+      this.whereArr.push({ queryStr, params })
+    } else if (queryStr instanceof FakeBrackets) {
+      this.whereArr.push({ queryStr: 'Bracket', params: null })
+    } else {
+      this.whereArr.push({ queryStr: 'Others', params: null })
+    }
 
     return this
   }
@@ -44,18 +64,44 @@ export class QueryBuilderMock {
     return this
   }
 
-  andWhere(fakeBrackets?: FakeBrackets) {
+  take() {
+    this.mockMethodCalleds.push(`take`)
+
+    return this
+  }
+
+  andWhere(
+    query: FakeBrackets | string | DynamicObject,
+    params: DynamicObject
+  ) {
     this.mockMethodCalleds.push(`andWhere`)
 
-    if (fakeBrackets) {
-      fakeBrackets.callback(this)
+    if (query instanceof FakeBrackets) {
+      this.andWhereArr.push({ queryStr: 'Brackets', params: null })
+      query.callback(this)
+    } else if (typeof query === 'string') {
+      this.andWhereArr.push({ queryStr: query, params: params })
+    } else {
+      this.andWhereArr.push({ queryStr: 'Others', params: null })
     }
+
+    return this
+  }
+
+  skip() {
+    this.mockMethodCalleds.push(`skip`)
 
     return this
   }
 
   orWhere() {
     this.mockMethodCalleds.push(`orWhere`)
+
+    return this
+  }
+
+  orderBy() {
+    this.mockMethodCalleds.push(`orderBy`)
 
     return this
   }

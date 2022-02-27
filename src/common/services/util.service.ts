@@ -84,11 +84,12 @@ export abstract class UtilService {
   }
 
   buildSearchOptions<T>(search: SearchOptionInput): FindManyOptions<T> {
-    const findArray: DynamicObject[] = []
-
     if (!search) {
       return {}
     }
+
+    const findArray: DynamicObject[] = []
+
     _.each(search.searchFields, (field) => {
       findArray.push({
         [field]: ILike(`%${search.searchString}%`),
