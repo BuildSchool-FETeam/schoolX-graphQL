@@ -6,6 +6,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule)
 
   app.use(graphqlUploadExpress())
-  await app.listen(3001)
+  await app.listen(30012)
 }
 bootstrap()
