@@ -7,10 +7,7 @@ export abstract class MiniServerBaseService {
 
   host: string
 
-  constructor(
-    configService: ConfigService<EnvVariable>,
-    envName: keyof EnvVariable
-  ) {
+  constructor(configService: ConfigService, envName: keyof EnvVariable) {
     this.host = configService.get(envName)
     this.axiosInstance = axios.create({
       baseURL: this.host,

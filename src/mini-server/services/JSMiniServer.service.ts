@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config'
-import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface'
 import { Injectable } from '@nestjs/common'
 import { MiniServerBaseService } from './base/MiniServer.base.service'
 import {
@@ -13,7 +12,7 @@ export class JSMiniServerService
   extends MiniServerBaseService
   implements IMiniServerService
 {
-  constructor(private configService: ConfigService<EnvVariable>) {
+  constructor(private configService: ConfigService) {
     super(configService, 'JS_MINI_SERVER')
   }
 

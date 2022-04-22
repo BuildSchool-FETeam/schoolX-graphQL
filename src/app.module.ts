@@ -2,6 +2,7 @@ import { ScheduleModule } from '@nestjs/schedule'
 import { CacheModule, Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { ApolloDriver } from '@nestjs/apollo'
 import { join } from 'path'
 import { APP_GUARD } from '@nestjs/core'
 import { ConfigModule } from '@nestjs/config'
@@ -37,6 +38,7 @@ const cacheManagerModule = CacheModule.register({
 console.log(process.env.CORS)
 
 const graphQLModuleInit = GraphQLModule.forRoot({
+  driver: ApolloDriver,
   typePaths: ['./**/*.graphql'],
   installSubscriptionHandlers: true,
   definitions: {
@@ -48,7 +50,9 @@ const graphQLModuleInit = GraphQLModule.forRoot({
     origin: process.env.CORS,
   },
   fieldResolverEnhancers: ['guards'],
-  subscriptions: {},
+  subscriptions: {
+    'graphql-ws': true,
+  },
   resolvers: {
     Upload: GraphQLUpload,
   },
