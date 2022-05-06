@@ -311,7 +311,7 @@ export const createArticleEntityMock = (data?: Partial<Article>) => {
 }
 
 export const createCommentEntityMock = (data?: Partial<UserComment>) => {
-  const defaultData: UserComment = {
+  const defaultData = {
     createdBy: new ClientUser(),
     content: '',
     votes: 0,
@@ -324,8 +324,8 @@ export const createCommentEntityMock = (data?: Partial<UserComment>) => {
     submittedAssignment: new SubmittedAssignment(),
     id: '1',
     title: 'a comment',
-    createdAt: new Date('1-6-2022'),
-    updatedAt: new Date('1-6-2022'),
+    updatedAt: new Date().toLocaleDateString(),
+    createdAt: new Date().toLocaleDateString(),
   }
 
   return assign(new UserComment(), { ...defaultData, ...data })
