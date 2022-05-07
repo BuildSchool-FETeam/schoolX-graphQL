@@ -107,7 +107,6 @@ export class ClientAuthService extends BaseService<ClientUser> {
     }
 
     if (clientUser.activationCode !== code) {
-      console.log(1)
       throw new BadRequestException('Activation code is invalid!')
     }
 

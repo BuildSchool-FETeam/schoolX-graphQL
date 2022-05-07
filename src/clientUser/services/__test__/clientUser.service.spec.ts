@@ -12,11 +12,7 @@ import { StreamMock } from 'src/common/mock/StreamMock'
 import { GCStorageService } from 'src/common/services/GCStorage.service'
 import { TokenService } from 'src/common/services/token.service'
 import { CourseService } from 'src/courses/services/course.service'
-import {
-  ActionCourse,
-  ActionFollow,
-  ClientUserUpdateInput,
-} from 'src/graphql'
+import { ActionCourse, ActionFollow, ClientUserUpdateInput } from 'src/graphql'
 import { Repository } from 'typeorm'
 import { ReadStream } from 'typeorm/platform/PlatformTools'
 import { AchievementService } from '../achievement.service'
