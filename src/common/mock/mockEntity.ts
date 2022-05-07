@@ -22,6 +22,22 @@ import {
 } from 'src/assignment/entities/codeChallenge/Testcase.entity'
 import { Question } from 'src/assignment/entities/quiz/Question.entity'
 
+export const createAchievementEntityMock = (data?: Partial<Achievement>) => {
+  const defaultData = {
+    id: '1',
+    clientUser: new ClientUser(),
+    rank: 0,
+    joinedCourse: [],
+    follow: [],
+    followedBy: [],
+    score: 0,
+    completedCourses: [],
+    completedAssignment: [],
+  }
+
+  return Object.assign(new Achievement(), { ...defaultData, ...data })
+}
+
 export const createQuestionEntityMock = (data?: Partial<Question>) => {
   const defaultData = {
     id: '1',
