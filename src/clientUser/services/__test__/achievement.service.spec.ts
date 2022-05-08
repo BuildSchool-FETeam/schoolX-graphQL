@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Achievement } from 'src/clientUser/entities/Achivement.entity'
+import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import {
   createAchievementEntityMock,
   createClientUserEntityMock,
@@ -13,9 +14,7 @@ import { Repository } from 'typeorm'
 import { AchievementService } from '../achievement.service'
 
 const couresServiecMock = {
-  async findById() {
-    return Promise.resolve({})
-  },
+  ...baseServiceMock,
 }
 
 describe('AchievementService', () => {

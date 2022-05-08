@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { AchievementService } from 'src/clientUser/services/achievement.service'
 import { ClientUserService } from 'src/clientUser/services/clientUser.service'
+import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import {
   createAchievementEntityMock,
   createClientUserEntityMock,
@@ -9,14 +10,10 @@ import {
 import { clientUserTypeResolver } from '../clientUserType.resolver'
 
 const clientUserServiceMock = {
-  async findById() {
-    return Promise.resolve({})
-  },
+  ...baseServiceMock,
 }
 const achievementServiceMock = {
-  async findWithOptions() {
-    return Promise.resolve({})
-  },
+  ...baseServiceMock,
 }
 
 describe('ClientUserTypeResolver', () => {

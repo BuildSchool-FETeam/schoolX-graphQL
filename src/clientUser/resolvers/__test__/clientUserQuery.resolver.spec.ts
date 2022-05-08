@@ -1,14 +1,13 @@
 import { Test } from '@nestjs/testing'
 import { ClientUserService } from 'src/clientUser/services/clientUser.service'
 import { AuthGuard } from 'src/common/guards/auth.guard'
+import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import { guardMock } from 'src/common/mock/guardMock'
 import { createClientUserEntityMock } from 'src/common/mock/mockEntity'
 import { clientUserQueryResolver } from '../clientUserQuery.resolver'
 
 const clientUserServiceMock = {
-  async findById() {
-    return Promise.resolve({})
-  },
+  ...baseServiceMock,
 }
 
 describe('ClientUserQueryResolver', () => {

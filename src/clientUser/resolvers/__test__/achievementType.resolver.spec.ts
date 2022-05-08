@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing'
 import { AchievementService } from 'src/clientUser/services/achievement.service'
+import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import {
   createAchievementEntityMock,
   createClientUserEntityMock,
@@ -9,13 +10,7 @@ import { PaginationInput } from 'src/graphql'
 import { AchievementTypeResolver } from '../achievementType.resolver'
 
 const achievementServiceMock = {
-  async findById() {
-    return Promise.resolve({})
-  },
-
-  async manuallyPagination() {
-    return Promise.resolve({})
-  },
+  ...baseServiceMock,
 }
 
 describe('AchievemenTypeResolver', () => {
@@ -51,10 +46,6 @@ describe('AchievemenTypeResolver', () => {
         createCourseEntityMock({ id: '2' }),
       ]
 
-      jest
-        .spyOn(achievementServiceMock, 'manuallyPagination')
-        .mockResolvedValue(achievement.joinedCourse)
-
       const result = await resolver.getCoursesStudentJoined(achievement, pg)
 
       expect(result).toEqual([
@@ -72,9 +63,6 @@ describe('AchievemenTypeResolver', () => {
         createClientUserEntityMock({ id: '2' }),
       ]
 
-      jest
-        .spyOn(achievementServiceMock, 'manuallyPagination')
-        .mockResolvedValue(achievement.follow)
       const result = await resolver.getPeopleStudentFollow(achievement, pg)
 
       expect(result).toEqual([
@@ -92,9 +80,6 @@ describe('AchievemenTypeResolver', () => {
         createClientUserEntityMock({ id: '2' }),
       ]
 
-      jest
-        .spyOn(achievementServiceMock, 'manuallyPagination')
-        .mockResolvedValue(achievement.followedBy)
       const result = await resolver.getPeopleFollowedMe(achievement, pg)
 
       expect(result).toEqual([
@@ -112,9 +97,6 @@ describe('AchievemenTypeResolver', () => {
         createCourseEntityMock({ id: '2' }),
       ]
 
-      jest
-        .spyOn(achievementServiceMock, 'manuallyPagination')
-        .mockResolvedValue(achievement.completedCourses)
       const result = await resolver.getAllCoursesCompleted(achievement, pg)
 
       expect(result).toEqual([
