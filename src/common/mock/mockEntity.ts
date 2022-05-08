@@ -22,6 +22,42 @@ import {
 } from 'src/assignment/entities/codeChallenge/Testcase.entity'
 import { Question } from 'src/assignment/entities/quiz/Question.entity'
 
+export const createInstructorEntiryMock = (data?: Partial<Instructor>) => {
+  const defaultData = {
+    id: '1',
+    title: 'title',
+    createAt: new Date().toLocaleDateString(),
+    updateAt: new Date().toLocaleDateString(),
+    name: 'name',
+    email: 'email',
+    description: 'description',
+    user: new ClientUser(),
+    cousres: [],
+    imageUrl: 'url',
+    filePath: 'path',
+    phone: 'phone',
+    createdBy: new AdminUser(),
+  }
+
+  return Object.assign(new Instructor(), { ...defaultData, ...data })
+}
+
+export const createAchievementEntityMock = (data?: Partial<Achievement>) => {
+  const defaultData = {
+    id: '1',
+    clientUser: new ClientUser(),
+    rank: 0,
+    joinedCourse: [],
+    follow: [],
+    followedBy: [],
+    score: 0,
+    completedCourses: [],
+    completedAssignment: [],
+  }
+
+  return Object.assign(new Achievement(), { ...defaultData, ...data })
+}
+
 export const createQuestionEntityMock = (data?: Partial<Question>) => {
   const defaultData = {
     id: '1',
