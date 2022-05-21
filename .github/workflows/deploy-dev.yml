@@ -24,6 +24,9 @@ jobs:
           STORAGE_SERVICE_PASS: ${{ secrets.STORAGE_SERVICE_PASS }}
         run: ./.github/scripts/decrypt-secret.sh "$STORAGE_SERVICE_PASS" "storage-service-account.json"
 
+      - name: Copy storage file to root repo folder
+        run: cp $HOME/storage-service-account.json .
+
       - name: login to docker
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
