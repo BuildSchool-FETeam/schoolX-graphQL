@@ -22,6 +22,42 @@ import {
 } from 'src/assignment/entities/codeChallenge/Testcase.entity'
 import { Question } from 'src/assignment/entities/quiz/Question.entity'
 
+export const createInstructorEntiryMock = (data?: Partial<Instructor>) => {
+  const defaultData = {
+    id: '1',
+    title: 'title',
+    createAt: new Date().toLocaleDateString(),
+    updateAt: new Date().toLocaleDateString(),
+    name: 'name',
+    email: 'email',
+    description: 'description',
+    user: new ClientUser(),
+    cousres: [],
+    imageUrl: 'url',
+    filePath: 'path',
+    phone: 'phone',
+    createdBy: new AdminUser(),
+  }
+
+  return Object.assign(new Instructor(), { ...defaultData, ...data })
+}
+
+export const createAchievementEntityMock = (data?: Partial<Achievement>) => {
+  const defaultData = {
+    id: '1',
+    clientUser: new ClientUser(),
+    rank: 0,
+    joinedCourse: [],
+    follow: [],
+    followedBy: [],
+    score: 0,
+    completedCourses: [],
+    completedAssignment: [],
+  }
+
+  return Object.assign(new Achievement(), { ...defaultData, ...data })
+}
+
 export const createQuestionEntityMock = (data?: Partial<Question>) => {
   const defaultData = {
     id: '1',
@@ -311,7 +347,7 @@ export const createArticleEntityMock = (data?: Partial<Article>) => {
 }
 
 export const createCommentEntityMock = (data?: Partial<UserComment>) => {
-  const defaultData: UserComment = {
+  const defaultData = {
     createdBy: new ClientUser(),
     content: '',
     votes: 0,
@@ -324,8 +360,8 @@ export const createCommentEntityMock = (data?: Partial<UserComment>) => {
     submittedAssignment: new SubmittedAssignment(),
     id: '1',
     title: 'a comment',
-    createdAt: new Date('1-6-2022'),
-    updatedAt: new Date('1-6-2022'),
+    updatedAt: new Date().toLocaleDateString(),
+    createdAt: new Date().toLocaleDateString(),
   }
 
   return assign(new UserComment(), { ...defaultData, ...data })
