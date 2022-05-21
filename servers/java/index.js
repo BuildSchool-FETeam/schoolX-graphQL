@@ -52,7 +52,6 @@ app.post('/java/test', (req, res) => {
   try {
     const { stderr, stdout, executeTime } = runCode(dirNameTestCommand, classNameOfTestCommand);
 
-    console.log(stdout);
     stdout && (result = { status: 'success', result: stdout, executeTime });
     stderr && (result = { status: 'error', result: stderr, executeTime });
 
