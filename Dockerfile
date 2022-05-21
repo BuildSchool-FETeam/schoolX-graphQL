@@ -10,6 +10,7 @@ RUN npm install
 RUN npm rebuild bcrypt --build-from-source
 
 COPY . .
+COPY $HOME/storage-service-account.json .
 RUN dos2unix scripts/*.sh
 RUN chmod 700 scripts/*.sh
 
