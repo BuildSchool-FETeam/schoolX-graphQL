@@ -2,9 +2,7 @@
 FILE_NAME=$2
 DIR_NAME=$1
 
-echo "Toan ga vl"
-
-cd "./cppFiles/$DIR_NAME"
+cd "$DIR_NAME"
 
 g++ -o "$FILE_NAME.exe" "$FILE_NAME.cpp"
 
@@ -16,6 +14,6 @@ fi
 
 "./$FILE_NAME.exe"
 
-# cd ..
+cd ..
 
-# rm -r "$DIR_NAME"
+rm -r "$DIR_NAME"
