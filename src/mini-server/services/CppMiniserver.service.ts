@@ -19,16 +19,28 @@ export class CppMiniServerService
   }
 
   async runCode(code: string): Promise<TestResponse> {
-    const response = await this.axiosInstance.get<MiniServerDTO> (
-      'hello'
+    const response = await this.axiosInstance.post<MiniServerDTO> (
+      '/cpp/playground',
+      {
+        code,
+      }
     )
 
     return response.data;
-  }
-  runCodeWithTestCase(
+  } 
+
+  async runCodeWithTestCase(
     code: string,
     testCase: ITestCaseConfig
   ): Promise<TestResponse> {
-    throw new Error('Method not implemented.')
+    const response = await this.axiosInstance.post<MiniServerDTO> (
+      '/cpp/test',
+      {
+        code,
+        command: testCase.runningTestScript
+      }
+    )
+
+    return response.data;
   }
 }
