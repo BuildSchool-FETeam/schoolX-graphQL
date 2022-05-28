@@ -44,3 +44,6 @@ storage-service-account.json
 lint
 compute-service-account.json
 report.xml
+
+servers/*/javaFiles
+servers/*/cppFiles/temp_*

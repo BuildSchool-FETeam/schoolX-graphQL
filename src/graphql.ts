@@ -7,6 +7,7 @@
 
 /* tslint:disable */
 /* eslint-disable */
+
 export enum ArticleStatus {
     pending = "pending",
     accept = "accept",

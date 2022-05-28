@@ -1,11 +1,11 @@
 version: '3.9'
 services:
   mini-server:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile.dev
     ports:
-      - 6004:6004
+      - 1000:6004
     volumes:
       - /home/app/node_modules
       - .:/home/app
