@@ -89,7 +89,7 @@ export class PermissionService extends BaseService<PermissionSet> {
 
   async updatePermission(
     id: string,
-    input: PermissionSetInput,
+    permissionInput: PermissionSetInput,
     strictConfig: IStrictConfig
   ) {
     const permissionSet = await this.findById(
@@ -103,15 +103,22 @@ export class PermissionService extends BaseService<PermissionSet> {
     if (!permissionSet) {
       throw new NotFoundException(`Resource with id "${id}" not found`)
     }
-    await this.roleService.updateRole(permissionSet.role.name, input.roleName)
-    _.forOwn(_.omit(input, 'roleName'), (value, key: Resource) => {
+
+    const updatedRole = await this.roleService.updateRole(
+      permissionSet.role.name,
+      permissionInput.roleName
+    )
+
+    permissionSet.role = updatedRole
+
+    _.forOwn(_.omit(permissionInput, 'roleName'), (value, key: Resource) => {
       permissionSet[key] = value
     })
 
     const savedData = await this.permissionRepo.save(permissionSet)
 
     return {
-      name: input.roleName,
+      name: savedData.role.name,
       permissionSet: savedData,
     }
   }
