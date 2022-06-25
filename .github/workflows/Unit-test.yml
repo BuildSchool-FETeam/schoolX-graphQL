@@ -3,6 +3,10 @@ on:
   pull_request_review:
     types: [submitted]
 
+permissions:
+  contents: read # Required when overriding permissions
+  pull-requests: write # <== Add this to allow action to modify your PR
+
 jobs:
   unit-test:
     if: ${{ contains(github.event.review.body, 'ok to test') && contains(github.event.review.state, 'approved') }} # check if the comments come from pull request, exclude those from issue.
@@ -35,22 +39,32 @@ jobs:
       - name: Coverage code
         run: yarn run test:cov
 
-      - name: Test Report
+      - name: Test Result Report
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: success() || failure() # run this step even if previous step failed
         with:
-          name: Unit test report           # Name of the check run which will be created
-          path: ./report.xml    # Path to test results
+          name: Unit test report # Name of the check run which will be created
+          path: ./report.xml # Path to test results
           reporter: jest-junit
 
-      - name: Generate Code Coverage report
-        id: code-coverage
-        uses: barecheck/code-coverage-action@v0.5.1
-        with:
-          barecheck-github-app-token: ${{ secrets.BARECHECK_GITHUB_APP_TOKEN }}
-          lcov-file: "./coverage/lcov.info"
-          send-summary-comment: true
-          show-annotations: "warning"
-          minimum-ratio: 85
-          app-name: "GraphQL schoolX"
+      - name: Copy Coverage To Predictable Location
+        run: cp coverage/cobertura-coverage.xml cobertura-coverage.xml
 
+      - name: Code Coverage Summary Report
+        uses: irongut/CodeCoverageSummary@v1.2.0
+        with:
+          filename: cobertura-coverage.xml
+          badge: true
+          fail_below_min: true
+          format: markdown
+          hide_branch_rate: false
+          hide_complexity: true
+          indicators: true
+          output: both
+          thresholds: '60 80'
+
+      - name: Add Coverage PR Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          recreate: true
+          path: code-coverage-results.md

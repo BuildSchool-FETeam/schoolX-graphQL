@@ -136,7 +136,8 @@
       "json",
       "html",
       "json-summary",
-      "lcov"
+      "lcov",
+      "cobertura"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",
