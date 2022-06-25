@@ -39,12 +39,10 @@ export class RoleService extends BaseService<Role> {
   }
 
   async updateRole(name: string, newName: string) {
-    return this.roleRepo.update(
-      { name },
-      {
-        name: newName,
-      }
-    )
+    const role = await this.findRoleByName(name)
+    role.name = newName
+
+    return this.roleRepo.save(role)
   }
 
   async deleteRoleByName(removedName: string) {
