@@ -29,7 +29,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     super(userRepo, 'AdminUser', cachedService)
   }
 
-  async createUserBySignup(data: Partial<AdminUser>) {
+  async createUserBySignup(data: Partial<AdminUser>, isIt?: boolean) {
     const userCount = await this.userRepo.count()
 
     if (userCount > 0) {
