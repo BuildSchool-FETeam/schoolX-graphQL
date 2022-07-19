@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
 
       - name: setup nodejs
         uses: actions/setup-node@v2
@@ -32,8 +34,8 @@ jobs:
       - name: install dependencies
         run: yarn install
 
-      - name: Coverage code
-        run: yarn run test:cov
+      - name: Run all unittest
+        run: yarn run test:all
 
       - name: Test Report
         uses: dorny/test-reporter@v1
@@ -42,6 +44,9 @@ jobs:
           name: Unit test report # Name of the check run which will be created
           path: ./report.xml # Path to test results
           reporter: jest-junit
+
+      - name: Coverage changed code
+        run: git fetch origin dev:dev && yarn run test:cov
 
       - name: Post Coverage Report
         uses: romeovs/lcov-reporter-action@v0.2.16
