@@ -38,10 +38,10 @@ export class Course {
   @Column({ nullable: true, type: 'int' })
   votes: number
 
-  @Column()
+  @Column({ nullable: true })
   imageUrl: string
 
-  @Column()
+  @Column({ nullable: true })
   filePath: string
 
   @Column({ nullable: true, type: 'int2' })

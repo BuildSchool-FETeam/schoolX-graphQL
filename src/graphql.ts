@@ -231,7 +231,7 @@ export class CourseSetInput {
     instructorId: string;
     benefits: string[];
     requirements: string[];
-    image: Upload;
+    image?: Nullable<Upload>;
     tags: string[];
     levels: Nullable<string>[];
 }
