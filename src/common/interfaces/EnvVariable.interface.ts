@@ -8,5 +8,6 @@ export interface EnvVariable {
   JS_MINI_SERVER: string
   JAVA_MINI_SERVER: string
   PYTHON_MINI_SERVER: string
+  CPP_MINI_SERVER: string
   MAILGUN_HOST: string
 }

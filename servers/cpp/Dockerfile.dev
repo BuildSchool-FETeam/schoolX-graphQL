@@ -1,0 +1,22 @@
+FROM node:14 AS nodejs
+
+RUN echo "Install Nodejs"
+
+FROM gcc:9.4.0
+
+COPY --from=nodejs . .
+
+WORKDIR /home/app
+
+COPY package.json .
+
+RUN npm i
+
+COPY . .
+
+RUN apt-get update -y
+RUN apt-get install -y dos2unix
+RUN chmod 700 ./runCppCode.sh
+RUN dos2unix ./runCppCode.sh
+
+CMD ["npm", "run", "start"]
