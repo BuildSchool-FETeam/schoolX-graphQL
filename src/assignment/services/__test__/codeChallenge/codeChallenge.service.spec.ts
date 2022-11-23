@@ -18,6 +18,7 @@ import {
   CodeConfigInput,
   ProgrammingLanguage,
 } from 'src/graphql'
+import { CppMiniServerService } from 'src/mini-server/services/CppMiniserver.service'
 import { JavaMiniServerService } from 'src/mini-server/services/JavaMiniServer.service'
 import { JSMiniServerService } from 'src/mini-server/services/JSMiniServer.service'
 import { PythonMiniServerService } from 'src/mini-server/services/PythonMiniServer.service'
@@ -46,6 +47,7 @@ const miniServiceMock = {
 const jsMiniServerServiceMock = { ...miniServiceMock }
 const javaMiniServerServiceMock = { ...miniServiceMock }
 const pythonMiniServerServiceMock = { ...miniServiceMock }
+const cppMiniServerServiceMock = {...miniServiceMock}
 
 const assignmentServiceMock = {
   ...GServiceMock,
@@ -67,6 +69,7 @@ describe('CodeChallengeService', () => {
         JSMiniServerService,
         JavaMiniServerService,
         PythonMiniServerService,
+        CppMiniServerService,
         AssignmentService,
         LessonService,
         {
@@ -89,6 +92,9 @@ describe('CodeChallengeService', () => {
     testModule
       .overrideProvider(JavaMiniServerService)
       .useValue(javaMiniServerServiceMock)
+    testModule
+      .overrideProvider(CppMiniServerService)
+      .useValue(cppMiniServerServiceMock)
 
     const compliedModule = await testModule.compile()
 

@@ -12,9 +12,6 @@ COMMAND="""
   cd /home/superknife0511/schoolX-graphQL &&
   sudo docker-compose -f docker-compose.prod.yml down &&
   sudo docker pull superknife0512/schoolx-graphql &&
-  sudo docker pull superknife0512/schoolx-python-server &&
-  sudo docker pull superknife0512/schoolx-java-server &&
-  sudo docker pull superknife0512/schoolx-js-server &&
   sudo docker-compose -f docker-compose.prod.yml up -d
 """
 

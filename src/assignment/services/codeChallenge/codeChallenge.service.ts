@@ -24,6 +24,7 @@ import {
 } from 'src/assignment/entities/codeChallenge/Testcase.entity'
 import { LessonService } from 'src/courses/services/lesson.service'
 import { AssignmentService } from '../assignment.service'
+import { CppMiniServerService } from 'src/mini-server/services/CppMiniserver.service'
 
 @Injectable()
 export class CodeChallengeService extends BaseService<CodeChallenge> {
@@ -33,6 +34,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
     private miniJSServerService: JSMiniServerService,
     private miniJavaServerService: JavaMiniServerService,
     private miniPythonServerService: PythonMiniServerService,
+    private miniCppServerService: CppMiniServerService,
     @Inject(forwardRef(() => AssignmentService))
     private assignService: AssignmentService,
     @Inject(forwardRef(() => LessonService))
@@ -284,6 +286,8 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
         return this.miniJavaServerService
       case TestCaseProgrammingLanguage.python:
         return this.miniPythonServerService
+      case TestCaseProgrammingLanguage.CPlus:
+        return this.miniCppServerService
       default:
         return null
     }

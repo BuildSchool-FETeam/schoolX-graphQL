@@ -21,6 +21,7 @@ services:
       - JS_MINI_SERVER=http://js-server:6001
       - JAVA_MINI_SERVER=http://java-server:6002
       - PYTHON_MINI_SERVER=http://python-server:6003
+      - CPP_MINI_SERVER=http://cpp-server:6004
     depends_on:
       - postgres-db
     command:
@@ -43,6 +44,9 @@ services:
 
   python-server:
     image: superknife0512/schoolx-python-server
+
+  cpp-server:
+    image: superknife0512/schoolx-cpp-server
 
   postgres-db:
     image: postgres:13.4
