@@ -13,34 +13,30 @@ export class CppMiniServerService
   extends MiniServerBaseService
   implements IMiniServerService
 {
-
   constructor(private configService: ConfigService) {
     super(configService, 'CPP_MINI_SERVER')
   }
 
   async runCode(code: string): Promise<TestResponse> {
-    const response = await this.axiosInstance.post<MiniServerDTO> (
+    const response = await this.axiosInstance.post<MiniServerDTO>(
       '/cpp/playground',
       {
         code,
       }
     )
 
-    return response.data;
-  } 
+    return response.data
+  }
 
   async runCodeWithTestCase(
     code: string,
     testCase: ITestCaseConfig
   ): Promise<TestResponse> {
-    const response = await this.axiosInstance.post<MiniServerDTO> (
-      '/cpp/test',
-      {
-        code,
-        command: testCase.runningTestScript
-      }
-    )
+    const response = await this.axiosInstance.post<MiniServerDTO>('/cpp/test', {
+      code,
+      command: testCase.runningTestScript,
+    })
 
-    return response.data;
+    return response.data
   }
 }

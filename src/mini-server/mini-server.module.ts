@@ -9,13 +9,13 @@ import { CppMiniServerService } from './services/CppMiniserver.service'
     JSMiniServerService,
     JavaMiniServerService,
     PythonMiniServerService,
-    CppMiniServerService
+    CppMiniServerService,
   ],
   providers: [
     JSMiniServerService,
     JavaMiniServerService,
     PythonMiniServerService,
-    CppMiniServerService
+    CppMiniServerService,
   ],
 })
 export class MiniServerModule {}
