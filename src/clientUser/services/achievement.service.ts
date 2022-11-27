@@ -40,7 +40,7 @@ export class AchievementService extends BaseService<Achievement> {
 
   async updateJoinedCourse(id: string, data: UpdateJoinedCourse) {
     const [existedAchi, course] = await Promise.all([
-      this.findById(id, { relations: ['joinedCourse'] }),
+      this.findById(id, { relations: { joinedCourse: true } }),
       this.courseService.findById(data.idCourse),
     ])
     const newCourses: Course[] = _.cloneDeep(existedAchi.joinedCourse)
@@ -65,7 +65,7 @@ export class AchievementService extends BaseService<Achievement> {
   }
 
   async updateFollow(id: string, userFollow: ClientUser, status: ActionFollow) {
-    const existedAchi = await this.findById(id, { relations: ['follow'] })
+    const existedAchi = await this.findById(id, { relations: { follow: true } })
     const follow: ClientUser[] = _.cloneDeep(existedAchi.follow)
     const checkAvailable = _.some(follow, ['id', userFollow.id])
 
@@ -92,7 +92,9 @@ export class AchievementService extends BaseService<Achievement> {
     userFollowedMe: ClientUser,
     status: ActionFollow
   ) {
-    const existedAchi = await this.findById(id, { relations: ['followedBy'] })
+    const existedAchi = await this.findById(id, {
+      relations: { followedBy: true },
+    })
     const followedMe: ClientUser[] = _.cloneDeep(existedAchi.followedBy)
 
     if (status === ActionFollow.FOLLOW) {
@@ -109,7 +111,12 @@ export class AchievementService extends BaseService<Achievement> {
 
   async updateCompletedCourses(id: string, idCourse: string) {
     const [existedAchi, course] = await Promise.all([
-      this.findById(id, { relations: ['completedCourses', 'joinedCourse'] }),
+      this.findById(id, {
+        relations: {
+          completedCourses: true,
+          joinedCourse: true,
+        },
+      }),
       this.courseService.findById(idCourse),
     ])
 

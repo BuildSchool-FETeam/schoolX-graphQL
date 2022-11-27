@@ -148,7 +148,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
   ) {
     const findObj: FindOneOptions = {
       where: { email },
-      relations: ['role'],
+      relations: { role: true },
     }
 
     _.size(select) > 0 && (findObj.select = select)

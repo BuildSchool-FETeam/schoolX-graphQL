@@ -47,7 +47,7 @@ const miniServiceMock = {
 const jsMiniServerServiceMock = { ...miniServiceMock }
 const javaMiniServerServiceMock = { ...miniServiceMock }
 const pythonMiniServerServiceMock = { ...miniServiceMock }
-const cppMiniServerServiceMock = {...miniServiceMock}
+const cppMiniServerServiceMock = { ...miniServiceMock }
 
 const assignmentServiceMock = {
   ...GServiceMock,

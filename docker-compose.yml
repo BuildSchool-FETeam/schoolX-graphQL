@@ -24,10 +24,9 @@ services:
       - PYTHON_MINI_SERVER=http://python-server:6003
       - CPP_MINI_SERVER=http://cpp-server:6004
     volumes:
+      - ./src:/home/app/src
       - /home/app/node_modules
       - /home/app/src/migrations
-      - /home/app/dist
-      - ./src:/home/app/src
     depends_on:
       - postgres-db
     command:
@@ -42,25 +41,25 @@ services:
         'start:docker',
       ]
 
-  js-server:
-    build:
-      context: ./servers/js
-      dockerfile: Dockerfile.dev
-    ports:
-      - 6001:6001
-    volumes:
-      - /home/app/node_modules
-      - ./servers/js:/home/app
+  # js-server:
+  #   build:
+  #     context: ./servers/js
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 6001:6001
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/js:/home/app
 
-  java-server:
-    build:
-      context: ./servers/java
-      dockerfile: Dockerfile.dev
-    ports:
-      - 6002:6002
-    volumes:
-      - /home/app/node_modules
-      - ./servers/java:/home/app
+  # java-server:
+  #   build:
+  #     context: ./servers/java
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 6002:6002
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/java:/home/app
 
   python-server:
     build:
@@ -73,7 +72,7 @@ services:
       - ./servers/python:/home/app
 
   cpp-server:
-    build: 
+    build:
       context: ./servers/cpp
       dockerfile: Dockerfile.dev
     ports:

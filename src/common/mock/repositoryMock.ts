@@ -128,5 +128,6 @@ export const repositoryMockFactory: <T>() => MockType<Repository<T>> = jest.fn(
     find: jest.fn(async () => Promise.resolve([])),
     createQueryBuilder: jest.fn(() => new QueryBuilderMock()),
     remove: jest.fn(async (entity) => Promise.resolve(entity)),
+    findOneBy: jest.fn((entity) => entity),
   })
 )

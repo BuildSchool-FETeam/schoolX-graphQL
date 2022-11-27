@@ -11,7 +11,9 @@ export class ArticleTagTypeResolver {
     const tagWithArticles = await this.articleTagService.findById(
       articleTag.id,
       {
-        relations: ['articles'],
+        relations: {
+          articles: true,
+        },
       }
     )
 

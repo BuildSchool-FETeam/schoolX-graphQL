@@ -87,7 +87,7 @@ export class CourseService extends BaseService<Course> {
   }
 
   async updateJoinedUsers(id: string, user: ClientUser, action: ActionCourse) {
-    const course = await this.findById(id, { relations: ['joinedUsers'] })
+    const course = await this.findById(id, { relations: { joinedUsers: true } })
     const users: ClientUser[] = _.cloneDeep(course.joinedUsers)
 
     if (action === ActionCourse.JOIN) {
@@ -103,7 +103,9 @@ export class CourseService extends BaseService<Course> {
   }
 
   async updateCompletedUser(id: string, user: ClientUser) {
-    const course = await this.findById(id, { relations: ['completedUser'] })
+    const course = await this.findById(id, {
+      relations: { completedUser: true },
+    })
     const users: ClientUser[] = _.cloneDeep(course.completedUser)
 
     users.push(user)

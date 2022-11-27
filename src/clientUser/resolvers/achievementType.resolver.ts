@@ -13,7 +13,7 @@ export class AchievementTypeResolver {
     @Args('pagination') pg: PaginationInput
   ) {
     const data = await this.achiService.findById(achiId, {
-      relations: ['joinedCourse'],
+      relations: { joinedCourse: true },
     })
 
     return this.achiService.manuallyPagination(data.joinedCourse, pg)
@@ -25,7 +25,7 @@ export class AchievementTypeResolver {
     @Args('pagination') pg: PaginationInput
   ) {
     const data = await this.achiService.findById(achiId, {
-      relations: ['follow'],
+      relations: { follow: true },
     })
 
     return this.achiService.manuallyPagination(data.follow, pg)
@@ -37,7 +37,7 @@ export class AchievementTypeResolver {
     @Args('pagination') pg: PaginationInput
   ) {
     const data = await this.achiService.findById(achiId, {
-      relations: ['followedBy'],
+      relations: { followedBy: true },
     })
 
     return this.achiService.manuallyPagination(data.followedBy, pg)
@@ -49,7 +49,7 @@ export class AchievementTypeResolver {
     @Args('pagination') pg: PaginationInput
   ) {
     const data = await this.achiService.findById(achiId, {
-      relations: ['completedCourses'],
+      relations: { completedCourses: true },
     })
 
     return this.achiService.manuallyPagination(data.completedCourses, pg)

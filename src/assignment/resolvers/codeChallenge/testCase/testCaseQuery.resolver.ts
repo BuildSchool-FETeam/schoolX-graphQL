@@ -13,7 +13,7 @@ export class TestCaseQueryResolver {
   @ResolveField('testCase')
   async getTestCaseById(@Args('id') id: string) {
     const testCase = await this.testCaseService.findById(id, {
-      relations: ['codeChallenge'],
+      relations: { codeChallenge: true },
     })
 
     return testCase

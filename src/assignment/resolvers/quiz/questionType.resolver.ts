@@ -9,7 +9,7 @@ export class QuestionTypeResolver {
   @ResolveField()
   async quiz(@Parent() parent: Question) {
     const question = await this.questionService.findById(parent.id, {
-      relations: ['quiz'],
+      relations: { quiz: true },
     })
 
     return question.quiz

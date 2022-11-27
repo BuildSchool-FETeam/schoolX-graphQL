@@ -1,7 +1,13 @@
 import { InternalServerErrorException } from '@nestjs/common'
 import * as _ from 'lodash'
 import { OrderDirection, PaginationInput, SearchOptionInput } from 'src/graphql'
-import { FindManyOptions, ILike, SelectQueryBuilder } from 'typeorm'
+import {
+  FindManyOptions,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  ILike,
+  SelectQueryBuilder,
+} from 'typeorm'
 
 export abstract class UtilService {
   private readonly MAXIMUM_LIMIT = 1000
@@ -35,8 +41,11 @@ export abstract class UtilService {
 
     limit && (options.take = limit)
     skip && (options.skip = skip)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    order && (options.order = { [order.orderBy as any]: order.direction })
+    order &&
+      (options.order = {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [order.orderBy as any]: order.direction,
+      } as FindOptionsOrder<T>)
 
     return options
   }
@@ -88,12 +97,12 @@ export abstract class UtilService {
       return {}
     }
 
-    const findArray: DynamicObject[] = []
+    const findArray: FindOptionsWhere<T>[] = []
 
     _.each(search.searchFields, (field) => {
       findArray.push({
         [field]: ILike(`%${search.searchString}%`),
-      })
+      } as FindOptionsWhere<T>)
     })
 
     return {

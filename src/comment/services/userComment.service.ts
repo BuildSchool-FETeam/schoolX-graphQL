@@ -91,7 +91,7 @@ export class UserCommentService extends BaseService<UserComment> {
     data: CommentDataInput,
     token: string
   ) {
-    const assignment = await this.assignmentRepo.findOne(assignId)
+    const assignment = await this.assignmentRepo.findOneBy({ id: assignId })
     const newComment = await this.setComment(
       data,
       { fieldAssign: 'assignment', data: assignment },
@@ -134,7 +134,10 @@ export class UserCommentService extends BaseService<UserComment> {
   async deleteComment(id: string, token: string) {
     const user = await this.tokenService.getAdminUserByToken<ClientUser>(token)
     const existedComment = await this.findById(id, {
-      relations: ['reply', 'createdBy'],
+      relations: {
+        reply: true,
+        createdBy: true,
+      },
       select: ['id'],
     })
 
@@ -166,7 +169,7 @@ export class UserCommentService extends BaseService<UserComment> {
 
     if (data.id) {
       const oldComment = await this.findById(data.id, {
-        relations: ['createdBy'],
+        relations: { createdBy: true },
       })
 
       if (user.id !== oldComment.createdBy.id) {

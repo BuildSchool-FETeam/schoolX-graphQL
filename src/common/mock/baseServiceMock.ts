@@ -1,7 +1,12 @@
 import * as _ from 'lodash'
 import { each } from 'lodash'
 import { OrderDirection, PaginationInput, SearchOptionInput } from 'src/graphql'
-import { FindManyOptions, ILike } from 'typeorm'
+import {
+  FindManyOptions,
+  FindOptionsOrder,
+  FindOptionsWhere,
+  ILike,
+} from 'typeorm'
 
 export const baseServiceMock = {
   buildPaginationOptions<T>(pg: PaginationInput) {
@@ -13,14 +18,17 @@ export const baseServiceMock = {
 
     limit && (options.take = limit)
     skip && (options.skip = skip)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    order && (options.order = { [order.orderBy as any]: order.direction })
+    order &&
+      (options.order = {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        [order.orderBy as any]: order.direction,
+      } as FindOptionsOrder<T>)
 
     return options
   },
 
   buildSearchOptions<T>(search: SearchOptionInput): FindManyOptions<T> {
-    const findArray: DynamicObject[] = []
+    const findArray: FindOptionsWhere<T>[] = []
 
     if (!search) {
       return {}
@@ -28,7 +36,7 @@ export const baseServiceMock = {
     each(search.searchFields, (field) => {
       findArray.push({
         [field]: ILike(`%${search.searchString}%`),
-      })
+      } as FindOptionsWhere<T>)
     })
 
     return {

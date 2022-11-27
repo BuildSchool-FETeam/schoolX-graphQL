@@ -9,7 +9,7 @@ export class AdminUserTypeResolver {
   @ResolveField()
   async role(@Parent() admin: AdminUser) {
     const parentAdmin = await this.adminUserService.findById(admin.id, {
-      relations: ['role'],
+      relations: { role: true },
     })
 
     return parentAdmin.role.name
@@ -18,7 +18,7 @@ export class AdminUserTypeResolver {
   @ResolveField()
   async createdBy(@Parent() admin: AdminUser) {
     const parentAdmin = await this.adminUserService.findById(admin.id, {
-      relations: ['createdBy'],
+      relations: { createdBy: true },
     })
 
     return parentAdmin.createdBy
@@ -27,7 +27,7 @@ export class AdminUserTypeResolver {
   @ResolveField()
   async evaluationComments(@Parent() admin: AdminUser) {
     const parentAdmin = await this.adminUserService.findById(admin.id, {
-      relations: ['commentEvaluations'],
+      relations: { evaluationComments: true },
     })
 
     return parentAdmin.evaluationComments

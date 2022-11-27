@@ -29,7 +29,10 @@ export class PermissionQueryResolver {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers)
     const permissions = await this.permissionService.findWithOptions(
       {
-        relations: ['role', 'createdBy'],
+        relations: {
+          role: true,
+          createdBy: true,
+        },
         ...pgOptions,
       },
       { token, strictResourceName: 'permission' }
@@ -61,7 +64,7 @@ export class PermissionQueryResolver {
     const permission = await this.permissionService.findById(
       id,
       {
-        relations: ['role', 'createdBy'],
+        relations: { role: true, createdBy: true },
       },
       { token, strictResourceName: 'permission' }
     )

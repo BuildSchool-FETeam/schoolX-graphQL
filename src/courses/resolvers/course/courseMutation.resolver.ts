@@ -89,7 +89,7 @@ export class CourseMutationResolver {
     const token = this.courseService.getTokenFromHttpHeader(req.headers)
     const course = await this.courseService.findById(
       id,
-      { relations: ['tags'] },
+      { relations: { tags: true } },
       { token, strictResourceName: 'course' }
     )
 

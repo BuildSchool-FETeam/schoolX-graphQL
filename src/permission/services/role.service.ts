@@ -24,7 +24,7 @@ export class RoleService extends BaseService<Role> {
   }
 
   async createRole(name: string) {
-    const existedRole = await this.roleRepo.findOne({ name })
+    const existedRole = await this.roleRepo.findOneBy({ name })
 
     if (existedRole) {
       throw new BadRequestException(
@@ -54,6 +54,11 @@ export class RoleService extends BaseService<Role> {
   }
 
   async findRoleByName(name: string, options?: FindOneOptions<Role>) {
-    return this.roleRepo.findOne({ name }, options)
+    return this.roleRepo.findOne({
+      where: {
+        name,
+      },
+      ...options,
+    })
   }
 }

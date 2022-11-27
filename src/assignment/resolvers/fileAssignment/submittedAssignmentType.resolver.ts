@@ -11,7 +11,7 @@ export class SubmittedAssignmentTypeResolver {
     const data = await this.submitAssignService.findById(
       submittedAssignment.id,
       {
-        relations: ['comments'],
+        relations: { comments: true },
       }
     )
 

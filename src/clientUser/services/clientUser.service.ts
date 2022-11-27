@@ -78,7 +78,9 @@ export class ClientUserService extends BaseService<ClientUser> {
       throw new BadRequestException('A score should be a positive number')
     }
 
-    const existedUser = await this.findById(id, { relations: ['achievement'] })
+    const existedUser = await this.findById(id, {
+      relations: { achievement: true },
+    })
 
     if (!data.isAdd) {
       this.achievementService.updateScore(
@@ -94,7 +96,7 @@ export class ClientUserService extends BaseService<ClientUser> {
   }
 
   async updateJoinedCourse(id: string, data: UpdateJoinedCourse) {
-    const user = await this.findById(id, { relations: ['achievement'] })
+    const user = await this.findById(id, { relations: { achievement: true } })
     const { achievement } = user
     const updated = await this.achievementService.updateJoinedCourse(
       achievement.id,
@@ -112,8 +114,8 @@ export class ClientUserService extends BaseService<ClientUser> {
 
   async updateFollow(id: string, data: UpdateFollow) {
     const [existedUser, userFollow] = await Promise.all([
-      this.findById(id, { relations: ['achievement'] }),
-      this.findById(data.idFollow, { relations: ['achievement'] }),
+      this.findById(id, { relations: { achievement: true } }),
+      this.findById(data.idFollow, { relations: { achievement: true } }),
     ])
 
     const updated = await this.achievementService.updateFollow(
@@ -136,7 +138,7 @@ export class ClientUserService extends BaseService<ClientUser> {
   }
 
   async updateCompletedCourses(id: string, idCourse: string) {
-    const user = await this.findById(id, { relations: ['achievement'] })
+    const user = await this.findById(id, { relations: { achievement: true } })
     const update = await this.achievementService.updateCompletedCourses(
       user.achievement.id,
       idCourse

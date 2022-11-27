@@ -10,7 +10,7 @@ export class CourseTypeResolver {
   @ResolveField()
   async instructor(@Parent() courseParent: CourseType) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ['instructor'],
+      relations: { instructor: true },
     })
 
     return course.instructor
@@ -19,7 +19,7 @@ export class CourseTypeResolver {
   @ResolveField()
   async tags(@Parent() courseParent: CourseType) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ['tags'],
+      relations: { tags: true },
     })
 
     return course.tags
@@ -31,7 +31,7 @@ export class CourseTypeResolver {
     @Args('pagination') pg: PaginationInput
   ) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ['lessons'],
+      relations: { lessons: true },
     })
 
     return this.courseService.manuallyPagination(course.lessons, pg)
@@ -40,7 +40,7 @@ export class CourseTypeResolver {
   @ResolveField()
   async createdBy(@Parent() courseParent: CourseType) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ['createdBy'],
+      relations: { createdBy: true },
     })
 
     return course.createdBy
@@ -68,7 +68,7 @@ export class CourseTypeResolver {
   ) {
     const course = await this.courseService.findById(courseParent.id, {
       select: ['id'],
-      relations: ['comments'],
+      relations: { comments: true },
     })
 
     return this.courseService.manuallyPagination(course.comments, pg)
@@ -77,7 +77,7 @@ export class CourseTypeResolver {
   @ResolveField()
   async joinedUsers(@Parent() courseParent: Course) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ['joinedUsers'],
+      relations: { joinedUsers: true },
     })
 
     return course.joinedUsers
@@ -89,7 +89,7 @@ export class CourseTypeResolver {
     @Args('pagination') pg: PaginationInput
   ) {
     const course = await this.courseService.findById(courseParent.id, {
-      relations: ['completedUser'],
+      relations: { completedUser: true },
     })
 
     return this.courseService.manuallyPagination(course.completedUser, pg)

@@ -16,7 +16,7 @@ export class InstructorTypeResolver {
   ) {
     const instructorWithCourses = await this.instructorService.findById(
       instructor.id,
-      { relations: ['courses'] }
+      { relations: { courses: true } }
     )
 
     return this.instructorService.manuallyPagination(
@@ -29,7 +29,7 @@ export class InstructorTypeResolver {
   async createdBy(@Parent() instructor: InstructorType) {
     const instructorAndCreatedBy = await this.instructorService.findById(
       instructor.id,
-      { relations: ['createdBy'] }
+      { relations: { createdBy: true } }
     )
 
     return instructorAndCreatedBy.createdBy

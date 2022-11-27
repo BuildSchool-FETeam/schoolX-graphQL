@@ -45,7 +45,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
 
   async create(data: CodeChallengeSetInput) {
     const lesson = await this.lessonService.findById(data.lessonId, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     let assignment: Assignment
@@ -68,8 +68,10 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
 
   async update(id: string, data: CodeChallengeSetInput) {
     const [lesson, codeChallenge] = await Promise.all([
-      this.lessonService.findById(data.lessonId, { relations: ['assignment'] }),
-      this.findById(id, { relations: ['assignment'] }),
+      this.lessonService.findById(data.lessonId, {
+        relations: { assignment: true },
+      }),
+      this.findById(id, { relations: { assignment: true } }),
     ])
 
     if (lesson.assignment.id !== codeChallenge.assignment.id) {
@@ -93,7 +95,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
 
   async delete(id: string) {
     const codeChallenge = await this.findById(id, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
     const deleted = await this.deleteOneById(id)
     this.assignService.deleteAssign(codeChallenge.assignment.id)
@@ -114,7 +116,7 @@ export class CodeChallengeService extends BaseService<CodeChallenge> {
 
   async runTestCase(challengeId: string, data: CodeConfigInput) {
     const existedChallenge = await this.findById(challengeId, {
-      relations: ['testCases'],
+      relations: { testCases: true },
       select: ['id'],
     })
 

@@ -36,7 +36,7 @@ export class NotificationTypeResolver {
   async createdBy(@Parent() notification: AdminNotification) {
     const notificationWithAdmin = await this.notificationService.findById(
       notification.id,
-      { relations: ['createdBy'] }
+      { relations: { createdBy: true } }
     )
 
     return notificationWithAdmin.createdBy

@@ -66,7 +66,7 @@ export class LessonService extends BaseService<Lesson> {
   }
 
   async getTypeAssignment(id: string, idAssign: string) {
-    const lesson = await this.findById(id, { relations: ['assignment'] })
+    const lesson = await this.findById(id, { relations: { assignment: true } })
 
     return this.assignService.getTypeAssign(lesson.assignment.id, idAssign)
   }

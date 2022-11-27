@@ -11,7 +11,7 @@ export class UserCommentTypeResolver {
   async createdBy(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['createdBy'],
+      relations: { createdBy: true },
     })
 
     return data.createdBy
@@ -21,7 +21,7 @@ export class UserCommentTypeResolver {
   async course(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['course'],
+      relations: { course: true },
     })
 
     return data.course
@@ -34,7 +34,7 @@ export class UserCommentTypeResolver {
   ) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['reply'],
+      relations: { reply: true },
     })
 
     return this.commentService.manuallyPagination(data.reply, pg)
@@ -44,7 +44,7 @@ export class UserCommentTypeResolver {
   async assignment(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     return data.assignment
@@ -54,7 +54,7 @@ export class UserCommentTypeResolver {
   async article(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['article'],
+      relations: { article: true },
     })
 
     return data.article
@@ -64,7 +64,7 @@ export class UserCommentTypeResolver {
   async submitted(@Parent() comment: UserComment) {
     const data = await this.commentService.findById(comment.id, {
       select: ['id'],
-      relations: ['submittedAssignment'],
+      relations: { submittedAssignment: true },
     })
 
     return data.submittedAssignment

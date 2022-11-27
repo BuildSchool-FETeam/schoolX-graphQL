@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import 'reflect-metadata'
 import { InternalServerErrorException } from '@nestjs/common/exceptions/internal-server-error.exception'
 import { assertThrowError } from 'src/common/mock/customAssertion'
 import { QueryBuilderMock } from 'src/common/mock/repositoryMock'

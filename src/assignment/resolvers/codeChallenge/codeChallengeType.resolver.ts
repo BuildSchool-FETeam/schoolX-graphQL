@@ -9,7 +9,7 @@ export class CodeChallengeTypeResolver {
   @ResolveField()
   async assignment(@Parent() parent: CodeChallenge) {
     const codeChallenge = await this.codeChallengeService.findById(parent.id, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     return codeChallenge.assignment
@@ -18,7 +18,7 @@ export class CodeChallengeTypeResolver {
   @ResolveField()
   async testCases(@Parent() parent: CodeChallenge) {
     const codeChallenge = await this.codeChallengeService.findById(parent.id, {
-      relations: ['testCases'],
+      relations: { testCases: true },
     })
 
     return codeChallenge.testCases
