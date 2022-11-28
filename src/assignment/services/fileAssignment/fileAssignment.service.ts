@@ -39,7 +39,7 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
 
   async create(data: FileAssignmentSetInput) {
     const lesson = await this.lessonService.findById(data.lessonId, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     let assignment: Assignment
@@ -60,8 +60,10 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
 
   async update(id: string, data: FileAssignmentSetInput) {
     const [lesson, fileAssignment] = await Promise.all([
-      this.lessonService.findById(data.lessonId, { relations: ['assignment'] }),
-      this.findById(id, { relations: ['assignment'] }),
+      this.lessonService.findById(data.lessonId, {
+        relations: { assignment: true },
+      }),
+      this.findById(id, { relations: { assignment: true } }),
     ])
 
     if (lesson.assignment.id !== fileAssignment.assignment.id) {
@@ -83,7 +85,7 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
 
   async delete(id: string) {
     const fileAssignment = await this.findById(id, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     const deleted = await this.deleteOneById(id)
@@ -94,9 +96,9 @@ export class FileAssignmentService extends BaseService<FileAssignment> {
 
   async firstSubmit(id: string, data: SubmitInput, userId: string) {
     const [fileAssign, user] = await Promise.all([
-      this.findById(id, { relations: ['submittedGroupAssignments'] }),
+      this.findById(id, { relations: { submittedGroupAssignments: true } }),
       this.clientUserService.findById(userId, {
-        relations: ['submittedGroupAssignments'],
+        relations: { submittedGroupAssignments: true },
       }),
     ])
     let groupAssignments: GroupAssignment[]

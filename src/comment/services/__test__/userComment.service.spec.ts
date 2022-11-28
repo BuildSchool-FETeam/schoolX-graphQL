@@ -115,7 +115,7 @@ describe('UserCommentService', () => {
       jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
     })
 
-    it('It should create new comment for course', async () => {
+    it(' should create new comment for course', async () => {
       jest
         .spyOn(userCommentRepo, 'save')
         .mockImplementation(async (data) =>
@@ -144,7 +144,7 @@ describe('UserCommentService', () => {
         inputComment.id = '1'
       })
 
-      it('It should throw exception forbidden', async () => {
+      it(' should throw exception forbidden', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           course,
@@ -166,7 +166,7 @@ describe('UserCommentService', () => {
         )
       })
 
-      it('It should update old comment', async () => {
+      it(' should update old comment', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           course,
@@ -211,7 +211,7 @@ describe('UserCommentService', () => {
       jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
     })
 
-    it('It should create new reply comment for comment', async () => {
+    it(' should create new reply comment for comment', async () => {
       jest
         .spyOn(userCommentRepo, 'save')
         .mockImplementation(async (data) =>
@@ -240,7 +240,7 @@ describe('UserCommentService', () => {
         inputComment.id = '1'
       })
 
-      it('It should throw exception forbidden', async () => {
+      it(' should throw exception forbidden', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           replyTo: comment,
@@ -262,7 +262,7 @@ describe('UserCommentService', () => {
         )
       })
 
-      it('It should update old comment', async () => {
+      it(' should update old comment', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           replyTo: comment,
@@ -307,7 +307,7 @@ describe('UserCommentService', () => {
       jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
     })
 
-    it('It should create new comment for lesson', async () => {
+    it(' should create new comment for lesson', async () => {
       jest
         .spyOn(userCommentRepo, 'save')
         .mockImplementation(async (data) =>
@@ -336,7 +336,7 @@ describe('UserCommentService', () => {
         inputComment.id = '1'
       })
 
-      it('It should throw exception forbidden', async () => {
+      it(' should throw exception forbidden', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           lesson,
@@ -358,7 +358,7 @@ describe('UserCommentService', () => {
         )
       })
 
-      it('It should update old comment', async () => {
+      it(' should update old comment', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           lesson,
@@ -403,28 +403,6 @@ describe('UserCommentService', () => {
       jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
     })
 
-    it('It should create new reply comment for assignment', async () => {
-      jest
-        .spyOn(userCommentRepo, 'save')
-        .mockImplementation(async (data) =>
-          createCommentEntityMock({ ...data } as UserComment)
-        )
-
-      const result = await userCommentService.setCommentForAssignment(
-        'assignmentId',
-        inputComment,
-        'token'
-      )
-
-      const expectResult = createCommentEntityMock({
-        ...inputComment,
-        assignment,
-        createdBy: user,
-      })
-
-      expect(result).toEqual(expectResult)
-    })
-
     describe('It should update new comment', () => {
       let oldComment: UserComment
 
@@ -432,7 +410,7 @@ describe('UserCommentService', () => {
         inputComment.id = '1'
       })
 
-      it('It should throw exception forbidden', async () => {
+      it(' should throw exception forbidden', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           assignment,
@@ -454,7 +432,7 @@ describe('UserCommentService', () => {
         )
       })
 
-      it('It should update old comment', async () => {
+      it(' should update old comment', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           assignment,
@@ -499,7 +477,7 @@ describe('UserCommentService', () => {
       jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
     })
 
-    it('It should create new comment for article', async () => {
+    it(' should create new comment for article', async () => {
       jest
         .spyOn(userCommentRepo, 'save')
         .mockImplementation(async (data) =>
@@ -528,7 +506,7 @@ describe('UserCommentService', () => {
         inputComment.id = '1'
       })
 
-      it('It should throw exception forbidden', async () => {
+      it(' should throw exception forbidden', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           article,
@@ -550,7 +528,7 @@ describe('UserCommentService', () => {
         )
       })
 
-      it('It should update old comment', async () => {
+      it(' should update old comment', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           article,
@@ -597,7 +575,7 @@ describe('UserCommentService', () => {
       jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
     })
 
-    it('It should create new comment for submitted assignment', async () => {
+    it(' should create new comment for submitted assignment', async () => {
       jest
         .spyOn(userCommentRepo, 'save')
         .mockImplementation(async (data) =>
@@ -626,7 +604,7 @@ describe('UserCommentService', () => {
         inputComment.id = '1'
       })
 
-      it('It should throw exception forbidden', async () => {
+      it(' should throw exception forbidden', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           submittedAssignment: submitted,
@@ -648,7 +626,7 @@ describe('UserCommentService', () => {
         )
       })
 
-      it('It should update old comment', async () => {
+      it(' should update old comment', async () => {
         oldComment = createCommentEntityMock({
           ...inputComment,
           submittedAssignment: submitted,
@@ -697,7 +675,7 @@ describe('UserCommentService', () => {
       jest.clearAllMocks()
     })
 
-    it('It should throw exception forbidden', async () => {
+    it(' should throw exception forbidden', async () => {
       user = createClientUserEntityMock({ id: '2' })
 
       jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
@@ -727,14 +705,14 @@ describe('UserCommentService', () => {
           })
       })
 
-      it('It without delete reply comment', async () => {
+      it(' without delete reply comment', async () => {
         const result = await userCommentService.deleteComment('id', 'token')
 
         expect({ affected: 1, raw: null }).toEqual(result)
         expect(deleteOneById).toHaveBeenCalledTimes(1)
       })
 
-      it('It delete reply comment', async () => {
+      it(' delete reply comment', async () => {
         existedComment.reply = [
           createCommentEntityMock({ id: '2' }),
           createCommentEntityMock({ id: '3' }),

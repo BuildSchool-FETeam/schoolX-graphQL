@@ -43,7 +43,11 @@ export class AssignmentService extends BaseService<Assignment> {
 
   async getTypeAssign(id, idAssign) {
     const assignment = await this.findById(id, {
-      relations: ['codeChallenges', 'quizs', 'fileAssignments'],
+      relations: {
+        codeChallenges: true,
+        quizs: true,
+        fileAssignments: true,
+      },
     })
     const codeChallenges = _.some(assignment.codeChallenges, ['id', idAssign])
 
@@ -159,7 +163,7 @@ export class AssignmentService extends BaseService<Assignment> {
 
   async submitAssignment(id: string, data: SubmitInput, userId: string) {
     const course = await this.courseService.findById(data.courseId, {
-      relations: ['joinedUsers'],
+      relations: { joinedUsers: true },
     })
     const checkUserJoinedCourse = _.some(course.joinedUsers, ['id', userId])
     if (!checkUserJoinedCourse) {
@@ -191,7 +195,11 @@ export class AssignmentService extends BaseService<Assignment> {
 
   async deleteAssign(id: string) {
     const { codeChallenges, quizs, fileAssignments } = await this.findById(id, {
-      relations: ['codeChallenges', 'quizs', 'fileAssignments'],
+      relations: {
+        codeChallenges: true,
+        quizs: true,
+        fileAssignments: true,
+      },
     })
 
     if (

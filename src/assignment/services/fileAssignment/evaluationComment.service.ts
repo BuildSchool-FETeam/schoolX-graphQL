@@ -37,7 +37,7 @@ export class EvaluationCommentService extends BaseService<EvaluationComment> {
   private async update(data: EvaluationCommentInput, token: string) {
     const [admin, oldComment] = await Promise.all([
       this.tokenService.getAdminUserByToken(token),
-      this.findById(data.id, { relations: ['createdBy'] }),
+      this.findById(data.id, { relations: { createdBy: true } }),
     ])
 
     if (admin.id !== oldComment.createdBy.id) {

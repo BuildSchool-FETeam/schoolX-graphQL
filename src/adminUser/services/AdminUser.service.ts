@@ -55,7 +55,11 @@ export class AdminUserService extends BaseService<AdminUser> {
     if (!existedRole) {
       throw new NotFoundException('This role is not existed')
     }
-    const existedUser = await this.userRepo.find({ email })
+    const existedUser = await this.userRepo.find({
+      where: {
+        email,
+      },
+    })
 
     if (existedUser.length > 0) {
       throw new NotFoundException('This user email has been taken!')
@@ -109,6 +113,9 @@ export class AdminUserService extends BaseService<AdminUser> {
   }
 
   async findUserByEmail(email: string) {
-    return this.userRepo.findOne({ email }, { relations: ['role'] })
+    return this.userRepo.findOne({
+      where: { email },
+      relations: { role: true },
+    })
   }
 }

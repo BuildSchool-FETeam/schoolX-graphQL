@@ -40,7 +40,7 @@ export class SubmittedAssignmentService extends BaseService<SubmittedAssignment>
 
   async evaluation(id: string, dataUpdate: EvaluationInput, token: string) {
     const data = await this.findById(id, {
-      relations: ['comments'],
+      relations: { comments: true },
     })
 
     let comment: EvaluationComment

@@ -95,7 +95,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     const permissionSet = await this.findById(
       id,
       {
-        relations: ['role'],
+        relations: { role: true },
       },
       strictConfig
     )
@@ -124,7 +124,7 @@ export class PermissionService extends BaseService<PermissionSet> {
   }
 
   async deletePermission(id: string, token: string) {
-    const permission = await this.findById(id, { relations: ['role'] })
+    const permission = await this.findById(id, { relations: { role: true } })
     await this.deleteOneById(id, {
       token,
       strictResourceName: 'permission',

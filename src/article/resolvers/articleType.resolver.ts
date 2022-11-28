@@ -10,7 +10,7 @@ export class ArticleTypeResolver {
   @ResolveField()
   async createdBy(@Parent() article: Article) {
     const articleWithAuthor = await this.articleService.findById(article.id, {
-      relations: ['createdBy'],
+      relations: { createdBy: true },
     })
 
     return articleWithAuthor.createdBy
@@ -19,7 +19,7 @@ export class ArticleTypeResolver {
   @ResolveField()
   async tags(@Parent() article: Article) {
     const articleWithTags = await this.articleService.findById(article.id, {
-      relations: ['tags'],
+      relations: { tags: true },
     })
 
     return articleWithTags.tags
@@ -32,7 +32,7 @@ export class ArticleTypeResolver {
   ) {
     const articleWithTags = await this.articleService.findById(article.id, {
       select: ['id'],
-      relations: ['comments'],
+      relations: { comments: true },
     })
 
     return this.articleService.manuallyPagination(articleWithTags.comments, pg)

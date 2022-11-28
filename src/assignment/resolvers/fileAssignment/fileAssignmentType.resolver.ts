@@ -10,7 +10,7 @@ export class FileAssignmentTypeResolver {
   @ResolveField()
   async assignment(@Parent() fileAssignment: FileAssignment) {
     const data = await this.fileAssignService.findById(fileAssignment.id, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     return data.assignment

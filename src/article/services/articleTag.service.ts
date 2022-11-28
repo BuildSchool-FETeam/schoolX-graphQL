@@ -16,7 +16,7 @@ export class ArticleTagService extends BaseService<ArticleTag> {
     const promises = _.map(tags, async (tag) => {
       const existedTag = await this.articleTagRepo.findOne({
         where: { title: tag },
-        relations: ['articles'],
+        relations: { articles: true },
       })
 
       if (existedTag) {

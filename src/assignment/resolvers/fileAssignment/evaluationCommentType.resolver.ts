@@ -9,7 +9,7 @@ export class EvaluationCommentTypeResolver {
   @ResolveField()
   async createdBy(@Parent() commentEvalua: EvaluationComment) {
     const parent = await this.commentEvaluaService.findById(commentEvalua.id, {
-      relations: ['createdBy'],
+      relations: { createdBy: true },
     })
 
     return parent.createdBy

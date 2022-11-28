@@ -131,7 +131,7 @@ export class NotificationService extends BaseService<AdminNotification> {
     if (_.size(roleNames) > 0) {
       rolePromises = _.map(roleNames, async (roleName) =>
         this.roleService.findRoleByName(roleName, {
-          relations: ['adminUsers'],
+          relations: { adminUsers: true },
         })
       )
     }

@@ -10,7 +10,7 @@ export class LessonTypeResolver {
   @ResolveField()
   async course(@Parent() lesson: Lesson) {
     const parent = await this.lessonService.findById(lesson.id, {
-      relations: ['course'],
+      relations: { course: true },
     })
 
     return parent.course
@@ -19,7 +19,7 @@ export class LessonTypeResolver {
   @ResolveField()
   async documents(@Parent() lesson: Lesson) {
     const parent = await this.lessonService.findById(lesson.id, {
-      relations: ['documents'],
+      relations: { documents: true },
     })
 
     return parent.documents
@@ -28,7 +28,7 @@ export class LessonTypeResolver {
   @ResolveField()
   async assignment(@Parent() lesson: Lesson) {
     const parent = await this.lessonService.findById(lesson.id, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     return parent.assignment
@@ -41,7 +41,7 @@ export class LessonTypeResolver {
   ) {
     const parent = await this.lessonService.findById(lesson.id, {
       select: ['id'],
-      relations: ['comments'],
+      relations: { comments: true },
     })
 
     return this.lessonService.manuallyPagination(parent.comments, pg)

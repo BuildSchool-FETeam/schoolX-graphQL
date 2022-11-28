@@ -1,17 +1,32 @@
 import { ForbiddenException, NotFoundException } from '@nestjs/common'
 import * as _ from 'lodash'
-import { Repository, FindManyOptions, FindOneOptions } from 'typeorm'
+import {
+  Repository,
+  FindManyOptions,
+  FindOneOptions,
+  FindOptionsWhere,
+  FindOptionsRelations,
+} from 'typeorm'
 import { CacheService } from './cache.service'
 import { PermissionSet } from '../../permission/entities/Permission.entity'
 import { ICachedPermissionSet } from '../guards/permission.guard'
 import { cacheConstant } from '../constants/cache.contant'
 import { UtilService } from './util.service'
+import { AdminUser } from 'src/adminUser/AdminUser.entity'
+import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
+
+export interface BaseRepoEntity {
+  id: string | number
+  createdBy?: AdminUser | ClientUser
+}
 
 export interface IStrictConfig {
   token: string
   strictResourceName: keyof Omit<PermissionSet, 'id' | 'role' | 'createdBy'>
 }
-export abstract class BaseService<T> extends UtilService {
+export abstract class BaseService<
+  T extends BaseRepoEntity
+> extends UtilService {
   protected repository: Repository<T>
 
   protected resourceName: string
@@ -49,13 +64,23 @@ export abstract class BaseService<T> extends UtilService {
   ) {
     if (strictConfig) {
       if (_.size(options.relations) === 0) {
-        options.relations = ['createdBy']
-      } else if (!options.relations.includes('createdBy')) {
-        options.relations.push('createdBy')
+        options.relations = {
+          createdBy: true,
+        } as FindOptionsRelations<T>
+      } else if (!(options.relations as FindOptionsRelations<T>).createdBy) {
+        options.relations = {
+          ...options.relations,
+          createdBy: true,
+        } as FindOptionsRelations<T>
       }
     }
 
-    const resource = await this.repository.findOne(id, options)
+    const resource = await this.repository.findOne({
+      where: {
+        id: id,
+      } as FindOptionsWhere<T>,
+      ...options,
+    })
 
     if (!resource) {
       throw new NotFoundException(
@@ -114,7 +139,7 @@ export abstract class BaseService<T> extends UtilService {
           const strictWhereOptions = _.map(options.where, (whereOpt) => {
             const whereOptions = _.assign(whereOpt, {
               createdBy: adminUser,
-            }) as FindManyOptions<T>
+            }) as FindOptionsWhere<T>
 
             return whereOptions
           })
@@ -125,7 +150,7 @@ export abstract class BaseService<T> extends UtilService {
         } else {
           const whereOptions = _.assign(options.where, {
             createdBy: adminUser,
-          }) as FindManyOptions<T>
+          }) as FindOptionsWhere<T>
 
           options = {
             ...options,
@@ -157,7 +182,9 @@ export abstract class BaseService<T> extends UtilService {
       await this.findById(id, {}, strictConfig)
     }
 
-    const existedItem = await this.repository.findOne(id)
+    const existedItem = await this.repository.findOneBy({
+      id,
+    } as FindOptionsWhere<T>)
     if (!existedItem) {
       throw new NotFoundException(
         `Resource ${this.resourceName || ''} with id: ${id} not found`

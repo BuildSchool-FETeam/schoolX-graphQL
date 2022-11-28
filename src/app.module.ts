@@ -1,7 +1,6 @@
 import { ScheduleModule } from '@nestjs/schedule'
 import { CacheModule, Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
-import { TypeOrmModule } from '@nestjs/typeorm'
 import { ApolloDriver } from '@nestjs/apollo'
 import { join } from 'path'
 import { APP_GUARD } from '@nestjs/core'
@@ -24,11 +23,12 @@ import { EmailModule } from './Email/email.module'
 import { MiniServerModule } from './mini-server/mini-server.module'
 import { CommentModule } from './comment/comment.module'
 
-const typeORMModuleInit = TypeOrmModule.forRoot()
 const EnvInitModule = ConfigModule.forRoot({
   envFilePath: ['.env.development', '.env'],
   isGlobal: true,
 })
+
+import { typeORMModuleInit } from './database.module'
 
 const cacheManagerModule = CacheModule.register({
   ttl: 1000, // 1000s

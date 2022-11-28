@@ -10,7 +10,9 @@ export class AssignmentTypeResolver {
   @ResolveField()
   async lesson(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ['lesson'],
+      relations: {
+        lesson: true,
+      },
     })
 
     return assignment.lesson
@@ -23,7 +25,7 @@ export class AssignmentTypeResolver {
   ) {
     const assignment = await this.assignmentService.findById(parent.id, {
       select: ['id'],
-      relations: ['comments'],
+      relations: { comments: true },
     })
 
     return this.assignmentService.manuallyPagination(assignment.comments, pg)
@@ -32,7 +34,7 @@ export class AssignmentTypeResolver {
   @ResolveField()
   async codeChallenges(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ['codeChallenges'],
+      relations: { codeChallenges: true },
     })
 
     return assignment.codeChallenges
@@ -41,7 +43,7 @@ export class AssignmentTypeResolver {
   @ResolveField()
   async quizs(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ['quizs'],
+      relations: { quizs: true },
     })
 
     return assignment.quizs
@@ -50,7 +52,7 @@ export class AssignmentTypeResolver {
   @ResolveField()
   async fileAssignments(@Parent() parent: Assignment) {
     const assignment = await this.assignmentService.findById(parent.id, {
-      relations: ['fileAssignments'],
+      relations: { fileAssignments: true },
     })
 
     return assignment.fileAssignments

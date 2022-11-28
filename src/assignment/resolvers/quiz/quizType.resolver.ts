@@ -9,7 +9,7 @@ export class QuizTypeResolver {
   @ResolveField()
   async assignment(@Parent() parent: Quiz) {
     const quiz = await this.quizService.findById(parent.id, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     return quiz.assignment
@@ -18,7 +18,7 @@ export class QuizTypeResolver {
   @ResolveField()
   async questions(@Parent() parent: Quiz) {
     const quiz = await this.quizService.findById(parent.id, {
-      relations: ['questions'],
+      relations: { questions: true },
     })
 
     return quiz.questions

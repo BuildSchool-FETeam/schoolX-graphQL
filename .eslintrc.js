@@ -5,13 +5,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier/@typescript-eslint',
-    // 'plugin:prettier/recommended',
-    // 'tslint-eslint-rules',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
   root: true,
   env: {
     node: true,

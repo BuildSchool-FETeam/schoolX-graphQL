@@ -37,7 +37,11 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
 
   async update(id: string, data: SubmitInput, userId: string) {
     const group = await this.findById(data.groupAssignmentId, {
-      relations: ['user', 'submitteds', 'fileAssignment'],
+      relations: {
+        submitteds: true,
+        fileAssignment: true,
+        user: true,
+      },
     })
 
     if (id !== group.fileAssignment.id.toString()) {
@@ -75,7 +79,11 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
 
   async evaluation(id: string, data: EvaluationInput, token: string) {
     const group = await this.findById(id, {
-      relations: ['submitteds', 'fileAssignment', 'user'],
+      relations: {
+        submitteds: true,
+        fileAssignment: true,
+        user: true,
+      },
     })
     if (group.submitteds.length < data.order) {
       throw new BadRequestException(
@@ -115,7 +123,7 @@ export class GroupAssignmentService extends BaseService<GroupAssignment> {
   }
 
   async viewSubmitted(id: string, order: number) {
-    const group = await this.findById(id, { relations: ['submitteds'] })
+    const group = await this.findById(id, { relations: { submitteds: true } })
 
     if (group.submitteds.length < order) {
       throw new BadRequestException(

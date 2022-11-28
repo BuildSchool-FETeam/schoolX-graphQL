@@ -30,7 +30,7 @@ export class TagService extends BaseService<Tag> {
   }
 
   async removeCourseFromTag(tagId: string, rmCourseId: string) {
-    const tag = await this.findById(tagId, { relations: ['courses'] })
+    const tag = await this.findById(tagId, { relations: { courses: true } })
     const cloneTagCourses = _.cloneDeep(tag.courses)
 
     tag.courses = cloneTagCourses.filter(

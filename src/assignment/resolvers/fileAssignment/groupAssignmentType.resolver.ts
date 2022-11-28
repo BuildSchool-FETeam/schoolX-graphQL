@@ -10,7 +10,7 @@ export class GroupAssignmentTypeResolver {
   @ResolveField()
   async user(@Parent() group: GroupAssignment) {
     const data = await this.groupAssignService.findById(group.id, {
-      relations: ['user'],
+      relations: { user: true },
     })
 
     return data.user
@@ -22,7 +22,7 @@ export class GroupAssignmentTypeResolver {
     @Args('pagination') pagination: PaginationInput
   ) {
     const data = await this.groupAssignService.findById(group.id, {
-      relations: ['submitteds'],
+      relations: { submitteds: true },
     })
 
     return this.groupAssignService.manuallyPagination(
@@ -34,7 +34,7 @@ export class GroupAssignmentTypeResolver {
   @ResolveField()
   async fileAssignment(@Parent() group: GroupAssignment) {
     const data = await this.groupAssignService.findById(group.id, {
-      relations: ['fileAssignment'],
+      relations: { fileAssignment: true },
     })
 
     return data.fileAssignment

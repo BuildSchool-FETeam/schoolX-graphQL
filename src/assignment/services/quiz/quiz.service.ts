@@ -31,7 +31,7 @@ export class QuizService extends BaseService<Quiz> {
 
   async create(data: QuizSetInput) {
     const { assignment } = await this.lessonService.findById(data.lessonId, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     let assign: Assignment
@@ -54,8 +54,15 @@ export class QuizService extends BaseService<Quiz> {
 
   async update(id: string, data: QuizSetInput) {
     const [lesson, quiz] = await Promise.all([
-      this.lessonService.findById(data.lessonId, { relations: ['assignment'] }),
-      this.findById(id, { relations: ['assignment', 'questions'] }),
+      this.lessonService.findById(data.lessonId, {
+        relations: { assignment: true },
+      }),
+      this.findById(id, {
+        relations: {
+          assignment: true,
+          questions: true,
+        },
+      }),
     ])
 
     if (lesson.assignment.id !== quiz.assignment.id) {
@@ -86,7 +93,7 @@ export class QuizService extends BaseService<Quiz> {
 
   async delete(id: string) {
     const quiz = await this.findById(id, {
-      relations: ['assignment'],
+      relations: { assignment: true },
     })
 
     const deleted = await this.deleteOneById(id)
