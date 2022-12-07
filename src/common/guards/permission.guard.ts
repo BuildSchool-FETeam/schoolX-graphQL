@@ -56,7 +56,7 @@ export class PermissionGuard implements CanActivate {
 
     const { user, token } = decodedToken
     const userPermissions = await this.permissionService.getPermissionByRole(
-      user.role.name
+      user.role?.name
     )
 
     await this.cacheService.setValue<ICachedPermissionSet>(
@@ -84,7 +84,7 @@ export class PermissionGuard implements CanActivate {
 
   private isResolve(context: GqlExecutionContext) {
     const info = context.getInfo()
-    const parentType = info.parentType.name
+    const parentType = info.parentType?.name
 
     if (!/query|mutation/i.test(parentType)) {
       return false

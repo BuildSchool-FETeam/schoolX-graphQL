@@ -6,7 +6,7 @@ on:
 jobs:
   unit-test:
     if: ${{ contains(github.event.review.body, 'ok to test') && contains(github.event.review.state, 'approved') }} # check if the comments come from pull request, exclude those from issue.
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
     steps:
       - name: checkout
         uses: actions/checkout@v2

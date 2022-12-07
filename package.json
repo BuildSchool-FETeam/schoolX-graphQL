@@ -31,7 +31,8 @@
     "migrate:down": "yarn run typeorm migration:revert -d ./data-source.ts",
     "start:docker": "./scripts/docker-start-app.sh",
     "start-prod:docker": "./scripts/docker-start-prod.sh",
-    "migrate:docker": "rimraf src/migrations/* && npm run migrate:gen"
+    "migrate:docker": "rimraf src/migrations/* && npm run migrate:gen",
+    "e2e:ci": "docker compose -f docker-compose.ci.yml up --build --abort-on-container-exit"
   },
   "dependencies": {
     "@apollo/client": "^3.7.1",
@@ -44,6 +45,7 @@
     "@nestjs/graphql": "^10.1.6",
     "@nestjs/platform-express": "^9.2.0",
     "@nestjs/schedule": "^2.1.0",
+    "@nestjs/terminus": "^9.1.4",
     "@nestjs/typeorm": "^9.0.1",
     "@types/graphql-upload": "^8.0.12",
     "@types/jsonwebtoken": "^8.5.0",

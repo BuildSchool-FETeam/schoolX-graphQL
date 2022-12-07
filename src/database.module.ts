@@ -23,7 +23,7 @@ import { PermissionSet } from './permission/entities/Permission.entity'
 import { Role } from './permission/entities/Role.entity'
 import { Tag } from './tag/entities/tag.entity'
 
-console.log(process.env.NODE_ENV)
+console.log('DB_LOG', process.env.DB_LOG)
 
 export const typeORMModuleInit = TypeOrmModule.forRoot({
   type: 'postgres',
@@ -32,7 +32,7 @@ export const typeORMModuleInit = TypeOrmModule.forRoot({
   username: process.env.DB_USER_NAME || 'postgres',
   password: process.env.DB_PASSWORD || 'Toan1234',
   database: process.env.DB_NAME || 'prisdom',
-  logging: true,
+  logging: process.env.DB_LOG === 'true' ? true : false,
   entities: [
     AdminUser,
     Instructor,
