@@ -29,6 +29,7 @@ const EnvInitModule = ConfigModule.forRoot({
 })
 
 import { typeORMModuleInit } from './database.module'
+import { HealthCheckModule } from './healthCheck/healthCheck.module'
 
 const cacheManagerModule = CacheModule.register({
   ttl: 1000, // 1000s
@@ -62,6 +63,7 @@ const scheduleModule = ScheduleModule.forRoot()
 
 @Module({
   imports: [
+    HealthCheckModule,
     scheduleModule,
     typeORMModuleInit,
     graphQLModuleInit,

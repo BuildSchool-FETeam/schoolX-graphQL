@@ -23,6 +23,7 @@ services:
       - JAVA_MINI_SERVER=http://java-server:6002
       - PYTHON_MINI_SERVER=http://python-server:6003
       - CPP_MINI_SERVER=http://cpp-server:6004
+      - DB_LOG=false
     volumes:
       - ./src:/home/app/src
       - /home/app/node_modules

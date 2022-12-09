@@ -3,3 +3,4 @@ dist
 src/migrations
 data
 servers
+e2e

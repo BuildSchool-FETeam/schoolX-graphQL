@@ -11,11 +11,5 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true
-  },
-
-  "watchOptions": {
-    "watchFile": "useFsEvents",
-    "watchDirectory": "useFsEvents",
-    "fallbackPolling": "dynamicPriority"
   }
 }

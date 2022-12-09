@@ -1,0 +1,89 @@
+version: '2.1'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - 3001:3001
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=storage-service-account.json
+      - JWT_SECRET=Yasuoganktem20gg
+      - STORAGE_FOLDER=storage-folder
+      - DB_HOST=postgres-db
+      - DB_USER_NAME=postgres
+      - DB_PASSWORD=Toan1234
+      - DB_NAME=Prisdom-e2e
+      - EMAIL_SENDER=schoolx.dev.001@gmail.com
+      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+
+      - JS_MINI_SERVER=http://js-server:6001
+      - JAVA_MINI_SERVER=http://java-server:6002
+      - PYTHON_MINI_SERVER=http://python-server:6003
+      - CPP_MINI_SERVER=http://cpp-server:6004
+      - DB_LOG=false
+    depends_on:
+      - postgres-db
+    command:
+      [
+        'bash',
+        './scripts/wait-for-it.sh',
+        '--timeout=180',
+        'postgres-db:5432',
+        '--',
+        'npm',
+        'run',
+        'start-prod:docker',
+      ]
+
+  js-server:
+    build:
+      context: ./servers/js
+      dockerfile: Dockerfile.dev
+    ports:
+      - 6001:6001
+
+  # java-server:
+  #   build:
+  #     context: ./servers/java
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 6002:6002
+
+  # python-server:
+  #   build:
+  #     context: ./servers/python
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - 6003:6003
+
+  cpp-server:
+    build:
+      context: ./servers/cpp
+      dockerfile: Dockerfile.dev
+    ports:
+      - 6004:6004
+
+  postgres-db:
+    image: postgres:13.4
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Toan1234
+      - POSTGRES_DB=Prisdom-e2e
+    ports:
+      - 5432:5432
+
+  e2e:
+    restart: always
+    build:
+      context: ./e2e/
+      dockerfile: Dockerfile
+    depends_on:
+      - app
+    volumes:
+      - ./e2e/reports:/home/app/reports
+    environment:
+      - HOST=app:3001
+      - DEBUGGING=false
+    command: bash -c 'while [[ "$$(curl --connect-timeout 2 -s -o /dev/null -w ''%{http_code}'' http://app:3001/health)" != "200" ]]; do echo ..; sleep 5; done; echo backend is up; npm test'
