@@ -9,11 +9,11 @@ import {
   IPermissionSetInput,
   IPermissionWithRole,
 } from '../interfaces/permission.interface'
-import { gqlMutation, gqlQuery } from './api-call'
+import { gqlRequest } from './api-call'
 
 export async function hasRole(roleName: string, token: string) {
   try {
-    const data = await gqlQuery<IPermissionWithRole, { name: string }>(
+    const data = await gqlRequest<IPermissionWithRole, { name: string }>(
       HAS_ROLE_GQL,
       { name: roleName },
       token
@@ -26,7 +26,7 @@ export async function hasRole(roleName: string, token: string) {
 }
 
 export async function createNewRole(data: IPermissionSetInput, token: string) {
-  await gqlMutation<unknown, { data: IPermissionSetInput }>(
+  await gqlRequest<unknown, { data: IPermissionSetInput }>(
     CREATE_ROLE,
     {
       data,
@@ -36,11 +36,11 @@ export async function createNewRole(data: IPermissionSetInput, token: string) {
 }
 
 export async function getPermissions(token: string) {
-  const res = await gqlQuery<IPermissionQuery>(GET_PERMISSIONS, {}, token)
+  const res = await gqlRequest<IPermissionQuery>(GET_PERMISSIONS, {}, token)
 
   return res.permissionQuery.permissions
 }
 
 export async function deletePermissons(id: string, token: string) {
-  return await gqlMutation<boolean, { id: string }>(DELETE_PERM, { id }, token)
+  return await gqlRequest<boolean, { id: string }>(DELETE_PERM, { id }, token)
 }

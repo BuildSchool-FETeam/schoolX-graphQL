@@ -7,7 +7,7 @@ import { AuthGuard } from '../common/guards/auth.guard'
 export class HeartBeat {
   @Query()
   heartBeat() {
-    return 'CI/CD that works!'
+    return 'CI/CD that works! Hello Human!'
   }
 
   @Query()

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import { gql } from 'graphql-request'
 
 export const heartBeatGql = gql`
   query HeartBeat {

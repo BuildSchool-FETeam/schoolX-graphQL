@@ -1,24 +1,18 @@
 import { DocumentNode } from 'graphql'
 import { getClient } from './apollo-client'
+import { Variables } from 'graphql-request/build/esm/types'
 
-export const gqlQuery = async <T, V = object>(
-  gqlDoc: DocumentNode,
+export const gqlRequest = async <T, V extends Variables = {}>(
+  gqlDoc: DocumentNode | string,
   variables?: V,
   token?: string
 ) => {
-  const client = getClient(token)
-  const response = await client.query<T, V>({ query: gqlDoc, variables })
+  const client = getClient()
 
-  return response.data
-}
+  if (token) {
+    client.setHeader('Authorization', `Bearer ${token}`)
+  }
+  const response = await client.request<T>(gqlDoc, variables)
 
-export const gqlMutation = async <T, V>(
-  gqlDoc: DocumentNode,
-  variables?: V,
-  token?: string
-) => {
-  const client = getClient(token)
-  const response = await client.mutate<T, V>({ mutation: gqlDoc, variables })
-
-  return response.data
+  return response
 }

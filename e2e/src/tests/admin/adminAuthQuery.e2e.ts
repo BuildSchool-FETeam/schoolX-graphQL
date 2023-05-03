@@ -4,7 +4,7 @@ import {
   PaginationInput,
   SearchOptionInput,
 } from 'e2e/src/interfaces/base.interface'
-import { gqlQuery } from 'e2e/src/utils/api-call'
+import { gqlRequest } from 'e2e/src/utils/api-call'
 import { createAdmin, DEFAULT_EMAIL, signIn } from 'e2e/src/utils/authUtils'
 import { SECONDARY_PERM } from 'e2e/src/utils/setup'
 import { removeAllCreatedPermissions } from 'e2e/src/utils/teardown'
@@ -40,7 +40,11 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
 
   describe('adminUsers', () => {
     it('should list adminUsers without any params', async () => {
-      const response = await gqlQuery<IAdminUserQuery>(ADMIN_USERS, {}, token)
+      const response = await gqlRequest<IAdminUserQuery>(
+        ADMIN_USERS,
+        undefined,
+        token
+      )
       const adminUsers = response.adminUserQuery.adminUsers
 
       const expectResults = [
@@ -88,7 +92,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
     })
 
     it('should list 1 adminUser (ultimate) by params', async () => {
-      const resData = await gqlQuery<
+      const resData = await gqlRequest<
         IAdminUserQuery,
         { pagination: PaginationInput }
       >(ADMIN_USERS, { pagination: { limit: 1 } }, token)
@@ -97,7 +101,6 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
 
       expect(adminUsers.length).toBe(1)
       expect(adminUsers[0]).toEqual({
-        __typename: 'AdminUser',
         createdBy: null,
         name: 'Admin Ultimate',
         role: 'ultimateAdmin',
@@ -106,7 +109,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
     })
 
     it('should list 2 adminUser (without ultimate) by params', async () => {
-      const resData = await gqlQuery<
+      const resData = await gqlRequest<
         IAdminUserQuery,
         { pagination: PaginationInput }
       >(ADMIN_USERS, { pagination: { limit: 2, skip: 1 } }, token)
@@ -149,7 +152,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
     })
 
     it('should return one true data with searchOption query', async () => {
-      const resData = await gqlQuery<
+      const resData = await gqlRequest<
         IAdminUserQuery,
         { search: SearchOptionInput }
       >(
@@ -165,16 +168,15 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         email: `test${now}-1@test.com`,
         name: 'test',
         role: SECONDARY_PERM,
-        __typename: 'AdminUser',
+
         createdBy: {
-          __typename: 'AdminUser',
           email: DEFAULT_EMAIL,
         },
       })
     })
 
     it('should return one true data with searchOption query', async () => {
-      const resData = await gqlQuery<
+      const resData = await gqlRequest<
         IAdminUserQuery,
         { search: SearchOptionInput }
       >(
@@ -190,16 +192,14 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         email: `test${now}-2@test.com`,
         name: 'test2',
         role: SECONDARY_PERM,
-        __typename: 'AdminUser',
         createdBy: {
-          __typename: 'AdminUser',
           email: DEFAULT_EMAIL,
         },
       })
     })
 
     it('should return one true data with searchOption, pagination query', async () => {
-      const resData = await gqlQuery<
+      const resData = await gqlRequest<
         IAdminUserQuery,
         { search: SearchOptionInput; pagination: PaginationInput }
       >(
@@ -218,16 +218,14 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         email: `test${now}-1@test.com`,
         name: 'test',
         role: SECONDARY_PERM,
-        __typename: 'AdminUser',
         createdBy: {
-          __typename: 'AdminUser',
           email: DEFAULT_EMAIL,
         },
       })
     })
 
     it('should list 2 adminUser (without ultimate) with full pagination params', async () => {
-      const resData = await gqlQuery<
+      const resData = await gqlRequest<
         IAdminUserQuery,
         { pagination: PaginationInput }
       >(
@@ -248,9 +246,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
           email: `test${now}-1@test.com`,
           name: 'test',
           role: SECONDARY_PERM,
-          __typename: 'AdminUser',
           createdBy: {
-            __typename: 'AdminUser',
             email: DEFAULT_EMAIL,
           },
         },
@@ -258,9 +254,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
           email: `test${now}-2@test.com`,
           name: 'test2',
           role: SECONDARY_PERM,
-          __typename: 'AdminUser',
           createdBy: {
-            __typename: 'AdminUser',
             email: DEFAULT_EMAIL,
           },
         },

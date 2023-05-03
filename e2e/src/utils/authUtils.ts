@@ -5,7 +5,7 @@ import {
   ISigninInput,
   ISignupInput,
 } from '../interfaces/admin.interfaces'
-import { gqlMutation } from './api-call'
+import { gqlRequest } from './api-call'
 import { systemLogs } from './logs'
 
 export const DEFAULT_EMAIL = 'admin@gmail.com'
@@ -13,7 +13,7 @@ export const DEFAULT_PASSWORD = 'Prisdom1234'
 
 export async function createOrUseAdmin() {
   try {
-    await gqlMutation<unknown, { data: ISignupInput }>(SIGNUP_GQL, {
+    await gqlRequest<unknown, { data: ISignupInput }>(SIGNUP_GQL, {
       data: {
         email: DEFAULT_EMAIL,
         name: 'Admin Ultimate',
@@ -42,7 +42,7 @@ export async function createOrUseAdmin() {
  * The function will return token
  */
 export async function signIn(emailInput?: string, passwordInput?: string) {
-  const data = await gqlMutation<IAuthPayload, { data: ISigninInput }>(
+  const data = await gqlRequest<IAuthPayload, { data: ISigninInput }>(
     SIGNIN_GQL,
     {
       data: {
@@ -56,7 +56,7 @@ export async function signIn(emailInput?: string, passwordInput?: string) {
 }
 
 export async function createAdmin(data: IAdminUserSetInput, token: string) {
-  await gqlMutation<unknown, { data: IAdminUserSetInput }>(
+  await gqlRequest<unknown, { data: IAdminUserSetInput }>(
     SET_ADMIN_GQL,
     { data },
     token

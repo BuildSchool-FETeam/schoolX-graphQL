@@ -6,6 +6,7 @@ RUN apt-get install -y dos2unix
 WORKDIR /home/app
 COPY package.json .
 COPY yarn.lock .
+RUN yarn config set unsafe-perm true
 RUN yarn install
 
 COPY . .

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost'
+import { gql } from 'graphql-request'
 
 export const HAS_ROLE_GQL = gql`
   query role($name: String!) {
