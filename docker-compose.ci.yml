@@ -14,8 +14,9 @@ services:
       - DB_USER_NAME=postgres
       - DB_PASSWORD=Toan1234
       - DB_NAME=Prisdom-e2e
-      - EMAIL_SENDER=schoolx.dev.001@gmail.com
-      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+      - EMAIL_SENDER=${EMAIL_SENDER}
+      - MAILJET_API_KEY=${MAILJET_API_KEY}
+      - MAILJET_SECRET_KEY=${MAILJET_SECRET_KEY}
 
       - JS_MINI_SERVER=http://js-server:6001
       - JAVA_MINI_SERVER=http://java-server:6002

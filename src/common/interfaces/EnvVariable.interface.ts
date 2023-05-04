@@ -4,10 +4,10 @@ export interface EnvVariable {
   GOOGLE_APPLICATION_CREDENTIALS: string
   SENDGRID_API_KEY: string
   EMAIL_SENDER: string
-  MAILGUN_API_KEY: string
+  MAILJET_API_KEY: string
   JS_MINI_SERVER: string
   JAVA_MINI_SERVER: string
   PYTHON_MINI_SERVER: string
   CPP_MINI_SERVER: string
-  MAILGUN_HOST: string
+  MAILJET_SECRET_KEY: string
 }
