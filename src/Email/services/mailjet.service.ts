@@ -7,17 +7,14 @@ import { Client } from 'node-mailjet'
 
 @Injectable()
 export class MailjetService implements ISendMail {
-  private readonly API_KEY: string;
-  private readonly SECRET_KEY: string;
+  private readonly API_KEY: string
+  private readonly SECRET_KEY: string
   private readonly mailjet
 
   constructor(private configService: ConfigService<EnvVariable>) {
     this.API_KEY = this.configService.get('MAILJET_API_KEY')
     this.SECRET_KEY = this.configService.get('MAILJET_SECRET_KEY')
-    this.mailjet = Client.apiConnect(
-      this.API_KEY,
-      this.SECRET_KEY
-    );
+    this.mailjet = Client.apiConnect(this.API_KEY, this.SECRET_KEY)
   }
 
   async sendMailWithCode(config: {
@@ -34,16 +31,12 @@ export class MailjetService implements ISendMail {
     }
     const data = {
       From: { Email: messageConfig.from },
-      To: [
-        { Email: messageConfig.to },
-      ],
+      To: [{ Email: messageConfig.to }],
       Subject: messageConfig.subject,
-      HTMLPart: replacedStr
+      HTMLPart: replacedStr,
     }
-    this.mailjet
-      .post('send', { version: "v3.1" })
-      .request({
-        Messages: [data],
-      })
+    this.mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [data],
+    })
   }
 }
