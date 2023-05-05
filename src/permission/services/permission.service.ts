@@ -37,9 +37,16 @@ export class PermissionService extends BaseService<PermissionSet> {
   }
 
   async getClientUserPermission() {
-    const clientPerm = 'R'
     const clientPermissionName = 'client_permission'
 
+    const existedRole = await this.roleService.findRoleByName(
+      clientPermissionName
+    )
+    if (existedRole) {
+      return existedRole
+    }
+    
+    const clientPerm = 'R'
     const permissionSet = this.permissionRepo.create({
       course: clientPerm,
       blog: 'C|R|U|D|S',
@@ -48,13 +55,6 @@ export class PermissionService extends BaseService<PermissionSet> {
       permission: '',
       notification: '',
     })
-
-    const existedRole = await this.roleService.findRoleByName(
-      clientPermissionName
-    )
-    if (existedRole) {
-      return existedRole
-    }
 
     const role = await this.roleService.createRole(clientPermissionName)
 
