@@ -31,7 +31,7 @@ export class InstructorMutationResolver {
     return {}
   }
 
-  @PermissionRequire({ instructor: ['C', 'U'] })
+  @PermissionRequire({ instructor: ['C:*', 'R:*', 'U:*', 'D:x'] })
   @ResolveField()
   async setInstructor(
     @Args('data') data: InstructorSetInput,
@@ -93,7 +93,7 @@ export class InstructorMutationResolver {
     return ins
   }
 
-  @PermissionRequire({ instructor: ['D'] })
+  @PermissionRequire({ instructor: ['C:x', 'R:x', 'U:x', 'D:*'] })
   @ResolveField()
   async deleteInstructor(
     @Args('id') id: string,

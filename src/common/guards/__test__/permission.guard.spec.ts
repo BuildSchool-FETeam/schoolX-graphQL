@@ -14,6 +14,7 @@ import { TokenService } from 'src/common/services/token.service'
 import { Role } from 'src/permission/entities/Role.entity'
 import { PermissionService } from 'src/permission/services/permission.service'
 import { PermissionGuard } from '../permission.guard'
+import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator'
 
 const tokenService = {
   verifyAndDecodeToken(): any {
@@ -79,6 +80,10 @@ describe('PermissionGuard', () => {
         },
         getContext() {
           return requestMock
+        },
+
+        getType() {
+          return
         },
       } as any
 
@@ -162,36 +167,65 @@ describe('PermissionGuard', () => {
   })
 
   describe('canActivate should validate truthy of required Permission ', () => {
-    const executionContextMock = {} as any
+    const executionContextMock = {
+      getHandler() {
+        return null
+      },
+      getInfo() {
+        return {
+          parentType: { name: 'query' },
+        }
+      },
+      getContext() {
+        return requestMock
+      },
+    } as any
 
     beforeEach(() => {
       const clientUser = createClientUserEntityMock({
         role: createRoleEntityMock({ name: 'leesin' }),
       })
+      GqlExecutionContext.create = jest.fn(() => executionContextMock)
 
       jest
         .spyOn(tokenService, 'verifyAndDecodeToken')
         .mockReturnValue(clientUser)
     })
 
-    it('should return false if missing C permission', async () => {
+    it('should return TRUE with Course', async () => {
       const userPermission = {
-        course: 'U|D|R',
-        user: 'U|D|R',
-        blog: 'U|D|R',
-        instructor: 'U|D|R',
-        permission: 'U|D|R',
-        notification: 'U|D|R',
+        course: 'C:*|R:+|U:+|D:x',
+        user: 'C:*|U:+|D:+|R:x',
+        role: new Role(),
+      }
+
+      const requiredPermission: PermissionRequire = {
+        course: ['C:*', 'R:*', 'U:x', 'D:x'],
+      }
+
+      jest
+        .spyOn(reflector, 'getAllAndOverride')
+        .mockReturnValue(requiredPermission)
+
+      jest
+        .spyOn(permissionService, 'getPermissionByRole')
+        .mockResolvedValue(userPermission)
+
+      const result = await permissionGuard.canActivate(executionContextMock)
+
+      expect(result).toBe(true)
+    })
+
+    it('should return TRUE with blog and user', async () => {
+      const userPermission = {
+        user: 'C:+|R:+|U:x|D:x',
+        blog: 'C:*|R:x|U:+|D:+',
         role: new Role(),
       }
 
       const requiredPermission = {
-        course: ['C'],
-        user: ['C'],
-        blog: ['C'],
-        instructor: ['C'],
-        permission: ['C'],
-        notification: ['C'],
+        blog: ['C:*', 'R:*', 'U:x', 'D:x'],
+        user: ['C:*', 'R:x', 'U:x', 'D:x'],
       }
 
       jest
@@ -207,46 +241,16 @@ describe('PermissionGuard', () => {
       expect(result).toBe(false)
     })
 
-    it('should return false if missing one of two permissions', async () => {
+    it('should be FALSE if missing U permission', async () => {
       const userPermission = {
-        course: 'U|D|R',
-        user: 'U|D|R',
-        blog: 'U|D|R',
-        instructor: 'U|D|R',
-        permission: 'U|D|R',
-        notification: 'U|D|R',
+        user: 'C:+|R:+|U:x|D:x', // would failed
+        blog: 'C:*|R:x|U:+|D:+',
         role: new Role(),
       }
 
       const requiredPermission = {
-        course: ['C', 'U'],
-        user: ['U'],
-        blog: ['U'],
-        instructor: ['U'],
-        permission: ['U'],
-        notification: ['U'],
-      }
-
-      jest
-        .spyOn(reflector, 'getAllAndOverride')
-        .mockReturnValue(requiredPermission)
-
-      jest
-        .spyOn(permissionService, 'getPermissionByRole')
-        .mockResolvedValue(userPermission)
-
-      const result = await permissionGuard.canActivate(executionContextMock)
-
-      expect(result).toBe(false)
-    })
-
-    it('should be false if missing U permission', async () => {
-      const userPermission = {
-        user: 'R',
-      }
-
-      const requiredPermission = {
-        user: ['U'],
+        blog: ['C:*', 'R:*', 'U:x', 'D:*'],
+        user: ['C:*', 'R:x', 'U:x', 'D:x'],
       }
 
       jest
@@ -284,48 +288,15 @@ describe('PermissionGuard', () => {
       expect(result).toBe(false)
     })
 
-    it('should be true if required permission is blank', async () => {
+    it('should be TRUE if required permission is blank', async () => {
       const userPermission = {
         course: '',
-        user: 'R|C',
+        user: 'R:*|C:+',
       }
 
       const requiredPermission = {
         course: [],
-        user: ['C'],
-      }
-
-      jest
-        .spyOn(reflector, 'getAllAndOverride')
-        .mockReturnValue(requiredPermission)
-
-      jest
-        .spyOn(permissionService, 'getPermissionByRole')
-        .mockResolvedValue(userPermission)
-
-      const result = await permissionGuard.canActivate(executionContextMock)
-
-      expect(result).toBe(true)
-    })
-
-    it('should be true if user permission match the required one', async () => {
-      const userPermission = {
-        course: 'C|R',
-        user: 'C|R|U',
-        blog: 'D|R',
-        instructor: 'U|D|C|S',
-        permission: 'U|D|C|R',
-        notification: 'C|U|D|R|S',
-        role: new Role(),
-      }
-
-      const requiredPermission = {
-        course: ['C'],
-        user: ['U'],
-        blog: ['D'],
-        instructor: ['C', 'U'],
-        permission: ['C', 'U', 'D'],
-        notification: ['C', 'R', 'U', 'D'],
+        user: ['C:+'],
       }
 
       jest

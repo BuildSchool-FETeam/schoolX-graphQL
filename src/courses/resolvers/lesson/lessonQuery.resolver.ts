@@ -22,7 +22,7 @@ export class LessonQueryResolver {
   }
 
   @ResolveField('lessonsWithCourseId')
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   async getAllLessonsWithCourseId(
     @Args('courseId') courseId: string,
     @Args('pagination') pg: PaginationInput,
@@ -63,14 +63,14 @@ export class LessonQueryResolver {
     return lessons
   }
 
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('lesson')
   async getLessonDetail(@Args('id') id: string) {
     return await this.lessonService.findById(id)
   }
 
   @ResolveField()
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   async totalLessons(@Args('courseId') courseId: string) {
     return await this.lessonService.countingLessonWithCourseId(courseId)
   }

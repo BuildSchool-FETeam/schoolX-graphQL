@@ -23,7 +23,7 @@ export class PermissionMutationResolver {
     return {}
   }
 
-  @PermissionRequire({ permission: ['C', 'U'] })
+  @PermissionRequire({ permission: ['C:*', 'R:*', 'U:*', 'D:x'] })
   @ResolveField()
   async setPermission(
     @Args('data') data: PermissionSetInput,
@@ -56,7 +56,7 @@ export class PermissionMutationResolver {
     }
   }
 
-  @PermissionRequire({ permission: ['D'] })
+  @PermissionRequire({ permission: ['C:x', 'R:*', 'U:x', 'D:*'] })
   @ResolveField()
   async deletePermission(
     @Args('id') id: string,

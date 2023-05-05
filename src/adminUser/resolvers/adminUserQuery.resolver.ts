@@ -12,13 +12,13 @@ export class AdminUserQueryResolver {
   constructor(private adminUserService: AdminUserService) {}
 
   @Query()
-  @PermissionRequire({ user: ['R'] })
+  @PermissionRequire({ user: ['C:x', 'R:*', 'U:x', 'D:x'] })
   adminUserQuery() {
     return {}
   }
 
   @ResolveField()
-  @PermissionRequire({ user: ['R'] })
+  @PermissionRequire({ user: ['C:x', 'R:*', 'U:x', 'D:x'] })
   async adminUsers(
     @Context() { req }: DynamicObject,
     @Args('pagination') pg: PaginationInput,
@@ -38,7 +38,7 @@ export class AdminUserQueryResolver {
   }
 
   @ResolveField()
-  @PermissionRequire({ user: ['R'] })
+  @PermissionRequire({ user: ['C:x', 'R:*', 'U:x', 'D:x'] })
   async adminUser(@Args('id') id: string, @Context() { req }: DynamicObject) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers)
 
@@ -50,7 +50,7 @@ export class AdminUserQueryResolver {
   }
 
   @ResolveField()
-  @PermissionRequire({ user: ['R'] })
+  @PermissionRequire({ user: ['C:x', 'R:*', 'U:x', 'D:x'] })
   async totalAdminUsers(@Context() { req }: DynamicObject) {
     const token = this.adminUserService.getTokenFromHttpHeader(req.headers)
 

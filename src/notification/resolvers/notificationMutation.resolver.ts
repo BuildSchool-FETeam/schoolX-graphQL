@@ -28,7 +28,7 @@ export class NotificationMutationResolver {
     return {}
   }
 
-  @PermissionRequire({ notification: ['C'] })
+  @PermissionRequire({ notification: ['C:*', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async createNotification(
     @Args('data') data: NotificationInput,
@@ -45,7 +45,7 @@ export class NotificationMutationResolver {
     return notificationData
   }
 
-  @PermissionRequire({ notification: ['D'] })
+  @PermissionRequire({ notification: ['C:x', 'R:*', 'U:x', 'D:*'] })
   @ResolveField()
   async deleteByOwner(
     @Args('id') id: string,
@@ -61,7 +61,7 @@ export class NotificationMutationResolver {
     return true
   }
 
-  @PermissionRequire({ notification: ['U'] })
+  @PermissionRequire({ notification: ['C:x', 'R:*', 'U:*', 'D:x'] })
   @ResolveField()
   async deleteByRecipient(
     @Args('id') id: string,

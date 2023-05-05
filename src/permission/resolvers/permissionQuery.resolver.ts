@@ -17,7 +17,7 @@ export class PermissionQueryResolver {
     return {}
   }
 
-  @PermissionRequire({ permission: ['R'] })
+  @PermissionRequire({ permission: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('permissions')
   async getAllPermissions(
     @Context() { req }: DynamicObject,
@@ -54,7 +54,7 @@ export class PermissionQueryResolver {
       )
   }
 
-  @PermissionRequire({ permission: ['R'] })
+  @PermissionRequire({ permission: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('permissionWithId')
   async getPermissionById(
     @Args('id') id: string,
@@ -75,7 +75,7 @@ export class PermissionQueryResolver {
     }
   }
 
-  @PermissionRequire({ permission: ['R'] })
+  @PermissionRequire({ permission: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('permissionWithRole')
   async getPermissionByRole(@Args('roleName') roleName: string) {
     const permissionSet = await this.permissionService.getPermissionByRole(
@@ -88,7 +88,7 @@ export class PermissionQueryResolver {
     }
   }
 
-  @PermissionRequire({ permission: ['R'] })
+  @PermissionRequire({ permission: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async totalPermissions(@Context() { req }: DynamicObject) {
     const token = this.permissionService.getTokenFromHttpHeader(req.headers)

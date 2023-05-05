@@ -11,7 +11,7 @@ import { SearchOptionInput } from '../../../graphql'
 export class CourseQueryResolver {
   constructor(private courseService: CourseService) {}
 
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @Query()
   courseQuery() {
     return {}

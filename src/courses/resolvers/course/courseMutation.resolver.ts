@@ -33,7 +33,7 @@ export class CourseMutationResolver {
     return {}
   }
 
-  @PermissionRequire({ course: ['C', 'U'] })
+  @PermissionRequire({ course: ['C:*', 'R:*', 'U:*', 'D:x'] })
   @ResolveField()
   async setCourse(
     @Args('data') data: CourseSetInput,
@@ -80,7 +80,7 @@ export class CourseMutationResolver {
     }
   }
 
-  @PermissionRequire({ course: ['D'] })
+  @PermissionRequire({ course: ['C:x', 'R:x', 'U:x', 'D:*'] })
   @ResolveField()
   async deleteCourse(
     @Args('id') id: string,

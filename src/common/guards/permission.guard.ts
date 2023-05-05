@@ -17,7 +17,11 @@ import { cacheConstant } from '../constants/cache.contant'
 import {
   PermissionRequire,
   PERMISSION_REQUIRE_KEY,
+  FlexiblePerm,
+  MainPerm,
+  FineGrainedPerm,
 } from '../decorators/PermissionRequire.decorator'
+import { Resource } from '../enums/resource.enum'
 
 export interface ICachedPermissionSet {
   user: AdminUser | ClientUser
@@ -35,7 +39,7 @@ export class PermissionGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const graphQLContext = GqlExecutionContext.create(context)
-    const requirePermission =
+    const requiredPermission =
       this.reflector.getAllAndOverride<PermissionRequire>(
         PERMISSION_REQUIRE_KEY,
         [graphQLContext.getHandler()]
@@ -45,7 +49,7 @@ export class PermissionGuard implements CanActivate {
       return true
     }
 
-    if (_.isNil(requirePermission)) {
+    if (_.isNil(requiredPermission)) {
       return true
     }
     const decodedToken = this.decodeToken(graphQLContext)
@@ -73,11 +77,37 @@ export class PermissionGuard implements CanActivate {
       )
     }
 
-    const validPermission = _.every(requirePermission, (value, key) => {
-      const diff = _.difference(value, _.split(userPermissions[key], '|'))
+    const validPermission = _.every(
+      requiredPermission,
+      (permissionList, resourceName: keyof typeof Resource) => {
+        const userPermBaseResource = userPermissions[resourceName].split(
+          '|'
+        ) as FlexiblePerm[]
+        const userFineGrainedPermMap = new Map(
+          userPermBaseResource.map((item) => {
+            const arr = item.split(':')
 
-      return diff.length === 0
-    })
+            return [arr[0] as MainPerm, arr[1] as FineGrainedPerm]
+          })
+        )
+
+        const isValid = permissionList.every((item) => {
+          const [requiredMainPerm, requiredFineGrainedPerm] = item.split(
+            ':'
+          ) as [MainPerm, FineGrainedPerm]
+          const userFineGrainedPerm =
+            userFineGrainedPermMap.get(requiredMainPerm)
+
+          if (requiredFineGrainedPerm === 'x') {
+            return true
+          }
+
+          return ['*', '+'].includes(userFineGrainedPerm)
+        })
+
+        return isValid
+      }
+    )
 
     return validPermission
   }

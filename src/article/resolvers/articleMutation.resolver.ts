@@ -21,7 +21,7 @@ export class ArticleMutationResolver {
     return {}
   }
 
-  @PermissionRequire({ blog: ['C', 'U'] })
+  @PermissionRequire({ blog: ['C:*', 'R:x', 'U:*', 'D:x'] })
   @ResolveField()
   async setArticle(
     @Args('data') data: ArticleInputType,
@@ -37,7 +37,7 @@ export class ArticleMutationResolver {
     return this.articleService.updateArticle(data, token, id)
   }
 
-  @PermissionRequire({ blog: ['D'] })
+  @PermissionRequire({ blog: ['C:x', 'R:x', 'U:x', 'D:*'] })
   @ResolveField()
   async deleteArticle(
     @Context() { req }: DynamicObject,
@@ -50,7 +50,7 @@ export class ArticleMutationResolver {
     return true
   }
 
-  @PermissionRequire({ blog: ['U'] })
+  @PermissionRequire({ blog: ['C:x', 'R:x', 'U:+', 'D:x'] })
   @ResolveField()
   async reviewArticle(
     @Args('id') id: string,
