@@ -10,7 +10,7 @@ import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface'
 import { BaseService } from 'src/common/services/base.service'
 import { PasswordService } from 'src/common/services/password.service'
 import { TokenService } from 'src/common/services/token.service'
-import { MailGunService } from 'src/Email/services/mailGun.service'
+import { MailjetService } from 'src/Email/services/mailjet.service'
 import { ClientUserSignupInput, ClientUserSigninInput } from 'src/graphql'
 import { PermissionService } from 'src/permission/services/permission.service'
 import { FindOneOptions, Repository } from 'typeorm'
@@ -28,7 +28,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
     private permissionService: PermissionService,
     private tokenService: TokenService,
     private achiService: AchievementService,
-    private emailService: MailGunService,
+    private emailService: MailjetService,
     private configService: ConfigService<EnvVariable>
   ) {
     super(clientRepo, 'ClientUser')
@@ -56,7 +56,6 @@ export class ClientAuthService extends BaseService<ClientUser> {
     newClientUser.activationCodeExpire = expiredTime
 
     await this.sendEmailWithCode(code, email)
-
     newClientUser.role = await this.permissionService.getClientUserPermission()
     const clientUserResponse = await this.clientRepo.save(newClientUser)
 

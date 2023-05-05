@@ -1,22 +1,20 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { EnvVariable } from 'src/common/interfaces/EnvVariable.interface'
-import * as mailGun from 'mailgun-js'
 import { IMessage, ISendMail, TemplateName } from './mail.base.service'
 import * as emailTemplates from '../email.template'
+import { Client } from 'node-mailjet'
 
 @Injectable()
-export class MailGunService implements ISendMail {
+export class MailjetService implements ISendMail {
   private readonly API_KEY: string
-
-  private readonly mailGunInstance: mailGun.Mailgun
+  private readonly SECRET_KEY: string
+  private readonly mailjet
 
   constructor(private configService: ConfigService<EnvVariable>) {
-    this.API_KEY = this.configService.get('MAILGUN_API_KEY')
-    this.mailGunInstance = new mailGun({
-      apiKey: this.API_KEY,
-      domain: 'schoolx.xyz',
-    })
+    this.API_KEY = this.configService.get('MAILJET_API_KEY')
+    this.SECRET_KEY = this.configService.get('MAILJET_SECRET_KEY')
+    this.mailjet = Client.apiConnect(this.API_KEY, this.SECRET_KEY)
   }
 
   async sendMailWithCode(config: {
@@ -32,10 +30,13 @@ export class MailGunService implements ISendMail {
       replacedStr = templateSelected.replace('%CODE%', code)
     }
     const data = {
-      ...messageConfig,
-      html: replacedStr,
+      From: { Email: messageConfig.from },
+      To: [{ Email: messageConfig.to }],
+      Subject: messageConfig.subject,
+      HTMLPart: replacedStr,
     }
-
-    return this.mailGunInstance.messages().send(data)
+    this.mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [data],
+    })
   }
 }

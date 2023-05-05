@@ -1,7 +1,6 @@
 __Task title: some thing short describing this task__
 
-### Task ID 
-Example: [https://app.clickup.com/t/1xc60y5]
+### Task Id: (task_id)[link_task]
 
 ### Task type
 - [ ] Bug
