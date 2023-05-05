@@ -16,7 +16,9 @@ jobs:
       - name: Setup docker composee
         run: npm run e2e:ci
         env:
-          MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          MAILJET_API_KEY: ${{ secrets.MAILJET_API_KEY }}
+          MAILJET_SECRET_KEY: ${{ secrets.MAILJET_SECRET_KEY }}
 
       - name: Test Report
         uses: dorny/test-reporter@v1
