@@ -8,7 +8,7 @@ import { createClientUserEntityMock } from 'src/common/mock/mockEntity'
 import { repositoryMockFactory } from 'src/common/mock/repositoryMock'
 import { PasswordService } from 'src/common/services/password.service'
 import { TokenService } from 'src/common/services/token.service'
-import { MailGunService } from 'src/Email/services/mailjet.service'
+import { MailjetService } from 'src/Email/services/mailjet.service'
 import { PermissionService } from 'src/permission/services/permission.service'
 import { Repository } from 'typeorm'
 import { AchievementService } from '../achievement.service'
@@ -37,7 +37,7 @@ const achievementServiceMock = {
     return Promise.resolve({})
   },
 }
-const mailGunServiceMock = {
+const mailjetServiceMock = {
   async sendMailWithCode() {
     return Promise.resolve({})
   },
@@ -60,7 +60,7 @@ describe('ClientAuthService', () => {
         PermissionService,
         TokenService,
         AchievementService,
-        MailGunService,
+        MailjetService,
         ConfigService,
         {
           provide: getRepositoryToken(ClientUser),
@@ -80,8 +80,8 @@ describe('ClientAuthService', () => {
       .overrideProvider(AchievementService)
       .useValue(achievementServiceMock)
     setupTestModule
-      .overrideProvider(MailGunService)
-      .useValue(mailGunServiceMock)
+      .overrideProvider(MailjetService)
+      .useValue(mailjetServiceMock)
     setupTestModule.overrideProvider(ConfigService).useValue(configServiceMock)
 
     const compliedModule = await setupTestModule.compile()
@@ -110,7 +110,7 @@ describe('ClientAuthService', () => {
         .spyOn(clientAuthService, 'generateActivationCode')
         .mockReturnValue({ expiredTime: 1000, code: 'code' })
       const sendMailWithCode = jest.spyOn(
-        mailGunServiceMock,
+        mailjetServiceMock,
         'sendMailWithCode'
       )
       const getClientUserPermission = jest
@@ -282,7 +282,7 @@ describe('ClientAuthService', () => {
       jest
         .spyOn(clientAuthService, 'generateActivationCode')
         .mockReturnValue({ code: 'code', expiredTime: 10000 })
-      const sendMail = jest.spyOn(mailGunServiceMock, 'sendMailWithCode')
+      const sendMail = jest.spyOn(mailjetServiceMock, 'sendMailWithCode')
       const save = jest.spyOn(clientRepo, 'save')
 
       await clientAuthService.sendRestorePassword('email')
