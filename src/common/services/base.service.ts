@@ -4,8 +4,7 @@ import {
   Repository,
   FindManyOptions,
   FindOneOptions,
-  FindOptionsWhere,
-  FindOptionsRelations,
+  FindOptionsWhere
 } from 'typeorm'
 import { CacheService } from './cache.service'
 import { PermissionSet } from '../../permission/entities/Permission.entity'
@@ -14,6 +13,10 @@ import { cacheConstant } from '../constants/cache.contant'
 import { UtilService } from './util.service'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
+import {
+  FineGrainedPerm,
+  FlexiblePerm,
+} from '../decorators/PermissionRequire.decorator'
 
 export interface BaseRepoEntity {
   id: string | number
@@ -62,19 +65,6 @@ export abstract class BaseService<
     options: FindOneOptions<T> = {},
     strictConfig?: IStrictConfig
   ) {
-    if (strictConfig) {
-      if (_.size(options.relations) === 0) {
-        options.relations = {
-          createdBy: true,
-        } as FindOptionsRelations<T>
-      } else if (!(options.relations as FindOptionsRelations<T>).createdBy) {
-        options.relations = {
-          ...options.relations,
-          createdBy: true,
-        } as FindOptionsRelations<T>
-      }
-    }
-
     const resource = await this.repository.findOne({
       where: {
         id: id,
@@ -88,33 +78,27 @@ export abstract class BaseService<
       )
     }
 
-    if (strictConfig) {
-      const { user: adminUser, permissionSet } =
-        await this.getAdminUserCredential(strictConfig.token)
-
-      if (
-        this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
-      ) {
-        if (_.isNil((resource as DynamicObject).createdBy)) {
-          throw new ForbiddenException(
-            "You don't have permission to do this action on resource"
-          )
-        }
-
-        if ((resource as DynamicObject).createdBy.id !== adminUser.id) {
-          throw new ForbiddenException(
-            "You don't have permission to do this action on resource"
-          )
-        }
-      }
+    if (
+      _.isEmpty(strictConfig.token) ||
+      _.isNil(strictConfig?.strictResourceName)
+    ) {
+      return resource
     }
 
-    if (!resource) {
-      throw new NotFoundException(
-        `Resource ${this.resourceName || ''} with id: ${id} not found`
+    const { user: adminUser, permissionSet } =
+      await this.getAdminUserCredential(strictConfig.token)
+    const resourcePerm = permissionSet[strictConfig.strictResourceName]
+    const permission = resourcePerm.match(/R:[+|x|*]/)[0] as FlexiblePerm
+    const isValidPermission = this.isValidPermissionOnResource(
+      resource,
+      adminUser,
+      permission
+    )
+
+    if (!isValidPermission)
+      throw new ForbiddenException(
+        "You don't have permission to do this action on resource"
       )
-    }
-
     return resource
   }
 
@@ -209,6 +193,19 @@ export abstract class BaseService<
     }
 
     return builder.getCount()
+  }
+
+  private isValidPermissionOnResource(
+    resource: BaseRepoEntity,
+    user: AdminUser | ClientUser,
+    flexiblePerm: FlexiblePerm
+  ) {
+    if (_.isEmpty(flexiblePerm)) return false
+    const grainedPerm = flexiblePerm.split(':')[1]
+    return (
+      _.isEqual(grainedPerm, '*') ||
+      (_.isEqual(grainedPerm, '+') && _.isEqual(resource.createdBy, user.id))
+    )
   }
 
   private isStrictPermission(permissionAsString: string) {

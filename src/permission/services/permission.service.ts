@@ -45,7 +45,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     if (existedRole) {
       return existedRole
     }
-    
+
     const clientPerm = 'R'
     const permissionSet = this.permissionRepo.create({
       course: clientPerm,
