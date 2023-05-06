@@ -4,7 +4,7 @@ import {
   Repository,
   FindManyOptions,
   FindOneOptions,
-  FindOptionsWhere
+  FindOptionsWhere,
 } from 'typeorm'
 import { CacheService } from './cache.service'
 import { PermissionSet } from '../../permission/entities/Permission.entity'
@@ -82,7 +82,9 @@ export abstract class BaseService<
       _.isEmpty(strictConfig.token) ||
       _.isNil(strictConfig?.strictResourceName)
     ) {
-      return resource
+      throw new ForbiddenException(
+        "You don't have permission to do this action on resource"
+      )
     }
 
     const { user: adminUser, permissionSet } =
