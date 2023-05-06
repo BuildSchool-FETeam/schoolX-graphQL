@@ -1,2 +1,3 @@
 dist/migrations/*
 src/graphql.ts
+data
