@@ -56,7 +56,7 @@ export class GCStorageService {
       imageProcessConfig,
     } = config
 
-    return new Promise((resolve) => {
+    return new Promise(async (resolve) => {
       const filePath = additionalPath
         ? `${
             this.rootFolder
@@ -64,12 +64,12 @@ export class GCStorageService {
         : `${this.rootFolder}/${type}/${this.makeFileNameUnique(fileName)}`
 
       const cloudFile = this.bucket.file(filePath)
-      const transformedStream = this.addProcessImageToStream(
+      const processedImage = await this.processingImage(
         imageProcessConfig,
         readStream
       )
 
-      transformedStream
+      processedImage
         .pipe(cloudFile.createWriteStream())
         .on('error', (err) => {
           throw new InternalServerErrorException(err)
@@ -121,15 +121,17 @@ export class GCStorageService {
     })
   }
 
-  private addProcessImageToStream(
+  private async processingImage(
     processConfig: IProcessConfig,
     stream: ReadStream
   ) {
     if (processConfig) {
-      const transformer =
-        this.imageProcessService.createResizeTransformer(processConfig)
+      const proccessedStream = await this.imageProcessService.processImage(
+        stream,
+        processConfig
+      )
 
-      return stream.pipe(transformer)
+      return proccessedStream
     }
 
     return stream

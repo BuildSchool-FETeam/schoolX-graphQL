@@ -1,41 +1,78 @@
 import { Injectable } from '@nestjs/common'
-import * as sharp from 'sharp'
+import { ReadStream } from 'fs'
+import * as Jimp from 'jimp'
+import { Readable } from 'stream'
 
 export interface IProcessConfig {
   resize: {
     width: number
     height?: number
-    fit?: 'cover' | 'fill' | 'contain'
-    position?: string
+    position?: ImagePos
   }
-  changeFormat?: keyof sharp.FormatEnum | sharp.AvailableFormatInfo
   rotate?: number
-  isSharpen?: boolean
+  opacity?: number
+  blur?: number
 }
 
+type ImagePos = 'top' | 'bottom' | 'center'
 @Injectable()
 export class ImageProcessService {
-  createResizeTransformer(processConfig: IProcessConfig) {
-    const sharpInstance = sharp()
-    const { resize, changeFormat, rotate, isSharpen } = processConfig
+  async processImage(
+    stream: ReadStream,
+    { resize, rotate, opacity, blur }: IProcessConfig
+  ) {
+    const { width, height = width * 0.6, position = 'center' } = resize
+    const buffs: unknown[] = []
 
-    sharpInstance.resize(resize.width, resize.height, {
-      fit: resize.fit || 'cover',
-      position: resize.position || 'center',
+    return new Promise<Readable>((resolve, reject) => {
+      stream.on('data', (dt) => {
+        buffs.push(dt)
+      })
+
+      stream.on('end', async () => {
+        const fullBuffer = Buffer.concat(buffs as Buffer[])
+        try {
+          let jimpFile = await Jimp.read(fullBuffer)
+          const mimeType = jimpFile.getMIME()
+
+          jimpFile = jimpFile.cover(width, height, this.getJimpPos(position))
+          jimpFile = jimpFile.resize(width, height)
+
+          if (rotate) {
+            jimpFile = jimpFile.rotate(rotate)
+          }
+
+          if (opacity) {
+            jimpFile = jimpFile.opacity(opacity)
+          }
+
+          if (blur) {
+            jimpFile = jimpFile.blur(blur)
+          }
+
+          jimpFile.getBuffer(mimeType, (err, img) => {
+            if (err) reject(err)
+            resolve(Readable.from(img))
+          })
+        } catch (err) {
+          reject(err)
+        }
+      })
     })
+  }
 
-    if (changeFormat) {
-      sharpInstance.toFormat(changeFormat)
+  private getJimpPos(pos: ImagePos) {
+    switch (pos) {
+      case 'top':
+        return Jimp.VERTICAL_ALIGN_TOP
+
+      case 'center':
+        return Jimp.VERTICAL_ALIGN_MIDDLE
+
+      case 'bottom':
+        return Jimp.VERTICAL_ALIGN_BOTTOM
+      default:
+        return Jimp.AUTO
     }
-
-    if (rotate) {
-      sharpInstance.rotate(rotate)
-    }
-
-    if (isSharpen) {
-      sharpInstance.sharpen()
-    }
-
-    return sharpInstance
   }
 }

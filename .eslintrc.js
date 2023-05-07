@@ -27,6 +27,7 @@ module.exports = {
     'no-extra-boolean-cast': 'error',
     'consistent-return': 'error',
     'default-case': 'error',
+    'no-async-promise-executor': 'off',
     eqeqeq: 'error',
     'no-useless-call': 'error',
     'newline-before-return': 'error',

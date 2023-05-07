@@ -28,6 +28,7 @@ services:
       - ./src:/home/app/src
       - /home/app/node_modules
       - /home/app/src/migrations
+      - ./upload:/home/app/upload
     depends_on:
       - postgres-db
     command:

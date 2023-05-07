@@ -63,7 +63,6 @@ export class ClientUserService extends BaseService<ClientUser> {
           height: 450,
           width: 450,
         },
-        changeFormat: 'jpeg',
       },
     })
 
