@@ -23,7 +23,7 @@ export class PermissionService extends BaseService<PermissionSet> {
   }
 
   createAdminPermission() {
-    const fullPerm = 'CRUD'.split('').join('|')
+    const fullPerm = 'C:*|R:*|U:*|D:*'
     const permissionSet = this.permissionRepo.create({
       course: fullPerm,
       blog: fullPerm,
@@ -49,7 +49,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     const clientPerm = 'R'
     const permissionSet = this.permissionRepo.create({
       course: clientPerm,
-      blog: 'C|R|U|D|S',
+      blog: 'C|R|U|D',
       instructor: clientPerm,
       user: '',
       permission: '',

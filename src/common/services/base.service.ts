@@ -13,10 +13,7 @@ import { cacheConstant } from '../constants/cache.contant'
 import { UtilService } from './util.service'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
-import {
-  FineGrainedPerm,
-  FlexiblePerm,
-} from '../decorators/PermissionRequire.decorator'
+import { FlexiblePerm } from '../decorators/PermissionRequire.decorator'
 
 export interface BaseRepoEntity {
   id: string | number
@@ -78,30 +75,22 @@ export abstract class BaseService<
       )
     }
 
-    if (
-      _.isEmpty(strictConfig.token) ||
-      _.isNil(strictConfig?.strictResourceName)
-    ) {
-      throw new ForbiddenException(
-        "You don't have permission to do this action on resource"
-      )
-    }
-
     const { user: adminUser, permissionSet } =
       await this.getAdminUserCredential(strictConfig.token)
     const resourcePerm = permissionSet[strictConfig.strictResourceName]
-    const permission = resourcePerm.match(/R:[+|x|*]/)[0] as FlexiblePerm
+    const flexibleReadPerm = resourcePerm.match(/R:[+|x|*]/)[0] as FlexiblePerm
     const isValidPermission = this.isValidPermissionOnResource(
       resource,
       adminUser,
-      permission
+      flexibleReadPerm
     )
 
     if (!isValidPermission)
       throw new ForbiddenException(
         "You don't have permission to do this action on resource"
       )
-    return resource
+    
+return resource
   }
 
   /**
@@ -204,9 +193,10 @@ export abstract class BaseService<
   ) {
     if (_.isEmpty(flexiblePerm)) return false
     const grainedPerm = flexiblePerm.split(':')[1]
-    return (
-      _.isEqual(grainedPerm, '*') ||
-      (_.isEqual(grainedPerm, '+') && _.isEqual(resource.createdBy, user.id))
+    
+return (
+      grainedPerm === '*' ||
+      (grainedPerm === '+' && resource.createdBy.id === user.id)
     )
   }
 
