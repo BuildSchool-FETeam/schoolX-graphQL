@@ -14,6 +14,7 @@ import { UtilService } from './util.service'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { FlexiblePerm } from '../decorators/PermissionRequire.decorator'
+import { REGEX_PERM } from '../constants/permission.constant'
 
 export interface BaseRepoEntity {
   id: string | number
@@ -80,7 +81,9 @@ export abstract class BaseService<
     const { user: adminUser, permissionSet } =
       await this.getAdminUserCredential(strictConfig.token)
     const resourcePerm = permissionSet[strictConfig.strictResourceName]
-    const flexibleReadPerm = resourcePerm.match(/R:[+|x|*]/)[0] as FlexiblePerm
+    const flexibleReadPerm = resourcePerm.match(
+      REGEX_PERM.READ
+    )[0] as FlexiblePerm
     const isValidPermission = this.isValidPermissionOnResource(
       resource,
       adminUser,
@@ -111,7 +114,7 @@ export abstract class BaseService<
         await this.getAdminUserCredential(strictConfig.token)
       const resourcePerm = permissionSet[strictConfig.strictResourceName]
       const flexibleReadPerm = resourcePerm.match(
-        /R:[+|x|*]/
+        REGEX_PERM.READ
       )[0] as FlexiblePerm
       const grainedPerm = flexibleReadPerm.split(':')[1]
 
@@ -121,7 +124,10 @@ export abstract class BaseService<
         )
       }
 
-      const conditionPerm = grainedPerm === '*' ? {} : { createdBy: adminUser }
+      const conditionPerm: { createdBy?: AdminUser | ClientUser } = {}
+      if (grainedPerm === '+') {
+        conditionPerm.createdBy = adminUser
+      }
 
       if (_.isArray(options.where)) {
         const strictWhereOptions = _.map(options.where, (whereOpt) => {
@@ -174,7 +180,9 @@ export abstract class BaseService<
     const { user: adminUser, permissionSet } =
       await this.getAdminUserCredential(strictConfig.token)
     const resourcePerm = permissionSet[strictConfig.strictResourceName]
-    const flexibleReadPerm = resourcePerm.match(/D:[+|x|*]/)[0] as FlexiblePerm
+    const flexibleReadPerm = resourcePerm.match(
+      REGEX_PERM.DELETE
+    )[0] as FlexiblePerm
     const isValidPermission = this.isValidPermissionOnResource(
       existed,
       adminUser,
@@ -199,7 +207,9 @@ export abstract class BaseService<
     const { user: adminUser, permissionSet } =
       await this.getAdminUserCredential(strict.token)
     const resourcePerm = permissionSet[strict.strictResourceName]
-    const flexibleReadPerm = resourcePerm.match(/R:[+|x|*]/)[0] as FlexiblePerm
+    const flexibleReadPerm = resourcePerm.match(
+      REGEX_PERM.READ
+    )[0] as FlexiblePerm
     const grainedPerm = flexibleReadPerm.split(':')[1]
 
     if (grainedPerm === 'x') {
