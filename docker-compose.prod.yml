@@ -7,7 +7,6 @@ services:
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=storage-service-account.json
       - JWT_SECRET=Yasuoganktem20gg
-      # - STORAGE_FOLDER=toan-dev-003
       - STORAGE_FOLDER=storage-folder
       - DB_HOST=postgres-db
       - DB_USER_NAME=postgres

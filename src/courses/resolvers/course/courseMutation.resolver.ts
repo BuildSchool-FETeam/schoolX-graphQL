@@ -124,7 +124,6 @@ export class CourseMutationResolver {
         resize: {
           width: 1200,
         },
-        changeFormat: 'jpeg',
       },
     })
 

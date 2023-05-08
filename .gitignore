@@ -47,3 +47,4 @@ report.xml
 
 servers/*/javaFiles
 servers/*/cppFiles/temp_*
+upload/*

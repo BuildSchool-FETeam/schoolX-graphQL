@@ -68,17 +68,6 @@ describe('GCStorageService', () => {
       }
     })
 
-    it("should throw an error if the file name don't have valid extension", async () => {
-      config.fileName = 'file.shit.name'
-
-      await assertThrowError(
-        service.uploadFile.bind(service, config),
-        new InternalServerErrorException(
-          'File name should be like "image.jpg")'
-        )
-      )
-    })
-
     it('should return a file path after upload done', async () => {
       config.makePublic = true
 

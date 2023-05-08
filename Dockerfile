@@ -1,12 +1,12 @@
-FROM node:18.12.1
+FROM node:18.12.1-alpine
 
-RUN apt-get update -y
-RUN apt-get install -y dos2unix
+RUN apk update
+RUN apk add dos2unix
+RUN apk add dos2unix && apk add bash
 
 WORKDIR /home/app
-COPY package.json .
 COPY yarn.lock .
-RUN yarn config set unsafe-perm true
+COPY package.json .
 RUN yarn install
 
 COPY . .

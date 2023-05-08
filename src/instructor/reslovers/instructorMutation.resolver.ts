@@ -17,13 +17,15 @@ import {
 } from 'src/common/services/GCStorage.service'
 import { InstructorSetInput } from 'src/graphql'
 import { InstructorService } from '../services/instructor.service'
+import { FileService } from 'src/common/services/file.service'
 
 @UseGuards(AuthGuard)
 @Resolver('InstructorMutation')
 export class InstructorMutationResolver {
   constructor(
     private instructorService: InstructorService,
-    private gcStorageService: GCStorageService
+    private gcStorageService: GCStorageService,
+    private localFileService: FileService
   ) {}
 
   @Mutation()
@@ -65,11 +67,10 @@ export class InstructorMutationResolver {
         makePublic: true,
         imageProcessConfig: {
           resize: {
-            height: 450,
-            width: 450,
+            height: 100,
+            width: 100,
+            position: 'center',
           },
-          changeFormat: 'jpeg',
-          isSharpen: true,
         },
       })
       imageUrl = promiseObj.publicUrl
