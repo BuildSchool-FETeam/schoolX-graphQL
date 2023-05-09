@@ -180,13 +180,13 @@ export abstract class BaseService<
     const { user: adminUser, permissionSet } =
       await this.getAdminUserCredential(strictConfig.token)
     const resourcePerm = permissionSet[strictConfig.strictResourceName]
-    const flexibleReadPerm = resourcePerm.match(
+    const flexibleDeletePerm = resourcePerm.match(
       REGEX_PERM.DELETE
     )[0] as FlexiblePerm
     const isValidPermission = this.isValidPermissionOnResource(
       existed,
       adminUser,
-      flexibleReadPerm
+      flexibleDeletePerm
     )
 
     if (!isValidPermission) {
