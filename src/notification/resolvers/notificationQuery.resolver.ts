@@ -15,7 +15,7 @@ export class NotificationQueryResolver {
     return {}
   }
 
-  @PermissionRequire({ notification: ['R'] })
+  @PermissionRequire({ notification: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('notificationsReceived')
   async getNotificationReceived(
     @Context() { req }: DynamicObject,
@@ -28,7 +28,7 @@ export class NotificationQueryResolver {
     return this.noticService.getNotificationsReceived(token, searchOpt, pg)
   }
 
-  @PermissionRequire({ notification: ['R'] })
+  @PermissionRequire({ notification: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('notificationsSent')
   async getNotificationsSent(
     @Context() { req }: DynamicObject,
@@ -48,7 +48,7 @@ export class NotificationQueryResolver {
     )
   }
 
-  @PermissionRequire({ notification: ['R'] })
+  @PermissionRequire({ notification: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('notification')
   async getNotification(
     @Context() { req }: DynamicObject,
@@ -59,7 +59,7 @@ export class NotificationQueryResolver {
     return this.noticService.getNotificationById(token, id)
   }
 
-  @PermissionRequire({ notification: ['R'] })
+  @PermissionRequire({ notification: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async totalNotificationReceived(@Context() { req }: DynamicObject) {
     const token = this.noticService.getTokenFromHttpHeader(req.headers)
@@ -67,7 +67,7 @@ export class NotificationQueryResolver {
     return this.noticService.countNotificationReceived(token)
   }
 
-  @PermissionRequire({ notification: ['R'] })
+  @PermissionRequire({ notification: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async totalNotificationSent(@Context() { req }: DynamicObject) {
     const token = this.noticService.getTokenFromHttpHeader(req.headers)

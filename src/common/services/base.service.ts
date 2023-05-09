@@ -5,7 +5,6 @@ import {
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
-  FindOptionsRelations,
 } from 'typeorm'
 import { CacheService } from './cache.service'
 import { PermissionSet } from '../../permission/entities/Permission.entity'
@@ -14,6 +13,8 @@ import { cacheConstant } from '../constants/cache.contant'
 import { UtilService } from './util.service'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
+import { FlexiblePerm } from '../decorators/PermissionRequire.decorator'
+import { REGEX_PERM } from '../constants/permission.constant'
 
 export interface BaseRepoEntity {
   id: string | number
@@ -62,19 +63,6 @@ export abstract class BaseService<
     options: FindOneOptions<T> = {},
     strictConfig?: IStrictConfig
   ) {
-    if (strictConfig) {
-      if (_.size(options.relations) === 0) {
-        options.relations = {
-          createdBy: true,
-        } as FindOptionsRelations<T>
-      } else if (!(options.relations as FindOptionsRelations<T>).createdBy) {
-        options.relations = {
-          ...options.relations,
-          createdBy: true,
-        } as FindOptionsRelations<T>
-      }
-    }
-
     const resource = await this.repository.findOne({
       where: {
         id: id,
@@ -88,30 +76,23 @@ export abstract class BaseService<
       )
     }
 
-    if (strictConfig) {
-      const { user: adminUser, permissionSet } =
-        await this.getAdminUserCredential(strictConfig.token)
+    if (_.isEmpty(strictConfig)) return resource
 
-      if (
-        this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
-      ) {
-        if (_.isNil((resource as DynamicObject).createdBy)) {
-          throw new ForbiddenException(
-            "You don't have permission to do this action on resource"
-          )
-        }
+    const { user: adminUser, permissionSet } =
+      await this.getAdminUserCredential(strictConfig.token)
+    const resourcePerm = permissionSet[strictConfig.strictResourceName]
+    const flexibleReadPerm = resourcePerm.match(
+      REGEX_PERM.READ
+    )[0] as FlexiblePerm
+    const isValidPermission = this.isValidPermissionOnResource(
+      resource,
+      adminUser,
+      flexibleReadPerm
+    )
 
-        if ((resource as DynamicObject).createdBy.id !== adminUser.id) {
-          throw new ForbiddenException(
-            "You don't have permission to do this action on resource"
-          )
-        }
-      }
-    }
-
-    if (!resource) {
-      throw new NotFoundException(
-        `Resource ${this.resourceName || ''} with id: ${id} not found`
+    if (!isValidPermission) {
+      throw new ForbiddenException(
+        "You don't have permission to do this action on resource"
       )
     }
 
@@ -131,32 +112,40 @@ export abstract class BaseService<
     if (strictConfig) {
       const { user: adminUser, permissionSet } =
         await this.getAdminUserCredential(strictConfig.token)
+      const resourcePerm = permissionSet[strictConfig.strictResourceName]
+      const flexibleReadPerm = resourcePerm.match(
+        REGEX_PERM.READ
+      )[0] as FlexiblePerm
+      const grainedPerm = flexibleReadPerm.split(':')[1]
 
-      if (
-        this.isStrictPermission(permissionSet[strictConfig.strictResourceName])
-      ) {
-        if (_.isArray(options.where)) {
-          const strictWhereOptions = _.map(options.where, (whereOpt) => {
-            const whereOptions = _.assign(whereOpt, {
-              createdBy: adminUser,
-            }) as FindOptionsWhere<T>
+      if (grainedPerm === 'x') {
+        throw new ForbiddenException(
+          "You don't have permission to do this action on resource"
+        )
+      }
 
-            return whereOptions
-          })
-          options = {
-            ...options,
-            where: strictWhereOptions,
-          }
-        } else {
-          const whereOptions = _.assign(options.where, {
-            createdBy: adminUser,
-          }) as FindOptionsWhere<T>
+      const conditionPerm: { createdBy?: AdminUser | ClientUser } = {}
+      if (grainedPerm === '+') {
+        conditionPerm.createdBy = adminUser
+      }
 
-          options = {
-            ...options,
-            where: whereOptions,
-            cache: true,
-          }
+      if (_.isArray(options.where)) {
+        const strictWhereOptions = _.map(options.where, (whereOpt) => {
+          return _.assign(whereOpt, conditionPerm) as FindOptionsWhere<T>
+        })
+        options = {
+          ...options,
+          where: strictWhereOptions,
+        }
+      } else {
+        const whereOptions = _.assign(
+          options.where,
+          conditionPerm
+        ) as FindOptionsWhere<T>
+        options = {
+          ...options,
+          where: whereOptions,
+          cache: true,
         }
       }
     }
@@ -178,16 +167,31 @@ export abstract class BaseService<
    * @returns delete information
    */
   async deleteOneById(id: string, strictConfig?: IStrictConfig) {
-    if (strictConfig) {
-      await this.findById(id, {}, strictConfig)
-    }
+    const existed = await this.findById(id, {}, strictConfig)
 
-    const existedItem = await this.repository.findOneBy({
-      id,
-    } as FindOptionsWhere<T>)
-    if (!existedItem) {
+    if (!existed) {
       throw new NotFoundException(
         `Resource ${this.resourceName || ''} with id: ${id} not found`
+      )
+    }
+
+    if (_.isEmpty(strictConfig)) return this.repository.delete(id)
+
+    const { user: adminUser, permissionSet } =
+      await this.getAdminUserCredential(strictConfig.token)
+    const resourcePerm = permissionSet[strictConfig.strictResourceName]
+    const flexibleDeletePerm = resourcePerm.match(
+      REGEX_PERM.DELETE
+    )[0] as FlexiblePerm
+    const isValidPermission = this.isValidPermissionOnResource(
+      existed,
+      adminUser,
+      flexibleDeletePerm
+    )
+
+    if (!isValidPermission) {
+      throw new ForbiddenException(
+        "You don't have permission to do this action on resource"
       )
     }
 
@@ -202,17 +206,39 @@ export abstract class BaseService<
   async countingTotalItem(strict?: IStrictConfig) {
     const { user: adminUser, permissionSet } =
       await this.getAdminUserCredential(strict.token)
+    const resourcePerm = permissionSet[strict.strictResourceName]
+    const flexibleReadPerm = resourcePerm.match(
+      REGEX_PERM.READ
+    )[0] as FlexiblePerm
+    const grainedPerm = flexibleReadPerm.split(':')[1]
+
+    if (grainedPerm === 'x') {
+      throw new ForbiddenException(
+        "You don't have permission to do this action on resource"
+      )
+    }
+
     const builder = this.repository.createQueryBuilder('entity')
 
-    if (this.isStrictPermission(permissionSet[strict.strictResourceName])) {
+    if (grainedPerm === '+') {
       builder.where('entity.createdById = :id', { id: adminUser.id })
     }
 
     return builder.getCount()
   }
 
-  private isStrictPermission(permissionAsString: string) {
-    return _.includes(permissionAsString.split('|'), 'S')
+  private isValidPermissionOnResource(
+    resource: BaseRepoEntity,
+    user: AdminUser | ClientUser,
+    flexiblePerm: FlexiblePerm
+  ) {
+    if (_.isEmpty(flexiblePerm)) return false
+    const grainedPerm = flexiblePerm.split(':')[1]
+
+    return (
+      grainedPerm === '*' ||
+      (grainedPerm === '+' && resource.createdBy.id === user.id)
+    )
   }
 
   /**

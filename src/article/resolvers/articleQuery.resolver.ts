@@ -23,7 +23,7 @@ export class ArticleQueryResolver {
     return {}
   }
 
-  @PermissionRequire({ blog: ['R'] })
+  @PermissionRequire({ blog: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('articles')
   async getAllArticles(
     @Args('pagination') pg?: PaginationInput,
@@ -38,7 +38,7 @@ export class ArticleQueryResolver {
     })
   }
 
-  @PermissionRequire({ blog: ['R'] })
+  @PermissionRequire({ blog: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('filteredArticles')
   async getArticleByFilter(
     @Args('filterOptions') filterOption: FilterArticleInput,
@@ -47,14 +47,14 @@ export class ArticleQueryResolver {
     return this.articleService.filterArticle(filterOption, pg)
   }
 
-  @PermissionRequire({ blog: ['R'] })
+  @PermissionRequire({ blog: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField('articleDetail')
   async getArticleById(@Args('id') id: string) {
     return this.articleService.findById(id)
   }
 
   @ResolveField('tags')
-  @PermissionRequire({ blog: ['R'] })
+  @PermissionRequire({ blog: ['C:x', 'R:*', 'U:x', 'D:x'] })
   async getAllTags(
     @Args('pagination') pg?: PaginationInput,
     @Args('searchOption') sOpt?: SearchOptionInput

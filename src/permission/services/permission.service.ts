@@ -9,6 +9,7 @@ import { TokenService } from 'src/common/services/token.service'
 import { CacheService } from 'src/common/services/cache.service'
 import { PermissionSet } from '../entities/Permission.entity'
 import { RoleService } from './role.service'
+import { DEFAULT_PERM } from 'src/common/constants/permission.constant'
 
 @Injectable()
 export class PermissionService extends BaseService<PermissionSet> {
@@ -23,31 +24,21 @@ export class PermissionService extends BaseService<PermissionSet> {
   }
 
   createAdminPermission() {
-    const fullPerm = 'CRUD'.split('').join('|')
+    const { ROOT } = DEFAULT_PERM
     const permissionSet = this.permissionRepo.create({
-      course: fullPerm,
-      blog: fullPerm,
-      permission: fullPerm,
-      user: fullPerm,
-      instructor: fullPerm,
-      notification: fullPerm,
+      course: ROOT,
+      blog: ROOT,
+      permission: ROOT,
+      user: ROOT,
+      instructor: ROOT,
+      notification: ROOT,
     })
 
     return permissionSet
   }
 
   async getClientUserPermission() {
-    const clientPerm = 'R'
     const clientPermissionName = 'client_permission'
-
-    const permissionSet = this.permissionRepo.create({
-      course: clientPerm,
-      blog: 'C|R|U|D|S',
-      instructor: clientPerm,
-      user: '',
-      permission: '',
-      notification: '',
-    })
 
     const existedRole = await this.roleService.findRoleByName(
       clientPermissionName
@@ -55,6 +46,15 @@ export class PermissionService extends BaseService<PermissionSet> {
     if (existedRole) {
       return existedRole
     }
+    const { READ_ONLY, UPDATE_SELF, DENINED } = DEFAULT_PERM
+    const permissionSet = this.permissionRepo.create({
+      course: READ_ONLY,
+      blog: UPDATE_SELF,
+      instructor: READ_ONLY,
+      user: READ_ONLY,
+      permission: DENINED,
+      notification: READ_ONLY,
+    })
 
     const role = await this.roleService.createRole(clientPermissionName)
 

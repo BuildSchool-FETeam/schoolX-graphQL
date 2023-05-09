@@ -23,7 +23,7 @@ export class AdminUserMutationResolver {
     return {}
   }
 
-  @PermissionRequire({ user: ['C', 'R'] })
+  @PermissionRequire({ user: ['C:*', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async setAdminUser(
     @Args('data') data: AdminUserSetInput,
@@ -47,7 +47,7 @@ export class AdminUserMutationResolver {
     }
   }
 
-  @PermissionRequire({ user: ['D'] })
+  @PermissionRequire({ user: ['C:x', 'R:x', 'U:x', 'D:*'] })
   @ResolveField()
   async deleteAdminUser(@Args('id') id?: string) {
     const result = await this.adminUserService.deleteOneById(id)

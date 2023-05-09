@@ -21,7 +21,7 @@ export class UserCommentMutationResolver {
     return {}
   }
 
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async setCommentToCourse(
     @Args('courseId') courseId: string,
@@ -33,7 +33,7 @@ export class UserCommentMutationResolver {
     return this.commentService.setCommentForCourse(courseId, data, token)
   }
 
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async setCommentToLesson(
     @Args('lessonId') lessonId: string,
@@ -45,7 +45,7 @@ export class UserCommentMutationResolver {
     return this.commentService.setCommentForLesson(lessonId, data, token)
   }
 
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async setCommentToAssignment(
     @Args('assignmentId') assignmentId: string,
@@ -61,7 +61,7 @@ export class UserCommentMutationResolver {
     )
   }
 
-  @PermissionRequire({ course: ['R'] })
+  @PermissionRequire({ course: ['C:x', 'R:*', 'U:x', 'D:x'] })
   @ResolveField()
   async setCommentToArticle(
     @Args('articleId') articleId: string,

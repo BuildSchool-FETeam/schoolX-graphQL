@@ -21,6 +21,8 @@ import {
   TestCaseProgrammingLanguage,
 } from 'src/assignment/entities/codeChallenge/Testcase.entity'
 import { Question } from 'src/assignment/entities/quiz/Question.entity'
+import { PermissionSet } from 'src/permission/entities/Permission.entity'
+import { DEFAULT_PERM } from '../constants/permission.constant'
 
 export const createInstructorEntiryMock = (data?: Partial<Instructor>) => {
   const defaultData = {
@@ -365,4 +367,23 @@ export const createCommentEntityMock = (data?: Partial<UserComment>) => {
   }
 
   return assign(new UserComment(), { ...defaultData, ...data })
+}
+
+export const createPermissionSetEntityMock = (
+  data?: Partial<PermissionSet>
+) => {
+  const { READ_ONLY, DENINED } = DEFAULT_PERM
+  const defaultData = {
+    id: '1',
+    blog: READ_ONLY,
+    course: READ_ONLY,
+    createdBy: new AdminUser(),
+    instructor: READ_ONLY,
+    notification: READ_ONLY,
+    permission: DENINED,
+    role: new Role(),
+    user: READ_ONLY,
+  }
+
+  return assign(new PermissionSet(), { ...defaultData, ...data })
 }
