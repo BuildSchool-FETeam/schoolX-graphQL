@@ -17,7 +17,6 @@ import { UserComment } from './comment/entities/UserComment.entity'
 import { Course } from './courses/entities/Course.entity'
 import { Lesson } from './courses/entities/Lesson.entity'
 import { LessonDocument } from './courses/entities/LessonDocument.entity'
-import { Instructor } from './instructor/entities/Instructor.entity'
 import { AdminNotification } from './notification/Notification.entity'
 import { PermissionSet } from './permission/entities/Permission.entity'
 import { Role } from './permission/entities/Role.entity'
@@ -35,7 +34,6 @@ export const typeORMModuleInit = TypeOrmModule.forRoot({
   logging: process.env.DB_LOG === 'true' ? true : false,
   entities: [
     AdminUser,
-    Instructor,
     Article,
     ArticleTag,
     Assignment,

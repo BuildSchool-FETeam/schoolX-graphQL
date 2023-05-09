@@ -1,18 +1,15 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql'
 import { ClientUser } from '../entities/ClientUser.entity'
 import { ClientUserService } from '../services/clientUser.service'
+import { TYPE_USER } from 'src/common/constants/user.constant'
 
 @Resolver('ClientUserType')
 export class clientUserTypeResolver {
   constructor(private clientUserService: ClientUserService) {}
-
-  @ResolveField('instructor')
-  async instructor(@Parent() clientUserData: ClientUser) {
-    const data = await this.clientUserService.findById(clientUserData.id, {
-      relations: { instructor: true },
-    })
-
-    return data.instructor
+  
+  @ResolveField("type")
+  async type(@Parent() clientUserData: ClientUser) {
+    return TYPE_USER[clientUserData.type]
   }
 
   @ResolveField('achievement')

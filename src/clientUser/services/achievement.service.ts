@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, forwardRef } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BaseService } from 'src/common/services/base.service'
 import { Repository } from 'typeorm'
@@ -14,6 +14,7 @@ export class AchievementService extends BaseService<Achievement> {
   constructor(
     @InjectRepository(Achievement)
     private achiRepo: Repository<Achievement>,
+    @Inject(forwardRef(() => CourseService))
     private courseService: CourseService
   ) {
     super(achiRepo, 'User achievement')

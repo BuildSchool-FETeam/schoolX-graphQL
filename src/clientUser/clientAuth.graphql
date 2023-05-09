@@ -14,6 +14,7 @@ input ClientUserSignupInput {
   name: String!
   email: String!
   password: String!
+  type: TypeUser!
 }
 
 input ClientUserSigninInput {
@@ -25,4 +26,5 @@ type ClientUserAuthResponse {
   id: ID!
   email: String!
   token: String
+  type: TypeUser
 }

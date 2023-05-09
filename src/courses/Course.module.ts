@@ -8,7 +8,6 @@ import { AdminUserModule } from '../adminUser/AdminUser.module'
 import { LessonDocument } from './entities/LessonDocument.entity'
 import { LessonDocumentService } from './services/document.service'
 import { LessonQueryResolver } from './resolvers/lesson/lessonQuery.resolver'
-import { InstructorModule } from '../instructor/instructor.module'
 import { CourseService } from './services/course.service'
 import { CourseMutationResolver } from './resolvers/course/courseMutation.resolver'
 import { CourseQueryResolver } from './resolvers/course/courseQuery.resolver'
@@ -18,15 +17,16 @@ import { LessonService } from './services/lesson.service'
 import { LessonMutationResolver } from './resolvers/lesson/lessonMutation.resolver'
 import { LessonTypeResolver } from './resolvers/lesson/lessonType.resolver'
 import { LessonDocumentMutationResolver } from './resolvers/lessonDocument/documentMutation.resolver'
+import { ClientUserModule } from 'src/clientUser/clientUser.module'
 
 @Module({
   imports: [
     forwardRef(() => CommonModule),
     TypeOrmModule.forFeature([Course, Lesson, LessonDocument]),
-    forwardRef(() => InstructorModule),
     TagModule,
     AdminUserModule,
     AssignmentModule,
+    forwardRef(() => ClientUserModule)
   ],
   providers: [
     CourseMutationResolver,

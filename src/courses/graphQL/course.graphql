@@ -38,7 +38,6 @@ type CourseType implements BaseGraphQL {
   createdAt: ScalarDate!
   updatedAt: ScalarDate!
   description: String!
-  instructor: InstructorType!
   benefits: [String!]!
   requirements: [String!]!
   imageUrl: String

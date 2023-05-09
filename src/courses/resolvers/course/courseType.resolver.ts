@@ -8,15 +8,6 @@ export class CourseTypeResolver {
   constructor(private courseService: CourseService) {}
 
   @ResolveField()
-  async instructor(@Parent() courseParent: CourseType) {
-    const course = await this.courseService.findById(courseParent.id, {
-      relations: { instructor: true },
-    })
-
-    return course.instructor
-  }
-
-  @ResolveField()
   async tags(@Parent() courseParent: CourseType) {
     const course = await this.courseService.findById(courseParent.id, {
       relations: { tags: true },
