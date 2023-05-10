@@ -74,6 +74,6 @@ export class Course {
   @OneToMany(() => UserComment, (userComment) => userComment.course)
   comments: UserComment[]
 
-  @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
-  createdBy: ClientUser
+  @ManyToOne(() => AdminUser || ClientUser, { onDelete: 'CASCADE' })
+  createdBy: ClientUser | AdminUser
 }

@@ -235,7 +235,6 @@ export class CompareInputString {
 export class CourseSetInput {
     title: string;
     description: string;
-    instructorId: string;
     benefits: string[];
     requirements: string[];
     image?: Nullable<Upload>;

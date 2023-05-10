@@ -48,7 +48,12 @@ export class ClientUser {
   @Column({ nullable: true })
   bio: string
 
-  @Column({ nullable: false, type: "enum", default: TYPE_USER.LEARNER, enum: TYPE_USER})
+  @Column({
+    nullable: false,
+    type: 'enum',
+    default: TYPE_USER.LEARNER,
+    enum: TYPE_USER,
+  })
   type: number
 
   @Column({ nullable: true })

@@ -24,7 +24,6 @@ type CourseMutation {
 input CourseSetInput {
   title: String!
   description: String!
-  instructorId: ID!
   benefits: [String!]!
   requirements: [String!]!
   image: Upload

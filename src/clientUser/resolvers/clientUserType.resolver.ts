@@ -6,8 +6,8 @@ import { TYPE_USER } from 'src/common/constants/user.constant'
 @Resolver('ClientUserType')
 export class clientUserTypeResolver {
   constructor(private clientUserService: ClientUserService) {}
-  
-  @ResolveField("type")
+
+  @ResolveField('type')
   async type(@Parent() clientUserData: ClientUser) {
     return TYPE_USER[clientUserData.type]
   }

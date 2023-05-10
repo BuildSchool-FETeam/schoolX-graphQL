@@ -53,7 +53,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
       email,
       password: this.passwordService.hash(password),
       name,
-      type: typeUser
+      type: typeUser,
     })
 
     const { expiredTime, code } = this.generateActivationCode(1)
@@ -61,7 +61,9 @@ export class ClientAuthService extends BaseService<ClientUser> {
     newClientUser.activationCodeExpire = expiredTime
 
     await this.sendEmailWithCode(code, email)
-    newClientUser.role = await this.permissionService.getClientUserPermission(typeUser === TYPE_USER.INSTRUCTOR)
+    newClientUser.role = await this.permissionService.getClientUserPermission(
+      typeUser === TYPE_USER.INSTRUCTOR
+    )
     const clientUserResponse = await this.clientRepo.save(newClientUser)
 
     await this.achiService.createEmptyAchievement(clientUserResponse)

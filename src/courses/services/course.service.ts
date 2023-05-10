@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Course } from 'src/courses/entities/Course.entity'
@@ -9,12 +9,11 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ActionCourse, CourseSetInput } from 'src/graphql'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { CacheService } from '../../common/services/cache.service'
-import { ClientUserService } from 'src/clientUser/services/clientUser.service'
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string
   filePath: string
-  createdBy: AdminUser
+  createdBy: AdminUser | ClientUser
   levels: string[]
 }
 
@@ -24,23 +23,18 @@ export class CourseService extends BaseService<Course> {
     @InjectRepository(Course)
     private courseRepo: Repository<Course>,
     private tagService: TagService,
-    private cachedService: CacheService,
-    @Inject(forwardRef(() => ClientUserService))
-    private clienUserService: ClientUserService
+    private cachedService: CacheService
   ) {
     super(courseRepo, 'Course', cachedService)
   }
 
   async createCourse(data: CourseDataInput) {
-    const { instructorId } = data
-    const existedUser = await this.clienUserService.findById(instructorId)
     const course = this.courseRepo.create({
       ...data,
       benefits: data.benefits.join('|'),
       requirements: data.requirements.join('|'),
       tags: [],
       levels: data.levels.join('|'),
-      createdBy: existedUser
     })
 
     const tagsString = data.tags
@@ -65,23 +59,20 @@ export class CourseService extends BaseService<Course> {
     if (!existedCourse) {
       throw new NotFoundException('Course not found')
     }
-    _.forOwn(data, (value, key: keyof CourseDataInput) => {
-      if (value instanceof Array) {
+    _.forOwn(data, (value, key) => {
+      if (_.isArray(value)) {
         existedCourse[key] = value.join('|')
       } else {
         value && (existedCourse[key] = value)
       }
     })
-    const tagsString = data.tags
-    const tagsPromise = this.createTags(tagsString)
 
-    return Promise.all(tagsPromise)
-      .then((tags) => {
-        existedCourse.tags = tags
-      })
-      .then(async () => {
-        return this.courseRepo.save(existedCourse)
-      })
+    const tagsPromise = this.createTags(data.tags)
+    const tags = await Promise.all(tagsPromise)
+
+    existedCourse.tags = tags
+
+    return this.courseRepo.save(existedCourse)
   }
 
   async updateJoinedUsers(id: string, user: ClientUser, action: ActionCourse) {

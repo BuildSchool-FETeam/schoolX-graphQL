@@ -1,6 +1,6 @@
 jest.mock('jimp', () => {
   return {
-    read(b: Buffer) {
+    read() {
       return {
         resize: jest.fn(),
       }

@@ -10,7 +10,6 @@ import { CacheService } from 'src/common/services/cache.service'
 import { PermissionSet } from '../entities/Permission.entity'
 import { RoleService } from './role.service'
 import { DEFAULT_PERM } from 'src/common/constants/permission.constant'
-import { TYPE_USER } from 'src/common/constants/user.constant'
 
 @Injectable()
 export class PermissionService extends BaseService<PermissionSet> {
@@ -39,7 +38,9 @@ export class PermissionService extends BaseService<PermissionSet> {
   }
 
   async getClientUserPermission(isInstructor: boolean) {
-    const clientPermissionName = isInstructor ? "instructor_permission" : 'learner_permission'
+    const clientPermissionName = isInstructor
+      ? 'instructor_permission'
+      : 'learner_permission'
 
     const existedRole = await this.roleService.findRoleByName(
       clientPermissionName
@@ -49,7 +50,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     }
     const { READ_ONLY, UPDATE_SELF, DENINED } = DEFAULT_PERM
 
-    const permissionInstructor = isInstructor ? UPDATE_SELF : READ_ONLY;
+    const permissionInstructor = isInstructor ? UPDATE_SELF : READ_ONLY
 
     const permissionSet = this.permissionRepo.create({
       course: permissionInstructor,

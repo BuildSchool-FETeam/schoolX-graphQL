@@ -1,10 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import './mocks/GCMock'
 import { file } from './mocks/GCMock'
-import {
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common'
+import { BadRequestException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test } from '@nestjs/testing'
 import { ReadStream } from 'fs'
