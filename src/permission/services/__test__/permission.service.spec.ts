@@ -118,75 +118,162 @@ describe('PermissionService', () => {
 
   describe('getClientUserPermission', () => {
     const { READ_ONLY, UPDATE_SELF, DENINED } = DEFAULT_PERM
-    const userPermission = createPermissionSetEntityMock({
-      course: READ_ONLY,
-      blog: UPDATE_SELF,
-      instructor: READ_ONLY,
-      user: READ_ONLY,
-      permission: DENINED,
-      notification: READ_ONLY,
-    })
-    const role = createRoleEntityMock({
-      id: '1',
-      name: 'client_permission',
-      permissionSet: userPermission,
-    })
+    const role = createRoleEntityMock({ id: '1' })
 
     let spyFindRoleByName
 
     beforeEach(() => {
-      jest.clearAllMocks()
       spyFindRoleByName = jest.spyOn(roleService, 'findRoleByName')
     })
 
-    afterEach(() => {
-      expect(spyFindRoleByName).toHaveBeenCalled()
+    describe('This acction if user is instructor', () => {
+      const userPermission = createPermissionSetEntityMock({
+        course: UPDATE_SELF,
+        blog: UPDATE_SELF,
+        instructor: UPDATE_SELF,
+        user: UPDATE_SELF,
+        permission: DENINED,
+        notification: READ_ONLY,
+      })
+
+      beforeEach(() => {
+        jest.clearAllMocks()
+        role.permissionSet = userPermission
+        role.name = 'instructor_permission'
+      })
+
+      afterEach(() => {
+        expect(spyFindRoleByName).toHaveBeenCalled()
+      })
+
+      it('If role existed, should return role', async () => {
+        jest
+          .spyOn(roleService, 'findRoleByName')
+          .mockImplementation(async (name) =>
+            createRoleEntityMock({
+              id: '1',
+              name,
+              permissionSet: userPermission,
+            })
+          )
+
+        const result = await permissionService.getClientUserPermission(true)
+
+        expect(result).toEqual(role)
+      })
+
+      it('If role not existed, should create new role', async () => {
+        jest.spyOn(roleService, 'findRoleByName').mockResolvedValue(undefined)
+
+        const spyCreatePerm = jest
+          .spyOn(permissionRepo, 'create')
+          .mockImplementation((data: PermissionSet) =>
+            createPermissionSetEntityMock(data)
+          )
+        const spyCreateRole = jest
+          .spyOn(roleService, 'createRole')
+          .mockImplementation(async (name: string) =>
+            createRoleEntityMock({
+              id: '1',
+              name,
+              permissionSet: userPermission,
+            })
+          )
+        const spySavePermission = jest
+          .spyOn(permissionRepo, 'save')
+          .mockResolvedValue({} as PermissionSet)
+
+        const result = await permissionService.getClientUserPermission(true)
+        expect(result).toEqual(role)
+        expect(
+          permissionRepo.create({
+            course: UPDATE_SELF,
+            blog: UPDATE_SELF,
+            instructor: UPDATE_SELF,
+            user: UPDATE_SELF,
+            permission: DENINED,
+            notification: READ_ONLY,
+          })
+        ).toEqual(userPermission)
+        expect(spyCreatePerm).toHaveBeenCalled()
+        expect(spyCreateRole).toHaveBeenCalled()
+        expect(spySavePermission).toBeCalled()
+      })
     })
 
-    it('If role existed, should return role', async () => {
-      jest
-        .spyOn(roleService, 'findRoleByName')
-        .mockImplementation(async (name) =>
-          createRoleEntityMock({ id: '1', name, permissionSet: userPermission })
-        )
+    describe('This acction if user is learner', () => {
+      const userPermission = createPermissionSetEntityMock({
+        course: READ_ONLY,
+        blog: READ_ONLY,
+        instructor: READ_ONLY,
+        user: UPDATE_SELF,
+        permission: DENINED,
+        notification: READ_ONLY,
+      })
 
-      const result = await permissionService.getClientUserPermission()
+      beforeEach(() => {
+        jest.clearAllMocks()
+        role.permissionSet = userPermission
+        role.name = 'learner_permission'
+      })
 
-      expect(result).toEqual(role)
-    })
+      afterEach(() => {
+        expect(spyFindRoleByName).toHaveBeenCalled()
+      })
 
-    it('If role not existed, should create new role', async () => {
-      jest.spyOn(roleService, 'findRoleByName').mockResolvedValue(undefined)
+      it('If role existed, should return role', async () => {
+        jest
+          .spyOn(roleService, 'findRoleByName')
+          .mockImplementation(async (name) =>
+            createRoleEntityMock({
+              id: '1',
+              name,
+              permissionSet: userPermission,
+            })
+          )
 
-      const spyCreatePerm = jest
-        .spyOn(permissionRepo, 'create')
-        .mockImplementation((data: PermissionSet) =>
-          createPermissionSetEntityMock(data)
-        )
-      const spyCreateRole = jest
-        .spyOn(roleService, 'createRole')
-        .mockImplementation(async (name: string) =>
-          createRoleEntityMock({ id: '1', name, permissionSet: userPermission })
-        )
-      const spySavePermission = jest
-        .spyOn(permissionRepo, 'save')
-        .mockResolvedValue({} as PermissionSet)
+        const result = await permissionService.getClientUserPermission(false)
 
-      const result = await permissionService.getClientUserPermission()
-      expect(result).toEqual(role)
-      expect(
-        permissionRepo.create({
-          course: READ_ONLY,
-          blog: UPDATE_SELF,
-          instructor: READ_ONLY,
-          user: READ_ONLY,
-          permission: DENINED,
-          notification: READ_ONLY,
-        })
-      ).toEqual(userPermission)
-      expect(spyCreatePerm).toHaveBeenCalled()
-      expect(spyCreateRole).toHaveBeenCalled()
-      expect(spySavePermission).toBeCalled()
+        expect(result).toEqual(role)
+      })
+
+      it('If role not existed, should create new role', async () => {
+        jest.spyOn(roleService, 'findRoleByName').mockResolvedValue(undefined)
+
+        const spyCreatePerm = jest
+          .spyOn(permissionRepo, 'create')
+          .mockImplementation((data: PermissionSet) =>
+            createPermissionSetEntityMock(data)
+          )
+        const spyCreateRole = jest
+          .spyOn(roleService, 'createRole')
+          .mockImplementation(async (name: string) =>
+            createRoleEntityMock({
+              id: '1',
+              name,
+              permissionSet: userPermission,
+            })
+          )
+        const spySavePermission = jest
+          .spyOn(permissionRepo, 'save')
+          .mockResolvedValue({} as PermissionSet)
+
+        const result = await permissionService.getClientUserPermission(false)
+        expect(result).toEqual(role)
+        expect(
+          permissionRepo.create({
+            course: READ_ONLY,
+            blog: READ_ONLY,
+            instructor: READ_ONLY,
+            user: UPDATE_SELF,
+            permission: DENINED,
+            notification: READ_ONLY,
+          })
+        ).toEqual(userPermission)
+        expect(spyCreatePerm).toHaveBeenCalled()
+        expect(spyCreateRole).toHaveBeenCalled()
+        expect(spySavePermission).toBeCalled()
+      })
     })
   })
 

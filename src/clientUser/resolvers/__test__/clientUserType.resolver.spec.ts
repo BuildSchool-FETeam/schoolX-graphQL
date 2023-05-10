@@ -1,18 +1,14 @@
 import { Test } from '@nestjs/testing'
-import { AchievementService } from 'src/clientUser/services/achievement.service'
 import { ClientUserService } from 'src/clientUser/services/clientUser.service'
 import { baseServiceMock } from 'src/common/mock/baseServiceMock'
 import {
   createAchievementEntityMock,
   createClientUserEntityMock,
-  createInstructorEntiryMock,
 } from 'src/common/mock/mockEntity'
 import { clientUserTypeResolver } from '../clientUserType.resolver'
+import { TypeUser } from 'src/graphql'
 
 const clientUserServiceMock = {
-  ...baseServiceMock,
-}
-const achievementServiceMock = {
   ...baseServiceMock,
 }
 
@@ -21,35 +17,22 @@ describe('ClientUserTypeResolver', () => {
   const clientUser = createClientUserEntityMock()
   beforeAll(async () => {
     const setupTestModule = Test.createTestingModule({
-      providers: [
-        clientUserTypeResolver,
-        ClientUserService,
-        AchievementService,
-      ],
+      providers: [clientUserTypeResolver, ClientUserService],
     })
 
     setupTestModule
       .overrideProvider(ClientUserService)
       .useValue(clientUserServiceMock)
-    setupTestModule
-      .overrideProvider(AchievementService)
-      .useValue(achievementServiceMock)
 
     const compliedModule = await setupTestModule.compile()
 
     resolver = compliedModule.get(clientUserTypeResolver)
   })
 
-  describe('instructor', () => {
-    it('It should return instructor', async () => {
-      clientUser.instructor = createInstructorEntiryMock()
-      jest
-        .spyOn(clientUserServiceMock, 'findById')
-        .mockResolvedValue(clientUser)
-
-      const result = await resolver.instructor(clientUser)
-
-      expect(result).toEqual(createInstructorEntiryMock())
+  describe('type', () => {
+    it('It should return type of user', () => {
+      const result = resolver.type(clientUser)
+      expect(result).toEqual(TypeUser.LEARNER)
     })
   })
 
@@ -58,8 +41,8 @@ describe('ClientUserTypeResolver', () => {
       clientUser.achievement = createAchievementEntityMock()
 
       jest
-        .spyOn(achievementServiceMock, 'findWithOptions')
-        .mockResolvedValue([clientUser.achievement])
+        .spyOn(clientUserServiceMock, 'findById')
+        .mockResolvedValue(clientUser)
 
       const result = await resolver.achievement(clientUser)
 

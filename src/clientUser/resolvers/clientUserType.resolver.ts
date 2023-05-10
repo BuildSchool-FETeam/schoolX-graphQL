@@ -8,7 +8,7 @@ export class clientUserTypeResolver {
   constructor(private clientUserService: ClientUserService) {}
 
   @ResolveField('type')
-  async type(@Parent() clientUserData: ClientUser) {
+  type(@Parent() clientUserData: ClientUser) {
     return TYPE_USER[clientUserData.type]
   }
 

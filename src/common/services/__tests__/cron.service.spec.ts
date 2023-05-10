@@ -4,7 +4,6 @@ import { ClientUserService } from 'src/clientUser/services/clientUser.service'
 import { assertThrowError } from 'src/common/mock/customAssertion'
 import { CourseService } from 'src/courses/services/course.service'
 import { LessonDocumentService } from 'src/courses/services/document.service'
-import { InstructorService } from 'src/instructor/services/instructor.service'
 import { CacheService } from '../cache.service'
 import { CronService } from '../cron.service'
 import { GCStorageService } from '../GCStorage.service'
@@ -13,9 +12,7 @@ const gcStorageService = {
   getAllFileNames: jest.fn(),
   deleteFile: jest.fn(),
 }
-const instructorService = {
-  findWithOptions: jest.fn().mockResolvedValue([{ filePath: 'file2' }]),
-}
+
 const courseService = {
   findWithOptions: jest.fn().mockResolvedValue([{ filePath: 'file1' }]),
 }
@@ -37,7 +34,6 @@ describe('CronService', () => {
       providers: [
         CronService,
         GCStorageService,
-        InstructorService,
         CourseService,
         LessonDocumentService,
         CacheService,
@@ -46,7 +42,6 @@ describe('CronService', () => {
     })
 
     testModule.overrideProvider(GCStorageService).useValue(gcStorageService)
-    testModule.overrideProvider(InstructorService).useValue(instructorService)
     testModule.overrideProvider(CourseService).useValue(courseService)
     testModule
       .overrideProvider(LessonDocumentService)
@@ -80,7 +75,7 @@ describe('CronService', () => {
       ])
       await service.clearTrashFiles()
 
-      expect(gcStorageService.deleteFile).toBeCalledTimes(2)
+      expect(gcStorageService.deleteFile).toBeCalledTimes(3)
     })
   })
 })
