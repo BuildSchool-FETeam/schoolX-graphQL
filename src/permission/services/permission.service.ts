@@ -50,12 +50,12 @@ export class PermissionService extends BaseService<PermissionSet> {
     }
     const { READ_ONLY, UPDATE_SELF, DENINED } = DEFAULT_PERM
 
-    const permissionInstructor = isInstructor ? UPDATE_SELF : READ_ONLY
+    const userPermission = isInstructor ? UPDATE_SELF : READ_ONLY
 
     const permissionSet = this.permissionRepo.create({
-      course: permissionInstructor,
-      blog: permissionInstructor,
-      instructor: permissionInstructor,
+      course: userPermission,
+      blog: userPermission,
+      instructor: userPermission,
       user: UPDATE_SELF,
       permission: DENINED,
       notification: READ_ONLY,
