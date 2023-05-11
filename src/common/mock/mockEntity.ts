@@ -13,7 +13,6 @@ import { UserComment } from 'src/comment/entities/UserComment.entity'
 import { Quiz } from 'src/assignment/entities/quiz/Quiz.entity'
 import { Course } from 'src/courses/entities/Course.entity'
 import { Lesson } from 'src/courses/entities/Lesson.entity'
-import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Role } from 'src/permission/entities/Role.entity'
 import { CodeChallenge } from 'src/assignment/entities/codeChallenge/CodeChallenge.entity'
 import {
@@ -23,26 +22,7 @@ import {
 import { Question } from 'src/assignment/entities/quiz/Question.entity'
 import { PermissionSet } from 'src/permission/entities/Permission.entity'
 import { DEFAULT_PERM } from '../constants/permission.constant'
-
-export const createInstructorEntiryMock = (data?: Partial<Instructor>) => {
-  const defaultData = {
-    id: '1',
-    title: 'title',
-    createAt: new Date().toLocaleDateString(),
-    updateAt: new Date().toLocaleDateString(),
-    name: 'name',
-    email: 'email',
-    description: 'description',
-    user: new ClientUser(),
-    cousres: [],
-    imageUrl: 'url',
-    filePath: 'path',
-    phone: 'phone',
-    createdBy: new AdminUser(),
-  }
-
-  return Object.assign(new Instructor(), { ...defaultData, ...data })
-}
+import { TYPE_USER } from '../constants/user.constant'
 
 export const createAchievementEntityMock = (data?: Partial<Achievement>) => {
   const defaultData = {
@@ -144,7 +124,6 @@ export const createCourseEntityMock = (data?: Partial<Course>) => {
     filePath: 'path',
     timeByHour: 20,
     lesson: [],
-    instructor: new Instructor(),
     isCompleted: false,
     benefits: [],
     requirements: 'no',
@@ -153,7 +132,7 @@ export const createCourseEntityMock = (data?: Partial<Course>) => {
     tags: [],
     levels: 'Beginner',
     comments: [],
-    createBy: new AdminUser(),
+    createBy: new ClientUser(),
   }
 
   return assign(new Course(), { ...defaultData, ...data })
@@ -301,7 +280,7 @@ export const createClientUserEntityMock = (data?: Partial<ClientUser>) => {
     activationCode: '',
     activationCodeExpire: 0,
     comments: [],
-    instructor: new Instructor(),
+    type: TYPE_USER.LEARNER,
     achievement: new Achievement(),
     role: new Role(),
     articles: [],

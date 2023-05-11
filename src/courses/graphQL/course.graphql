@@ -24,7 +24,6 @@ type CourseMutation {
 input CourseSetInput {
   title: String!
   description: String!
-  instructorId: ID!
   benefits: [String!]!
   requirements: [String!]!
   image: Upload
@@ -38,7 +37,6 @@ type CourseType implements BaseGraphQL {
   createdAt: ScalarDate!
   updatedAt: ScalarDate!
   description: String!
-  instructor: InstructorType!
   benefits: [String!]!
   requirements: [String!]!
   imageUrl: String

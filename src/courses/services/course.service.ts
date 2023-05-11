@@ -7,14 +7,13 @@ import * as _ from 'lodash'
 import { TagService } from 'src/tag/tag.service'
 import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ActionCourse, CourseSetInput } from 'src/graphql'
-import { InstructorService } from 'src/instructor/services/instructor.service'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { CacheService } from '../../common/services/cache.service'
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string
   filePath: string
-  createdBy: AdminUser
+  createdBy: AdminUser | ClientUser
   levels: string[]
 }
 
@@ -23,7 +22,6 @@ export class CourseService extends BaseService<Course> {
   constructor(
     @InjectRepository(Course)
     private courseRepo: Repository<Course>,
-    private instructorService: InstructorService,
     private tagService: TagService,
     private cachedService: CacheService
   ) {
@@ -31,8 +29,6 @@ export class CourseService extends BaseService<Course> {
   }
 
   async createCourse(data: CourseDataInput) {
-    const { instructorId } = data
-
     const course = this.courseRepo.create({
       ...data,
       benefits: data.benefits.join('|'),
@@ -49,8 +45,6 @@ export class CourseService extends BaseService<Course> {
         course.tags = tags
       })
       .then(async () => {
-        await this.updateCourseInstructor(course, instructorId)
-
         return this.courseRepo.save(course)
       })
   }
@@ -65,25 +59,20 @@ export class CourseService extends BaseService<Course> {
     if (!existedCourse) {
       throw new NotFoundException('Course not found')
     }
-    _.forOwn(data, (value, key: keyof CourseDataInput) => {
-      if (value instanceof Array) {
+    _.forOwn(data, (value, key) => {
+      if (_.isArray(value)) {
         existedCourse[key] = value.join('|')
       } else {
         value && (existedCourse[key] = value)
       }
     })
-    const tagsString = data.tags
-    const tagsPromise = this.createTags(tagsString)
 
-    return Promise.all(tagsPromise)
-      .then((tags) => {
-        existedCourse.tags = tags
-      })
-      .then(async () => {
-        await this.updateCourseInstructor(existedCourse, data.instructorId)
+    const tagsPromise = this.createTags(data.tags)
+    const tags = await Promise.all(tagsPromise)
 
-        return this.courseRepo.save(existedCourse)
-      })
+    existedCourse.tags = tags
+
+    return this.courseRepo.save(existedCourse)
   }
 
   async updateJoinedUsers(id: string, user: ClientUser, action: ActionCourse) {
@@ -132,10 +121,5 @@ export class CourseService extends BaseService<Course> {
         title: tag,
       })
     )
-  }
-
-  private async updateCourseInstructor(course: Course, instId: string) {
-    const existedOne = await this.instructorService.findById(instId)
-    course.instructor = existedOne
   }
 }

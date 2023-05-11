@@ -42,7 +42,7 @@ export class TokenService {
 
   async getAdminUserByToken<T = AdminUser>(token: string) {
     const adminUser = (await this.cacheService.getValue(
-      `${cacheConstant.ADMIN_USER}-${token}`
+      `${cacheConstant.USER}-${token}`
     )) as T
 
     if (adminUser) {

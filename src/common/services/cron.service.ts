@@ -9,8 +9,6 @@ import * as _ from 'lodash'
 import { LessonDocument } from 'src/courses/entities/LessonDocument.entity'
 import { CourseService } from 'src/courses/services/course.service'
 import { LessonDocumentService } from 'src/courses/services/document.service'
-import { Instructor } from 'src/instructor/entities/Instructor.entity'
-import { InstructorService } from 'src/instructor/services/instructor.service'
 import { ClientUserService } from 'src/clientUser/services/clientUser.service'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { CacheService } from './cache.service'
@@ -19,7 +17,6 @@ import { cacheConstant } from '../constants/cache.contant'
 
 type ArrayPromises = [
   Promise<string[]>,
-  Promise<Instructor[]>,
   Promise<Course[]>,
   Promise<LessonDocument[]>,
   Promise<ClientUser[]>
@@ -31,7 +28,6 @@ export class CronService {
 
   constructor(
     private gcStorage: GCStorageService,
-    private instructorService: InstructorService,
     private courseService: CourseService,
     private lessonDocumentService: LessonDocumentService,
     private cacheService: CacheService,
@@ -44,7 +40,6 @@ export class CronService {
     try {
       const promises: ArrayPromises = [
         this.gcStorage.getAllFileNames(),
-        this.instructorService.findWithOptions(),
         this.courseService.findWithOptions(),
         this.lessonDocumentService.findWithOptions(),
         this.clientUserService.findWithOptions(),
@@ -53,9 +48,8 @@ export class CronService {
       this.cacheService.setValue(cacheConstant.CLEAR_FILE, true)
 
       await Promise.all(promises).then((result) => {
-        const [files, instructors, courses, lessonDocs, clientUser] = result
+        const [files, courses, lessonDocs, clientUser] = result
         const listFilePaths = [
-          ..._.map(instructors, 'filePath'),
           ..._.map(courses, 'filePath'),
           ..._.map(lessonDocs, 'filePath'),
           ..._.map(clientUser, 'filePath'),

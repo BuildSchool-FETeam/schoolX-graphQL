@@ -37,6 +37,11 @@ export enum ActionFollow {
     FOLLOW = "FOLLOW"
 }
 
+export enum TypeUser {
+    INSTRUCTOR = "INSTRUCTOR",
+    LEARNER = "LEARNER"
+}
+
 export enum OrderDirection {
     ASC = "ASC",
     DESC = "DESC"
@@ -159,6 +164,7 @@ export class ClientUserSignupInput {
     name: string;
     email: string;
     password: string;
+    type: TypeUser;
 }
 
 export class ClientUserSigninInput {
@@ -229,7 +235,6 @@ export class CompareInputString {
 export class CourseSetInput {
     title: string;
     description: string;
-    instructorId: string;
     benefits: string[];
     requirements: string[];
     image?: Nullable<Upload>;
@@ -247,16 +252,6 @@ export class LessonSetInput {
 
 export class AddDocumentInput {
     file: Upload;
-}
-
-export class InstructorSetInput {
-    name: string;
-    title: string;
-    description: string;
-    email: string;
-    ClientUserId?: Nullable<string>;
-    image?: Nullable<Upload>;
-    phone: string;
 }
 
 export class NotificationInput {
@@ -302,8 +297,6 @@ export abstract class IQuery {
 
     abstract lessonQuery(): Nullable<LessonQuery> | Promise<Nullable<LessonQuery>>;
 
-    abstract instructorQuery(): InstructorQuery | Promise<InstructorQuery>;
-
     abstract notificationQuery(): NotificationQuery | Promise<NotificationQuery>;
 
     abstract permissionQuery(): PermissionQuery | Promise<PermissionQuery>;
@@ -339,8 +332,6 @@ export abstract class IMutation {
     abstract lessonMutation(): LessonMutation | Promise<LessonMutation>;
 
     abstract documentMutation(): Nullable<DocumentMutation> | Promise<Nullable<DocumentMutation>>;
-
-    abstract instructorMutation(): InstructorMutation | Promise<InstructorMutation>;
 
     abstract notificationMutation(): NotificationMutation | Promise<NotificationMutation>;
 
@@ -591,6 +582,7 @@ export class ClientUserAuthResponse {
     id: string;
     email: string;
     token?: Nullable<string>;
+    type?: Nullable<TypeUser>;
 }
 
 export class ClientUserMutation {
@@ -620,7 +612,7 @@ export class ClientUserType {
     phone?: Nullable<string>;
     imageUrl?: Nullable<string>;
     filePath?: Nullable<string>;
-    instructor?: Nullable<InstructorType>;
+    type?: Nullable<TypeUser>;
     achievement: AchievementType;
     name: string;
     createdAt: ScalarDate;
@@ -692,7 +684,6 @@ export class CourseType implements BaseGraphQL {
     createdAt: ScalarDate;
     updatedAt: ScalarDate;
     description: string;
-    instructor: InstructorType;
     benefits: string[];
     requirements: string[];
     imageUrl?: Nullable<string>;
@@ -762,35 +753,6 @@ export class DocumentMutation {
     __typename?: 'DocumentMutation';
     addDocumentToLesson: DocumentType;
     removeDocumentFromLesson: boolean;
-}
-
-export class InstructorQuery {
-    __typename?: 'InstructorQuery';
-    instructors: InstructorType[];
-    instructor: InstructorType;
-    totalInstructors: number;
-}
-
-export class InstructorMutation {
-    __typename?: 'InstructorMutation';
-    setInstructor: InstructorType;
-    deleteInstructor?: Nullable<boolean>;
-}
-
-export class InstructorType implements BaseGraphQL {
-    __typename?: 'InstructorType';
-    id: string;
-    title: string;
-    createdAt: ScalarDate;
-    updatedAt: ScalarDate;
-    name: string;
-    description: string;
-    email: string;
-    clientUser?: Nullable<ClientUserType>;
-    imageUrl: string;
-    phone: string;
-    courses: Nullable<CourseType>[];
-    createdBy?: Nullable<AdminUser>;
 }
 
 export class NotificationMutation {

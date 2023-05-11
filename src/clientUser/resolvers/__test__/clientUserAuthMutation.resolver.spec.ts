@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { ClientAuthService } from 'src/clientUser/services/clientAuth.service'
 import { ClientUserAuthMutationResolver } from '../clientUserAuthMutation.resolver'
+import { TypeUser } from 'src/graphql'
 
 const clientAuthServiceMock = {
   async createClientUser() {
@@ -56,6 +57,7 @@ describe('ClientUserAuthMutationResolver', () => {
         email: 'email',
         password: 'pass',
         name: 'name',
+        type: TypeUser.LEARNER,
       })
 
       expect(result).toEqual({ id: 'id', email: 'email' })

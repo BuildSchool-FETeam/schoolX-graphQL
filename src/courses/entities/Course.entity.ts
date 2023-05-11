@@ -2,13 +2,11 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Tag } from 'src/tag/entities/tag.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -50,12 +48,6 @@ export class Course {
   @OneToMany(() => Lesson, (lesson) => lesson.course)
   lessons: Lesson[]
 
-  @ManyToOne(() => Instructor, (instructor) => instructor.courses, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  instructor: Instructor
-
   @Column({ nullable: true })
   isCompleted: boolean
 
@@ -82,6 +74,6 @@ export class Course {
   @OneToMany(() => UserComment, (userComment) => userComment.course)
   comments: UserComment[]
 
-  @ManyToOne(() => AdminUser, { onDelete: 'CASCADE' })
-  createdBy: AdminUser
+  @ManyToOne(() => AdminUser || ClientUser, { onDelete: 'CASCADE' })
+  createdBy: ClientUser | AdminUser
 }

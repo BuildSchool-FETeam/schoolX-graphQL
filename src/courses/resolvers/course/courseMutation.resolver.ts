@@ -46,7 +46,7 @@ export class CourseMutationResolver {
     let existedCourse: Course
 
     const token = this.courseService.getTokenFromHttpHeader(req.headers)
-    const adminUser = await this.tokenService.getAdminUserByToken(token)
+    const user = await this.tokenService.getAdminUserByToken(token)
 
     if (id) {
       existedCourse = await this.courseService.findById(id)
@@ -58,26 +58,21 @@ export class CourseMutationResolver {
       filePath = result.filePath
     }
 
-    let course: Course
     const savedObj = {
       ..._.omit(data, 'image'),
       imageUrl,
       filePath,
-      createdBy: adminUser,
+      createdBy: user,
     }
 
     if (id) {
-      course = await this.courseService.updateCourse(id, savedObj, {
+      return this.courseService.updateCourse(id, savedObj, {
         token,
         strictResourceName: 'course',
       })
-    } else {
-      course = await this.courseService.createCourse(savedObj)
     }
 
-    return {
-      ...course,
-    }
+    return this.courseService.createCourse(savedObj)
   }
 
   @PermissionRequire({ course: ['C:x', 'R:x', 'U:x', 'D:*'] })

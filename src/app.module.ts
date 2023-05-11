@@ -15,7 +15,6 @@ import { AdminUserModule } from './adminUser/AdminUser.module'
 import { PermissionGuard } from './common/guards/permission.guard'
 import { CommonModule } from './common/Common.module'
 import { TagModule } from './tag/tag.module'
-import { InstructorModule } from './instructor/instructor.module'
 import { AssignmentModule } from './assignment/assignment.module'
 import { NotificationModule } from './notification/notification.module'
 import { ClientUserModule } from './clientUser/clientUser.module'
@@ -73,7 +72,6 @@ const scheduleModule = ScheduleModule.forRoot()
     AdminUserModule,
     PermissionModule,
     CommonModule,
-    InstructorModule,
     CourseModule,
     EnvInitModule,
     TagModule,

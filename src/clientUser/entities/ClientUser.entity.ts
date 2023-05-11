@@ -1,13 +1,11 @@
 import { Article } from 'src/article/entities/Article.entity'
 import { GroupAssignment } from 'src/assignment/entities/fileAssignment/groupAssignment.entity'
 import { UserComment } from 'src/comment/entities/UserComment.entity'
-import { Instructor } from 'src/instructor/entities/Instructor.entity'
 import { Role } from 'src/permission/entities/Role.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -15,6 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Achievement } from './Achivement.entity'
+import { TYPE_USER } from 'src/common/constants/user.constant'
 
 // FOR testing purpose
 @Entity()
@@ -49,6 +48,14 @@ export class ClientUser {
   @Column({ nullable: true })
   bio: string
 
+  @Column({
+    nullable: false,
+    type: 'enum',
+    default: TYPE_USER.LEARNER,
+    enum: TYPE_USER,
+  })
+  type: number
+
   @Column({ nullable: true })
   phone: string
 
@@ -69,10 +76,6 @@ export class ClientUser {
 
   @OneToMany(() => UserComment, (cmt) => cmt.createdBy)
   comments: UserComment[]
-
-  @OneToOne(() => Instructor, (instructor) => instructor.user)
-  @JoinColumn()
-  instructor: Instructor
 
   @OneToOne(() => Achievement, (ach) => ach.clientUser)
   achievement: Achievement

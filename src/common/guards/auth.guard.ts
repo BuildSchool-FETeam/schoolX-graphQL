@@ -38,7 +38,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const user = this.tokenService.verifyAndDecodeToken(token)
-      await this.cacheService.setValue(`${cacheConstant.ADMIN_USER}-${token}`, {
+      await this.cacheService.setValue(`${cacheConstant.USER}-${token}`, {
         ...user,
       })
 

@@ -13,6 +13,7 @@ import { PermissionService } from 'src/permission/services/permission.service'
 import { Repository } from 'typeorm'
 import { AchievementService } from '../achievement.service'
 import { ClientAuthService } from '../clientAuth.service'
+import { ClientUserSignupInput, TypeUser } from 'src/graphql'
 
 const passwordServiceMock = {
   hash() {
@@ -91,7 +92,12 @@ describe('ClientAuthService', () => {
   })
 
   describe('createClientUser', () => {
-    const data = { email: 'email', password: 'password', name: 'name' }
+    const data: ClientUserSignupInput = {
+      email: 'email',
+      password: 'password',
+      name: 'name',
+      type: TypeUser.LEARNER,
+    }
 
     it('It should throw Exception if email is used', async () => {
       jest

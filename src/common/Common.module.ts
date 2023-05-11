@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config'
 import { ClientUserModule } from 'src/clientUser/clientUser.module'
 import { ComplexQueryBuilderService } from './services/complexQueryBuilder.service'
 import { CourseModule } from '../courses/Course.module'
-import { InstructorModule } from '../instructor/instructor.module'
 import { CronService } from './services/cron.service'
 import { TokenService } from './services/token.service'
 import { AuthGuard } from './guards/auth.guard'
@@ -19,7 +18,6 @@ import { ImageProcessService } from './services/imageProcess.service'
 @Module({
   imports: [
     forwardRef(() => PermissionModule),
-    forwardRef(() => InstructorModule),
     forwardRef(() => CourseModule),
     forwardRef(() => ClientUserModule),
     CacheModule.register(),

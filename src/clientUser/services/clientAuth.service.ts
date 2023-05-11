@@ -16,6 +16,7 @@ import { PermissionService } from 'src/permission/services/permission.service'
 import { FindOneOptions, Repository } from 'typeorm'
 import { ClientUser } from '../entities/ClientUser.entity'
 import { AchievementService } from './achievement.service'
+import { TYPE_USER } from 'src/common/constants/user.constant'
 
 @Injectable()
 export class ClientAuthService extends BaseService<ClientUser> {
@@ -37,7 +38,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
   }
 
   async createClientUser(data: ClientUserSignupInput) {
-    const { email, password, name } = data
+    const { email, password, name, type } = data
     const existedData = await this.findWithOptions({
       where: { email },
     })
@@ -45,10 +46,14 @@ export class ClientAuthService extends BaseService<ClientUser> {
     if (_.size(existedData) > 0) {
       throw new BadRequestException('This email has been taken')
     }
+
+    const typeUser = TYPE_USER[type]
+
     const newClientUser = this.clientRepo.create({
       email,
       password: this.passwordService.hash(password),
       name,
+      type: typeUser,
     })
 
     const { expiredTime, code } = this.generateActivationCode(1)
@@ -56,7 +61,9 @@ export class ClientAuthService extends BaseService<ClientUser> {
     newClientUser.activationCodeExpire = expiredTime
 
     await this.sendEmailWithCode(code, email)
-    newClientUser.role = await this.permissionService.getClientUserPermission()
+    newClientUser.role = await this.permissionService.getClientUserPermission(
+      typeUser === TYPE_USER.INSTRUCTOR
+    )
     const clientUserResponse = await this.clientRepo.save(newClientUser)
 
     await this.achiService.createEmptyAchievement(clientUserResponse)

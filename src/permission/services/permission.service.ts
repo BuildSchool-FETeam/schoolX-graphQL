@@ -37,8 +37,10 @@ export class PermissionService extends BaseService<PermissionSet> {
     return permissionSet
   }
 
-  async getClientUserPermission() {
-    const clientPermissionName = 'client_permission'
+  async getClientUserPermission(isInstructor: boolean) {
+    const clientPermissionName = isInstructor
+      ? 'instructor_permission'
+      : 'learner_permission'
 
     const existedRole = await this.roleService.findRoleByName(
       clientPermissionName
@@ -47,11 +49,14 @@ export class PermissionService extends BaseService<PermissionSet> {
       return existedRole
     }
     const { READ_ONLY, UPDATE_SELF, DENINED } = DEFAULT_PERM
+
+    const userPermission = isInstructor ? UPDATE_SELF : READ_ONLY
+
     const permissionSet = this.permissionRepo.create({
-      course: READ_ONLY,
-      blog: UPDATE_SELF,
-      instructor: READ_ONLY,
-      user: READ_ONLY,
+      course: userPermission,
+      blog: userPermission,
+      instructor: userPermission,
+      user: UPDATE_SELF,
       permission: DENINED,
       notification: READ_ONLY,
     })

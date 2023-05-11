@@ -22,7 +22,7 @@ import { ClientUserService } from './services/clientUser.service'
     PermissionModule,
     TypeOrmModule.forFeature([ClientUser, Achievement]),
     EmailModule,
-    forwardRef(() => CourseModule),
+    CourseModule,
   ],
   providers: [
     ClientUserService,
