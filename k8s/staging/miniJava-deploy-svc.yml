@@ -1,0 +1,43 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mini-java-svc
+  namespace: staging
+spec:
+  selector:
+    component: miniJava-pod
+  ports:
+    - protocol: TCP
+      port: 6002
+      targetPort: 6002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-java-deployment
+  namespace: staging
+  labels:
+    component: miniJava
+    mainServer: "false"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: miniJava-pod
+  template:
+    metadata:
+      labels:
+        component: miniJava-pod
+    spec:
+      containers:
+      - name: mini-js-server
+        image: prisdom/mini-java:latest-staging
+        ports:
+        - containerPort: 6002
+        readinessProbe:
+          httpGet:
+            path: /hello
+            port: 6002
+          initialDelaySeconds: 10
+          periodSeconds: 3

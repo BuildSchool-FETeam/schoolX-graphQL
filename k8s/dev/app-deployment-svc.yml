@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql-svc
+  namespace: dev
+spec:
+  type: NodePort
+  selector:
+    component: graphql-pod
+  ports:
+    - protocol: TCP
+      port: 3001
+      targetPort: 3001
+      nodePort: 30001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql-deployment
+  namespace: dev
+  labels:
+    component: graphql
+    mainServer: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: graphql-pod
+  template:
+    metadata:
+      labels:
+        component: graphql-pod
+    spec:
+      containers:
+      - name: graphql-server
+        image: prisdom/graphql:latest-dev
+        envFrom:  
+        - configMapRef:  
+            name: app-config
+        - secretRef:
+            name: be-credentials
+        ports:
+        - containerPort: 3001
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 30
+          periodSeconds: 5

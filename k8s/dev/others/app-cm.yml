@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: dev
+data:
+  GOOGLE_APPLICATION_CREDENTIALS: storage-service-account.json
+  STORAGE_FOLDER: gke-dev-folder
+  DB_HOST: db-svc
+  DB_USER_NAME: postgres
+  DB_NAME: prisdom-dev
+  EMAIL_SENDER: tpc.techlab@gmail.com
+  JS_MINI_SERVER: "js-server:6001"
+  JAVA_MINI_SERVER: "java-server:6002"
+  PYTHON_MINI_SERVER: "python-server:6003"
+  CPP_MINI_SERVER: "cpp-server:6004"
+  DB_LOG: "true"

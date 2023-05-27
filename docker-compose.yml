@@ -46,7 +46,7 @@ services:
   # js-server:
   #   build:
   #     context: ./servers/js
-  #     dockerfile: Dockerfile.dev
+  #     dockerfile: Dockerfile
   #   ports:
   #     - 6001:6001
   #   volumes:
@@ -56,7 +56,7 @@ services:
   # java-server:
   #   build:
   #     context: ./servers/java
-  #     dockerfile: Dockerfile.dev
+  #     dockerfile: Dockerfile
   #   ports:
   #     - 6002:6002
   #   volumes:
@@ -66,22 +66,22 @@ services:
   python-server:
     build:
       context: ./servers/python
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - 6003:6003
     volumes:
       - /home/app/node_modules
       - ./servers/python:/home/app
 
-  cpp-server:
-    build:
-      context: ./servers/cpp
-      dockerfile: Dockerfile.dev
-    ports:
-      - 6004:6004
-    volumes:
-      - /home/app/node_modules
-      - ./servers/cpp:/home/app
+  # cpp-server:
+  #   build:
+  #     context: ./servers/cpp
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 6004:6004
+  #   volumes:
+  #     - /home/app/node_modules
+  #     - ./servers/cpp:/home/app
 
   postgres-db:
     image: postgres:13.4

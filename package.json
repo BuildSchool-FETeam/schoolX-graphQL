@@ -26,7 +26,7 @@
     "test:change": "jest --coverage --changeSince=origin/dev",
     "typeorm": "typeorm-ts-node-commonjs",
     "migrate:create": "typeorm migration:create -n",
-    "migrate:gen": "yarn run typeorm -d ./data-source.ts migration:generate",
+    "migrate:gen": "yarn run typeorm migration:generate src/migrations/init -d ./data-source.ts ",
     "migrate:up": "yarn run typeorm migration:run -d ./data-source.ts",
     "migrate:down": "yarn run typeorm migration:revert -d ./data-source.ts",
     "start:docker": "./scripts/docker-start-app.sh",
