@@ -35,11 +35,11 @@ if [[ ! $APP_COMPONENT =~ ^(graphql|mini-js|mini-java|mini-cpp|mini-python)$ ]];
     exit 1
 fi
 
-if [[ ! $ENV =~ ^(dev|staging|prod)$ ]]; then
-    echo "Check your env params"
-    usage
-    exit 1
-fi
+# if [[ ! $ENV =~ ^(dev|staging|prod)$ ]]; then
+#     echo "Check your env params"
+#     usage
+#     exit 1
+# fi
 
 TAG="prisdom/$APP_COMPONENT:$VERSION-$ENV"
 echo "Build and push server with tag $TAG"

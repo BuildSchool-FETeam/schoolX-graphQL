@@ -1,18 +1,18 @@
 version: 2.1
 orbs:
-  node: circleci/node@5.1.0
-  # kubernetes: circleci/kubernetes@1.3.1
+  kubernetes: circleci/kubernetes@1.3.1
+  codecov: codecov/codecov@1.0.2
 # commands:
 
 jobs:
   lint-check: # this can be any name you choose
-    executor: node/default # use the default executor defined within the orb
+    docker:
+    - image: node:18.12.1 # use the default executor defined within the orb
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
+      - run: yarn install
       - save_cache:
-          key: node-cache-{{ checksum "yarn.lock" }}
+          key: node-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
       - run: 
@@ -20,102 +20,157 @@ jobs:
           command: yarn run lint-report
 
   prettier-check: # this can be any name you choose
-    executor: node/default # use the default executor defined within the orb
+    docker:
+    - image: node:18.12.1 # use the default executor defined within the orb
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
+      - run: yarn install
       - save_cache:
-          key: node-cache-{{ checksum "yarn.lock" }}
+          key: node-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
       - run: 
           name: lint
           command: yarn run check-style
   audit: # this can be any name you choose
-    executor: node/default # use the default executor defined within the orb
+    docker:
+    - image: node:18.12.1 # use the default executor defined within the orb
     steps:
       - checkout
       - restore_cache:
           keys: 
-            - node-cache-{{ checksum "yarn.lock" }}
-            - node-cache-
+            - node-cache-{{ checksum "package.json" }}
       - run: 
           name: run audit
           command: yarn run improved-yarn-audit --min-severity critical
   build-gql:
-    executor: node/default # use the default executor defined within the orb
+    docker:
+    - image: node:18.12.1 # use the default executor defined within the orb
     steps:
       - checkout
+      - run: yarn install
       - restore_cache:
           keys: 
-            - node-cache-{{ checksum "yarn.lock" }}
-            - node-cache-
+            - node-cache-{{ checksum "package.json" }}
       - run: 
           name: build frontend
           command: yarn build
   unit-test:
-    executor: node/default # use the default executor defined within the orb
+    docker:
+    - image: node:18.12.1
+    resource_class: medium
     steps:
       - checkout
+      - run: git fetch origin dev:dev
       - restore_cache:
           keys: 
-            - node-cache-{{ checksum "yarn.lock" }}
-            - node-cache-
+            - node-cache-{{ checksum "package.json" }}
       - run: 
-          name: UT frontend
-          command: yarn test:cov
+          name: Run unit test
+          command: yarn test:all
       - store_test_results:
-          path: coverage
-  
+          path: report.xml
+      - store_artifacts:
+          path: coverage/lcov-report
 
-  # build-and-push-img-fe:
-  #   docker:
-  #     - image: cimg/base:2022.06
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker:
-  #         docker_layer_caching: true # DLC will explicitly cache layers here and try to avoid rebuilding.
-  #     - run: 
-  #         name: login docker
-  #         command: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-  #     - run: 
-  #         name: build docker FE image
-  #         command: |
-  #           scripts/build-images.sh fe latest 
-  #           scripts/build-images.sh fe ${CIRCLE_SHA1:0:7}
-  #     - run: 
-  #         name: push docker images
-  #         command: |
-  #           bash scripts/push-images.sh latest fe
-  #           bash scripts/push-images.sh "${CIRCLE_SHA1:0:7}" fe
-  # build-and-push-img-be:
-  #   docker:
-  #     - image: cimg/base:2022.06
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker:
-  #         docker_layer_caching: true # DLC will explicitly cache layers here and try to avoid rebuilding.
-  #     - run: 
-  #         name: login docker
-  #         command: docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-  #     - run: 
-  #         name: build docker BE image
-  #         command: |
-  #           scripts/build-images.sh be latest 
-  #           scripts/build-images.sh be "${CIRCLE_SHA1:0:7}"
-  #     - run: 
-  #         name: push docker images
-  #         command: |
-  #           bash scripts/push-images.sh latest be
-  #           bash scripts/push-images.sh "${CIRCLE_SHA1:0:7}" be
+  e2e-test: 
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: large
+    steps:
+      - checkout
+      - run: 
+          name: E2E Testing
+          command: docker-compose -f docker-compose.ci.yml up --build --abort-on-container-exit
+      - store_test_results:
+          path: e2e/reports/report.xml
+
+  # CD part
+  build-push-graphql-image: 
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: medium
+    steps:
+      - checkout
+      - run:
+          name: decoded storage account
+          command: |
+            echo "$STORAGE_ACCOUNT_BASE64" | base64 -d > storage-service-account.json 
+            cat storage-service-account.json
+      - run: 
+          name: build-push latest image
+          command: ./scripts/docker/build-push-images.sh -p graphql << pipeline.git.branch >>
+      - run: 
+          name: build-push version image
+          command: ./scripts/docker/build-push-images.sh -v "${CIRCLE_SHA1:0:6}" -p graphql << pipeline.git.branch >>
+  build-push-js: 
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: medium
+    steps:
+      - checkout
+      - run: 
+          name: build-push mini JS image
+          command: |
+            ./scripts/docker/check-diff.sh servers/js
+            if [[ $? -eq 0 ]]; then
+              ./scripts/docker/build-push-images.sh -p -c servers/js mini-js << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/js mini-js << pipeline.git.branch >>          
+            fi
+  build-push-java: 
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: medium
+    steps:
+      - checkout
+      - run: 
+          name: build-push mini java image
+          command: |
+            ./scripts/docker/check-diff.sh servers/java
+            if [[ $? -eq 0 ]]; then
+              ./scripts/docker/build-push-images.sh -p -c servers/java mini-java << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/java mini-java << pipeline.git.branch >>           
+            fi
+  build-push-python: 
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: medium
+    steps:
+      - checkout
+      - run: 
+          name: build-push mini python image
+          command: |
+            ./scripts/docker/check-diff.sh servers/python
+            if [[ $? -eq 0 ]]; then
+              ./scripts/docker/build-push-images.sh -p -c servers/python mini-python << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/python mini-python << pipeline.git.branch >>           
+            fi
+  build-push-cpp: 
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    resource_class: medium
+    steps:
+      - checkout
+      - run: 
+          name: build-push mini cpp image
+          command: |
+            ./scripts/docker/check-diff.sh servers/cpp
+            if [[ $? -eq 0 ]]; then
+              ./scripts/docker/build-push-images.sh -p -c servers/cpp mini-cpp << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/cpp mini-cpp << pipeline.git.branch >>           
+            fi          
 
   # run-migration-job:
   #   docker:
   #     - image: cimg/base:stable
   #   steps:
   #     - checkout
-  #     - aws-setup
   #     - kubernetes/install-kubectl
   #     - kubernetes/install-kubeconfig:
   #         kubeconfig: KUBECONFIG_DATA
@@ -161,8 +216,9 @@ jobs:
   #         when: on_fail
       
 workflows:
-  build_and_test:
+  graphql-build-test:
     jobs:
+      # CI pipeline run every PR
       - lint-check
       - prettier-check
       - audit:
@@ -175,10 +231,39 @@ workflows:
       - unit-test:
           requires:
             - audit
+      - e2e-test:
+          requires:
+            - audit
 
-      # - build-fe:
-      #     requires: 
-      #     - audit
+      - pre-deploy:
+          requires:
+            - unit-test
+            - e2e-test
+          type: approval
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+                - staging
+      # CD pipeline run for dev/staging/production
+      - build-push-graphql-image:
+          requires:
+          - pre-deploy
+      - build-push-js:
+          requires:
+          - pre-deploy
+      - build-push-java:
+          requires:
+          - pre-deploy
+      - build-push-cpp:
+          requires:
+          - pre-deploy
+      - build-push-python:
+          requires:
+          - pre-deploy
+
+      
       # - build-be:
       #     requires: 
       #     - audit
