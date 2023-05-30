@@ -2,17 +2,11 @@
 
 function usage() {    
     echo """Usage: command [-v|VERSION] [-p|PUSH TO REGISTRY] [-c|BUILD CONTEXT|default .]
-        <Build-for [graphql|mini-js|mini-java|mini-cpp|mini-python]> 
-        <env [dev|staging|prod]> """
+        <App-components - [graphql|mini-js|mini-java|mini-cpp|mini-python]> 
+        <env - [dev|staging|prod]> """
     echo "Exp: command graphql dev"
     echo "Exp: command -v 1.01 graphql dev "
 }
-
-# if [[ "$EUID" -ne 0 ]];then
-#     echo "Please run as root"
-#     usage
-#     exit 1
-# fi
 
 VERSION='latest'
 BUILD_CONTEXT='.'
@@ -31,6 +25,18 @@ APP_COMPONENT=$1
 ENV=$2
 
 if [[ ! $APP_COMPONENT || ! $ENV ]]; then
+    usage
+    exit 1
+fi
+
+if [[ ! $APP_COMPONENT =~ ^(graphql|mini-js|mini-java|mini-cpp|mini-python)$ ]]; then
+    echo "Check your app-component params"
+    usage
+    exit 1
+fi
+
+if [[ ! $ENV =~ ^(dev|staging|prod)$ ]]; then
+    echo "Check your env params"
     usage
     exit 1
 fi
