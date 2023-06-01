@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/hello', (req, res) => {
-  res.send("HELLO SERVER CPP")
+  res.send("HELLO SERVER CPP v2")
 });
 
 app.post('/cpp/playground', (req, res) => {

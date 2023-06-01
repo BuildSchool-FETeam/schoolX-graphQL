@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mini-js-svc
+  namespace: dev
+spec:
+  type: NodePort
+  selector:
+    component: miniJS-pod
+  ports:
+    - protocol: TCP
+      port: 6001
+      targetPort: 6001
+      nodePort: 31001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-js-deployment
+  namespace: dev
+  labels:
+    component: miniJS
+    mainServer: "false"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: miniJS-pod
+  template:
+    metadata:
+      labels:
+        component: miniJS-pod
+    spec:
+      containers:
+      - name: mini-js-server
+        image: prisdom/mini-js:latest-dev
+        ports:
+        - containerPort: 6001
+        readinessProbe:
+          httpGet:
+            path: /hello
+            port: 6001
+          initialDelaySeconds: 10
+          periodSeconds: 3

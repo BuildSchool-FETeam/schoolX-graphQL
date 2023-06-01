@@ -214,3 +214,8 @@ b. You can change this host in _docker-compose.yml_ file
 - You will see the docker container ID, grape it.
 - You command `docker exec -it <ID> bash`
 - And that's it you have enter to linux environment, and can do whatever you want.
+
+### Docker build name convention
+docker build -f <Dockerfile> <context> -t prisdom/<app-name>-<version>:<env>
+exp: docker build -f Dockerfile . -t prisdom/graphql:latest-dev
+exp: docker build -f Dockerfile . -t prisdom/graphql:latest-staging

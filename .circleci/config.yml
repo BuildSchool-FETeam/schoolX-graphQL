@@ -1,0 +1,451 @@
+version: 2.1
+orbs:
+  kubernetes: circleci/kubernetes@1.3.1
+commands:
+  gcloud-setup:
+     steps:
+      - run: 
+          name: Gcloud auth
+          command: |
+            echo $GCLOUD_KEY_FILE | base64 -d | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GCLOUD_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GCLOUD_COMPUTE_ZONE}
+  switch-namespace:
+    steps:
+      - run:
+          name: switch to namespace << pipeline.git.branch >>
+          command: kubectl config set-context --current --namespace=<< pipeline.git.branch >>
+  docker-auth:
+    steps:
+      - run: 
+          name: Docker login
+          command: echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+  check-diff:
+    # this step to avoid unnessessary build
+    parameters:
+      path:
+        type: string
+      file_name:
+        type: string
+    steps:      
+      - run: 
+          name: check diff          
+          command: ./scripts/docker/check-diff.sh << parameters.path >>  << parameters.file_name >>
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - diff-result-<< parameters.file_name >>
+  prepare-k8s-deploy:
+    steps:
+      - checkout
+      - kubernetes/install-kubectl
+      - gcloud-setup
+      - kubernetes/install-kubeconfig:
+          kubeconfig: KUBECONFIG_DATA
+      - switch-namespace
+  mini-server-smoke:
+    parameters:
+      server-name: 
+        type: enum
+        enum:
+          - mini-js
+          - mini-java
+          - mini-python
+          - mini-cpp
+    steps:
+      - run:
+          name: setup test env
+          command: k8s/scripts/smoke-test-setup.sh << pipeline.git.branch >>
+      - run: 
+          name: Smoke test run
+          command: python3 k8s/scripts/smoke-test.py << pipeline.git.branch >> << parameters.server-name >>
+
+jobs:
+  lint-check:
+    docker:
+    - image: node:18.12.1 
+    steps:
+      - checkout
+      - run: yarn install
+      - save_cache:
+          key: node-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run: 
+          name: lint
+          command: yarn run lint-report
+
+  prettier-check:
+    docker:
+    - image: node:18.12.1
+    steps:
+      - checkout
+      - run: yarn install
+      - save_cache:
+          key: node-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run: 
+          name: lint
+          command: yarn run check-style
+  audit: 
+    docker:
+    - image: node:18.12.1 
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - node-cache-{{ checksum "package.json" }}
+      - run: 
+          name: run audit
+          command: yarn run improved-yarn-audit --min-severity critical
+  build-gql:
+    docker:
+    - image: node:18.12.1 
+    steps:
+      - checkout
+      - run: yarn install
+      - restore_cache:
+          keys: 
+            - node-cache-{{ checksum "package.json" }}
+      - run: 
+          name: build frontend
+          command: yarn build
+  unit-test:
+    docker:
+    - image: node:18.12.1
+    resource_class: medium
+    steps:
+      - checkout
+      - restore_cache:
+          keys: 
+            - node-cache-{{ checksum "package.json" }}
+      - run: 
+          name: Run unit test
+          command: yarn test:all
+      - store_test_results:
+          path: report.xml
+      - store_artifacts:
+          path: coverage/lcov-report
+  e2e-test: 
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large
+    steps:
+      - checkout
+      - run: 
+          name: E2E Testing
+          command: docker-compose -f docker-compose.ci.yml up --build --abort-on-container-exit
+      - store_test_results:
+          path: e2e/reports/report.xml
+
+  # CD part
+  build-push-graphql-image: 
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - checkout
+      - docker-auth
+      - run:
+          name: decoded storage account
+          command: |
+            echo "$STORAGE_ACCOUNT_BASE64" | base64 -d > storage-service-account.json 
+            cat storage-service-account.json
+      - run: 
+          name: build-push latest image
+          command: ./scripts/docker/build-push-images.sh -p graphql << pipeline.git.branch >>
+      - run: 
+          name: build-push version image
+          command: ./scripts/docker/build-push-images.sh -v "${CIRCLE_SHA1:0:6}" -p graphql << pipeline.git.branch >>
+  run-migration-job:
+    docker:
+      - image: google/cloud-sdk:433.0.0
+    steps:
+      - prepare-k8s-deploy
+      - run:
+          name: Run migration job and wait until finish
+          command: | 
+            kubectl apply -f k8s/<< pipeline.git.branch >>/others/migration-job.yml
+            kubectl wait --for=condition=complete --timeout=100s job/migration
+      - run:
+          name: migration result
+          command: |
+            k8s/scripts/check-migration.sh 
+      - save_cache:
+          paths:
+            - migration-result.txt
+          key: migration-result-{{ .Revision }}    
+  deploy-graphql:
+    docker:
+      - image: google/cloud-sdk:433.0.0
+    steps:
+      - prepare-k8s-deploy
+      - restore_cache:
+          key: migration-result-{{ .Revision }}
+      - run:
+          name: deploy graphql
+          command: | 
+            kubectl set image deployment/graphql-deployment  \
+              graphql-server=prisdom/graphql:${CIRCLE_SHA1:0:6}-<< pipeline.git.branch >>
+            kubectl rollout status deployment graphql-deployment
+      - mini-server-smoke:
+          server-name: mini-js
+      - run:
+          name: revert
+          command: |
+            echo "Some error cause, Reverting back the previous version..."            
+            kubectl rollout undo deployment graphql-deployment
+            k8s/scripts/check-should-revert.sh
+          when: on_fail
+          
+  build-push-js: 
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - checkout
+      - docker-auth
+      - check-diff:
+          path: servers/js
+          file_name: js
+      - run: 
+          name: build-push mini JS image
+          command: |
+            if [[ $(grep "Need to build" workspace/diff-result-js) ]]; then  
+              ./scripts/docker/build-push-images.sh -p -c servers/js mini-js << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/js mini-js << pipeline.git.branch >>  
+              exit 0        
+            fi
+            echo "No need to build"
+  deploy-mini-js:
+    docker:
+      - image: google/cloud-sdk:433.0.0
+    steps:
+      - prepare-k8s-deploy
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: deploy mini-js
+          command: | 
+            if [[ $(grep "Need to build" workspace/diff-result-js) ]]; then 
+              kubectl set image deployment/mini-js-deployment  \
+                mini-js-server=prisdom/mini-js:${CIRCLE_SHA1:0:6}-<< pipeline.git.branch >>
+              kubectl rollout status deployment mini-js-deployment
+              exit 0
+            fi
+            echo "No need to deploy"
+      - mini-server-smoke:
+          server-name: mini-java
+      - run:
+          name: revert
+          command: |
+            echo "Some error cause, Revert back the previous miniserver version"            
+            kubectl rollout undo deployment mini-js-deployment
+          when: on_fail
+            
+  build-push-java: 
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - checkout
+      - docker-auth
+      - check-diff:
+          path: servers/java
+          file_name: java
+      - run: 
+          name: build-push mini java image
+          command: |
+            if [[ $(grep "Need to build" workspace/diff-result-java) ]]; then  
+              ./scripts/docker/build-push-images.sh -p -c servers/java mini-java << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/java mini-java << pipeline.git.branch >>  
+              exit 0        
+            fi
+            echo "No need to build"
+  deploy-mini-java:
+    docker:
+      - image: google/cloud-sdk:433.0.0
+    steps:
+      - prepare-k8s-deploy
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: deploy mini-java
+          command: | 
+            if [[ $(grep "Need to build" workspace/diff-result-java) ]]; then 
+              kubectl set image deployment/mini-java-deployment  \
+                mini-java-server=prisdom/mini-java:${CIRCLE_SHA1:0:6}-<< pipeline.git.branch >>
+              kubectl rollout status deployment mini-java-deployment
+              exit 0
+            fi
+            echo "No need to deploy"
+      - mini-server-smoke:
+          server-name: mini-java
+      - run:
+          name: revert
+          command: |
+            echo "Some error cause, Revert back the previous miniserver version"            
+            kubectl rollout undo deployment mini-java-deployment
+          when: on_fail    
+
+  build-push-python: 
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - checkout
+      - docker-auth
+      - check-diff:
+          path: servers/python
+          file_name: python
+      - run: 
+          name: build-push mini python image
+          command: |
+            if [[ $(grep "Need to build" workspace/diff-result-python) ]]; then  
+              ./scripts/docker/build-push-images.sh -p -c servers/python mini-python << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/python mini-python << pipeline.git.branch >>  
+              exit 0        
+            fi
+            echo "No need to build"
+  deploy-mini-python:
+    docker:
+      - image: google/cloud-sdk:433.0.0
+    steps:
+      - prepare-k8s-deploy
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: deploy mini-python
+          command: | 
+            if [[ $(grep "Need to build" workspace/diff-result-python) ]]; then 
+              kubectl set image deployment/mini-python-deployment  \
+                mini-python-server=prisdom/mini-python:${CIRCLE_SHA1:0:6}-<< pipeline.git.branch >>
+              kubectl rollout status deployment mini-python-deployment
+              exit 0
+            fi
+            echo "No need to deploy"
+      - mini-server-smoke:
+          server-name: mini-python
+      - run:
+          name: revert
+          command: |
+            echo "Some error cause, Revert back the previous miniserver version"            
+            kubectl rollout undo deployment mini-python-deployment
+          when: on_fail
+
+  build-push-cpp: 
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    steps:
+      - checkout
+      - docker-auth
+      - check-diff:
+          path: servers/cpp
+          file_name: cpp
+      - run: 
+          name: build-push mini cpp image
+          command: |
+            if [[ $(grep "Need to build" workspace/diff-result-cpp) ]]; then  
+              ./scripts/docker/build-push-images.sh -p -c servers/cpp mini-cpp << pipeline.git.branch >>  
+              ./scripts/docker/build-push-images.sh -p -v "${CIRCLE_SHA1:0:6}" -c servers/cpp mini-cpp << pipeline.git.branch >>  
+              exit 0        
+            fi
+            echo "No need to build"
+  deploy-mini-cpp:
+    docker:
+      - image: google/cloud-sdk:433.0.0
+    steps:
+      - prepare-k8s-deploy
+      - attach_workspace:
+          at: workspace
+      - run:
+          name: deploy mini-cpp
+          command: | 
+            if [[ $(grep "Need to build" workspace/diff-result-cpp) ]]; then 
+              kubectl set image deployment/mini-cpp-deployment  \
+                mini-cpp-server=prisdom/mini-cpp:${CIRCLE_SHA1:0:6}-<< pipeline.git.branch >>
+              kubectl rollout status deployment mini-cpp-deployment
+              exit 0
+            fi
+            echo "No need to deploy"
+      - mini-server-smoke:
+          server-name: mini-cpp
+      - run:
+          name: revert
+          command: |
+            echo "Some error cause, Revert back the previous miniserver version"            
+            kubectl rollout undo deployment mini-cpp-deployment
+          when: on_fail    
+      
+workflows:
+  graphql-build-test:
+    jobs:
+      # CI pipeline run every PR
+      - lint-check
+      - prettier-check
+      - audit:
+          requires: 
+          - lint-check
+          - prettier-check
+      - build-gql:
+          requires:
+            - audit
+      - unit-test:
+          requires:
+            - audit
+      - e2e-test:
+          requires:
+            - audit
+
+      - pre-deploy:
+          requires:
+            - unit-test
+            - e2e-test
+          type: approval
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+                - staging
+      # CD pipeline run for dev/staging/production
+      - build-push-graphql-image:
+          requires:
+            - pre-deploy
+      - run-migration-job:
+          requires:
+            - build-push-graphql-image
+      - deploy-graphql:
+          requires:
+            - run-migration-job
+
+      - build-push-js:
+          requires:
+            - pre-deploy
+      - deploy-mini-js:
+          requires:
+            - build-push-js
+
+      - build-push-java:
+          requires:
+            - pre-deploy
+      - deploy-mini-java:
+          requires:
+            - build-push-java
+      
+      - build-push-python:
+          requires:
+            - pre-deploy
+      - deploy-mini-python:
+          requires:
+            - build-push-python
+
+      - build-push-cpp:
+          requires:
+            - pre-deploy
+      - deploy-mini-cpp:
+          requires:
+            - build-push-cpp
+      

@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration-revert
+  namespace: dev
+spec:
+  completions: 1
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      volumes:
+      - name: migration-storage
+        persistentVolumeClaim:
+          claimName: migrate-claim-dev
+      containers:
+      - name: dev-mirgate-job
+        image: prisdom/graphql:latest-dev
+        # The volume only using for migrations-revert
+        volumeMounts:
+        - mountPath: /tmp
+          name: migration-storage
+        command: 
+          - bash
+          - k8s/scripts/revert-migration.sh
+        envFrom:  
+        - configMapRef:  
+            name: app-config
+        - secretRef:
+            name: be-credentials
+
+      restartPolicy: Never
+  backoffLimit: 2

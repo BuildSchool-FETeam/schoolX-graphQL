@@ -19,20 +19,18 @@
     "lint-report": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:all": "jest --ci --testResultsProcessor=jest-junit",
+    "test:all": "jest --ci --testResultsProcessor=jest-junit --coverage -i",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:cov": "jest --ci --changedSince=\"dev\" --coverage",
     "test:change": "jest --coverage --changeSince=origin/dev",
     "typeorm": "typeorm-ts-node-commonjs",
     "migrate:create": "typeorm migration:create -n",
-    "migrate:gen": "yarn run typeorm -d ./data-source.ts migration:generate",
+    "migrate:gen": "yarn run typeorm migration:generate src/migrations/init -d ./data-source.ts ",
     "migrate:up": "yarn run typeorm migration:run -d ./data-source.ts",
     "migrate:down": "yarn run typeorm migration:revert -d ./data-source.ts",
     "start:docker": "./scripts/docker-start-app.sh",
     "start-prod:docker": "./scripts/docker-start-prod.sh",
     "migrate:docker": "rimraf src/migrations/* && npm run migrate:gen",
-    "e2e:ci": "docker compose -f docker-compose.ci.yml up --build --abort-on-container-exit"
+    "e2e:ci": "docker-compose -f docker-compose.ci.yml up --build --abort-on-container-exit"
   },
   "dependencies": {
     "@apollo/gateway": "^2.2.1",
@@ -94,6 +92,7 @@
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
+    "improved-yarn-audit": "^3.0.0",
     "jest": "^29.3.1",
     "jest-junit": "^15.0.0",
     "madge": "^5.0.1",
@@ -112,7 +111,9 @@
     "yarn-audit-fix": "^9.3.10"
   },
   "jest": {
-    "setupFilesAfterEnv": ["<rootDir>/src/common/setupTests.ts"],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/common/setupTests.ts"
+    ],
     "moduleDirectories": [
       "node_modules",
       "<rootDir>"
@@ -137,15 +138,13 @@
     ],
     "coverageDirectory": "./coverage",
     "testEnvironment": "node",
-    "moduleNameMapper": {
-      "src/(.*)": "<rootDir>/src/$1"
-    },
     "coverageReporters": [
       "text",
       "json",
       "html",
       "json-summary",
-      "lcov"
+      "lcov",
+      "xml"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/node_modules/",

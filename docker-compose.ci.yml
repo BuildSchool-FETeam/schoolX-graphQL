@@ -40,28 +40,28 @@ services:
   js-server:
     build:
       context: ./servers/js
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - 6001:6001
 
   # java-server:
   #   build:
   #     context: ./servers/java
-  #     dockerfile: Dockerfile.dev
+  #     dockerfile: Dockerfile
   #   ports:
   #     - 6002:6002
 
   # python-server:
   #   build:
   #     context: ./servers/python
-  #     dockerfile: Dockerfile.dev
+  #     dockerfile: Dockerfile
   #   ports:
   #     - 6003:6003
 
   cpp-server:
     build:
       context: ./servers/cpp
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     ports:
       - 6004:6004
 

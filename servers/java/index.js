@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/hello', (req, res) => {
-  res.send('HELLO FROM JAVA');
+  res.send('HELLO FROM JAVA v2');
 });
 
 function writeCodeToFile(code, specificDirname) {

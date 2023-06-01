@@ -28,7 +28,7 @@ export class GCStorageService {
     private imageProcessService: ImageProcessService
   ) {
     const storage = new Storage()
-    this.bucket = storage.bucket('schoolx-dev-storage')
+    this.bucket = storage.bucket('prisdom-storage')
     this.rootFolder = this.configService.get('STORAGE_FOLDER')
   }
 

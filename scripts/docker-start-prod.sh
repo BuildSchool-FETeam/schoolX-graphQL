@@ -1,7 +1,7 @@
 #!/bin/bash
 
 yarn build
-yarn migrate:docker /home/app/src/migrations/Init_app_docker
+yarn migrate:docker
 
 if [[ ${?} -eq 0 ]] 
 then

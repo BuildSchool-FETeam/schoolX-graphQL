@@ -1,0 +1,26 @@
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-claim-staging
+  namespace: staging
+spec:
+  storageClassName: standard-rwo
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: migrate-claim-staging
+  namespace: staging
+spec:
+  storageClassName: standard-rwo
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

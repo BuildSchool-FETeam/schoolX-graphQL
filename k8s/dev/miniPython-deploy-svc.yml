@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mini-python-svc
+  namespace: dev
+spec:
+  type: NodePort
+  selector:
+    component: miniPython-pod
+  ports:
+    - protocol: TCP
+      port: 6003
+      targetPort: 6003
+      nodePort: 31003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-python-deployment
+  namespace: dev
+  labels:
+    component: miniPython
+    mainServer: "false"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: miniPython-pod
+  template:
+    metadata:
+      labels:
+        component: miniPython-pod
+    spec:
+      containers:
+      - name: mini-python-server
+        image: prisdom/mini-python:latest-dev
+        ports:
+        - containerPort: 6003
+        readinessProbe:
+          httpGet:
+            path: /hello
+            port: 6003
+          initialDelaySeconds: 10
+          periodSeconds: 3

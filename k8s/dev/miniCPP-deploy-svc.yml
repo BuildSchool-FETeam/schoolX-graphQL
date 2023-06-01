@@ -1,0 +1,45 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minicpp-svc
+  namespace: dev
+spec:
+  type: NodePort
+  selector:
+    component: miniCPP-pod
+  ports:
+    - protocol: TCP
+      port: 6004
+      targetPort: 6004
+      nodePort: 31004
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mini-cpp-deployment
+  namespace: dev
+  labels:
+    component: miniCPP
+    mainServer: "false"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: miniCPP-pod
+  template:
+    metadata:
+      labels:
+        component: miniCPP-pod
+    spec:
+      containers:
+      - name: mini-cpp-server
+        image: prisdom/mini-cpp:latest-dev
+        ports:
+        - containerPort: 6004
+        readinessProbe:
+          httpGet:
+            path: /hello
+            port: 6004
+          initialDelaySeconds: 10
+          periodSeconds: 3
