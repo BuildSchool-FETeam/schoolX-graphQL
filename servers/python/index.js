@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/hello', (req, res) => {
-  res.send('HELLO FROM PYTHON');
+  res.send('HELLO FROM PYTHON V2');
 });
 
 app.post('/python/playground', (req, res) => {

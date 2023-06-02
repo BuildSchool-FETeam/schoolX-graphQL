@@ -7,9 +7,9 @@ CHECK_RESULT=$(git diff --name-status HEAD^ HEAD -- "$CONTEXT")
 echo "Diff result:"
 echo "$CHECK_RESULT"
 
-if [[ CHECK_RESULT ]]; then
+mkdir workspace
+if [ ! -z "$CHECK_RESULT" ]; then
     # Later fix to Need to build
-    mkdir workspace
     echo "Need to build $CONTEXT" > workspace/diff-result-$FILE_NAME
 else 
     echo "No need to build" > workspace/diff-result-$FILE_NAME
