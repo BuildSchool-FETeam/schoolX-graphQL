@@ -64,7 +64,7 @@ commands:
                       "type": "header",
                       "text": {
                         "type": "plain_text",
-                        "text": "Congratutalion: Pipeline deploy successfully",
+                        "text": "Congratulation: Pipeline deploy successfully",
                         "emoji": true
                       }
                     },
@@ -73,7 +73,7 @@ commands:
                       "block_id": "section567",
                       "text": {
                         "type": "mrkdwn",
-                        "text": "When you change your thoughts, remember to also change your world. \n\n :white_check_mark: :white_check_mark: :white_check_mark:"
+                        "text": "When you change your thoughts, remember to also change your world. \n\n \n :white_check_mark: :white_check_mark: :white_check_mark:"
                       },
                       "accessory": {
                         "type": "image",
@@ -490,30 +490,29 @@ workflows:
   graphql-build-test:
     jobs:
       # CI pipeline run every PR
-      # - lint-check
-      # - prettier-check
-      # - audit:
-      #     requires: 
-      #     - lint-check
-      #     - prettier-check
-      # - build-gql:
-      #     requires:
-      #       - audit
-      # - unit-test:
-      #     requires:
-      #       - audit
-      # - e2e-test:
-      #     requires:
-      #       - audit
+      - lint-check
+      - prettier-check
+      - audit:
+          requires: 
+          - lint-check
+          - prettier-check
+      - build-gql:
+          requires:
+            - audit
+      - unit-test:
+          requires:
+            - audit
+      - e2e-test:
+          requires:
+            - audit
       - slack/on-hold:
           context: slack-secrets
-          requires: []
-            # - pre-deploy
+          requires: 
+            - e2e-test
+            - unit-test
       - pre-deploy:
           requires:
             - slack/on-hold
-            # - unit-test
-            # - e2e-test
           type: approval
           filters:
             branches:
