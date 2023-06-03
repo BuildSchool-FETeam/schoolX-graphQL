@@ -6,7 +6,7 @@ import {
 } from 'e2e/src/interfaces/base.interface'
 import { gqlRequest } from 'e2e/src/utils/api-call'
 import { createAdmin, DEFAULT_EMAIL, signIn } from 'e2e/src/utils/authUtils'
-import { SECONDARY_PERM } from 'e2e/src/utils/setup'
+import { E2E_PERM } from 'e2e/src/utils/setup'
 import { removeAllCreatedPermissions } from 'e2e/src/utils/teardown'
 
 describe('AdminAuthQuery endpoint. #auth #admin', () => {
@@ -20,13 +20,13 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         email: `test${now}-1@test.com`,
         name: 'test',
         password: 'Test1234',
-        role: SECONDARY_PERM,
+        role: E2E_PERM,
       },
       {
         email: `test${now}-2@test.com`,
         name: 'test2',
         password: 'Test1234',
-        role: SECONDARY_PERM,
+        role: E2E_PERM,
       },
     ]
     // Create admins
@@ -58,7 +58,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         {
           email: `test${now}-1@test.com`,
           name: 'test',
-          role: SECONDARY_PERM,
+          role: E2E_PERM,
           __typename: 'AdminUser',
           createdBy: {
             email: DEFAULT_EMAIL,
@@ -67,7 +67,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         {
           email: `test${now}-2@test.com`,
           name: 'test2',
-          role: SECONDARY_PERM,
+          role: E2E_PERM,
           __typename: DEFAULT_EMAIL,
           createdBy: {
             email: DEFAULT_EMAIL,
@@ -119,7 +119,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         {
           email: `test${now}-1@test.com`,
           name: 'test',
-          role: SECONDARY_PERM,
+          role: E2E_PERM,
           __typename: 'AdminUser',
           createdBy: {
             email: DEFAULT_EMAIL,
@@ -128,7 +128,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         {
           email: `test${now}-2@test.com`,
           name: 'test2',
-          role: SECONDARY_PERM,
+          role: E2E_PERM,
           __typename: DEFAULT_EMAIL,
           createdBy: {
             email: DEFAULT_EMAIL,
@@ -167,7 +167,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
       expect(adminUsers[0]).toEqual({
         email: `test${now}-1@test.com`,
         name: 'test',
-        role: SECONDARY_PERM,
+        role: E2E_PERM,
 
         createdBy: {
           email: DEFAULT_EMAIL,
@@ -191,7 +191,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
       expect(adminUsers[0]).toEqual({
         email: `test${now}-2@test.com`,
         name: 'test2',
-        role: SECONDARY_PERM,
+        role: E2E_PERM,
         createdBy: {
           email: DEFAULT_EMAIL,
         },
@@ -217,7 +217,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
       expect(adminUsers[0]).toEqual({
         email: `test${now}-1@test.com`,
         name: 'test',
-        role: SECONDARY_PERM,
+        role: E2E_PERM,
         createdBy: {
           email: DEFAULT_EMAIL,
         },
@@ -245,7 +245,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         {
           email: `test${now}-1@test.com`,
           name: 'test',
-          role: SECONDARY_PERM,
+          role: E2E_PERM,
           createdBy: {
             email: DEFAULT_EMAIL,
           },
@@ -253,7 +253,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         {
           email: `test${now}-2@test.com`,
           name: 'test2',
-          role: SECONDARY_PERM,
+          role: E2E_PERM,
           createdBy: {
             email: DEFAULT_EMAIL,
           },

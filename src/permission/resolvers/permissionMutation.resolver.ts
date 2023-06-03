@@ -36,7 +36,7 @@ export class PermissionMutationResolver {
     }
     if (!this.isRightFormat(data)) {
       throw new BadRequestException(
-        'Wrong format with permission, it should be like this "C|R|U|D|S" or "R" or ""(nothing)"'
+        'Wrong format with permission, it should be like this "C:*|R:*|U:x|D:+"'
       )
     }
     const token = _.split(req.headers.authorization, ' ')[1]
@@ -68,17 +68,11 @@ export class PermissionMutationResolver {
   }
 
   private isRightFormat(perm: PermissionSetInput) {
-    const pattern_1 = /^[CRUDS]{0,1}$/
-    const pattern_2 = /^[CRUDS]{1}(\|[CRUDS]){1,4}$/
-
+    const pattern = /([CRUD]:[*+x]\|?){4}/
     const permissionSetOnly = _.omit(perm, 'roleName')
 
     const isValidPattern = _.every(permissionSetOnly, (value) => {
-      if (!pattern_1.test(value) && !pattern_2.test(value)) {
-        return false
-      }
-
-      return true
+      return pattern.test(value)
     })
 
     return isValidPattern
