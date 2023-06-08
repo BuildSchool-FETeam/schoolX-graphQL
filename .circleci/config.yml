@@ -233,6 +233,23 @@ jobs:
           description: E2E test failed!
 
   # CD part
+  synchronize-infra:
+    docker:
+      - image: google/cloud-sdk:433.0.0
+    steps:
+      - prepare-k8s-deploy
+      - run:
+          name: Synchronize deployment and service
+          command: | 
+            kubectl apply -f k8s/<< pipeline.git.branch >>
+      - run:
+          name: Synchronize ingress
+          command: | 
+            kubectl apply -f k8s/ingress-<< pipeline.git.branch >>.yml
+      - slack-notify-fail:
+          description: Synchronize infrastructure failed!!
+            
+
   build-push-graphql-image: 
     machine:
       image: ubuntu-2204:current
@@ -528,6 +545,9 @@ workflows:
                 - dev
                 - staging
       # CD pipeline run for dev/staging/production
+      - synchronize-infra:
+          requires:
+            - pre-deploy
       - build-push-graphql-image:
           requires:
             - pre-deploy
