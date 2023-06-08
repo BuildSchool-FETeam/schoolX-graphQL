@@ -35,8 +35,6 @@ const cacheManagerModule = CacheModule.register({
   max: 100,
 })
 
-console.log(process.env.CORS)
-
 const graphQLModuleInit = GraphQLModule.forRoot({
   driver: ApolloDriver,
   typePaths: ['./**/*.graphql'],
@@ -45,9 +43,6 @@ const graphQLModuleInit = GraphQLModule.forRoot({
     path: join(process.cwd(), 'src/graphql.ts'),
     outputAs: 'class',
     emitTypenameField: true,
-  },
-  cors: {
-    origin: process.env.CORS,
   },
   fieldResolverEnhancers: ['guards'],
   subscriptions: {
