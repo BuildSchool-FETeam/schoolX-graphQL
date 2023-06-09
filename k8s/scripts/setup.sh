@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage() {
-    echo "Please provide DB_Password, OR Mailjest Credentials!"
+    echo "Please provide DB_Password, OR Mailjet Credentials!"
     echo """Usage: ./setup.sh <DB_PASSWORD> <MAILJET_API_KEY> <MAILJET_SECRET_KEY> 
             [e, --environment|dev|staging|prod]"""
     exit 1
@@ -40,12 +40,18 @@ fi
 
 kubectl config set-context --current --namespace=$ENV
 
-echo "Setting up secret..."
-kubectl create -n $ENV secret generic be-credentials \
-    --from-literal DB_PASSWORD="$DB_PASSWORD" \
-    --from-literal MAILJET_API_KEY="$MAILJET_API_KEY" \
-    --from-literal MAILJET_SECRET_KEY="$MAILJET_SECRET_KEY" \
-    --from-literal JWT_SECRET="LocalSecret"
+SECRET_NAME='be-credentials'
+kubectl describe secrets $SECRET_NAME > /dev/null
+if [[ $? -ne 0 ]]; then
+    echo "Setting up new secret..."
+    kubectl create -n $ENV secret generic $SECRET_NAME \
+        --from-literal DB_PASSWORD="$DB_PASSWORD" \
+        --from-literal MAILJET_API_KEY="$MAILJET_API_KEY" \
+        --from-literal MAILJET_SECRET_KEY="$MAILJET_SECRET_KEY" \
+        --from-literal JWT_SECRET="LocalSecret"
+fi
+echo "Have a secret, don't need to create new one :D "
+
 
 echo "Setting up configmap..."
 kubectl apply -f k8s/$ENV/others/app-cm.yml

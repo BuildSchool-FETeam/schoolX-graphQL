@@ -18,6 +18,7 @@ import { ClientUser } from '../entities/ClientUser.entity'
 import { AchievementService } from './achievement.service'
 import { TYPE_USER } from 'src/common/constants/user.constant'
 
+export const EXP_TIME = +process.env.TOKEN_EXP_TIME || 8
 @Injectable()
 export class ClientAuthService extends BaseService<ClientUser> {
   private SENDER: string
@@ -56,7 +57,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
       type: typeUser,
     })
 
-    const { expiredTime, code } = this.generateActivationCode(1)
+    const { expiredTime, code } = this.generateActivationCode(EXP_TIME)
     newClientUser.activationCode = code
     newClientUser.activationCodeExpire = expiredTime
 
@@ -125,7 +126,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
 
   async sendRestorePassword(email: string) {
     const clientUser = await this.getClientUserFromEmail(email)
-    const { code, expiredTime } = this.generateActivationCode(1)
+    const { code, expiredTime } = this.generateActivationCode(EXP_TIME)
 
     clientUser.activationCode = code
     clientUser.activationCodeExpire = expiredTime

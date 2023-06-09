@@ -241,9 +241,9 @@ jobs:
       - run:
           name: Synchronize deployment and service
           command: | 
-            kubectl apply -f k8s/<< pipeline.git.branch >>
+            ./k8s/scripts/setup.sh -e << pipeline.git.branch >> "$DB_ADMIN_PASSWORD" "$MAILJET_API_KEY" "$MAILJET_API_KEY"
       - run:
-          name: Synchronize ingress
+          name: Synchronize ingress resource
           command: | 
             kubectl apply -f k8s/ingress-<< pipeline.git.branch >>.yml
       - slack-notify-fail:
