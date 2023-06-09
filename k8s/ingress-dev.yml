@@ -3,6 +3,11 @@ kind: Ingress
 metadata:
   name: prisdom-ingress
   namespace: dev
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-credentials: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:3030, http://localhost:3000"
 spec:
   ingressClassName: nginx
   rules:
