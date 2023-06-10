@@ -8,6 +8,7 @@ type ClientUserAuthMutation {
   activateAccount(email: String!, activationCode: String!): Boolean!
   sendRestorePassword(email: String!): Boolean!
   resetPassword(resetCode: String!, password: String!, email: String!): Boolean!
+  sendActivateAccount(email: String!): Boolean!
 }
 
 input ClientUserSignupInput {

@@ -109,6 +109,29 @@ describe('AdminUserService', () => {
     }
   })
 
+  describe('validationEmail', () => {
+    it('It should throw error user is existed', async () => {
+      jest
+        .spyOn(adminUserService, 'findWithOptions')
+        .mockResolvedValue([createAdminUserEntityMock()])
+
+      assertThrowError(
+        adminUserService.validationEmail.bind(
+          adminUserService,
+          'example@gmail.com'
+        ),
+        new BadRequestException('This email has been taken')
+      )
+    })
+
+    it('It should return true', async () => {
+      jest.spyOn(adminUserService, 'findWithOptions').mockResolvedValue([])
+
+      const result = await adminUserService.validationEmail('example@gmail.com')
+      expect(result).toEqual(true)
+    })
+  })
+
   describe('findUserByEmail', () => {
     const adminUser: AdminUser = createAdminUserEntityMock()
 

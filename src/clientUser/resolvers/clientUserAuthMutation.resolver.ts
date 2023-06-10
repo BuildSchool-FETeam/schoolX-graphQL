@@ -48,4 +48,11 @@ export class ClientUserAuthMutationResolver {
 
     return true
   }
+
+  @ResolveField()
+  async sendActivateAccount(@Args('email') email: string) {
+    await this.clientAuthService.sendActivateAccount(email)
+
+    return true
+  }
 }

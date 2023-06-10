@@ -68,10 +68,12 @@ export class ClientAuthService extends BaseService<ClientUser> {
     const clientUserResponse = await this.clientRepo.save(newClientUser)
 
     await this.achiService.createEmptyAchievement(clientUserResponse)
+    const token = this.tokenService.createToken({ ...clientUserResponse })
 
     return {
       id: clientUserResponse.id,
       email: clientUserResponse.email,
+      token,
     }
   }
 
@@ -83,12 +85,6 @@ export class ClientAuthService extends BaseService<ClientUser> {
       'email',
       'isActive',
     ])
-
-    if (!existedClientUser.isActive) {
-      throw new ForbiddenException(
-        'This client user is inactive! Please try active it first!'
-      )
-    }
 
     const compareResult = this.passwordService.compare(
       password,
@@ -124,13 +120,8 @@ export class ClientAuthService extends BaseService<ClientUser> {
     return this.clientRepo.save(clientUser)
   }
 
-  async sendRestorePassword(email: string) {
-    const clientUser = await this.getClientUserFromEmail(email)
-    const { code, expiredTime } = this.generateActivationCode(EXP_TIME)
-
-    clientUser.activationCode = code
-    clientUser.activationCodeExpire = expiredTime
-    await this.clientRepo.save(clientUser)
+  async sendRestorePassword(emailUser: string) {
+    const { email, code } = await this.setActivateCode(emailUser)
 
     return this.sendEmailWithCode(code, email, 'Reset password')
   }
@@ -147,6 +138,23 @@ export class ClientAuthService extends BaseService<ClientUser> {
     clientUser.password = this.passwordService.hash(password)
 
     return this.clientRepo.save(clientUser)
+  }
+
+  async sendActivateAccount(emailUser: string) {
+    const { email, code } = await this.setActivateCode(emailUser)
+
+    return this.sendEmailWithCode(code, email, 'Activate Account')
+  }
+
+  private async setActivateCode(email: string) {
+    const clientUser = await this.getClientUserFromEmail(email)
+    const { code, expiredTime } = this.generateActivationCode(EXP_TIME)
+
+    clientUser.activationCode = code
+    clientUser.activationCodeExpire = expiredTime
+    await this.clientRepo.save(clientUser)
+
+    return { email, code }
   }
 
   private async getClientUserFromEmail(

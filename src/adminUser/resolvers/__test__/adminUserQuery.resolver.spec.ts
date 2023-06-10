@@ -29,6 +29,10 @@ const adminUserServiceMock = {
   async countingTotalItem() {
     return Promise.resolve(5)
   },
+
+  async validationEmail() {
+    return Promise.resolve({})
+  },
 }
 
 describe('AdminUserQueryResolver', () => {
@@ -55,6 +59,15 @@ describe('AdminUserQueryResolver', () => {
       const result = resolver.adminUserQuery()
 
       expect(result).toEqual({})
+    })
+  })
+
+  describe('validationEmail', () => {
+    it('It should return true', async () => {
+      jest
+        .spyOn(adminUserServiceMock, 'validationEmail')
+        .mockResolvedValue(true)
+      expect(await resolver.validationEmail('example@gmail.com')).toEqual(true)
     })
   })
 

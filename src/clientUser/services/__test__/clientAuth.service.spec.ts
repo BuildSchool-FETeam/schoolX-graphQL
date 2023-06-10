@@ -128,6 +128,8 @@ describe('ClientAuthService', () => {
         'createEmptyAchievement'
       )
 
+      const createToken = jest.spyOn(tokenServiceMock, 'createToken')
+
       jest
         .spyOn(clientRepo, 'save')
         .mockImplementation(async (data) =>
@@ -136,7 +138,8 @@ describe('ClientAuthService', () => {
 
       const result = await clientAuthService.createClientUser(data)
 
-      expect(result).toEqual({ id: '1', email: 'email' })
+      expect(result).toEqual({ id: '1', email: 'email', token: 'token' })
+      expect(createToken).toHaveBeenCalled()
       expect(generateActivationCode).toHaveBeenCalled()
       expect(sendMailWithCode).toHaveBeenCalled()
       expect(getClientUserPermission).toHaveBeenCalled()
@@ -158,21 +161,6 @@ describe('ClientAuthService', () => {
           data
         ),
         new ForbiddenException("This email doesn't exist yet")
-      )
-    })
-
-    it("It should throw new Exception if account doesn't active", async () => {
-      user.isActive = 0
-      jest.spyOn(clientRepo, 'findOne').mockResolvedValue(user)
-
-      assertThrowError(
-        clientAuthService.loginWithEmailAndPassword.bind(
-          clientAuthService,
-          data
-        ),
-        new ForbiddenException(
-          'This client user is inactive! Please try active it first!'
-        )
       )
     })
 
@@ -292,6 +280,33 @@ describe('ClientAuthService', () => {
       const save = jest.spyOn(clientRepo, 'save')
 
       await clientAuthService.sendRestorePassword('email')
+
+      expect(sendMail).toHaveBeenCalled()
+      expect(save).toHaveBeenCalled()
+    })
+  })
+
+  describe('sendActivateAccount', () => {
+    const user = createClientUserEntityMock({ id: '1' })
+
+    it("It should throw new Exception if email doesn't exist", async () => {
+      jest.spyOn(clientRepo, 'findOne').mockResolvedValue(null)
+
+      assertThrowError(
+        clientAuthService.sendActivateAccount.bind(clientAuthService, 'email'),
+        new ForbiddenException("This email doesn't exist yet")
+      )
+    })
+
+    it('It should send mail restore password', async () => {
+      jest.spyOn(clientRepo, 'findOne').mockResolvedValue(user)
+      jest
+        .spyOn(clientAuthService, 'generateActivationCode')
+        .mockReturnValue({ code: 'code', expiredTime: 10000 })
+      const sendMail = jest.spyOn(mailjetServiceMock, 'sendMailWithCode')
+      const save = jest.spyOn(clientRepo, 'save')
+
+      await clientAuthService.sendActivateAccount('email')
 
       expect(sendMail).toHaveBeenCalled()
       expect(save).toHaveBeenCalled()

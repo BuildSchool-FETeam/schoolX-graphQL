@@ -16,7 +16,8 @@ type ClientUserMutation {
 }
 
 type ClientUserQuery {
-  userDetail(id: ID!): ClientUserType!
+  userDetail(id: ID!): ClientUserType!,
+  validationEmail(email: String!): Boolean!
 }
 
 enum ActionCourse {

@@ -97,6 +97,31 @@ describe('ClientUserService', () => {
     clientUserService = comppliedModule.get(ClientUserService)
   })
 
+  describe('validationEmail', () => {
+    it('It should throw error user is existed', async () => {
+      jest
+        .spyOn(clientUserService, 'findWithOptions')
+        .mockResolvedValue([createClientUserEntityMock()])
+
+      assertThrowError(
+        clientUserService.validationEmail.bind(
+          clientUserService,
+          'example@gmail.com'
+        ),
+        new BadRequestException('This email has been taken')
+      )
+    })
+
+    it('It should return true', async () => {
+      jest.spyOn(clientUserService, 'findWithOptions').mockResolvedValue([])
+
+      const result = await clientUserService.validationEmail(
+        'example@gmail.com'
+      )
+      expect(result).toEqual(true)
+    })
+  })
+
   describe('updateClientUserInfo', () => {
     it('It should update client user info', async () => {
       const data: ClientUserUpdateInput = {

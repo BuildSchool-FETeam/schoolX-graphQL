@@ -343,6 +343,7 @@ export class AdminUserQuery {
     adminUsers: Nullable<AdminUser>[];
     adminUser: AdminUser;
     totalAdminUsers: number;
+    validationEmail: boolean;
 }
 
 export class AdminUserMutation {
@@ -575,6 +576,7 @@ export class ClientUserAuthMutation {
     activateAccount: boolean;
     sendRestorePassword: boolean;
     resetPassword: boolean;
+    sendActivateAccount: boolean;
 }
 
 export class ClientUserAuthResponse {
@@ -598,6 +600,7 @@ export class ClientUserMutation {
 export class ClientUserQuery {
     __typename?: 'ClientUserQuery';
     userDetail: ClientUserType;
+    validationEmail: boolean;
 }
 
 export class ClientUserType {

@@ -32,6 +32,16 @@ export class ClientUserService extends BaseService<ClientUser> {
     super(clientRepo, 'clientUser')
   }
 
+  async validationEmail(email: string) {
+    const existUser = await this.findWithOptions({ where: { email } })
+
+    if (_.size(existUser) > 0) {
+      throw new BadRequestException('This email has been taken')
+    }
+
+    return true
+  }
+
   async updateClientUserInfo(data: ClientUserUpdateInput, id: string) {
     const existedUser = await this.findById(id)
 

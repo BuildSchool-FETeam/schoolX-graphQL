@@ -8,6 +8,9 @@ import { clientUserQueryResolver } from '../clientUserQuery.resolver'
 
 const clientUserServiceMock = {
   ...baseServiceMock,
+  async validationEmail() {
+    return Promise.resolve(true)
+  },
 }
 
 describe('ClientUserQueryResolver', () => {
@@ -31,11 +34,18 @@ describe('ClientUserQueryResolver', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     jest.spyOn(clientUserServiceMock, 'findById').mockResolvedValue(user)
+    jest.spyOn(clientUserServiceMock, 'validationEmail').mockResolvedValue(true)
   })
 
   describe('clientUserQuery', () => {
     it('It should return empty object', () => {
       expect(resolver.clientUserQuery()).toEqual({})
+    })
+  })
+
+  describe('validationEmail', () => {
+    it('It should return true', async () => {
+      expect(await resolver.validationEmail('example@gmail.com')).toEqual(true)
     })
   })
 
