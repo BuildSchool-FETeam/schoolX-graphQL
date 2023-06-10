@@ -97,6 +97,15 @@ describe('ClientUserService', () => {
     clientUserService = comppliedModule.get(ClientUserService)
   })
 
+  describe('validationEmail', () => {
+    it('It should return true', async () => {
+      jest.spyOn(clientUserService, 'findWithOptions').mockResolvedValue([])
+
+      const result = await clientUserService.validateEmail('example@gmail.com')
+      expect(result).toEqual(true)
+    })
+  })
+
   describe('updateClientUserInfo', () => {
     it('It should update client user info', async () => {
       const data: ClientUserUpdateInput = {

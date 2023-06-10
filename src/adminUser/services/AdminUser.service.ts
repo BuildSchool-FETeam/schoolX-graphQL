@@ -29,6 +29,12 @@ export class AdminUserService extends BaseService<AdminUser> {
     super(userRepo, 'AdminUser', cachedService)
   }
 
+  async validateEmail(email: string) {
+    const existUser = await this.findUserByEmail(email)
+
+    return _.isNull(existUser)
+  }
+
   async createUserBySignup(data: Partial<AdminUser>) {
     const userCount = await this.userRepo.count()
 

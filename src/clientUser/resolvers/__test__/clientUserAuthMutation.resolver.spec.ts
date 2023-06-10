@@ -23,6 +23,10 @@ const clientAuthServiceMock = {
   async resetPassword() {
     return Promise.resolve({})
   },
+
+  async sendActivateCode() {
+    return Promise.resolve({})
+  },
 }
 
 describe('ClientUserAuthMutationResolver', () => {
@@ -120,6 +124,19 @@ describe('ClientUserAuthMutationResolver', () => {
 
       expect(result).toEqual(true)
       expect(resetPassword).toHaveBeenCalled()
+    })
+  })
+
+  describe('sendActivateCode', () => {
+    it('It should return true', async () => {
+      const sendActivateAccount = jest.spyOn(
+        clientAuthServiceMock,
+        'sendActivateCode'
+      )
+
+      const result = await resolver.sendActivateCode('example@gmail.com')
+      expect(result).toEqual(true)
+      expect(sendActivateAccount).toHaveBeenCalled()
     })
   })
 })

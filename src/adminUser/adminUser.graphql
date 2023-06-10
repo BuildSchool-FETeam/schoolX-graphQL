@@ -21,6 +21,7 @@ type AdminUserQuery {
 
   adminUser(id: ID!): AdminUser!
   totalAdminUsers: Int!
+  validateEmail(email: String!): Boolean!
 }
 
 type AdminUserMutation {

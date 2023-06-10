@@ -32,6 +32,12 @@ export class ClientUserService extends BaseService<ClientUser> {
     super(clientRepo, 'clientUser')
   }
 
+  async validateEmail(email: string) {
+    const existUser = await this.findWithOptions({ where: { email } })
+
+    return _.isEmpty(existUser)
+  }
+
   async updateClientUserInfo(data: ClientUserUpdateInput, id: string) {
     const existedUser = await this.findById(id)
 
