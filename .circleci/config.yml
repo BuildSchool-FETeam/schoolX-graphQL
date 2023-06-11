@@ -525,15 +525,42 @@ workflows:
           context: slack-secrets
           requires:
             - audit
+      # E2E for feature branch need to be approved to run:
       - e2e-test:
+          name: e2e-for-feature 
           context: slack-secrets
           requires:
             - audit
+          type: approval
+          filters:
+            branches:
+              ignore:
+                - master
+                - dev
+                - staging
+      # E2E for env branch no need to be approve
+      - e2e-test:
+          context: slack-secrets
+          name: e2e-test
+          requires:
+            - audit
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+                - staging
       - slack/on-hold:
           context: slack-secrets
           requires: 
             - e2e-test
             - unit-test
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+                - staging
       - pre-deploy:
           requires:
             - slack/on-hold
