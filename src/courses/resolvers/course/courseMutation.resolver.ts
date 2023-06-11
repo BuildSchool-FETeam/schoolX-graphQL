@@ -18,6 +18,7 @@ import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decor
 import { AuthGuard } from 'src/common/guards/auth.guard'
 import { TokenService } from 'src/common/services/token.service'
 import { CourseService } from '../../services/course.service'
+import { IsActiveUser } from 'src/common/decorators/IsActiveUser.decorator'
 
 @UseGuards(AuthGuard)
 @Resolver('CourseMutation')
@@ -34,6 +35,7 @@ export class CourseMutationResolver {
   }
 
   @PermissionRequire({ course: ['C:*', 'R:*', 'U:*', 'D:x'] })
+  @IsActiveUser()
   @ResolveField()
   async setCourse(
     @Args('data') data: CourseSetInput,
@@ -76,6 +78,7 @@ export class CourseMutationResolver {
   }
 
   @PermissionRequire({ course: ['C:x', 'R:x', 'U:x', 'D:*'] })
+  @IsActiveUser()
   @ResolveField()
   async deleteCourse(
     @Args('id') id: string,

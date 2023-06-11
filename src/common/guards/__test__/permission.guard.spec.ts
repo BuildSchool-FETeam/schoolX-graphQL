@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NotFoundException } from '@nestjs/common'
+import { ForbiddenException, NotFoundException } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { Test } from '@nestjs/testing'
@@ -97,7 +97,7 @@ describe('PermissionGuard', () => {
         },
         getInfo() {
           return {
-            parentType: { name: 'someAPI' },
+            parentType: null,
           }
         },
         getContext() {
@@ -142,9 +142,28 @@ describe('PermissionGuard', () => {
       expect(result).toBe(false)
     })
 
+    it('If must verify, should throw error if account not verify', async () => {
+      const clientUser = createClientUserEntityMock({
+        isActive: 0,
+        role: createRoleEntityMock({ name: 'leesin' }),
+      })
+      jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(true)
+
+      jest
+        .spyOn(tokenService, 'verifyAndDecodeToken')
+        .mockReturnValue(clientUser)
+
+      await assertThrowError(
+        permissionGuard.canActivate.bind(permissionGuard, contextMock),
+        new ForbiddenException(
+          'This client user is inactive! Please try active it first!'
+        )
+      )
+    })
+
     it('should throw an Exception if user permission is invalid', async () => {
       const clientUser = createClientUserEntityMock({
-        role: createRoleEntityMock({ name: 'leesin' }),
+        role: null,
       })
 
       jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue({})
@@ -186,7 +205,6 @@ describe('PermissionGuard', () => {
         role: createRoleEntityMock({ name: 'leesin' }),
       })
       GqlExecutionContext.create = jest.fn(() => executionContextMock)
-
       jest
         .spyOn(tokenService, 'verifyAndDecodeToken')
         .mockReturnValue(clientUser)

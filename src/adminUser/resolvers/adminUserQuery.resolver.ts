@@ -18,6 +18,11 @@ export class AdminUserQueryResolver {
   }
 
   @ResolveField()
+  async validateEmail(@Args('email') email: string) {
+    return this.adminUserService.validateEmail(email)
+  }
+
+  @ResolveField()
   @PermissionRequire({ user: ['C:x', 'R:*', 'U:x', 'D:x'] })
   async adminUsers(
     @Context() { req }: DynamicObject,

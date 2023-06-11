@@ -14,6 +14,11 @@ export class clientUserQueryResolver {
   }
 
   @ResolveField()
+  async validateEmail(@Args('email') email: string) {
+    return this.clientUserService.validateEmail(email)
+  }
+
+  @ResolveField()
   async userDetail(@Args('id') id: string) {
     return this.clientUserService.findById(id)
   }

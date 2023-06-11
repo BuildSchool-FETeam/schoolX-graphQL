@@ -2,6 +2,7 @@ import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
@@ -22,6 +23,7 @@ import {
   FineGrainedPerm,
 } from '../decorators/PermissionRequire.decorator'
 import { Resource } from '../enums/resource.enum'
+import { IS_ACTIVE_KEY } from '../decorators/IsActiveUser.decorator'
 
 export interface ICachedPermissionSet {
   user: AdminUser | ClientUser
@@ -53,12 +55,23 @@ export class PermissionGuard implements CanActivate {
       return true
     }
     const decodedToken = this.decodeToken(graphQLContext)
-
     if (!decodedToken) {
       return false
     }
 
     const { user, token } = decodedToken
+
+    const accoutIsActive = this.reflector.getAllAndOverride<boolean>(
+      IS_ACTIVE_KEY,
+      [graphQLContext.getHandler()]
+    )
+
+    if (accoutIsActive && !(user as ClientUser).isActive) {
+      throw new ForbiddenException(
+        'This client user is inactive! Please try active it first!'
+      )
+    }
+
     const userPermissions = await this.permissionService.getPermissionByRole(
       user.role?.name
     )

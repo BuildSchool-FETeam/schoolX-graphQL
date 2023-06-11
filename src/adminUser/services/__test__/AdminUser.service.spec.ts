@@ -109,6 +109,15 @@ describe('AdminUserService', () => {
     }
   })
 
+  describe('validateEmail', () => {
+    it('It should return true', async () => {
+      jest.spyOn(adminRepo, 'findOne').mockResolvedValue(null)
+
+      const result = await adminUserService.validateEmail('example@gmail.com')
+      expect(result).toEqual(true)
+    })
+  })
+
   describe('findUserByEmail', () => {
     const adminUser: AdminUser = createAdminUserEntityMock()
 
