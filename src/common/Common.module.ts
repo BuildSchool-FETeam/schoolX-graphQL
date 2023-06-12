@@ -14,9 +14,11 @@ import { CacheService } from './services/cache.service'
 import { SubscriptionService } from './services/subscription.service'
 import { DateScalar } from './scalars/date.scalar'
 import { ImageProcessService } from './services/imageProcess.service'
+import { AdminUserModule } from 'src/adminUser/AdminUser.module'
 
 @Module({
   imports: [
+    forwardRef(() => AdminUserModule),
     forwardRef(() => PermissionModule),
     forwardRef(() => CourseModule),
     forwardRef(() => ClientUserModule),

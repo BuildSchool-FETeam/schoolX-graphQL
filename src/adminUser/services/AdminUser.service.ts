@@ -1,8 +1,10 @@
 import { BaseService, IStrictConfig } from 'src/common/services/base.service'
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { PasswordService } from 'src/common/services/password.service'
@@ -23,6 +25,7 @@ export class AdminUserService extends BaseService<AdminUser> {
     private passwordService: PasswordService,
     private permissionService: PermissionService,
     private roleService: RoleService,
+    @Inject(forwardRef(() => TokenService))
     private tokenService: TokenService,
     public cachedService: CacheService
   ) {
@@ -77,7 +80,7 @@ export class AdminUserService extends BaseService<AdminUser> {
       )
     }
 
-    const adminUser = await this.tokenService.getAdminUserByToken(token)
+    const adminUser = await this.tokenService.getUserByToken(token)
 
     const user = this.userRepo.create({
       email,
@@ -122,6 +125,12 @@ export class AdminUserService extends BaseService<AdminUser> {
     return this.userRepo.findOne({
       where: { email },
       relations: { role: true },
+    })
+  }
+
+  async findUserById(id: string) {
+    return this.userRepo.findOne({
+      where: { id },
     })
   }
 }

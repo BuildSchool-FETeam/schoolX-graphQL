@@ -1,4 +1,3 @@
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import {
   CanActivate,
   ExecutionContext,
@@ -11,7 +10,6 @@ import * as _ from 'lodash'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { PermissionService } from 'src/permission/services/permission.service'
 import { PermissionSet } from 'src/permission/entities/Permission.entity'
-import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { TokenService } from '../services/token.service'
 import { CacheService } from '../services/cache.service'
 import { cacheConstant } from '../constants/cache.contant'
@@ -24,9 +22,10 @@ import {
 } from '../decorators/PermissionRequire.decorator'
 import { Resource } from '../enums/resource.enum'
 import { IS_ACTIVE_KEY } from '../decorators/IsActiveUser.decorator'
+import { TokenType } from '../constants/user.constant'
 
 export interface ICachedPermissionSet {
-  user: AdminUser | ClientUser
+  payload: TokenType
   permissionSet: PermissionSet
 }
 
@@ -59,28 +58,28 @@ export class PermissionGuard implements CanActivate {
       return false
     }
 
-    const { user, token } = decodedToken
+    const { payload, token } = decodedToken
 
     const accoutIsActive = this.reflector.getAllAndOverride<boolean>(
       IS_ACTIVE_KEY,
       [graphQLContext.getHandler()]
     )
 
-    if (accoutIsActive && !(user as ClientUser).isActive) {
+    if (!payload.isAdmin && accoutIsActive && !payload.isActive) {
       throw new ForbiddenException(
         'This client user is inactive! Please try active it first!'
       )
     }
 
     const userPermissions = await this.permissionService.getPermissionByRole(
-      user.role?.name
+      payload.role
     )
 
     await this.cacheService.setValue<ICachedPermissionSet>(
       `${cacheConstant.PERMISSION}-${token}`,
       {
         permissionSet: userPermissions,
-        user,
+        payload,
       }
     )
 
@@ -142,7 +141,7 @@ export class PermissionGuard implements CanActivate {
       const token = headers.authorization?.split(' ')[1] as string
 
       return {
-        user: this.tokenService.verifyAndDecodeToken(token),
+        payload: this.tokenService.verifyAndDecodeToken(token),
         token,
       }
     } catch (err) {

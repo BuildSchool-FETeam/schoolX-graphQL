@@ -1,7 +1,7 @@
 import { Parent, ResolveField, Resolver } from '@nestjs/graphql'
 import { ClientUser } from '../entities/ClientUser.entity'
 import { ClientUserService } from '../services/clientUser.service'
-import { TYPE_USER } from 'src/common/constants/user.constant'
+import { UserType } from 'src/common/constants/user.constant'
 
 @Resolver('ClientUserType')
 export class clientUserTypeResolver {
@@ -9,7 +9,7 @@ export class clientUserTypeResolver {
 
   @ResolveField('type')
   type(@Parent() clientUserData: ClientUser) {
-    return TYPE_USER[clientUserData.type]
+    return UserType[clientUserData.type]
   }
 
   @ResolveField('achievement')

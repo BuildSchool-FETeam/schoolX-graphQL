@@ -1,4 +1,3 @@
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import {
   Injectable,
   ForbiddenException,
@@ -132,7 +131,7 @@ export class UserCommentService extends BaseService<UserComment> {
   }
 
   async deleteComment(id: string, token: string) {
-    const user = await this.tokenService.getAdminUserByToken<ClientUser>(token)
+    const user = await this.tokenService.getUserByToken(token)
     const existedComment = await this.findById(id, {
       relations: {
         reply: true,
@@ -165,7 +164,7 @@ export class UserCommentService extends BaseService<UserComment> {
     resourceAssign: IResourceAssign<T>,
     token: string
   ) {
-    const user = await this.tokenService.getAdminUserByToken<ClientUser>(token)
+    const user = await this.tokenService.getUserByToken(token)
 
     if (data.id) {
       const oldComment = await this.findById(data.id, {

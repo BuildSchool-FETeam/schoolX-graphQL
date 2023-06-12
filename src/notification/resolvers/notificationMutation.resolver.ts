@@ -68,7 +68,7 @@ export class NotificationMutationResolver {
     @Context() { req }: DynamicObject
   ) {
     const token = this.notificationService.getTokenFromHttpHeader(req.headers)
-    const { id: adminId } = await this.tokenService.getAdminUserByToken(token)
+    const { id: adminId } = await this.tokenService.getUserByToken(token)
 
     await this.notificationService.deleteByRecipient(id, adminId)
 

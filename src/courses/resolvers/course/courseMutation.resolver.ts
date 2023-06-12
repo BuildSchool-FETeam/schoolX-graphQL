@@ -48,7 +48,7 @@ export class CourseMutationResolver {
     let existedCourse: Course
 
     const token = this.courseService.getTokenFromHttpHeader(req.headers)
-    const user = await this.tokenService.getAdminUserByToken(token)
+    const user = await this.tokenService.getUserByToken(token)
 
     if (id) {
       existedCourse = await this.courseService.findById(id)

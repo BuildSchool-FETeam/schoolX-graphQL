@@ -75,8 +75,8 @@ export class PermissionService extends BaseService<PermissionSet> {
 
   async createPermission(input: PermissionSetInput, token: string) {
     const inputWithoutName = _.omit(input, 'roleName')
+    const adminUser = await this.tokenService.getUserByToken(token)
     const role = await this.roleService.createRole(input.roleName)
-    const adminUser = await this.tokenService.getAdminUserByToken(token)
 
     const perSet = this.permissionRepo.create({
       ...inputWithoutName,
