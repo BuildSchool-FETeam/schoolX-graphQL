@@ -5,7 +5,6 @@ import {
 } from 'src/common/mock/mockEntity'
 import { Role } from 'src/permission/entities/Role.entity'
 import { RoleService } from '../role.service'
-import { TokenService } from 'src/common/services/token.service'
 import { CacheService } from 'src/common/services/cache.service'
 import { Repository } from 'typeorm'
 import { PermissionSet } from 'src/permission/entities/Permission.entity'
@@ -19,6 +18,7 @@ import {
 import { DEFAULT_PERM } from 'src/common/constants/permission.constant'
 import { assertThrowError } from 'src/common/mock/customAssertion'
 import { NotFoundException } from '@nestjs/common'
+import { TokenService } from 'src/common/services/token.service'
 
 const roleServiceMock = {
   async createAdminRole() {
@@ -42,7 +42,7 @@ const roleServiceMock = {
 }
 
 const tokenServiceMock = {
-  async getAdminUserByToken() {
+  async getUserByToken() {
     return Promise.resolve(
       createAdminUserEntityMock({ id: '2', name: 'yasuo' })
     )
@@ -335,7 +335,7 @@ describe('PermissionService', () => {
           createRoleEntityMock({ id: '1', name })
         )
       const spyGetAdminUserByToken = jest
-        .spyOn(tokenService, 'getAdminUserByToken')
+        .spyOn(tokenService, 'getUserByToken')
         .mockResolvedValue(createAdminUserEntityMock())
       const spyPermissionCreate = jest
         .spyOn(permissionRepo, 'create')

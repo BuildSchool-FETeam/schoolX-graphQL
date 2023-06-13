@@ -46,7 +46,7 @@ const roleServiceMock = {
 }
 
 const tokenServiceMock = {
-  async getAdminUserByToken() {
+  async getUserByToken() {
     return Promise.resolve(
       createAdminUserEntityMock({ id: '2', name: 'yasuo' })
     )
@@ -223,7 +223,7 @@ describe('AdminUserService', () => {
       jest.spyOn(roleServiceMock, 'findRoleByName').mockResolvedValue(role)
       jest.spyOn(adminRepo, 'find').mockResolvedValue([])
       jest
-        .spyOn(tokenServiceMock, 'getAdminUserByToken')
+        .spyOn(tokenServiceMock, 'getUserByToken')
         .mockResolvedValue(createdByAdmin)
 
       jest
@@ -318,6 +318,23 @@ describe('AdminUserService', () => {
       )
 
       expect(result).toEqual(foundAdmin)
+    })
+  })
+
+  describe('findUserById', () => {
+    it('It should return admin user', async () => {
+      const findOne = jest
+        .spyOn(adminRepo, 'findOne')
+        .mockImplementation(async (options) =>
+          Promise.resolve(
+            createAdminUserEntityMock(options.where as Partial<AdminUser>)
+          )
+        )
+
+      const result = await adminUserService.findUserById('id')
+
+      expect(result).toEqual(createAdminUserEntityMock({ id: 'id' }))
+      expect(findOne).toHaveBeenCalled()
     })
   })
 })

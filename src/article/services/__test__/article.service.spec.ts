@@ -31,7 +31,7 @@ const articleTagServiceMock = {
   },
 }
 const tokenServiceMock = {
-  async getAdminUserByToken() {
+  async getUserByToken() {
     return Promise.resolve({})
   },
 }
@@ -90,7 +90,7 @@ describe('ArticleService', () => {
       })
 
       jest
-        .spyOn(tokenServiceMock, 'getAdminUserByToken')
+        .spyOn(tokenServiceMock, 'getUserByToken')
         .mockResolvedValue(clientUserMock)
 
       jest

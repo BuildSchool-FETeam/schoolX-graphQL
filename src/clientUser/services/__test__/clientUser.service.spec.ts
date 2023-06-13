@@ -376,4 +376,21 @@ describe('ClientUserService', () => {
       expect(id).toHaveBeenCalled()
     })
   })
+
+  describe('findUserById', () => {
+    it('It should return client user', async () => {
+      const findOne = jest
+        .spyOn(clientUserRepo, 'findOne')
+        .mockImplementation(async (options) =>
+          Promise.resolve(
+            createClientUserEntityMock(options.where as Partial<ClientUser>)
+          )
+        )
+
+      const result = await clientUserService.findUserById('id')
+
+      expect(result).toEqual(createClientUserEntityMock({ id: 'id' }))
+      expect(findOne).toHaveBeenCalled()
+    })
+  })
 })
