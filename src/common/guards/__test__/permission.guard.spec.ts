@@ -15,6 +15,7 @@ import { Role } from 'src/permission/entities/Role.entity'
 import { PermissionService } from 'src/permission/services/permission.service'
 import { PermissionGuard } from '../permission.guard'
 import { PermissionRequire } from 'src/common/decorators/PermissionRequire.decorator'
+import { ConfigService } from '@nestjs/config'
 
 const tokenService = {
   verifyAndDecodeToken(): any {
@@ -39,6 +40,12 @@ const reflector = {
   },
 }
 
+const configService = {
+  get() {
+    return 'e2e'
+  },
+}
+
 const contextMock = {} as any
 
 describe('PermissionGuard', () => {
@@ -52,6 +59,7 @@ describe('PermissionGuard', () => {
         PermissionService,
         CacheService,
         Reflector,
+        ConfigService,
       ],
     })
 
@@ -59,6 +67,7 @@ describe('PermissionGuard', () => {
     module.overrideProvider(PermissionService).useValue(permissionService)
     module.overrideProvider(CacheService).useValue(cacheService)
     module.overrideProvider(Reflector).useValue(reflector)
+    module.overrideProvider(ConfigService).useValue(configService)
 
     const compiledModule = await module.compile()
 

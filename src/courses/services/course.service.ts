@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Course } from 'src/courses/entities/Course.entity'
@@ -9,6 +13,7 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ActionCourse, CourseSetInput } from 'src/graphql'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { CacheService } from '../../common/services/cache.service'
+import { ACTION_PERM } from 'src/common/constants/permission.constant'
 
 type CourseDataInput = Omit<CourseSetInput, 'image'> & {
   imageUrl: string
@@ -54,11 +59,27 @@ export class CourseService extends BaseService<Course> {
     data: CourseDataInput,
     strictConfig: IStrictConfig
   ) {
-    const existedCourse = await this.findById(id, {}, strictConfig)
+    const existedCourse = await this.findById(
+      id,
+      { relations: { createdBy: true } },
+      strictConfig
+    )
 
     if (!existedCourse) {
       throw new NotFoundException('Course not found')
     }
+
+    const isHavePerm = await this.isHavePermAction(
+      existedCourse,
+      strictConfig,
+      ACTION_PERM.UPDATE
+    )
+    if (!isHavePerm) {
+      throw new ForbiddenException(
+        "You don't have permission to do this action on resource"
+      )
+    }
+    _.omit(data, 'createdBy')
     _.forOwn(data, (value, key) => {
       if (_.isArray(value)) {
         existedCourse[key] = value.join('|')
@@ -103,6 +124,12 @@ export class CourseService extends BaseService<Course> {
     this.courseRepo.save(course)
 
     return true
+  }
+
+  async removeCourse(course: Course) {
+    await this.removeCourseFormTag(course.id, _.map(course.tags, 'id'))
+
+    return this.repository.delete(course.id)
   }
 
   async removeCourseFormTag(removedCourseId: string, tagIds: string[]) {

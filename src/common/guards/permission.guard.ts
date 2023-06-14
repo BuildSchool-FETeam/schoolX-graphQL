@@ -23,6 +23,8 @@ import {
 import { Resource } from '../enums/resource.enum'
 import { IS_ACTIVE_KEY } from '../decorators/IsActiveUser.decorator'
 import { TokenType } from '../constants/user.constant'
+import { ConfigService } from '@nestjs/config'
+import { EnvVariable } from '../interfaces/EnvVariable.interface'
 
 export interface ICachedPermissionSet {
   payload: TokenType
@@ -35,8 +37,11 @@ export class PermissionGuard implements CanActivate {
     private reflector: Reflector,
     private tokenService: TokenService,
     private permissionService: PermissionService,
-    private cacheService: CacheService
-  ) {}
+    private cacheService: CacheService,
+    private configService: ConfigService<EnvVariable>
+  ) {
+    console.log(`APP run in ${this.configService.get('APP_ENV')} environment`)
+  }
 
   async canActivate(context: ExecutionContext) {
     const graphQLContext = GqlExecutionContext.create(context)
@@ -64,8 +69,12 @@ export class PermissionGuard implements CanActivate {
       IS_ACTIVE_KEY,
       [graphQLContext.getHandler()]
     )
+    const appEnv = this.configService.get('APP_ENV')
+    const isE2EEnv = appEnv === 'E2E'
+    const shouldBlockInActiveUser =
+      !payload.isAdmin && accoutIsActive && !payload.isActive && !isE2EEnv
 
-    if (!payload.isAdmin && accoutIsActive && !payload.isActive) {
+    if (shouldBlockInActiveUser) {
       throw new ForbiddenException(
         'This client user is inactive! Please try active it first!'
       )

@@ -10,4 +10,5 @@ export interface EnvVariable {
   PYTHON_MINI_SERVER: string
   CPP_MINI_SERVER: string
   MAILJET_SECRET_KEY: string
+  APP_ENV: string
 }

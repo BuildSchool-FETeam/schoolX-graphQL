@@ -8,7 +8,7 @@ import {
 import { gqlRequest } from './api-call'
 import { systemLogs } from './logs'
 
-export const DEFAULT_EMAIL = 'admin@gmail.com'
+export const DEFAULT_EMAIL = 'e2e@gmail.com'
 export const DEFAULT_PASSWORD = 'Prisdom1234'
 
 export async function createOrUseAdmin() {
@@ -28,10 +28,13 @@ export async function createOrUseAdmin() {
       password: DEFAULT_PASSWORD,
     }
   } catch (error) {
-    systemLogs('Existing an ultimate admin, maybe with credentials:', {
-      email: DEFAULT_EMAIL,
-      password: DEFAULT_PASSWORD,
-    })
+    systemLogs(
+      'Existing an ultimate admin, maybe with credentials:',
+      JSON.stringify({
+        email: DEFAULT_EMAIL,
+        password: DEFAULT_PASSWORD,
+      })
+    )
 
     return { email: DEFAULT_EMAIL, password: DEFAULT_PASSWORD }
   }

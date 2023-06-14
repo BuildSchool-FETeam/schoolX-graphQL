@@ -5,6 +5,7 @@ import {
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
+  FindOptionsRelations,
 } from 'typeorm'
 import { CacheService } from './cache.service'
 import { PermissionSet } from '../../permission/entities/Permission.entity'
@@ -157,7 +158,11 @@ export abstract class BaseService<
    * @returns delete information
    */
   async deleteOneById(id: string, strictConfig?: IStrictConfig) {
-    const existed = await this.findById(id, {}, strictConfig)
+    const existed = await this.findById(
+      id,
+      { relations: { createdBy: true } as FindOptionsRelations<T> },
+      strictConfig
+    )
 
     if (!existed) {
       throw new NotFoundException(
@@ -219,6 +224,26 @@ export abstract class BaseService<
     return builder.getCount()
   }
 
+  async isHavePermAction(
+    resource: T,
+    strictConfig: IStrictConfig,
+    action: string
+  ) {
+    const { payload, permissionSet } = await this.getUserCredential(
+      strictConfig.token
+    )
+    const resourcePerm = permissionSet[strictConfig.strictResourceName]
+    const flexibleDeletePerm = resourcePerm.match(
+      REGEX_PERM[action]
+    )[0] as FlexiblePerm
+
+    return this.isValidPermissionOnResource(
+      resource,
+      payload,
+      flexibleDeletePerm
+    )
+  }
+
   private isValidPermissionOnResource(
     resource: BaseRepoEntity,
     user: TokenType,
@@ -229,7 +254,7 @@ export abstract class BaseService<
 
     return (
       grainedPerm === '*' ||
-      (grainedPerm === '+' && resource.createdBy.id === user.id)
+      (grainedPerm === '+' && resource.createdBy?.id === user.id)
     )
   }
 

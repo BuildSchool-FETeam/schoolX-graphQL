@@ -82,6 +82,10 @@ export class PermissionQueryResolver {
       roleName
     )
 
+    if (!permissionSet) {
+      return null
+    }
+
     return {
       ...permissionSet,
       roleName: permissionSet.role.name,

@@ -16,3 +16,4 @@ data:
   CPP_MINI_SERVER: "http://minicpp-svc:6004"
   DB_LOG: "true"
   DEPLOY_ENV: dev
+  APP_ENV: dev

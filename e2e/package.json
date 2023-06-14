@@ -12,6 +12,7 @@
     "jest-junit": "^15.0.0",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.3",
+    "lodash": "^4.17.21",
     "graphql-request": "^6.0.0"
   },
   "dependencies": {

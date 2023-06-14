@@ -1,4 +1,3 @@
-import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 
 import { UserComment } from 'src/comment/entities/UserComment.entity'
@@ -74,6 +73,6 @@ export class Course {
   @OneToMany(() => UserComment, (userComment) => userComment.course)
   comments: UserComment[]
 
-  @ManyToOne(() => AdminUser || ClientUser, { onDelete: 'CASCADE' })
-  createdBy: ClientUser | AdminUser
+  @ManyToOne(() => ClientUser, { onDelete: 'CASCADE' })
+  createdBy: ClientUser
 }
