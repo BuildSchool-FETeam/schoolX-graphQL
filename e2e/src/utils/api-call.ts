@@ -2,7 +2,10 @@ import { DocumentNode } from 'graphql'
 import { getClient } from './apollo-client'
 import { Variables } from 'graphql-request/build/esm/types'
 
-export const gqlRequest = async <T, V extends Variables = {}>(
+export const gqlRequest = async <
+  T,
+  V extends Variables = Record<string, never>
+>(
   gqlDoc: DocumentNode | string,
   variables?: V,
   token?: string
