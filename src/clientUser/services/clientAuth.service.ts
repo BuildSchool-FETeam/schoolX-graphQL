@@ -16,7 +16,7 @@ import { PermissionService } from 'src/permission/services/permission.service'
 import { FindOneOptions, Repository } from 'typeorm'
 import { ClientUser } from '../entities/ClientUser.entity'
 import { AchievementService } from './achievement.service'
-import { TYPE_USER } from 'src/common/constants/user.constant'
+import { UserType } from 'src/common/constants/user.constant'
 
 export const EXP_TIME = +process.env.TOKEN_EXP_TIME || 8
 @Injectable()
@@ -48,7 +48,7 @@ export class ClientAuthService extends BaseService<ClientUser> {
       throw new BadRequestException('This email has been taken')
     }
 
-    const typeUser = TYPE_USER[type]
+    const typeUser = UserType[type]
 
     const newClientUser = this.clientRepo.create({
       email,
@@ -63,12 +63,19 @@ export class ClientAuthService extends BaseService<ClientUser> {
 
     await this.sendEmailWithCode(code, email)
     newClientUser.role = await this.permissionService.getClientUserPermission(
-      typeUser === TYPE_USER.INSTRUCTOR
+      typeUser === UserType.INSTRUCTOR
     )
     const clientUserResponse = await this.clientRepo.save(newClientUser)
 
     await this.achiService.createEmptyAchievement(clientUserResponse)
-    const token = this.tokenService.createToken({ ...clientUserResponse })
+    const token = this.tokenService.createToken({
+      id: clientUserResponse.id,
+      email,
+      type: clientUserResponse.type,
+      isActive: clientUserResponse.isActive,
+      role: newClientUser.role.name,
+      isAdmin: false,
+    })
 
     return {
       id: clientUserResponse.id,
@@ -78,17 +85,14 @@ export class ClientAuthService extends BaseService<ClientUser> {
   }
 
   async loginWithEmailAndPassword(data: ClientUserSigninInput) {
-    const { email, password } = data
-    const existedClientUser = await this.getClientUserFromEmail(email, [
-      'id',
-      'password',
-      'email',
-      'isActive',
-    ])
+    const { role, ...existedUser } = await this.getClientUserFromEmail(
+      data.email,
+      ['id', 'password', 'email', 'isActive', 'type', 'role']
+    )
 
     const compareResult = this.passwordService.compare(
-      password,
-      existedClientUser.password
+      data.password,
+      existedUser.password
     )
 
     if (!compareResult) {
@@ -96,9 +100,13 @@ export class ClientAuthService extends BaseService<ClientUser> {
     }
 
     return {
-      id: existedClientUser.id,
-      email: existedClientUser.email,
-      token: this.tokenService.createToken({ ...existedClientUser }),
+      id: existedUser.id,
+      email: existedUser.email,
+      token: this.tokenService.createToken({
+        ...existedUser,
+        role: role.name,
+        isAdmin: false,
+      }),
     }
   }
 

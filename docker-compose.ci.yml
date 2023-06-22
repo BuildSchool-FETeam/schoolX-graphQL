@@ -23,6 +23,7 @@ services:
       - PYTHON_MINI_SERVER=http://python-server:6003
       - CPP_MINI_SERVER=http://cpp-server:6004
       - DB_LOG=false
+      - APP_ENV=${APP_ENV}
     depends_on:
       - postgres-db
     command:
@@ -34,7 +35,7 @@ services:
         '--',
         'npm',
         'run',
-        'start-prod:docker',
+        'start-prod:docker'
       ]
 
   js-server:
@@ -58,12 +59,12 @@ services:
   #   ports:
   #     - 6003:6003
 
-  cpp-server:
-    build:
-      context: ./servers/cpp
-      dockerfile: Dockerfile
-    ports:
-      - 6004:6004
+  # cpp-server:
+  #   build:
+  #     context: ./servers/cpp
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 6004:6004
 
   postgres-db:
     image: postgres:13.4

@@ -40,7 +40,7 @@ const articleServiceMock = {
   },
 }
 const tokenServiceMock = {
-  async getAdminUserByToken() {
+  async getUserByToken() {
     return Promise.resolve({})
   },
 }
@@ -112,7 +112,7 @@ describe('UserCommentService', () => {
 
     beforeAll(() => {
       jest.spyOn(courseService, 'findById').mockResolvedValue(course)
-      jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+      jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
     })
 
     it(' should create new comment for course', async () => {
@@ -208,7 +208,7 @@ describe('UserCommentService', () => {
 
     beforeAll(() => {
       jest.spyOn(userCommentService, 'findById').mockResolvedValue(comment)
-      jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+      jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
     })
 
     it(' should create new reply comment for comment', async () => {
@@ -304,7 +304,7 @@ describe('UserCommentService', () => {
 
     beforeAll(() => {
       jest.spyOn(lessonService, 'findById').mockResolvedValue(lesson)
-      jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+      jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
     })
 
     it(' should create new comment for lesson', async () => {
@@ -400,7 +400,7 @@ describe('UserCommentService', () => {
 
     beforeAll(() => {
       jest.spyOn(assginmentRepo, 'findOne').mockResolvedValue(assignment)
-      jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+      jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
     })
 
     describe('It should update new comment', () => {
@@ -474,7 +474,7 @@ describe('UserCommentService', () => {
 
     beforeAll(() => {
       jest.spyOn(articleService, 'findById').mockResolvedValue(article)
-      jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+      jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
     })
 
     it(' should create new comment for article', async () => {
@@ -572,7 +572,7 @@ describe('UserCommentService', () => {
       jest
         .spyOn(submittedAssignService, 'findById')
         .mockResolvedValue(submitted)
-      jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+      jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
     })
 
     it(' should create new comment for submitted assignment', async () => {
@@ -678,7 +678,7 @@ describe('UserCommentService', () => {
     it(' should throw exception forbidden', async () => {
       user = createClientUserEntityMock({ id: '2' })
 
-      jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+      jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
 
       assertThrowError(
         userCommentService.deleteComment.bind(
@@ -696,7 +696,7 @@ describe('UserCommentService', () => {
       let deleteOneById
       beforeAll(() => {
         user = createClientUserEntityMock({ id: '1' })
-        jest.spyOn(tokenService, 'getAdminUserByToken').mockResolvedValue(user)
+        jest.spyOn(tokenService, 'getUserByToken').mockResolvedValue(user)
         deleteOneById = jest
           .spyOn(userCommentService, 'deleteOneById')
           .mockResolvedValue({

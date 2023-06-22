@@ -111,11 +111,11 @@ export abstract class UtilService {
   }
 
   generateActivationCode(hours: number) {
-    const code = Math.random().toString(24).slice(3, 10)
+    const code = Math.floor(Math.random() * 1000000)
     const expiredTime = Date.now() + 1000 * 3600 * hours
 
     return {
-      code: code.toUpperCase(),
+      code: code.toString(),
       expiredTime,
     }
   }

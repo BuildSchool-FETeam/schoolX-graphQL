@@ -29,7 +29,7 @@ export class NotificationService extends BaseService<AdminNotification> {
   }
 
   async create(data: NotificationInput, token: string) {
-    const adminUser = await this.tokenService.getAdminUserByToken(token)
+    const adminUser = await this.tokenService.getUserByToken(token)
 
     if (
       _.size(data.recipientByAdminIds) === 0 &&
@@ -75,7 +75,7 @@ export class NotificationService extends BaseService<AdminNotification> {
     adminToken: string,
     searchOptions: FindManyOptions<AdminNotification>
   ) {
-    const adminUser = await this.tokenService.getAdminUserByToken(adminToken)
+    const adminUser = await this.tokenService.getUserByToken(adminToken)
     const notifications = await this.findWithOptions(searchOptions)
 
     const notificationAdminReceived = _.filter(notifications, (item) =>
@@ -90,7 +90,7 @@ export class NotificationService extends BaseService<AdminNotification> {
     noticId: string,
     commonOptions?: FindOneOptions
   ) {
-    const adminUser = await this.tokenService.getAdminUserByToken(adminToken)
+    const adminUser = await this.tokenService.getUserByToken(adminToken)
     const notification = await this.findById(noticId, commonOptions)
 
     if (!notification.recipientByAdminIds.includes(adminUser.id)) {
@@ -117,7 +117,7 @@ export class NotificationService extends BaseService<AdminNotification> {
   }
 
   async countNotificationSent(adminToken: string) {
-    const adminUser = await this.tokenService.getAdminUserByToken(adminToken)
+    const adminUser = await this.tokenService.getUserByToken(adminToken)
 
     return this.noticRepo
       .createQueryBuilder('notic')

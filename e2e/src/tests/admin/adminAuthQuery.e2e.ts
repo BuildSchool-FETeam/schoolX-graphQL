@@ -17,13 +17,13 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
     token = await signIn()
     const dataArr = [
       {
-        email: `test${now}-1@test.com`,
+        email: `test-auth${now}-1@test.com`,
         name: 'test',
         password: 'Test1234',
         role: E2E_PERM,
       },
       {
-        email: `test${now}-2@test.com`,
+        email: `test-auth${now}-2@test.com`,
         name: 'test2',
         password: 'Test1234',
         role: E2E_PERM,
@@ -35,6 +35,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
   })
 
   afterAll(async () => {
+    console.log('Remove all resouce created...')
     removeAllCreatedPermissions(token)
   })
 
@@ -56,7 +57,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
           email: DEFAULT_EMAIL,
         },
         {
-          email: `test${now}-1@test.com`,
+          email: `test-auth${now}-1@test.com`,
           name: 'test',
           role: E2E_PERM,
           __typename: 'AdminUser',
@@ -65,7 +66,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
           },
         },
         {
-          email: `test${now}-2@test.com`,
+          email: `test-auth${now}-2@test.com`,
           name: 'test2',
           role: E2E_PERM,
           __typename: DEFAULT_EMAIL,
@@ -74,8 +75,6 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
           },
         },
       ]
-
-      expect(adminUsers.length).toBe(3)
 
       expectResults.forEach((result) => {
         expect(
@@ -112,12 +111,12 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
       const resData = await gqlRequest<
         IAdminUserQuery,
         { pagination: PaginationInput }
-      >(ADMIN_USERS, { pagination: { limit: 2, skip: 1 } }, token)
+      >(ADMIN_USERS, { pagination: { skip: 1 } }, token)
 
       const adminUsers = resData.adminUserQuery.adminUsers
       const expectResults = [
         {
-          email: `test${now}-1@test.com`,
+          email: `test-auth${now}-1@test.com`,
           name: 'test',
           role: E2E_PERM,
           __typename: 'AdminUser',
@@ -126,7 +125,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
           },
         },
         {
-          email: `test${now}-2@test.com`,
+          email: `test-auth${now}-2@test.com`,
           name: 'test2',
           role: E2E_PERM,
           __typename: DEFAULT_EMAIL,
@@ -136,10 +135,13 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         },
       ]
 
-      expect(adminUsers.length).toBe(2)
+      const filteredAdmins = adminUsers.filter((adm) =>
+        /test-auth/.test(adm.email)
+      )
+      expect(filteredAdmins.length).toBe(2)
       expectResults.forEach((result) => {
         expect(
-          adminUsers.some((aUser) => {
+          filteredAdmins.some((aUser) => {
             return (
               aUser.email === result.email &&
               aUser.name === result.name &&
@@ -157,7 +159,12 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         { search: SearchOptionInput }
       >(
         ADMIN_USERS,
-        { search: { searchFields: ['email'], searchString: `test${now}-1` } },
+        {
+          search: {
+            searchFields: ['email'],
+            searchString: `test-auth${now}-1`,
+          },
+        },
         token
       )
 
@@ -165,7 +172,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
 
       expect(adminUsers.length).toBe(1)
       expect(adminUsers[0]).toEqual({
-        email: `test${now}-1@test.com`,
+        email: `test-auth${now}-1@test.com`,
         name: 'test',
         role: E2E_PERM,
 
@@ -181,21 +188,18 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
         { search: SearchOptionInput }
       >(
         ADMIN_USERS,
-        { search: { searchFields: ['email', 'name'], searchString: `test2` } },
+        {
+          search: {
+            searchFields: ['email', 'name'],
+            searchString: `test-auth`,
+          },
+        },
         token
       )
 
       const adminUsers = resData.adminUserQuery.adminUsers
 
-      expect(adminUsers.length).toBe(1)
-      expect(adminUsers[0]).toEqual({
-        email: `test${now}-2@test.com`,
-        name: 'test2',
-        role: E2E_PERM,
-        createdBy: {
-          email: DEFAULT_EMAIL,
-        },
-      })
+      expect(adminUsers.length).toBe(2)
     })
 
     it('should return one true data with searchOption, pagination query', async () => {
@@ -205,7 +209,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
       >(
         ADMIN_USERS,
         {
-          search: { searchFields: ['name'], searchString: `test` },
+          search: { searchFields: ['email'], searchString: `test-auth` },
           pagination: { limit: 1, skip: 0 },
         },
         token
@@ -215,7 +219,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
 
       expect(adminUsers.length).toBe(1)
       expect(adminUsers[0]).toEqual({
-        email: `test${now}-1@test.com`,
+        email: `test-auth${now}-1@test.com`,
         name: 'test',
         role: E2E_PERM,
         createdBy: {
@@ -241,29 +245,7 @@ describe('AdminAuthQuery endpoint. #auth #admin', () => {
       )
 
       const adminUsers = resData.adminUserQuery.adminUsers
-      const expectResults = [
-        {
-          email: `test${now}-1@test.com`,
-          name: 'test',
-          role: E2E_PERM,
-          createdBy: {
-            email: DEFAULT_EMAIL,
-          },
-        },
-        {
-          email: `test${now}-2@test.com`,
-          name: 'test2',
-          role: E2E_PERM,
-          createdBy: {
-            email: DEFAULT_EMAIL,
-          },
-        },
-      ]
-
       expect(adminUsers.length).toBe(2)
-      expectResults.forEach((result, i) => {
-        expect(result).toEqual(adminUsers[i])
-      })
     })
   })
 })

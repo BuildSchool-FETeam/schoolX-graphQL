@@ -23,7 +23,12 @@ export class AuthResolver {
     const user = await this.adminUserService.createUserBySignup({ ...data })
 
     return {
-      token: this.tokenService.createToken({ ...user }),
+      token: this.tokenService.createToken({
+        id: user.id,
+        email: user.email,
+        role: user.role.name,
+        isAdmin: true,
+      }),
       userName: user.name,
       role: user.role.name,
     }
@@ -41,7 +46,12 @@ export class AuthResolver {
     }
 
     return {
-      token: this.tokenService.createToken({ ...user }),
+      token: this.tokenService.createToken({
+        id: user.id,
+        email: user.email,
+        role: user.role.name,
+        isAdmin: true,
+      }),
       userName: user.name,
       role: user.role.name,
     }

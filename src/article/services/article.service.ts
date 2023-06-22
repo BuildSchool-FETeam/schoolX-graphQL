@@ -1,4 +1,3 @@
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { TokenService } from 'src/common/services/token.service'
 import { Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
@@ -22,7 +21,6 @@ export class ArticleService extends BaseService<Article> {
   constructor(
     @InjectRepository(Article)
     private articleRepo: Repository<Article>,
-
     private articleTagService: ArticleTagService,
     private tokenService: TokenService,
     protected cachingService: CacheService,
@@ -32,9 +30,7 @@ export class ArticleService extends BaseService<Article> {
   }
 
   async createArticle(data: ArticleInputType, token: string) {
-    const clientUser = await this.tokenService.getAdminUserByToken<ClientUser>(
-      token
-    )
+    const clientUser = await this.tokenService.getUserByToken(token)
 
     const article = this.articleRepo.create({
       title: data.title,

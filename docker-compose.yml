@@ -24,6 +24,7 @@ services:
       - PYTHON_MINI_SERVER=http://python-server:6003
       - CPP_MINI_SERVER=http://cpp-server:6004
       - DB_LOG=false
+      - APP_ENV=${APP_ENV} # if run for e2e test you should pass APP_ENV="e2e"
     volumes:
       - ./src:/home/app/src
       - /home/app/node_modules
@@ -40,7 +41,7 @@ services:
         '--',
         'npm',
         'run',
-        'start:docker',
+        'start:docker'
       ]
 
   # js-server:

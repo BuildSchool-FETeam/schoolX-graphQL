@@ -1,5 +1,9 @@
 import { BaseService } from 'src/common/services/base.service'
-import { Injectable, BadRequestException } from '@nestjs/common'
+import {
+  Injectable,
+  BadRequestException,
+  InternalServerErrorException,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { FindOneOptions, Repository } from 'typeorm'
 import { PermissionSet } from '../entities/Permission.entity'
@@ -39,6 +43,11 @@ export class RoleService extends BaseService<Role> {
   }
 
   async updateRole(name: string, newName: string) {
+    if (name !== newName) {
+      throw new BadRequestException(
+        'You cannot update a permission with new name, create a new one!!'
+      )
+    }
     const role = await this.findRoleByName(name)
     role.name = newName
 
@@ -46,11 +55,15 @@ export class RoleService extends BaseService<Role> {
   }
 
   async deleteRoleByName(removedName: string) {
-    return this.roleRepo
-      .createQueryBuilder('role')
-      .where('role.name = :name', { name: removedName })
-      .delete()
-      .execute()
+    try {
+      await this.roleRepo
+        .createQueryBuilder('roles')
+        .delete()
+        .where('name = :name', { name: removedName })
+        .execute()
+    } catch (err) {
+      throw new InternalServerErrorException(err)
+    }
   }
 
   async findRoleByName(name: string, options?: FindOneOptions<Role>) {

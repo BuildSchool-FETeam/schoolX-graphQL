@@ -209,11 +209,11 @@ describe('UtilService', () => {
     it('should random an activation code', () => {
       const now = new Date('2022-02-07')
 
-      jest.spyOn(Math, 'random').mockReturnValue(0.2)
+      jest.spyOn(Math, 'floor').mockReturnValue(111111)
       jest.spyOn(Date, 'now').mockReturnValue(now.getTime())
 
       expect(service.generateActivationCode(8)).toEqual({
-        code: 'J4J4J4J',
+        code: '111111',
         expiredTime: 1644220800000,
       })
     })

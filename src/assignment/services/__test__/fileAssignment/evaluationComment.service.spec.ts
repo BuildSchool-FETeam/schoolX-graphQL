@@ -14,7 +14,7 @@ import { Repository } from 'typeorm'
 import { EvaluationCommentService } from '../../fileAssignment/evaluationComment.service'
 
 const tokenServiceMock = {
-  async getAdminUserByToken() {
+  async getUserByToken() {
     return Promise.resolve({})
   },
 }
@@ -46,14 +46,14 @@ describe('EvaluationCommentService', () => {
 
   describe('setComment', () => {
     let data: EvaluationCommentInput
-    let getAdminUserByToken
+    let getUserByToken
     beforeEach(() => {
       data = {
         content: 'content',
       }
 
-      getAdminUserByToken = jest
-        .spyOn(tokenServiceMock, 'getAdminUserByToken')
+      getUserByToken = jest
+        .spyOn(tokenServiceMock, 'getUserByToken')
         .mockResolvedValue(createAdminUserEntityMock())
     })
 
@@ -76,7 +76,7 @@ describe('EvaluationCommentService', () => {
           createdBy: createAdminUserEntityMock(),
         })
       )
-      expect(getAdminUserByToken).toHaveBeenCalled()
+      expect(getUserByToken).toHaveBeenCalled()
     })
 
     describe('update old comment', () => {
@@ -124,7 +124,7 @@ describe('EvaluationCommentService', () => {
             createdBy: createAdminUserEntityMock(),
           })
         )
-        expect(getAdminUserByToken).toHaveBeenCalled()
+        expect(getUserByToken).toHaveBeenCalled()
       })
     })
   })

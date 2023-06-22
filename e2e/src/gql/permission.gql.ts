@@ -10,10 +10,11 @@ export const HAS_ROLE_GQL = gql`
     }
   }
 `
-export const CREATE_ROLE = gql`
-  mutation createRole($data: PermissionSetInput!) {
+export const SET_ROLE = gql`
+  mutation SetRole($data: PermissionSetInput!, $id: ID) {
     permissionMutation {
-      setPermission(data: $data) {
+      setPermission(data: $data, id: $id) {
+        id
         roleName
       }
     }
@@ -21,11 +22,23 @@ export const CREATE_ROLE = gql`
 `
 
 export const GET_PERMISSIONS = gql`
-  query GET_PERM {
+  query GET_PERM($pagination: PaginationInput) {
     permissionQuery {
-      permissions {
+      permissions(pagination: $pagination) {
         id
         roleName
+      }
+    }
+  }
+`
+
+export const GET_PERMISSION = gql`
+  query GetPermissionById($id: ID!) {
+    permissionQuery {
+      permissionWithId(id: $id) {
+        id
+        roleName
+        blog
       }
     }
   }

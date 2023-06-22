@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common'
+import { ForbiddenException, UseGuards } from '@nestjs/common'
 import { Course } from 'src/courses/entities/Course.entity'
 import {
   GCStorageService,
@@ -19,6 +19,7 @@ import { AuthGuard } from 'src/common/guards/auth.guard'
 import { TokenService } from 'src/common/services/token.service'
 import { CourseService } from '../../services/course.service'
 import { IsActiveUser } from 'src/common/decorators/IsActiveUser.decorator'
+import { ACTION_PERM } from 'src/common/constants/permission.constant'
 
 @UseGuards(AuthGuard)
 @Resolver('CourseMutation')
@@ -48,7 +49,7 @@ export class CourseMutationResolver {
     let existedCourse: Course
 
     const token = this.courseService.getTokenFromHttpHeader(req.headers)
-    const user = await this.tokenService.getAdminUserByToken(token)
+    const user = await this.tokenService.getUserByToken(token)
 
     if (id) {
       existedCourse = await this.courseService.findById(id)
@@ -60,7 +61,7 @@ export class CourseMutationResolver {
       filePath = result.filePath
     }
 
-    const savedObj = {
+    const courseData = {
       ..._.omit(data, 'image'),
       imageUrl,
       filePath,
@@ -68,13 +69,13 @@ export class CourseMutationResolver {
     }
 
     if (id) {
-      return this.courseService.updateCourse(id, savedObj, {
+      return this.courseService.updateCourse(id, courseData, {
         token,
         strictResourceName: 'course',
       })
     }
 
-    return this.courseService.createCourse(savedObj)
+    return this.courseService.createCourse(courseData)
   }
 
   @PermissionRequire({ course: ['C:x', 'R:x', 'U:x', 'D:*'] })
@@ -87,17 +88,26 @@ export class CourseMutationResolver {
     const token = this.courseService.getTokenFromHttpHeader(req.headers)
     const course = await this.courseService.findById(
       id,
-      { relations: { tags: true } },
+      { relations: { tags: true, createdBy: true } },
       { token, strictResourceName: 'course' }
     )
 
+    const isHavePerm = await this.courseService.isHavePermAction(
+      course,
+      { token, strictResourceName: 'course' },
+      ACTION_PERM.DELETE
+    )
+
+    if (!isHavePerm) {
+      throw new ForbiddenException(
+        "You don't have permission to do this action on resource"
+      )
+    }
+
+    await this.courseService.removeCourse(course)
     if (course.filePath) {
       this.gcStorageService.deleteFile(course.filePath)
     }
-
-    await this.courseService.removeCourseFormTag(id, _.map(course.tags, 'id'))
-
-    await this.courseService.deleteOneById(id)
 
     return true
   }

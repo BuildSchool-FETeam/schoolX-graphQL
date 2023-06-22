@@ -22,7 +22,7 @@ import {
 import { Question } from 'src/assignment/entities/quiz/Question.entity'
 import { PermissionSet } from 'src/permission/entities/Permission.entity'
 import { DEFAULT_PERM } from '../constants/permission.constant'
-import { TYPE_USER } from '../constants/user.constant'
+import { UserType } from '../constants/user.constant'
 
 export const createAchievementEntityMock = (data?: Partial<Achievement>) => {
   const defaultData = {
@@ -280,7 +280,7 @@ export const createClientUserEntityMock = (data?: Partial<ClientUser>) => {
     activationCode: '',
     activationCodeExpire: 0,
     comments: [],
-    type: TYPE_USER.LEARNER,
+    type: UserType.LEARNER,
     achievement: new Achievement(),
     role: new Role(),
     articles: [],

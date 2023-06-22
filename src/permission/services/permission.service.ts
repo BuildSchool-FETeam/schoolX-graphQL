@@ -1,6 +1,11 @@
 import { PermissionSetInput } from 'src/graphql'
 import { Repository } from 'typeorm'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Resource } from 'src/common/enums/resource.enum'
 import * as _ from 'lodash'
@@ -17,6 +22,7 @@ export class PermissionService extends BaseService<PermissionSet> {
     @InjectRepository(PermissionSet)
     private permissionRepo: Repository<PermissionSet>,
     private roleService: RoleService,
+    @Inject(forwardRef(() => TokenService))
     private tokenService: TokenService,
     public cachedService: CacheService
   ) {
@@ -75,8 +81,8 @@ export class PermissionService extends BaseService<PermissionSet> {
 
   async createPermission(input: PermissionSetInput, token: string) {
     const inputWithoutName = _.omit(input, 'roleName')
+    const adminUser = await this.tokenService.getUserByToken(token)
     const role = await this.roleService.createRole(input.roleName)
-    const adminUser = await this.tokenService.getAdminUserByToken(token)
 
     const perSet = this.permissionRepo.create({
       ...inputWithoutName,

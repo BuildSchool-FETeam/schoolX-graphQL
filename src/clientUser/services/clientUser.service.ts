@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BaseService } from 'src/common/services/base.service'
 import {
@@ -26,6 +31,7 @@ export class ClientUserService extends BaseService<ClientUser> {
     private clientRepo: Repository<ClientUser>,
     private gcStorageService: GCStorageService,
     private achievementService: AchievementService,
+    @Inject(forwardRef(() => TokenService))
     private tokenService: TokenService,
     private courseService: CourseService
   ) {
@@ -161,5 +167,11 @@ export class ClientUserService extends BaseService<ClientUser> {
     const { id } = this.tokenService.verifyAndDecodeToken(token)
 
     return id
+  }
+
+  async findUserById(id: string) {
+    return this.clientRepo.findOne({
+      where: { id },
+    })
   }
 }

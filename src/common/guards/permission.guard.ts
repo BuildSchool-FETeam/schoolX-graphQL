@@ -1,4 +1,3 @@
-import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import {
   CanActivate,
   ExecutionContext,
@@ -11,7 +10,6 @@ import * as _ from 'lodash'
 import { GqlExecutionContext } from '@nestjs/graphql'
 import { PermissionService } from 'src/permission/services/permission.service'
 import { PermissionSet } from 'src/permission/entities/Permission.entity'
-import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { TokenService } from '../services/token.service'
 import { CacheService } from '../services/cache.service'
 import { cacheConstant } from '../constants/cache.contant'
@@ -24,9 +22,12 @@ import {
 } from '../decorators/PermissionRequire.decorator'
 import { Resource } from '../enums/resource.enum'
 import { IS_ACTIVE_KEY } from '../decorators/IsActiveUser.decorator'
+import { TokenType } from '../constants/user.constant'
+import { ConfigService } from '@nestjs/config'
+import { EnvVariable } from '../interfaces/EnvVariable.interface'
 
 export interface ICachedPermissionSet {
-  user: AdminUser | ClientUser
+  payload: TokenType
   permissionSet: PermissionSet
 }
 
@@ -36,8 +37,11 @@ export class PermissionGuard implements CanActivate {
     private reflector: Reflector,
     private tokenService: TokenService,
     private permissionService: PermissionService,
-    private cacheService: CacheService
-  ) {}
+    private cacheService: CacheService,
+    private configService: ConfigService<EnvVariable>
+  ) {
+    console.log(`APP run in ${this.configService.get('APP_ENV')} environment`)
+  }
 
   async canActivate(context: ExecutionContext) {
     const graphQLContext = GqlExecutionContext.create(context)
@@ -59,28 +63,32 @@ export class PermissionGuard implements CanActivate {
       return false
     }
 
-    const { user, token } = decodedToken
+    const { payload, token } = decodedToken
 
     const accoutIsActive = this.reflector.getAllAndOverride<boolean>(
       IS_ACTIVE_KEY,
       [graphQLContext.getHandler()]
     )
+    const appEnv = this.configService.get('APP_ENV')
+    const isE2EEnv = appEnv === 'E2E'
+    const shouldBlockInActiveUser =
+      !payload.isAdmin && accoutIsActive && !payload.isActive && !isE2EEnv
 
-    if (accoutIsActive && !(user as ClientUser).isActive) {
+    if (shouldBlockInActiveUser) {
       throw new ForbiddenException(
         'This client user is inactive! Please try active it first!'
       )
     }
 
     const userPermissions = await this.permissionService.getPermissionByRole(
-      user.role?.name
+      payload.role
     )
 
     await this.cacheService.setValue<ICachedPermissionSet>(
       `${cacheConstant.PERMISSION}-${token}`,
       {
         permissionSet: userPermissions,
-        user,
+        payload,
       }
     )
 
@@ -142,7 +150,7 @@ export class PermissionGuard implements CanActivate {
       const token = headers.authorization?.split(' ')[1] as string
 
       return {
-        user: this.tokenService.verifyAndDecodeToken(token),
+        payload: this.tokenService.verifyAndDecodeToken(token),
         token,
       }
     } catch (err) {

@@ -13,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { Achievement } from './Achivement.entity'
-import { TYPE_USER } from 'src/common/constants/user.constant'
+import { UserType } from 'src/common/constants/user.constant'
 
 // FOR testing purpose
 @Entity()
@@ -51,8 +51,8 @@ export class ClientUser {
   @Column({
     nullable: false,
     type: 'enum',
-    default: TYPE_USER.LEARNER,
-    enum: TYPE_USER,
+    default: UserType.LEARNER,
+    enum: UserType,
   })
   type: number
 

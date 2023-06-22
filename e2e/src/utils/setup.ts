@@ -1,6 +1,6 @@
 import { createOrUseAdmin, signIn } from './authUtils'
 import { systemLogs } from './logs'
-import { createNewRole, hasRole } from './permissionUtils'
+import { setRole, hasRole } from './permissionUtils'
 
 export const E2E_PERM = 'e2e_admin_perm'
 
@@ -11,7 +11,7 @@ export default async () => {
   const existingRole = await hasRole(E2E_PERM, token)
 
   if (!existingRole) {
-    await createNewRole(
+    await setRole(
       {
         roleName: E2E_PERM,
         course: 'C:+|R:*|U:+|D:+',

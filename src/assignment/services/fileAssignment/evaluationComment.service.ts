@@ -25,7 +25,7 @@ export class EvaluationCommentService extends BaseService<EvaluationComment> {
   }
 
   private async create(data: EvaluationCommentInput, token: string) {
-    const admin = await this.tokenService.getAdminUserByToken(token)
+    const admin = await this.tokenService.getUserByToken(token)
     const comment = this.commentEvaluaRepo.create({
       content: data.content,
       createdBy: admin,
@@ -36,7 +36,7 @@ export class EvaluationCommentService extends BaseService<EvaluationComment> {
 
   private async update(data: EvaluationCommentInput, token: string) {
     const [admin, oldComment] = await Promise.all([
-      this.tokenService.getAdminUserByToken(token),
+      this.tokenService.getUserByToken(token),
       this.findById(data.id, { relations: { createdBy: true } }),
     ])
 

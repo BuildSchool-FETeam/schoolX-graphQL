@@ -526,12 +526,22 @@ workflows:
           requires:
             - audit
       # E2E for feature branch need to be approved to run:
-      - e2e-test:
-          name: e2e-for-feature 
+      - e2e-test-approval:
           context: slack-secrets
           requires:
             - audit
           type: approval
+          filters:
+            branches:
+              ignore:
+                - master
+                - dev
+                - staging
+      - e2e-test:
+          name: e2e-for-feature 
+          context: slack-secrets
+          requires:
+            - e2e-test-approval
           filters:
             branches:
               ignore:

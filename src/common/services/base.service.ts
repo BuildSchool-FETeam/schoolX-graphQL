@@ -5,6 +5,7 @@ import {
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
+  FindOptionsRelations,
 } from 'typeorm'
 import { CacheService } from './cache.service'
 import { PermissionSet } from '../../permission/entities/Permission.entity'
@@ -15,6 +16,7 @@ import { AdminUser } from 'src/adminUser/AdminUser.entity'
 import { ClientUser } from 'src/clientUser/entities/ClientUser.entity'
 import { FlexiblePerm } from '../decorators/PermissionRequire.decorator'
 import { REGEX_PERM } from '../constants/permission.constant'
+import { TokenType } from '../constants/user.constant'
 
 export interface BaseRepoEntity {
   id: string | number
@@ -78,15 +80,16 @@ export abstract class BaseService<
 
     if (_.isEmpty(strictConfig)) return resource
 
-    const { user: adminUser, permissionSet } =
-      await this.getAdminUserCredential(strictConfig.token)
+    const { payload, permissionSet } = await this.getUserCredential(
+      strictConfig.token
+    )
     const resourcePerm = permissionSet[strictConfig.strictResourceName]
     const flexibleReadPerm = resourcePerm.match(
       REGEX_PERM.READ
     )[0] as FlexiblePerm
     const isValidPermission = this.isValidPermissionOnResource(
       resource,
-      adminUser,
+      payload,
       flexibleReadPerm
     )
 
@@ -109,9 +112,11 @@ export abstract class BaseService<
     options?: FindManyOptions<T>,
     strictConfig?: IStrictConfig
   ) {
+    const conditionPerm: { createdBy?: string } = {}
     if (strictConfig) {
-      const { user: adminUser, permissionSet } =
-        await this.getAdminUserCredential(strictConfig.token)
+      const { payload, permissionSet } = await this.getUserCredential(
+        strictConfig.token
+      )
       const resourcePerm = permissionSet[strictConfig.strictResourceName]
       const flexibleReadPerm = resourcePerm.match(
         REGEX_PERM.READ
@@ -124,33 +129,19 @@ export abstract class BaseService<
         )
       }
 
-      const conditionPerm: { createdBy?: AdminUser | ClientUser } = {}
       if (grainedPerm === '+') {
-        conditionPerm.createdBy = adminUser
-      }
-
-      if (_.isArray(options.where)) {
-        const strictWhereOptions = _.map(options.where, (whereOpt) => {
-          return _.assign(whereOpt, conditionPerm) as FindOptionsWhere<T>
-        })
-        options = {
-          ...options,
-          where: strictWhereOptions,
-        }
-      } else {
-        const whereOptions = _.assign(
-          options.where,
-          conditionPerm
-        ) as FindOptionsWhere<T>
-        options = {
-          ...options,
-          where: whereOptions,
-          cache: true,
-        }
+        conditionPerm.createdBy = payload.id
       }
     }
 
-    const resource = await this.repository.find(options)
+    const builder = this.repository
+      .createQueryBuilder('entity')
+      .setFindOptions(options)
+    if (!_.isEmpty(conditionPerm)) {
+      builder.andWhere('entity.createdById = :createdBy', conditionPerm)
+    }
+    const resource = await builder.getMany()
+
     if (!resource) {
       throw new NotFoundException(
         `Resources ${this.resourceName || ''} not found`
@@ -167,7 +158,11 @@ export abstract class BaseService<
    * @returns delete information
    */
   async deleteOneById(id: string, strictConfig?: IStrictConfig) {
-    const existed = await this.findById(id, {}, strictConfig)
+    const existed = await this.findById(
+      id,
+      { relations: { createdBy: true } as FindOptionsRelations<T> },
+      strictConfig
+    )
 
     if (!existed) {
       throw new NotFoundException(
@@ -177,15 +172,16 @@ export abstract class BaseService<
 
     if (_.isEmpty(strictConfig)) return this.repository.delete(id)
 
-    const { user: adminUser, permissionSet } =
-      await this.getAdminUserCredential(strictConfig.token)
+    const { payload, permissionSet } = await this.getUserCredential(
+      strictConfig.token
+    )
     const resourcePerm = permissionSet[strictConfig.strictResourceName]
     const flexibleDeletePerm = resourcePerm.match(
       REGEX_PERM.DELETE
     )[0] as FlexiblePerm
     const isValidPermission = this.isValidPermissionOnResource(
       existed,
-      adminUser,
+      payload,
       flexibleDeletePerm
     )
 
@@ -204,8 +200,9 @@ export abstract class BaseService<
    * @returns number of items
    */
   async countingTotalItem(strict?: IStrictConfig) {
-    const { user: adminUser, permissionSet } =
-      await this.getAdminUserCredential(strict.token)
+    const { payload, permissionSet } = await this.getUserCredential(
+      strict.token
+    )
     const resourcePerm = permissionSet[strict.strictResourceName]
     const flexibleReadPerm = resourcePerm.match(
       REGEX_PERM.READ
@@ -221,15 +218,35 @@ export abstract class BaseService<
     const builder = this.repository.createQueryBuilder('entity')
 
     if (grainedPerm === '+') {
-      builder.where('entity.createdById = :id', { id: adminUser.id })
+      builder.where('entity.createdById = :id', { id: payload.id })
     }
 
     return builder.getCount()
   }
 
+  async isHavePermAction(
+    resource: T,
+    strictConfig: IStrictConfig,
+    action: string
+  ) {
+    const { payload, permissionSet } = await this.getUserCredential(
+      strictConfig.token
+    )
+    const resourcePerm = permissionSet[strictConfig.strictResourceName]
+    const flexibleDeletePerm = resourcePerm.match(
+      REGEX_PERM[action]
+    )[0] as FlexiblePerm
+
+    return this.isValidPermissionOnResource(
+      resource,
+      payload,
+      flexibleDeletePerm
+    )
+  }
+
   private isValidPermissionOnResource(
     resource: BaseRepoEntity,
-    user: AdminUser | ClientUser,
+    user: TokenType,
     flexiblePerm: FlexiblePerm
   ) {
     if (_.isEmpty(flexiblePerm)) return false
@@ -237,7 +254,7 @@ export abstract class BaseService<
 
     return (
       grainedPerm === '*' ||
-      (grainedPerm === '+' && resource.createdBy.id === user.id)
+      (grainedPerm === '+' && resource.createdBy?.id === user.id)
     )
   }
 
@@ -246,7 +263,7 @@ export abstract class BaseService<
    * @param token String
    * @returns user credentials which encrypted in the token
    */
-  protected async getAdminUserCredential(token: string) {
+  protected async getUserCredential(token: string) {
     if (!this.cachingService) {
       throw new Error('You should inject caching service before using it!!')
     }
