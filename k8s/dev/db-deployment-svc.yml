@@ -38,9 +38,11 @@ spec:
       - name: db-server
         image: postgres
         volumeMounts:
-        - mountPath: /var/lib/
+        - mountPath: /var/lib/postgresql/data
           name: db-storage
         env:  
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata/
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:  
